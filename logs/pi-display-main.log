@@ -1,0 +1,8 @@
+746      |main                        | INFO   | NodeTreeIteratorTest      | Node: system
+761      |main                        | INFO   | NodeTreeIteratorTest      | Node: settings
+800      |main                        | DEBUG  | Node                      | Entering
+802      |main                        | DEBUG  | Node                      | Exiting. New Current = settings
+802      |main                        | DEBUG  | Node                      | Entering
+802      |main                        | DEBUG  | Node                      | Entering
+803      |main                        | DEBUG  | Node                      | Exiting. New Current = system3
+803      |main                        | DEBUG  | Node                      | Exiting. New Current = system
