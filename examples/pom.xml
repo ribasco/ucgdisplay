@@ -4,20 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>pi-display</artifactId>
-        <groupId>com.ibasco.rpi.display</groupId>
+        <groupId>com.ibasco.pidisplay</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>pi-display-examples</artifactId>
     <dependencies>
-
         <dependency>
-            <groupId>com.ibasco.rpi.display</groupId>
+            <groupId>com.ibasco.pidisplay</groupId>
             <artifactId>pi-display-drivers</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.ibasco.rpi.display</groupId>
+            <groupId>com.ibasco.pidisplay</groupId>
             <artifactId>pi-display-impl</artifactId>
         </dependency>
         <dependency>
@@ -35,6 +34,14 @@
         <dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-device</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
         </dependency>
     </dependencies>
 
