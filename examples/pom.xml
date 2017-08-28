@@ -44,6 +44,4 @@
             <artifactId>logback-core</artifactId>
         </dependency>
     </dependencies>
-
-
 </project>
