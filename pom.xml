@@ -33,22 +33,22 @@
             <dependency>
                 <groupId>com.ibasco.pidisplay</groupId>
                 <artifactId>pi-display-core</artifactId>
-                <version>0.1-SNAPSHOT</version>
+                <version>${version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ibasco.pidisplay</groupId>
                 <artifactId>pi-display-drivers</artifactId>
-                <version>0.1-SNAPSHOT</version>
+                <version>${version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ibasco.pidisplay</groupId>
                 <artifactId>pi-display-examples</artifactId>
-                <version>0.1-SNAPSHOT</version>
+                <version>${version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ibasco.pidisplay</groupId>
                 <artifactId>pi-display-impl</artifactId>
-                <version>0.1-SNAPSHOT</version>
+                <version>${version}</version>
             </dependency>
             <dependency>
                 <groupId>com.pi4j</groupId>
@@ -98,6 +98,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
