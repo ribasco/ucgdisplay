@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.nio.ByteBuffer;
 
 @SuppressWarnings("WeakerAccess")
+@Deprecated
 abstract public class LcdDisplay extends AbstractDisplay<LcdGraphics> {
 
     protected static final String CMD_CHAR = "char";

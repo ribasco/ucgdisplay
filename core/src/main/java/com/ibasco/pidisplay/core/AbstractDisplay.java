@@ -3,7 +3,7 @@ package com.ibasco.pidisplay.core;
 import com.ibasco.pidisplay.core.events.DisplayEvent;
 import com.ibasco.pidisplay.core.events.Event;
 import com.ibasco.pidisplay.core.events.EventDispatcher;
-import com.ibasco.pidisplay.core.util.TextProcessor;
+import com.ibasco.pidisplay.core.util.RegexTextProcessor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 @SuppressWarnings("WeakerAccess")
+@Deprecated
 abstract public class AbstractDisplay<T extends Graphics> implements Display<T> {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractDisplay.class);
@@ -30,7 +31,7 @@ abstract public class AbstractDisplay<T extends Graphics> implements Display<T> 
 
     protected static final String CMD_DATE = "date";
 
-    protected TextProcessor textProcessor = new TextProcessor();
+    protected RegexTextProcessor textProcessor = new RegexTextProcessor();
 
     protected AbstractDisplay() {
         this(String.format("display-%d", displayCounter.incrementAndGet()));

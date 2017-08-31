@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -29,9 +30,11 @@ public class EventDispatcher {
 
     private static final ThreadGroup THREAD_GROUP = new ThreadGroup("pi-events");
 
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-
     private Thread dispatchThread;
+
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
+    protected final Lock readLock = readWriteLock.readLock();
+    protected final Lock writeLock = readWriteLock.writeLock();
 
     private static class Dispatcher {
         private static final EventDispatcher INSTANCE = new EventDispatcher();
@@ -47,21 +50,34 @@ public class EventDispatcher {
 
     public static <T extends Event> void addHandler(final EventType<T> eventType, final EventHandler<? super T> handler) {
         log.debug("Adding Event Handler for: {}", eventType.getName());
-        synchronized (Dispatcher.INSTANCE.handlers) {
-            Dispatcher.INSTANCE.handlers.put(eventType, handler);
-        }
+        Dispatcher.INSTANCE.add(eventType, handler);
     }
 
     public static <T extends Event> void removeHandler(final EventType<T> eventType, final EventHandler<? super T> handler) {
         log.debug("Removing Event Handler: {}", eventType);
-        synchronized (Dispatcher.INSTANCE.handlers) {
-            Dispatcher.INSTANCE.handlers.remove(eventType, handler);
+        Dispatcher.INSTANCE.remove(eventType, handler);
+    }
+
+    public static <T extends Event> void dispatch(T event) {
+        Dispatcher.INSTANCE.eventQueue.add(event);
+    }
+
+    private <T extends Event> void add(final EventType<T> eventType, final EventHandler<? super T> handler) {
+        writeLock.lock();
+        try {
+            handlers.put(eventType, handler);
+        } finally {
+            writeLock.unlock();
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends Event> void dispatch(T event) {
-        Dispatcher.INSTANCE.eventQueue.add(event);
+    private <T extends Event> void remove(final EventType<T> eventType, final EventHandler<? super T> handler) {
+        writeLock.lock();
+        try {
+            handlers.remove(eventType, handler);
+        } finally {
+            this.writeLock.unlock();
+        }
     }
 
     private void start() {
@@ -72,11 +88,22 @@ public class EventDispatcher {
         log.debug("Event Dispatcher Started");
     }
 
+    public static boolean isEventThread() {
+        return Dispatcher.INSTANCE.dispatchThread == Thread.currentThread();
+    }
+
+    public static void checkEventDispatchThread() {
+        if (!isEventThread())
+            throw new IllegalStateException("Not currently in event dispatcher thread");
+    }
+
     public static void shutdown() {
-        Dispatcher.INSTANCE.done.set(true);
-        Dispatcher.INSTANCE.started.set(false);
-        Dispatcher.INSTANCE.dispatchThread.interrupt();
-        Dispatcher.INSTANCE.dispatchThread = null;
+        log.debug("Shutting down event dispatcher");
+        EventDispatcher dispatcher = Dispatcher.INSTANCE;
+        dispatcher.done.set(true);
+        dispatcher.started.set(false);
+        dispatcher.dispatchThread.interrupt();
+        dispatcher.dispatchThread = null;
     }
 
     public static EventDispatcher getInstance() {
@@ -90,10 +117,12 @@ public class EventDispatcher {
             try {
                 Event event = eventQueue.take();
                 log.debug("EVENT FIRED: {}", event.getEventType());
-                if (event != null) {
-                    Collection<EventHandler> handlers = this.handlers.get(event.getEventType());
-                    for (EventHandler handler : handlers)
-                        handler.handle(event);
+                Collection<EventHandler> handlers = this.handlers.get(event.getEventType());
+                this.readLock.lock();
+                try {
+                    handlers.forEach(handler -> handler.handle(event));
+                } finally {
+                    this.readLock.unlock();
                 }
             } catch (InterruptedException e) {
                 log.debug("Dispatcher Interrupted");
