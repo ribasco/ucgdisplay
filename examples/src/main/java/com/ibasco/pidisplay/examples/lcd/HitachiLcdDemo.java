@@ -1,14 +1,16 @@
 package com.ibasco.pidisplay.examples.lcd;
 
 import com.ibasco.pidisplay.core.DisplayManager;
+import com.ibasco.pidisplay.core.events.EventDispatcher;
 import com.ibasco.pidisplay.core.util.Node;
+import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdDriver;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdTemplates;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.Mcp23017LcdAdapter;
-import com.ibasco.pidisplay.impl.lcd.hitachi.LcdDisplayManager;
 import com.ibasco.pidisplay.impl.lcd.hitachi.LcdGraphics;
-import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdDisplayContainer;
-import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdDisplayText;
+import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdGroup;
+import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdScreen;
+import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdText;
 import com.pi4j.component.button.Button;
 import com.pi4j.component.button.ButtonHoldListener;
 import com.pi4j.component.button.ButtonReleasedListener;
@@ -25,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -105,15 +108,18 @@ public class HitachiLcdDemo {
 
         printNodeTree(menuEntries);
 
-        LcdDisplayContainer menuDisplay = createMenuDisplay();
-
-        displayManager = new LcdDisplayManager(lcdDriver);
-        displayManager.show(menuDisplay);
+        LcdGroup menu = createMenuDisplay();
+        LcdScreen screen = new LcdScreen();
+        screen.setPrimary(menu);
+        screen.show();
     }
 
-    private LcdDisplayContainer createMenuDisplay() {
-        LcdDisplayContainer menuDisplay = new LcdDisplayContainer();
-        menuDisplay.addComponent(new LcdDisplayText());
+    private LcdGroup createMenuDisplay() {
+        LcdGroup menuDisplay = new LcdGroup();
+        LcdText header = new LcdText(0, 0, "Header");
+        LcdText body = new LcdText("Body");
+        menuDisplay.add(header);
+        menuDisplay.add(body);
         return menuDisplay;
     }
 
@@ -255,11 +261,24 @@ public class HitachiLcdDemo {
         log.info("Exiting button hold listener");
     };
 
+    private void delay(int interval) {
+        ThreadUtils.sleepUninterrupted(interval);
+    }
+
     public static void main(String[] args) throws Exception {
         new HitachiLcdDemo().run();
     }
 
     public void run() throws Exception {
-
+        log.info("Running LCD Display");
+        while (!shutdown.get()) {
+            delay(500);
+        }
+        log.info("Shutting down...");
+        ((GpioButtonComponent) button1).close();
+        gpio.shutdown();
+        executorService.shutdown();
+        EventDispatcher.shutdown();
+        executorService.awaitTermination(5, TimeUnit.SECONDS);
     }
 }

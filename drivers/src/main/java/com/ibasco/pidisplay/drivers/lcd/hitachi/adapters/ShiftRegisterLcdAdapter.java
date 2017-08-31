@@ -6,13 +6,14 @@ import com.ibasco.pidisplay.drivers.lcd.hitachi.enums.LcdPin;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.enums.LcdReadWriteState;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.enums.LcdRegisterSelectState;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.exceptions.InvalidPinMappingException;
-import com.ibasco.pidisplay.drivers.lcd.hitachi.pins.ShiftOutRegPin;
 import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.impl.PinImpl;
 import com.pi4j.wiringpi.Shift;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Objects;
 
@@ -24,9 +25,9 @@ import java.util.Objects;
  * @author Rafael Ibasco
  */
 //TODO: Add support for daisy chained shift-out registers
-public class ShiftRegLcdAdapter extends BaseLcdGpioAdapter {
+public class ShiftRegisterLcdAdapter extends BaseLcdGpioAdapter {
 
-    private static final Logger log = LoggerFactory.getLogger(ShiftRegLcdAdapter.class);
+    private static final Logger log = LoggerFactory.getLogger(ShiftRegisterLcdAdapter.class);
 
     /**
      * Holds the current state of the shift register
@@ -78,7 +79,7 @@ public class ShiftRegLcdAdapter extends BaseLcdGpioAdapter {
      * @throws IllegalArgumentException
      *         Thrown when pin mapping validation fails
      */
-    public ShiftRegLcdAdapter(GpioProvider provider, Pin dataPin, Pin latchPin, Pin clockPin, LcdPinMapConfig lcdPinMap) throws IllegalArgumentException {
+    public ShiftRegisterLcdAdapter(GpioProvider provider, Pin dataPin, Pin latchPin, Pin clockPin, LcdPinMapConfig lcdPinMap) throws IllegalArgumentException {
         super(lcdPinMap);
         GpioController controller = GpioFactory.getInstance();
         this.provider = provider;
@@ -194,5 +195,27 @@ public class ShiftRegLcdAdapter extends BaseLcdGpioAdapter {
         this.latchPin.low();
         Shift.shiftOut((byte) this.dataPin.getPin().getAddress(), (byte) this.clockPin.getPin().getAddress(), (byte) Shift.MSBFIRST, this.state);
         this.latchPin.high();
+    }
+
+    /**
+     * A collection of valid Shift Register Output Pins
+     *
+     * @author Rafael Ibasco
+     */
+    public static final class ShiftOutRegPin {
+        public static final Pin QA = createPin(0, "QA");
+        public static final Pin QB = createPin(1, "QB");
+        public static final Pin QC = createPin(2, "QC");
+        public static final Pin QD = createPin(3, "QD");
+        public static final Pin QE = createPin(4, "QE");
+        public static final Pin QF = createPin(5, "QF");
+        public static final Pin QG = createPin(6, "QG");
+        public static final Pin QH = createPin(7, "QH");
+
+        public static final String PROVIDER_NAME = "ShiftOutReg";
+
+        private static Pin createPin(int address, String name) {
+            return new PinImpl(PROVIDER_NAME, address, name, EnumSet.of(PinMode.DIGITAL_OUTPUT, PinMode.GPIO_CLOCK));
+        }
     }
 }

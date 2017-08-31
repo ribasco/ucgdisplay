@@ -1,6 +1,5 @@
 package com.ibasco.pidisplay.core.components;
 
-import com.ibasco.pidisplay.core.DisplayComponent;
 import com.ibasco.pidisplay.core.Graphics;
 
 abstract public class DisplayProgress extends DisplayComponent {

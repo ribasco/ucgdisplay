@@ -7,8 +7,7 @@ import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdDriver;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdTemplates;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.Mcp23017LcdAdapter;
-import com.ibasco.pidisplay.impl.lcd.hitachi.LcdDisplayManager;
-import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdMenu;
+import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdMenuOld;
 import com.ibasco.pidisplay.impl.lcd.hitachi.enums.LcdMenuCursorOrientation;
 import com.ibasco.pidisplay.impl.lcd.hitachi.enums.LcdMenuItemStyle;
 import com.ibasco.pidisplay.impl.lcd.hitachi.events.LcdMenuItemEvent;
@@ -52,9 +51,7 @@ public class HitachiLcdDemoOld {
 
     private LcdDriver lcdDriver;
 
-    private LcdMenu lcdMenu;
-
-    private LcdDisplayManager displayManager;
+    private LcdMenuOld lcdMenu;
 
     private AtomicBoolean shutdown = new AtomicBoolean(false);
 
@@ -112,9 +109,9 @@ public class HitachiLcdDemoOld {
 
         printNodeTree(menuEntries);
 
-        displayManager = new LcdDisplayManager(lcdDriver);
+        //displayManager = new LcdDisplayManager(lcdDriver);
 
-        lcdMenu = new LcdMenu(menuEntries);
+        lcdMenu = new LcdMenuOld(menuEntries);
         //Properties
         lcdMenu.setHeaderTextAlignment(TextAlignment.LEFT);
         lcdMenu.setCursorOrientation(LcdMenuCursorOrientation.LEFT);
