@@ -1,5 +1,6 @@
 package com.ibasco.pidisplay.drivers.lcd.hitachi;
 
+import com.ibasco.pidisplay.core.annotations.DisplayDriver;
 import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.StdGpioLcdAdapter;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.enums.*;
@@ -24,6 +25,7 @@ import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
  * @author Rafael Ibasco
  */
 @SuppressWarnings("All")
+@DisplayDriver
 public class LcdDriver extends LCDBase implements LCD {
     private static final Logger log = LoggerFactory.getLogger(LcdDriver.class);
 
@@ -450,7 +452,7 @@ public class LcdDriver extends LCDBase implements LCD {
     public void setCursorPosition(final int row, final int column) {
         //fail fast
         if (column > this.cols - 1 || row > this.rows - 1)
-            throw new IllegalArgumentException("Column or Row index must not exceed it's maximum value");
+            throw new IllegalArgumentException(String.format("Cursor out of bounds (Row: %d, Col: %d, Max Rows: %d, Max Cols: %d)", row, column, getRowCount(), getColumnCount()));
         command(LCD_SETDDRAMADDR | (this.rowOffsets[row] + column));
     }
 

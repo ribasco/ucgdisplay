@@ -1,29 +1,35 @@
 package com.ibasco.pidisplay.core.components;
 
 import com.ibasco.pidisplay.core.Graphics;
-import com.ibasco.pidisplay.core.beans.DisplayProperty;
+import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.events.EventHandler;
 import com.ibasco.pidisplay.core.events.ValueChangeEvent;
-import com.ibasco.pidisplay.core.util.TextProcessor;
+import com.ibasco.pidisplay.core.util.RegexTextProcessor;
+import com.ibasco.pidisplay.core.util.date.DateTimeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.CharBuffer;
+import java.util.Arrays;
 
 @SuppressWarnings("all")
 abstract public class DisplayText<T extends Graphics> extends DisplayComponent<T> {
 
-    protected static final int DEFAULT_WIDTH = 5;
+    private static final Logger log = LoggerFactory.getLogger(DisplayText.class);
+
+    protected static final int DEFAULT_WIDTH = -1;
 
     protected static final int DEFAULT_HEIGHT = 1;
 
-    protected static final String DEFAULT_TRUNC_STR = "..";
+    protected ObservableProperty<String> textProperty = new ObservableProperty<>(StringUtils.EMPTY);
 
-    protected DisplayProperty<String> textProperty = new DisplayProperty<>(StringUtils.EMPTY);
+    protected ObservableProperty<TextAlignment> textAlignment = new ObservableProperty<>(TextAlignment.LEFT);
 
-    protected DisplayProperty<TextAlignment> textAlignment = new DisplayProperty<>(TextAlignment.LEFT);
+    protected ObservableProperty<RegexTextProcessor> textProcessor = new ObservableProperty<>(new RegexTextProcessor());
 
-    protected DisplayProperty<TextProcessor> textProcessor = new DisplayProperty<>(null);
+    protected ObservableProperty<String> abbreviateChar = new ObservableProperty<>(StringUtils.EMPTY);
 
     private EventHandler<ValueChangeEvent<String>> onTextChange;
 
@@ -41,7 +47,15 @@ abstract public class DisplayText<T extends Graphics> extends DisplayComponent<T
 
     protected DisplayText(int x, int y, int width, int height, String text) {
         super(x, y, width, height);
+        textProperty.addListener(this::onPropertyChange);
+        textAlignment.addListener(this::onPropertyChange);
+        abbreviateChar.addListener(this::onPropertyChange);
         setText(text);
+        textProcessor.get().register("date", DateTimeUtils::formatCurrentDateTime);
+    }
+
+    private void onPropertyChange(ValueChangeEvent valueChangeEvent) {
+        this.redraw();
     }
 
     public String getText() {
@@ -60,16 +74,24 @@ abstract public class DisplayText<T extends Graphics> extends DisplayComponent<T
         this.textAlignment.set(textAlignment);
     }
 
-    public TextProcessor getTextProcessor() {
+    public RegexTextProcessor getTextProcessor() {
         return textProcessor.get();
     }
 
-    public void setTextProcessor(TextProcessor textProcessor) {
+    public void setTextProcessor(RegexTextProcessor textProcessor) {
         this.textProcessor.set(textProcessor);
     }
 
+    public String getAbbreviateChar() {
+        return abbreviateChar.get();
+    }
+
+    public void setAbbreviateChar(String abbreviateChar) {
+        this.abbreviateChar.set(abbreviateChar);
+    }
+
     public void clear() {
-        this.textProperty.set(StringUtils.repeat(" ", getWidth()));
+        this.textProperty.set(StringUtils.repeat(" ", getWidth() * getHeight()));
     }
 
     public EventHandler<ValueChangeEvent<String>> getOnTextChange() {
@@ -81,34 +103,58 @@ abstract public class DisplayText<T extends Graphics> extends DisplayComponent<T
     }
 
     @Override
+    protected void onVisibilityChange(ValueChangeEvent valueChangeEvent) {
+        if ((Boolean) valueChangeEvent.getNewValue()) {
+            log.debug("Visible: {}", valueChangeEvent.getNewValue());
+        }
+    }
+
+    @Override
     public void draw(T graphics) {
         super.draw(graphics);
 
-        if (StringUtils.isEmpty(textProperty.get()))
+        if (!textProperty.isSet() || !isVisible())
             return;
 
-        String text = textProperty.get();
-        if (textProcessor.isSet()) {
-            text = textProcessor.get().process(text);
-        }
-        text = truncateText(text, DEFAULT_TRUNC_STR, graphics.getWidth());
-        text = alignText(text, textAlignment.get(), graphics.getWidth());
+        int startX = getX(), curX = startX;
+        int startY = getY(), curY = startY;
+        int maxDisplayWidth = graphics.getWidth(), maxDisplayHeight = graphics.getHeight();
+        int textWidth = getWidth(), textHeight = getHeight();
+        int maxAllowableChars = textWidth * textHeight;
+
+        //Process text
+        String text = textProperty.getDefault(StringUtils.EMPTY);
+        text = processText(text, maxAllowableChars);
 
         CharBuffer b = CharBuffer.wrap(text);
 
-        int x = getX();
-        int y = getY();
-        int width = getWidth();
-        int height = getHeight();
+        //Set cursor position
+        graphics.setCursor(startX, startY);
 
-        graphics.setCursor(x, y);
+        int idx = 0;
+        char[] tmp = new char[textWidth];
+        Arrays.fill(tmp, ' ');
 
         while (b.hasRemaining()) {
-            byte c = (byte) b.get();
+            tmp[idx++] = b.get();
+            if (idx > (textWidth - 1)) {
+                graphics.drawText(alignText(new String(tmp), textAlignment.get(), textWidth));
+                idx = 0;
+                if (++curY <= (maxDisplayHeight - 1))
+                    graphics.setCursor(startX, curY);
+            }
         }
-
-        graphics.drawText(text);
     }
+
+    protected String processText(String text, int maxAllowableChars) {
+        String tmp = text;
+        if (textProcessor.isSet())
+            text = textProcessor.get().process(tmp);
+        tmp = truncateText(tmp, abbreviateChar.get(), maxAllowableChars);
+        //tmp = alignText(tmp, textAlignment.get(), getWidth());
+        return tmp;
+    }
+
 
     protected String truncateText(String text, String truncStr, int maxWidth) {
         return StringUtils.abbreviate(text, truncStr, maxWidth);

@@ -61,9 +61,11 @@
         <appender-ref ref="file-error"/>
     </root>
 
-    <logger name="com.ibasco.pidisplay.impl" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.core" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.core.events.EventDispatcher" level="INFO"/>
+    <logger name="com.ibasco.pidisplay.core.DisplayManager" level="INFO"/>
+    <logger name="com.ibasco.pidisplay.core.util" level="INFO"/>
+    <logger name="com.ibasco.pidisplay.impl" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.drivers" level="ERROR"/>
     <logger name="com.ibasco.pidisplay.examples" level="INFO"/>
 </configuration>

@@ -1,15 +1,14 @@
 package com.ibasco.pidisplay.examples.lcd;
 
-import com.ibasco.pidisplay.core.DisplayManager;
+import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.events.EventDispatcher;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdDriver;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdTemplates;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.Mcp23017LcdAdapter;
-import com.ibasco.pidisplay.impl.lcd.hitachi.LcdGraphics;
+import com.ibasco.pidisplay.impl.lcd.hitachi.LcdManager;
 import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdGroup;
-import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdScreen;
 import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdText;
 import com.pi4j.component.button.Button;
 import com.pi4j.component.button.ButtonHoldListener;
@@ -48,7 +47,7 @@ public class HitachiLcdDemo {
     private final Button button3;
     private final Button button4;
 
-    private DisplayManager<LcdGraphics> displayManager;
+    private LcdManager lcdManager;
 
     private LcdDriver lcdDriver;
 
@@ -82,6 +81,8 @@ public class HitachiLcdDemo {
         //initialize lcd driver
         lcdDriver = new LcdDriver(lcdAdapter, 20, 4);
 
+        lcdManager = new LcdManager(lcdDriver);
+
         byte[] returnChar = new byte[]{
                 0b00000,
                 0b00100,
@@ -107,20 +108,6 @@ public class HitachiLcdDemo {
         Node<String> menuEntries = createMenuEntries();
 
         printNodeTree(menuEntries);
-
-        LcdGroup menu = createMenuDisplay();
-        LcdScreen screen = new LcdScreen();
-        screen.setPrimary(menu);
-        screen.show();
-    }
-
-    private LcdGroup createMenuDisplay() {
-        LcdGroup menuDisplay = new LcdGroup();
-        LcdText header = new LcdText(0, 0, "Header");
-        LcdText body = new LcdText("Body");
-        menuDisplay.add(header);
-        menuDisplay.add(body);
-        return menuDisplay;
     }
 
     private void printNodeTree(Node<String> root) {
@@ -271,9 +258,32 @@ public class HitachiLcdDemo {
 
     public void run() throws Exception {
         log.info("Running LCD Display");
+
+        LcdGroup menuDisplay = new LcdGroup();
+        LcdText progress = new LcdText(0, 0, 15, 1, "Progress 1: 0");
+        LcdText another = new LcdText(0, 1, 5, 2, "Hello World");
+        another.setTextAlignment(TextAlignment.LEFT);
+        LcdText progress2 = new LcdText(9, 1, 7, 3, "This is a really long text");
+        progress2.setTextAlignment(TextAlignment.RIGHT);
+
+        menuDisplay.add(progress);
+        menuDisplay.add(another);
+        menuDisplay.add(progress2);
+
+        lcdManager.setDisplay(menuDisplay);
+
+        ThreadUtils.sleepUninterrupted(5000);
+        another.clear();
+        ThreadUtils.sleepUninterrupted(1000);
+        progress2.clear();
+        ThreadUtils.sleepUninterrupted(1000);
+        progress.clear();
+
+        //Wait
         while (!shutdown.get()) {
-            delay(500);
+            ThreadUtils.sleepUninterrupted(500);
         }
+
         log.info("Shutting down...");
         ((GpioButtonComponent) button1).close();
         gpio.shutdown();

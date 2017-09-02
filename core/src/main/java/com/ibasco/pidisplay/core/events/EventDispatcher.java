@@ -116,7 +116,7 @@ public class EventDispatcher {
         while (!done.get()) {
             try {
                 Event event = eventQueue.take();
-                log.debug("EVENT FIRED: {}", event.getEventType());
+                log.debug("EVENT FIRED: {}, QUEUE: {}", event.getEventType(), eventQueue.size());
                 Collection<EventHandler> handlers = this.handlers.get(event.getEventType());
                 this.readLock.lock();
                 try {
