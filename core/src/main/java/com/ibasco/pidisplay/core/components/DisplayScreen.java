@@ -1,7 +1,7 @@
 package com.ibasco.pidisplay.core.components;
 
 import com.ibasco.pidisplay.core.Graphics;
-import com.ibasco.pidisplay.core.beans.DisplayProperty;
+import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.events.DisplayEvent;
 
 import java.util.Objects;
@@ -10,9 +10,7 @@ import static com.ibasco.pidisplay.core.events.EventDispatcher.dispatch;
 
 abstract public class DisplayScreen<T extends Graphics> extends DisplayComponent<T> {
 
-    protected DisplayProperty<DisplayGroup<T>> primaryDisplay = new DisplayProperty<>();
-
-    private boolean isShown = false;
+    protected ObservableProperty<DisplayGroup<T>> primaryDisplay = new ObservableProperty<>();
 
     public DisplayScreen() {
         super(-1, -1);

@@ -11,6 +11,10 @@ public interface Graphics {
 
     void setCursor(int x, int y);
 
+    void drawText(char data);
+
+    void drawText(char[] data);
+
     void drawText(byte[] data);
 
     void drawText(byte data);

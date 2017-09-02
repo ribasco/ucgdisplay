@@ -64,6 +64,16 @@ public class LcdGraphics implements Graphics {
     }
 
     @Override
+    public void drawText(char data) {
+        driver.write(data);
+    }
+
+    @Override
+    public void drawText(char[] data) {
+        driver.write(data);
+    }
+
+    @Override
     public void drawText(byte[] data) {
         driver.write(data);
     }

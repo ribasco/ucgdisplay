@@ -10,7 +10,7 @@ public class LcdText extends DisplayText<LcdGraphics> {
     }
 
     public LcdText(String text) {
-        this(text.length(), DEFAULT_HEIGHT, text);
+        this(0, 0, text);
     }
 
     public LcdText(int x, int y, String text) {
