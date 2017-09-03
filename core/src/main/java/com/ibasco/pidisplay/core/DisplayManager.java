@@ -4,6 +4,8 @@ import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.components.DisplayGroup;
 import com.ibasco.pidisplay.core.events.DisplayEvent;
 import com.ibasco.pidisplay.core.events.EventDispatcher;
+import com.ibasco.pidisplay.core.events.EventHandler;
+import com.ibasco.pidisplay.core.events.ValueChangeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +28,10 @@ abstract public class DisplayManager<T extends Graphics> {
         this.graphics = graphics;
         log.debug("Adding DisplayManager to handle draw events");
         addHandler(DisplayEvent.DISPLAY_DRAW, this::drawDisplay);
+    }
+
+    public void setOnDisplayChange(EventHandler<? super ValueChangeEvent> handler) {
+        display.addListener(handler);
     }
 
     public DisplayGroup<T> getDisplay() {
