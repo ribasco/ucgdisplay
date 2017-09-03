@@ -25,8 +25,9 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
     @Override
     public void set(T newValue) {
         if (super.get() != newValue) {
+            T oldVal = super.get();
             super.set(newValue);
-            invalidate();
+            invalidate(oldVal);
         }
     }
 
@@ -44,15 +45,15 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
         return super.get() != null;
     }
 
-    private void invalidate() {
+    private void invalidate(T oldVal) {
         if (valid) {
             valid = false;
-            fireChangeEvent();
+            fireChangeEvent(oldVal);
         }
     }
 
-    private void fireChangeEvent() {
-        dispatch(new ValueChangeEvent<>(ValueChangeEvent.VALUE_CHANGED_EVENT, get()));
+    private void fireChangeEvent(T oldVal) {
+        dispatch(new ValueChangeEvent<>(ValueChangeEvent.VALUE_CHANGED_EVENT, oldVal, super.get()));
     }
 
     @Override
