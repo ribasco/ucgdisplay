@@ -23,7 +23,6 @@ public class RotaryEncoder {
     private RotaryEncoderListener listener;
 
     public RotaryEncoder(Pin pinA, Pin pinB, long initalValue) {
-
         encoderValue = initalValue;
         gpio = GpioFactory.getInstance();
 
