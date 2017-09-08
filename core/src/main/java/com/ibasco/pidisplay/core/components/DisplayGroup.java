@@ -1,5 +1,6 @@
 package com.ibasco.pidisplay.core.components;
 
+import com.ibasco.pidisplay.core.DisplayComponent;
 import com.ibasco.pidisplay.core.Graphics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ abstract public class DisplayGroup<T extends Graphics> extends DisplayComponent<
 
     @Override
     public void add(DisplayComponent<T> component) {
+        component.setVisible(true);
         super.add(component);
     }
 
@@ -41,18 +43,5 @@ abstract public class DisplayGroup<T extends Graphics> extends DisplayComponent<
     @Override
     public List<DisplayComponent<T>> getChildren() {
         return super.getChildren();
-    }
-
-    @Override
-    public void draw(T graphics) {
-        log.debug("Drawing Display Tree: ");
-        drawTree(this, graphics, 0);
-    }
-
-    protected void drawTree(DisplayComponent<T> component, T graphics, int depth) {
-        for (DisplayComponent<T> i : component.getChildren()) {
-            i.draw(graphics);
-            drawTree(i, graphics, depth + 1);
-        }
     }
 }
