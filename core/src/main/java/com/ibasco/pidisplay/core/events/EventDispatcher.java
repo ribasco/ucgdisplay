@@ -33,12 +33,11 @@ public class EventDispatcher {
     private Thread dispatchThread;
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
-    protected final Lock readLock = readWriteLock.readLock();
-    protected final Lock writeLock = readWriteLock.writeLock();
+    private final Lock readLock = readWriteLock.readLock();
+    private final Lock writeLock = readWriteLock.writeLock();
 
     private static class Dispatcher {
         private static final EventDispatcher INSTANCE = new EventDispatcher();
-
         static {
             log.info("Auto-starting event dispatcher");
             INSTANCE.start();
