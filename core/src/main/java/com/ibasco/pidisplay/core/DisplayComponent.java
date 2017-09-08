@@ -1,18 +1,16 @@
-package com.ibasco.pidisplay.core.components;
+package com.ibasco.pidisplay.core;
 
-import com.ibasco.pidisplay.core.Display;
-import com.ibasco.pidisplay.core.DisplayRegion;
-import com.ibasco.pidisplay.core.Graphics;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.events.EventDispatcher;
-import com.ibasco.pidisplay.core.events.ValueChangeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
+@SuppressWarnings("WeakerAccess")
 abstract public class DisplayComponent<T extends Graphics>
         extends DisplayRegion implements Display<T> {
 
@@ -22,9 +20,13 @@ abstract public class DisplayComponent<T extends Graphics>
 
     protected static final int DEFAULT_YPOS = 0;
 
-    private ObservableProperty<Boolean> visible = new ObservableProperty<>(true);
+    private ObservableProperty<Boolean> visible = new ObservableProperty<>(false);
 
     private List<DisplayComponent<T>> children = new ArrayList<>();
+
+    private static final AtomicInteger idCtr = new AtomicInteger(0);
+
+    private int id = idCtr.incrementAndGet();
 
     protected DisplayComponent(int width, int height) {
         this(DEFAULT_XPOS, DEFAULT_YPOS, width, height);
@@ -32,7 +34,11 @@ abstract public class DisplayComponent<T extends Graphics>
 
     protected DisplayComponent(int x, int y, int width, int height) {
         super(x, y, width, height);
-        visible.addListener(this::onVisibilityChange);
+        redrawOnChange(visible);
+    }
+
+    public int getId() {
+        return id;
     }
 
     protected void add(DisplayComponent<T> component) {
@@ -55,13 +61,25 @@ abstract public class DisplayComponent<T extends Graphics>
         this.visible.set(visible);
     }
 
-    protected void onVisibilityChange(ValueChangeEvent valueChangeEvent) {
-        //to be implemented by sub-class
-    }
-
     @Override
     public void draw(T graphics) {
         Objects.requireNonNull(graphics, "Graphics cannot be null");
         EventDispatcher.checkEventDispatchThread();
+    }
+
+    protected void redrawOnChange(ObservableProperty<?>... properties) {
+        if (properties != null)
+            for (ObservableProperty<?> property : properties)
+                property.addListener(this::requestRedrawOnChange);
+    }
+
+    @SuppressWarnings("unused")
+    private <A> void requestRedrawOnChange(A oldVal, A newVal) {
+        this.redraw();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s [idCtr: %d]", this.getClass().getSimpleName(), getId());
     }
 }
