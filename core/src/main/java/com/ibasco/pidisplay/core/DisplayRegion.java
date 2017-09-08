@@ -1,9 +1,8 @@
 package com.ibasco.pidisplay.core;
 
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
-import com.ibasco.pidisplay.core.events.EventHandler;
-import com.ibasco.pidisplay.core.events.ValueChangeEvent;
 
+@SuppressWarnings("WeakerAccess")
 abstract public class DisplayRegion implements Region {
 
     protected ObservableProperty<Integer> x = new ObservableProperty<>();
@@ -19,21 +18,12 @@ abstract public class DisplayRegion implements Region {
     protected ObservableProperty<Integer> maxHeight = new ObservableProperty<>();
 
     public DisplayRegion(int x, int y, int width, int height) {
-        setX(x);
-        setY(y);
-        setWidth(width);
-        setHeight(height);
-        setMaxWidth(width);
-        setMaxHeight(height);
-    }
-
-    protected void setupRegionListeners(EventHandler<? super ValueChangeEvent> listener) {
-        x.addListener(listener);
-        y.addListener(listener);
-        width.addListener(listener);
-        height.addListener(listener);
-        maxWidth.addListener(listener);
-        maxHeight.addListener(listener);
+        this.x.set(x, false);
+        this.y.set(y, false);
+        this.width.set(width, false);
+        this.height.set(height, false);
+        this.maxWidth.set(width, false);
+        this.maxHeight.set(height, false);
     }
 
     public void setX(int x) {
