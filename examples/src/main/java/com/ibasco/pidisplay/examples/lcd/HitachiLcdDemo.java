@@ -1,5 +1,7 @@
 package com.ibasco.pidisplay.examples.lcd;
 
+import com.ibasco.pidisplay.components.RotaryEncoder;
+import com.ibasco.pidisplay.components.RotaryState;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.events.EventDispatcher;
 import com.ibasco.pidisplay.core.util.Node;
@@ -23,10 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -43,15 +42,15 @@ public class HitachiLcdDemo {
     private final I2CBus bus;
     private final GpioPinDigitalOutput lcdBacklightPin;
     private final Button button1;
-    private final Button button2;
-    private final Button button3;
-    private final Button button4;
+    private final Button btnSelect;
 
     private LcdManager lcdManager;
 
     private LcdDriver lcdDriver;
 
     private AtomicBoolean shutdown = new AtomicBoolean(false);
+
+    private RotaryEncoder rotaryEncoder;
 
     public HitachiLcdDemo() throws Exception {
         //Initialize I2C Bus
@@ -99,11 +98,12 @@ public class HitachiLcdDemo {
         //toggle lcd backlight
         lcdBacklightPin.high();
 
+        rotaryEncoder = new RotaryEncoder(RaspiPin.GPIO_05, RaspiPin.GPIO_04, -1);
+        rotaryEncoder.setListener(this::rotaryChange);
+
         //Initialize Buttons
         button1 = createButton(RaspiPin.GPIO_06, "Back", "back", 3500, buttonHoldListener);
-        button2 = createButton(RaspiPin.GPIO_05, "Previous", "previous");
-        button3 = createButton(RaspiPin.GPIO_04, "Next", "next");
-        button4 = createButton(RaspiPin.GPIO_01, "Select", "select");
+        btnSelect = createButton(RaspiPin.GPIO_01, "Select", "select");
 
         Node<String> menuEntries = createMenuEntries();
 
@@ -215,6 +215,7 @@ public class HitachiLcdDemo {
                 //success = lcdMenu.doPrevious();
                 break;
             case "select":
+                log.info("Select Button Pressed");
                 /*if (lcdMenu.getSelectedItem().hasChildren()) {
                     success = lcdMenu.doEnter();
                     break;
@@ -256,28 +257,38 @@ public class HitachiLcdDemo {
         new HitachiLcdDemo().run();
     }
 
+    private LcdText volume = new LcdText(0, 0, 10, 2, "Volume: ");
+
+    private void rotaryChange(long l, RotaryState state) {
+        log.info("Rotary Change: {}, State: {}", l, state);
+        volume.setText("%s:\n%d", state.name(), l);
+    }
+
     public void run() throws Exception {
         log.info("Running LCD Display");
 
-        LcdGroup menuDisplay = new LcdGroup();
-        LcdText progress = new LcdText(0, 0, 15, 1, "Progress 1: 0");
-        LcdText another = new LcdText(0, 1, 5, 2, "Hello World");
-        another.setTextAlignment(TextAlignment.LEFT);
-        LcdText progress2 = new LcdText(9, 1, 7, 3, "This is a really long text");
-        progress2.setTextAlignment(TextAlignment.RIGHT);
+        LcdGroup group1 = new LcdGroup();
+        LcdText temp = new LcdText(0, 2, 10, 2, "Temp");
+        LcdText humidity = new LcdText(12, 0, 8, 4, "Humidity");
 
-        menuDisplay.add(progress);
-        menuDisplay.add(another);
-        menuDisplay.add(progress2);
+        volume.setTextAlignment(TextAlignment.LEFT);
+        temp.setTextAlignment(TextAlignment.LEFT);
+        humidity.setTextAlignment(TextAlignment.LEFT);
 
-        lcdManager.setDisplay(menuDisplay);
+        group1.add(volume);
+        group1.add(temp);
+        group1.add(humidity);
 
-        ThreadUtils.sleepUninterrupted(5000);
-        another.clear();
-        ThreadUtils.sleepUninterrupted(1000);
-        progress2.clear();
-        ThreadUtils.sleepUninterrupted(1000);
-        progress.clear();
+        lcdManager.setDisplay(group1);
+
+        CompletableFuture.runAsync(() -> {
+            for (int i = 0; i < 100; i++) {
+                //volume.setText("Volume:\n%d", i);
+                temp.setText("Temp:\n%d", i + 1);
+                humidity.setText("This\nIs\na\nTest: %d", i + 3);
+                delay(1000);
+            }
+        });
 
         //Wait
         while (!shutdown.get()) {
@@ -285,7 +296,7 @@ public class HitachiLcdDemo {
         }
 
         log.info("Shutting down...");
-        ((GpioButtonComponent) button1).close();
+        //((GpioButtonComponent) button1).close();
         gpio.shutdown();
         executorService.shutdown();
         EventDispatcher.shutdown();

@@ -1,7 +1,7 @@
 package com.ibasco.pidisplay.core.beans;
 
 public interface Observable<T> {
-    void removeListener(T listener);
+    void removeListener(ChangeListener<T> listener);
 
-    void addListener(T listener);
+    void addListener(ChangeListener<T> listener);
 }
