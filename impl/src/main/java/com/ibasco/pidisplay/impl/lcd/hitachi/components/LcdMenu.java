@@ -9,7 +9,7 @@ public class LcdMenu extends DisplayMenu<LcdGraphics> {
     }
 
     @Override
-    public void draw(LcdGraphics graphics) {
+    public void drawNode(LcdGraphics graphics) {
 
     }
 }

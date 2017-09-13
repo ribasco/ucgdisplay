@@ -3,8 +3,8 @@ package com.ibasco.pidisplay.core.beans;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ObservableProperty<T> extends PropertyBase<T> implements Observable<T> {
 
@@ -12,7 +12,7 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
 
     private boolean valid = true;
 
-    private List<ChangeListener<T>> listeners = new ArrayList<>();
+    private Set<PropertyChangeListener<T>> listeners = new HashSet<>();
 
     public ObservableProperty() {
         this(null);
@@ -27,7 +27,15 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
         set(newValue, super.get() != newValue);
     }
 
-    public void set(T newValue, boolean invalidate) {
+    public void setValid(T newValue) {
+        set(newValue, false);
+    }
+
+    public void setInvalid(T newValue) {
+        set(newValue, true);
+    }
+
+    private void set(T newValue, boolean invalidate) {
         T oldVal = super.get();
         super.set(newValue);
         if (invalidate)
@@ -48,16 +56,20 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
     }
 
     private void fireChangeEvent(T oldVal) {
-        listeners.forEach(l -> l.changed(oldVal, super.get()));
+        listeners.forEach(l -> l.changed(this, oldVal, super.get()));
     }
 
     @Override
-    public void addListener(ChangeListener<T> listener) {
+    public void addListener(PropertyChangeListener<T> listener) {
         listeners.add(listener);
     }
 
     @Override
-    public void removeListener(ChangeListener<T> listener) {
+    public void removeListener(PropertyChangeListener<T> listener) {
         listeners.remove(listener);
+    }
+
+    public Set<PropertyChangeListener<T>> getListeners() {
+        return listeners;
     }
 }

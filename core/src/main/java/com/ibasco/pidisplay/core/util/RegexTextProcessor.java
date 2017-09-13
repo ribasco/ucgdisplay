@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A Simple Text Processor which process variables within the text
+ * A Simple Text Processor.
  *
  * @author Rafael Ibasco
  */

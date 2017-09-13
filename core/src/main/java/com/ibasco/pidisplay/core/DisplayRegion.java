@@ -13,68 +13,94 @@ abstract public class DisplayRegion implements Region {
 
     protected ObservableProperty<Integer> height = new ObservableProperty<>();
 
+    protected ObservableProperty<Integer> minWidth = new ObservableProperty<>();
+
+    protected ObservableProperty<Integer> minHeight = new ObservableProperty<>();
+
     protected ObservableProperty<Integer> maxWidth = new ObservableProperty<>();
 
     protected ObservableProperty<Integer> maxHeight = new ObservableProperty<>();
 
-    public DisplayRegion(int x, int y, int width, int height) {
-        this.x.set(x, false);
-        this.y.set(y, false);
-        this.width.set(width, false);
-        this.height.set(height, false);
-        this.maxWidth.set(width, false);
-        this.maxHeight.set(height, false);
+    public DisplayRegion(Integer x, Integer y, Integer width, Integer height) {
+        this.x.setValid(x);
+        this.y.setValid(y);
+        this.width.setValid(width);
+        this.height.setValid(height);
+        this.minWidth.setValid(width);
+        this.minHeight.setValid(height);
+        this.maxWidth.setValid(width);
+        this.maxHeight.setValid(height);
     }
 
-    public void setX(int x) {
+    public void setX(Integer x) {
         this.x.set(x);
     }
 
-    public void setY(int y) {
+    public void setY(Integer y) {
         this.y.set(y);
     }
 
-    public void setWidth(int width) {
+    public void setWidth(Integer width) {
         this.width.set(width);
     }
 
-    public void setHeight(int height) {
+    public void setHeight(Integer height) {
         this.height.set(height);
     }
 
-    public int getMaxWidth() {
+    @Override
+    public Integer getMaxWidth() {
         return maxWidth.get();
     }
 
-    public void setMaxWidth(int maxWidth) {
+    public void setMaxWidth(Integer maxWidth) {
         this.maxWidth.set(maxWidth);
     }
 
-    public int getMaxHeight() {
+    @Override
+    public Integer getMaxHeight() {
         return maxHeight.get();
     }
 
-    public void setMaxHeight(int maxHeight) {
+    public void setMaxHeight(Integer maxHeight) {
         this.maxHeight.set(maxHeight);
     }
 
+    public void setMinWidth(Integer minWidth) {
+        this.minWidth.set(minWidth);
+    }
+
+    public void setMinHeight(Integer minHeight) {
+        this.minHeight.set(minHeight);
+    }
+
     @Override
-    public int getX() {
+    public Integer getMinWidth() {
+        return this.minWidth.get();
+    }
+
+    @Override
+    public Integer getMinHeight() {
+        return this.minHeight.get();
+    }
+
+    @Override
+    public Integer getX() {
         return x.get();
     }
 
     @Override
-    public int getY() {
+    public Integer getY() {
         return y.get();
     }
 
     @Override
-    public int getWidth() {
+    public Integer getWidth() {
         return width.get();
     }
 
     @Override
-    public int getHeight() {
+    public Integer getHeight() {
         return height.get();
     }
 }

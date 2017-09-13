@@ -25,6 +25,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -257,35 +259,100 @@ public class HitachiLcdDemo {
         new HitachiLcdDemo().run();
     }
 
-    private LcdText volume = new LcdText(0, 0, 10, 2, "Volume: ");
+    private LcdGroup group1 = new LcdGroup();
+    private LcdGroup group2 = new LcdGroup();
+    private LcdGroup group3 = new LcdGroup();
+    private List<LcdGroup> groupList = new ArrayList<>();
+    private LcdText label1 = new LcdText();
+    private AtomicInteger startPos = new AtomicInteger(0);
 
     private void rotaryChange(long l, RotaryState state) {
-        log.info("Rotary Change: {}, State: {}", l, state);
-        volume.setText("%s:\n%d", state.name(), l);
+        log.info("Rotary Change: {}, State: {}", startPos, state);
+
+        //int width = label1.getWidth();
+
+        /*if (state == RotaryState.DOWN) {
+            startPos += width;
+        } else {
+            startPos -= width;
+        }
+
+        label1.setStartIndex(startPos);*/
+        if (state == RotaryState.DOWN) {
+            if ((startPos.get() + 1) <= (groupList.size() - 1))
+                startPos.incrementAndGet();
+        } else {
+            if ((startPos.get() - 1) >= 0)
+                startPos.decrementAndGet();
+        }
+
+        LcdGroup group = groupList.get(startPos.get());
+
+        lcdManager.setActiveDisplay(group);
     }
 
     public void run() throws Exception {
         log.info("Running LCD Display");
 
-        LcdGroup group1 = new LcdGroup();
-        LcdText temp = new LcdText(0, 2, 10, 2, "Temp");
-        LcdText humidity = new LcdText(12, 0, 8, 4, "Humidity");
+        group1.add(label1);
+        group2.add(new LcdText("Hello World"));
 
-        volume.setTextAlignment(TextAlignment.LEFT);
-        temp.setTextAlignment(TextAlignment.LEFT);
-        humidity.setTextAlignment(TextAlignment.LEFT);
+        groupList.add(group1);
+        groupList.add(group2);
+        groupList.add(group3);
 
-        group1.add(volume);
-        group1.add(temp);
-        group1.add(humidity);
+        group3.add(new LcdText(0, 0, 20, 1, "Header"));
+        group3.add(new LcdText(0, 1, 15, 3, "Body"));
+        group3.add(new LcdText(15, 1, 5, 3, "Body Icon"));
 
-        lcdManager.setDisplay(group1);
+        ((LcdText) group3.getChildren().get(0)).setTextAlignment(TextAlignment.CENTER);
+
+        lcdManager.setActiveDisplay(groupList.get(startPos.get()));
+
+        label1.setText("Moments its musical age explain. But extremity sex now education concluded earnestly her continual. " +
+                "Oh furniture acuteness suspected continual ye something frankness. Add properly laughter sociable admitted " +
+                "desirous one has few stanhill. Opinion regular in perhaps another enjoyed no engaged he at. It conveying he " +
+                "continual ye suspected as necessary. Separate met packages shy for kindness.   Gay one the what walk then she. " +
+                "Demesne mention promise you justice arrived way. Or increasing to in especially inquietude companions acceptance " +
+                "admiration. Outweigh it families distance wandered ye an. Mr unsatiable at literature connection favourable. We " +
+                "neglected mr perfectly continual dependent.   On projection apartments unsatiable so if he entreaties appearance. " +
+                "Rose you wife how set lady half wish. Hard sing an in true felt. Welcomed stronger if steepest ecstatic an suitable " +
+                "finished of oh. Entered at excited at forming between so produce. Chicken unknown besides attacks gay compact out you. " +
+                "Continuing no simplicity no favourable on reasonably melancholy estimating. Own hence views two ask right whole ten " +
+                "seems. What near kept met call old west dine. Our announcing sufficient why pianoforte.   Inhabit hearing perhaps o" +
+                "n ye do no. It maids decay as there he. Smallest on suitable disposed do although blessing he juvenile in. Society " +
+                "or if excited forbade. Here name off yet she long sold easy whom. Differed oh cheerful procured pleasure securing su" +
+                "itable in. Hold rich on an he oh fine. Chapter ability shyness article welcome be do on service.   Mr do raising art" +
+                "icle general norland my hastily. Its companions say uncommonly pianoforte favourable. Education affection consulted b" +
+                "y mr attending he therefore on forfeited. High way more far feet kind evil play led. Sometimes furnished collected add" +
+                " for resources attention. Norland an by minuter enquire it general on towards forming. Adapted mrs totally company two" +
+                " yet conduct men.   Is education residence conveying so so. Suppose shyness say ten behaved morning had. Any unsatiable" +
+                " assistance compliment occasional too reasonably advantages. Unpleasing has ask acceptance partiality alteration unders" +
+                "tood two. Worth no tiled my at house added. Married he hearing am it totally removal. Remove but suffer wanted his live" +
+                "ly length. Moonlight two applauded conveying end direction old principle but. Are expenses distance weddings perceive s" +
+                "trongly who age domestic.   Finished her are its honoured drawings nor. Pretty see mutual thrown all not edward ten. Pa" +
+                "rticular an boisterous up he reasonably frequently. Several any had enjoyed shewing studied two. Up intention remainder" +
+                " sportsmen behaviour ye happiness. Few again any alone style added abode ask. Nay projecting unpleasing boisterous eat " +
+                "discovered solicitude. Own six moments produce elderly pasture far arrival. Hold our year they ten upon. Gentleman cont" +
+                "ained so intention sweetness in on resolving.   Friendship contrasted solicitude insipidity in introduced literature it." +
+                " He seemed denote except as oppose do spring my. Between any may mention evening age shortly can ability regular. He sh" +
+                "ortly sixteen of colonel colonel evening cordial to. Although jointure an my of mistress servants am weddings. Age why " +
+                "the therefore education unfeeling for arranging. Above again money own scale maids ham least led. Returned settling pro" +
+                "duced strongly ecstatic use yourself way. Repulsive extremity enjoyment she perceived nor.   An so vulgar to on points wa" +
+                "nted. Not rapturous resolving continued household northward gay. He it otherwise supported instantly. Unfeeling agreeable " +
+                "suffering it on smallness newspaper be. So come must time no as. Do on unpleasing possession as of unreserved. Yet joy exq" +
+                "uisite put sometimes enjoyment perpetual now. Behind lovers eat having length horses vanity say had its.   Written enquire" +
+                " painful ye to offices forming it. Then so does over sent dull on. Likewise offended humoured mrs fat trifling answered. O" +
+                "n ye position greatest so desirous. So wound stood guest weeks no terms up ought. By so these am so rapid blush songs begi" +
+                "n. Nor but mean time one over.");
 
         CompletableFuture.runAsync(() -> {
-            for (int i = 0; i < 100; i++) {
-                //volume.setText("Volume:\n%d", i);
-                temp.setText("Temp:\n%d", i + 1);
-                humidity.setText("This\nIs\na\nTest: %d", i + 3);
+            boolean state = false;
+            for (int i = 0; i < label1.getText().length(); i += lcdDriver.getColumnCount()) {
+                state = !state;
+                log.info("Start Index: {}/{} (width: {}, is active: {})", i, label1.getText().length(), label1.getWidth(), label1.isActive());
+                label1.setStartIndex(i);
+                group3.getChildren().get(1).setVisible(state);
                 delay(1000);
             }
         });
@@ -296,7 +363,6 @@ public class HitachiLcdDemo {
         }
 
         log.info("Shutting down...");
-        //((GpioButtonComponent) button1).close();
         gpio.shutdown();
         executorService.shutdown();
         EventDispatcher.shutdown();

@@ -7,8 +7,4 @@ public class LcdGroup extends DisplayGroup<LcdGraphics> {
     public LcdGroup() {
         super();
     }
-
-    public LcdGroup(int width, int height) {
-        super(width, height);
-    }
 }

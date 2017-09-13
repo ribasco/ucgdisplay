@@ -7,6 +7,9 @@ import com.pi4j.component.lcd.LCDTextAlignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.CharBuffer;
+import java.util.Arrays;
+
 /**
  * Graphics implementation for LCD Display
  *
@@ -39,13 +42,27 @@ public class LcdGraphics implements Graphics {
     };
     //</editor-fold>
 
+    private CharBuffer[] buffer;
+
     public LcdGraphics(LcdDriver driver) {
         this.driver = driver;
+        char[] cbuf = new char[driver.getColumnCount() * driver.getRowCount()];
+        Arrays.fill(cbuf, ' ');
+        log.debug("Initialized Buffer Dimensions to {} x {}", driver.getColumnCount(), driver.getRowCount());
+        buffer = new CharBuffer[driver.getRowCount()];
+        for (int i = 0; i < buffer.length; i++)
+            buffer[i] = CharBuffer.allocate(driver.getColumnCount());
     }
 
     @Override
     public void clear() {
         driver.clear();
+    }
+
+    @Override
+    public void cursorBlink(boolean state) {
+        driver.cursor(state);
+        driver.blink(state);
     }
 
     @Override
@@ -136,7 +153,7 @@ public class LcdGraphics implements Graphics {
         return a;
     }
 
-    public LcdDriver getDriver() {
-        return driver;
+    @Override
+    public void flush() {
     }
 }

@@ -26,6 +26,7 @@ import java.util.*;
 import static com.ibasco.pidisplay.core.events.EventDispatcher.addHandler;
 
 @SuppressWarnings("WeakerAccess")
+@Deprecated
 public class LcdMenuOld extends LcdDisplay {
 
     private static final Logger log = LoggerFactory.getLogger(LcdMenuOld.class);
