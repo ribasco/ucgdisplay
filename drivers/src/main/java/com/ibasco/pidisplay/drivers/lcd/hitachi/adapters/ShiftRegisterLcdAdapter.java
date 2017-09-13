@@ -1,5 +1,6 @@
 package com.ibasco.pidisplay.drivers.lcd.hitachi.adapters;
 
+import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.BaseLcdGpioAdapter;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdPinMapConfig;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.enums.LcdPin;
@@ -127,7 +128,7 @@ public class ShiftRegisterLcdAdapter extends BaseLcdGpioAdapter {
 
     @Override
     public void write8Bits(byte value) {
-        throw new RuntimeException("Woops Not yet implemented");
+        throw new NotImplementedException("8-bit support not yet implemented for this adapter");
     }
 
     @Override
@@ -202,6 +203,7 @@ public class ShiftRegisterLcdAdapter extends BaseLcdGpioAdapter {
      *
      * @author Rafael Ibasco
      */
+    @SuppressWarnings("unused")
     public static final class ShiftOutRegPin {
         public static final Pin QA = createPin(0, "QA");
         public static final Pin QB = createPin(1, "QB");
