@@ -2,6 +2,8 @@ package com.ibasco.pidisplay.core.events;
 
 public class InvocationEvent extends Event {
 
+    public static final EventType<InvocationEvent> INVOKE_IMMEDIATELY = new EventType<>("INVOKE_IMMEDIATELY");
+
     public static final EventType<InvocationEvent> INVOKE_LATER = new EventType<>("INVOKE_LATER");
 
     private Runnable runnable;
