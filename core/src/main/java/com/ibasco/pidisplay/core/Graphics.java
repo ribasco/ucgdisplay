@@ -1,6 +1,7 @@
 package com.ibasco.pidisplay.core;
 
 import com.ibasco.pidisplay.core.enums.TextAlignment;
+import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
 
 /**
  * Generic Graphics Interface
@@ -9,13 +10,21 @@ import com.ibasco.pidisplay.core.enums.TextAlignment;
  */
 public interface Graphics {
 
-    void setCursor(int x, int y);
+    default void setCursor(int x, int y) {
+        throw new NotImplementedException();
+    }
 
-    void drawText(char data);
+    default void drawText(char data) {
+        throw new NotImplementedException();
+    }
 
-    void drawText(char[] data);
+    default void drawText(char[] data) {
+        throw new NotImplementedException();
+    }
 
-    void drawText(byte[] data);
+    default void drawText(byte[] data) {
+        throw new NotImplementedException();
+    }
 
     void drawText(byte data);
 
@@ -41,9 +50,13 @@ public interface Graphics {
 
     void clear();
 
+    void cursorBlink(boolean state);
+
     default void clear(int y) {
         clear(-1, y, -1);
     }
 
     void clear(int x, int y, int length);
+
+    void flush();
 }

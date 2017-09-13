@@ -22,6 +22,8 @@ import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 /**
  * Improved LCD Implementation for HD44780. Compatible with the Pi4J {@link LCD} interface.
  *
+ * This class is not Thread-Safe
+ *
  * @author Rafael Ibasco
  */
 @SuppressWarnings("All")

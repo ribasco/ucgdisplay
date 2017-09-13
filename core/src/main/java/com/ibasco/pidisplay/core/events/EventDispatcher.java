@@ -2,7 +2,6 @@ package com.ibasco.pidisplay.core.events;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,13 +13,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+@SuppressWarnings("unused")
 public class EventDispatcher {
 
     private static final Logger log = LoggerFactory.getLogger(EventDispatcher.class);
 
     private BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<>();
 
-    private final Multimap<EventType, EventHandler> handlers = Multimaps.synchronizedSetMultimap(HashMultimap.create());
+    private final Multimap<EventType, EventHandler> handlers = HashMultimap.create();
 
     private AtomicBoolean done = new AtomicBoolean();
 
@@ -38,6 +38,7 @@ public class EventDispatcher {
 
     private static class Dispatcher {
         private static final EventDispatcher INSTANCE = new EventDispatcher();
+
         static {
             log.info("Auto-starting event dispatcher");
             INSTANCE.start();
@@ -103,10 +104,6 @@ public class EventDispatcher {
         dispatcher.started.set(false);
         dispatcher.dispatchThread.interrupt();
         dispatcher.dispatchThread = null;
-    }
-
-    public static EventDispatcher getInstance() {
-        return Dispatcher.INSTANCE;
     }
 
     @SuppressWarnings("unchecked")

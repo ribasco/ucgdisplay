@@ -1,6 +1,5 @@
 package com.ibasco.pidisplay.core;
 
-import com.ibasco.pidisplay.core.events.DisplayEvent;
 import com.ibasco.pidisplay.core.events.Event;
 import com.ibasco.pidisplay.core.events.EventDispatcher;
 import com.ibasco.pidisplay.core.util.RegexTextProcessor;
@@ -13,7 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-@SuppressWarnings("WeakerAccess")
 @Deprecated
 abstract public class AbstractDisplay<T extends Graphics> implements Display<T> {
 
@@ -80,7 +78,7 @@ abstract public class AbstractDisplay<T extends Graphics> implements Display<T> 
 
     @Override
     public void redraw() {
-        fireEvent(new DisplayEvent(DisplayEvent.DISPLAY_DRAW, this));
+        //fireEvent(new DisplayEvent(DisplayEvent.DISPLAY_DRAW, this));
     }
 
     @Override

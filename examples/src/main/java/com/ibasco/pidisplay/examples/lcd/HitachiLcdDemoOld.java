@@ -284,7 +284,7 @@ public class HitachiLcdDemoOld {
             delay(500);
         }
         log.info("Shutting down...");
-        ((GpioButtonComponent) button1).close();
+        //((GpioButtonComponent) button1).close();
         gpio.shutdown();
         executorService.shutdown();
         EventDispatcher.shutdown();
