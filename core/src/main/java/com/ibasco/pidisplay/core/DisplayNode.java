@@ -108,7 +108,17 @@ abstract public class DisplayNode<T extends Graphics>
 
     //endregion
 
-    //TODO: Add setters for property event handlers here
+    public void setOnVisibilityChange(PropertyChangeListener<Boolean> listener) {
+        visible.addListener(listener);
+    }
+
+    public void setOnActiveChange(PropertyChangeListener<Boolean> listener) {
+        active.addListener(listener);
+    }
+
+    public void setOnEnableChange(PropertyChangeListener<Boolean> listener) {
+        enabled.addListener(listener);
+    }
 
     /**
      * The primary method used by the system to draw the component
@@ -219,6 +229,6 @@ abstract public class DisplayNode<T extends Graphics>
 
     @Override
     public String toString() {
-        return String.format("%s#%d", getName(), getId());
+        return String.format("%s (id: %d)", getName(), getId());
     }
 }
