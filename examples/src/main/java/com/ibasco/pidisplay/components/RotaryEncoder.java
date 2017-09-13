@@ -8,9 +8,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-/**
- * @author Mark de Reeper
- */
 public class RotaryEncoder {
 
     private Lock lock = new ReentrantLock(true);
@@ -26,7 +23,6 @@ public class RotaryEncoder {
     private RotaryEncoderListener listener;
 
     public RotaryEncoder(Pin pinA, Pin pinB, long initalValue) {
-
         encoderValue = initalValue;
         gpio = GpioFactory.getInstance();
 
