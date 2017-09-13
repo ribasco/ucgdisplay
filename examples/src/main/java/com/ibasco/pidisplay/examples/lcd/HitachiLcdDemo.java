@@ -218,11 +218,7 @@ public class HitachiLcdDemo {
                 break;
             case "select":
                 log.info("Select Button Pressed");
-                /*if (lcdMenu.getSelectedItem().hasChildren()) {
-                    success = lcdMenu.doEnter();
-                    break;
-                }
-                success = lcdMenu.doSelect();*/
+                lcdManager.setActiveDisplay(null);
                 break;
             default:
                 success = false;
@@ -237,12 +233,6 @@ public class HitachiLcdDemo {
             case "back":
                 log.info("Back button held. Shutting down");
                 shutdown.set(true);
-                break;
-            case "next":
-                log.info("Next button held");
-                break;
-            case "previous":
-                log.info("Previous button held");
                 break;
             case "select":
                 log.info("Select button held");
@@ -293,6 +283,10 @@ public class HitachiLcdDemo {
 
     public void run() throws Exception {
         log.info("Running LCD Display");
+
+        group1.setName("Group #1");
+        group2.setName("Group #2");
+        group3.setName("Group #3");
 
         group1.add(label1);
         group2.add(new LcdText("Hello World"));
