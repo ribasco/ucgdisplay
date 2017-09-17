@@ -22,7 +22,7 @@ public class EventDispatcher {
 
     private final Multimap<EventType, EventHandler> handlers = HashMultimap.create();
 
-    private AtomicBoolean done = new AtomicBoolean();
+    private AtomicBoolean shutdown = new AtomicBoolean();
 
     private AtomicBoolean started = new AtomicBoolean(false);
 
@@ -100,7 +100,7 @@ public class EventDispatcher {
     public static void shutdown() {
         log.debug("Shutting down event dispatcher");
         EventDispatcher dispatcher = Dispatcher.INSTANCE;
-        dispatcher.done.set(true);
+        dispatcher.shutdown.set(true);
         dispatcher.started.set(false);
         dispatcher.dispatchThread.interrupt();
         dispatcher.dispatchThread = null;
@@ -109,12 +109,12 @@ public class EventDispatcher {
     @SuppressWarnings("unchecked")
     private void processEvents() {
         log.debug("Processing of Events Started");
-        while (!done.get()) {
+        while (!shutdown.get()) {
             try {
                 Event event = eventQueue.take();
+                this.readLock.lock();
                 log.debug("EVENT FIRED: {}, QUEUE: {}", event.getEventType(), eventQueue.size());
                 Collection<EventHandler> handlers = this.handlers.get(event.getEventType());
-                this.readLock.lock();
                 try {
                     handlers.forEach(handler -> handler.handle(event));
                 } finally {

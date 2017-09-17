@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * TODO: Add the following text effects
@@ -44,19 +45,6 @@ public class LcdText extends DisplayText<LcdGraphics> {
     }
     //endregion
 
-    @Override
-    public void clear() {
-        this.text.set(StringUtils.repeat(" ", getMaxWidth() * getMaxHeight()));
-    }
-
-    public RegexTextProcessor getTextProcessor() {
-        return textProcessor.get();
-    }
-
-    public void setTextProcessor(RegexTextProcessor textProcessor) {
-        this.textProcessor.set(textProcessor);
-    }
-
     /**
      * Calculates the actual height for the current text
      *
@@ -71,7 +59,7 @@ public class LcdText extends DisplayText<LcdGraphics> {
 
     @Override
     public void drawNode(LcdGraphics graphics) {
-        calculatePrefDimensions(graphics);
+        calcPrefDimen(graphics);
 
         int startCol = this.x.get();
         int startRow = this.y.get();
@@ -98,7 +86,8 @@ public class LcdText extends DisplayText<LcdGraphics> {
 
         int startPos = 0;
         for (int pos = startPos; pos < text.length(); pos++) {
-            if (pos == maxCharSize)
+            //do not proceed if we have surpassed the character limit
+            if (pos >= maxCharSize)
                 break;
 
             tmp[colOffset++] = text.charAt(pos);
@@ -107,15 +96,19 @@ public class LcdText extends DisplayText<LcdGraphics> {
             if (tmp[colOffset - 1] == '\n')
                 colOffset = tmp.length;
 
+            //calculate the remaining number of characters to process
             int remaining = (text.length() - 1) - pos;
 
             //Start drawing once the tmp buffer is filled
             if ((colOffset > (tmp.length - 1)) || remaining <= 0) {
                 drawText(new String(tmp), tmp.length, graphics);
+
                 //do not adjust row offset if we have reached the
                 // max row offset allowable for the current node
                 if (++rowOffset <= rowOffsetLimit)
                     graphics.setCursor(startCol, rowOffset);
+
+                //Reset the offset and buffer
                 colOffset = 0;
                 Arrays.fill(tmp, ' ');
             }
@@ -128,35 +121,53 @@ public class LcdText extends DisplayText<LcdGraphics> {
      * @param graphics
      *         The underlying {@link LcdGraphics} driver
      */
-    private void calculatePrefDimensions(LcdGraphics graphics) {
+    private void calcPrefDimen(LcdGraphics graphics) {
         int maxDisplayWidth = graphics.getWidth();
         int maxDisplayHeight = graphics.getHeight();
+        int textLength = this.text.getDefault(StringUtils.EMPTY).length();
 
         Integer x = this.x.getDefault(0);
         Integer y = this.y.getDefault(0);
         Integer maxWidth = this.maxWidth.getDefault(maxDisplayWidth);
         Integer maxHeight = this.maxHeight.getDefault(maxDisplayHeight);
-        Integer width = this.width.getDefault(this.text.get().length());
+        Integer width = this.width.getDefault(textLength);
         Integer height = this.height.getDefault(calculateActualHeight(maxWidth));
+        Integer minWidth = this.minWidth.getDefault((textLength < maxWidth) ? textLength : 1);
+        Integer minHeight = this.minHeight.getDefault(1);
 
         if (maxWidth > maxDisplayWidth)
             maxWidth = maxDisplayWidth;
         if (maxHeight > maxDisplayHeight)
             maxHeight = maxDisplayHeight;
+        if (minWidth > maxWidth)
+            throw new IllegalStateException("Minimum Width should be less than the Max Width");
+        if (minHeight > maxHeight)
+            throw new IllegalStateException("Minimum Height should be less than the Max Height");
         if (width > maxWidth)
             width = maxWidth;
         if (height > maxHeight)
             height = maxHeight;
+        if (width < minWidth)
+            width = minWidth;
+        if (height < minHeight)
+            height = minHeight;
 
         this.x.setValid(x);
         this.y.setValid(y);
         this.maxWidth.setValid(maxWidth);
         this.maxHeight.setValid(maxHeight);
+        this.minWidth.setValid(minWidth);
+        this.minHeight.setValid(minHeight);
         this.width.setValid(width);
         this.height.setValid(height);
     }
 
-    private String processText(String text, int maxCharSize) {
+    private String processText(String text, int maxCharWidth) {
+        List<String> l = Arrays.asList(StringUtils.splitByWholeSeparator(text, " "));
+
+        for (String s : l)
+            log.debug("Str: {}", s);
+
         //Step #1: Extract then process text for variable substitution (if applicable)
         if (!StringUtils.isBlank(text) && textProcessor.isSet())
             text = textProcessor.get().process(text);
@@ -164,13 +175,13 @@ public class LcdText extends DisplayText<LcdGraphics> {
         //Step #2: If visibility state is false or text is empty,
         // fill all text area with spaces to hide the text
         if (!isVisible() || StringUtils.isEmpty(text))
-            text = StringUtils.repeat(' ', maxCharSize);
+            return StringUtils.repeat(' ', maxCharWidth);
 
         //Step #3: If a start index has been specified, extract
         // the substring from the start position specified
         if (!StringUtils.isBlank(text)) {
             int startIndex = this.startIndex.get();
-            int endIndex = startIndex + maxCharSize;
+            int endIndex = startIndex + maxCharWidth;
             if (endIndex >= text.length())
                 text = text.substring(startIndex);
             else

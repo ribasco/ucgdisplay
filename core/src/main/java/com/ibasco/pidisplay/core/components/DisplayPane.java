@@ -13,13 +13,13 @@ import java.util.List;
  *
  * @author Rafael Ibasco
  */
-abstract public class DisplayGroup<T extends Graphics> extends DisplayNode<T> {
+abstract public class DisplayPane<T extends Graphics> extends DisplayNode<T> {
 
-    public DisplayGroup() {
+    public DisplayPane() {
         super(null, null);
     }
 
-    protected DisplayGroup(int width, int height) {
+    protected DisplayPane(int width, int height) {
         super(width, height);
     }
 

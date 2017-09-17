@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.CharBuffer;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Graphics implementation for LCD Display
@@ -41,6 +42,10 @@ public class LcdGraphics implements Graphics {
             0b00000
     };
     //</editor-fold>
+
+    private AtomicInteger colOffset = new AtomicInteger(0);
+
+    private AtomicInteger rowOffset = new AtomicInteger(0);
 
     private CharBuffer[] buffer;
 
@@ -77,6 +82,8 @@ public class LcdGraphics implements Graphics {
 
     @Override
     public void setCursor(int x, int y) {
+        this.colOffset.set(x);
+        this.rowOffset.set(y);
         driver.setCursorPosition(y, x);
     }
 

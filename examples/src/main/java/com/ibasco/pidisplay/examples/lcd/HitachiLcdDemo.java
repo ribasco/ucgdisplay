@@ -3,6 +3,7 @@ package com.ibasco.pidisplay.examples.lcd;
 import com.ibasco.pidisplay.components.RotaryEncoder;
 import com.ibasco.pidisplay.components.RotaryState;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
+import com.ibasco.pidisplay.core.enums.TextWrapStyle;
 import com.ibasco.pidisplay.core.events.EventDispatcher;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
@@ -10,7 +11,7 @@ import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdDriver;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdTemplates;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.Mcp23017LcdAdapter;
 import com.ibasco.pidisplay.impl.lcd.hitachi.LcdManager;
-import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdGroup;
+import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdPane;
 import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdText;
 import com.pi4j.component.button.Button;
 import com.pi4j.component.button.ButtonHoldListener;
@@ -109,7 +110,7 @@ public class HitachiLcdDemo {
 
         Node<String> menuEntries = createMenuEntries();
 
-        printNodeTree(menuEntries);
+        //printNodeTree(menuEntries);
     }
 
     private void printNodeTree(Node<String> root) {
@@ -249,59 +250,49 @@ public class HitachiLcdDemo {
         new HitachiLcdDemo().run();
     }
 
-    private LcdGroup group1 = new LcdGroup();
-    private LcdGroup group2 = new LcdGroup();
-    private LcdGroup group3 = new LcdGroup();
-    private List<LcdGroup> groupList = new ArrayList<>();
+    private LcdPane pane1 = new LcdPane();
+    private LcdPane pane2 = new LcdPane();
+    private LcdPane pane3 = new LcdPane();
+    private List<LcdPane> paneList = new ArrayList<>();
     private LcdText label1 = new LcdText();
     private AtomicInteger startPos = new AtomicInteger(0);
 
     private void rotaryChange(long l, RotaryState state) {
         log.info("Rotary Change: {}, State: {}", startPos, state);
 
-        //int width = label1.getWidth();
-
-        /*if (state == RotaryState.DOWN) {
-            startPos += width;
-        } else {
-            startPos -= width;
-        }
-
-        label1.setStartIndex(startPos);*/
         if (state == RotaryState.DOWN) {
-            if ((startPos.get() + 1) <= (groupList.size() - 1))
+            if ((startPos.get() + 1) <= (paneList.size() - 1))
                 startPos.incrementAndGet();
         } else {
             if ((startPos.get() - 1) >= 0)
                 startPos.decrementAndGet();
         }
 
-        LcdGroup group = groupList.get(startPos.get());
-
+        LcdPane group = paneList.get(startPos.get());
         lcdManager.setActiveDisplay(group);
     }
 
     public void run() throws Exception {
         log.info("Running LCD Display");
 
-        group1.setName("Group #1");
-        group2.setName("Group #2");
-        group3.setName("Group #3");
+        pane1.setName("Pane #1");
+        pane2.setName("Pane #2");
+        pane3.setName("Pane #3");
 
-        group1.add(label1);
-        group2.add(new LcdText("Hello World"));
+        pane1.add(label1);
+        pane2.add(new LcdText("Hello World"));
 
-        groupList.add(group1);
-        groupList.add(group2);
-        groupList.add(group3);
+        pane3.add(new LcdText(0, 0, 20, 1, "Header"));
+        pane3.add(new LcdText(0, 1, 15, 3, "Body"));
+        pane3.add(new LcdText(15, 1, 5, 3, "Body Icon"));
 
-        group3.add(new LcdText(0, 0, 20, 1, "Header"));
-        group3.add(new LcdText(0, 1, 15, 3, "Body"));
-        group3.add(new LcdText(15, 1, 5, 3, "Body Icon"));
+        paneList.add(pane1);
+        paneList.add(pane2);
+        paneList.add(pane3);
 
-        ((LcdText) group3.getChildren().get(0)).setTextAlignment(TextAlignment.CENTER);
+        ((LcdText) pane3.getChildren().get(0)).setTextAlignment(TextAlignment.CENTER);
 
-        lcdManager.setActiveDisplay(groupList.get(startPos.get()));
+        lcdManager.setActiveDisplay(paneList.get(startPos.get()));
 
         label1.setText("Moments its musical age explain. But extremity sex now education concluded earnestly her continual. " +
                 "Oh furniture acuteness suspected continual ye something frankness. Add properly laughter sociable admitted " +
@@ -340,14 +331,16 @@ public class HitachiLcdDemo {
                 "n ye position greatest so desirous. So wound stood guest weeks no terms up ought. By so these am so rapid blush songs begi" +
                 "n. Nor but mean time one over.");
 
+        label1.setTextWrapStyle(TextWrapStyle.WORD);
+
         CompletableFuture.runAsync(() -> {
             boolean state = false;
             for (int i = 0; i < label1.getText().length(); i += lcdDriver.getColumnCount()) {
                 state = !state;
-                log.info("Start Index: {}/{} (width: {}, is active: {})", i, label1.getText().length(), label1.getWidth(), label1.isActive());
+                //log.info("Start Index: {}/{} (width: {}, is active: {})", i, label1.getText().length(), label1.getWidth(), label1.isActive());
                 label1.setStartIndex(i);
-                group3.getChildren().get(1).setVisible(state);
-                delay(1000);
+                pane3.getChildren().get(1).setVisible(state);
+                delay(500);
             }
         });
 

@@ -16,7 +16,6 @@ import static com.ibasco.pidisplay.core.events.EventDispatcher.addHandler;
 import static com.ibasco.pidisplay.core.events.EventDispatcher.dispatch;
 
 //TODO: Ensure thread-safety access for this class
-@SuppressWarnings("unused")
 abstract public class DisplayManager<T extends Graphics> {
 
     private static final Logger log = LoggerFactory.getLogger(DisplayManager.class);
@@ -98,17 +97,15 @@ abstract public class DisplayManager<T extends Graphics> {
      */
     private void drawEventHandler(DisplayEvent<T> event) {
         if (event.getEventType() == DisplayEvent.DISPLAY_DRAW) {
-            if (displayProperty.isSet()) {
-                try {
-                    this.readLock.lock();
-                    log.debug("Drawing Display: {}", displayProperty.get());
+            try {
+                this.readLock.lock();
+                if (displayProperty.isSet()) {
+                    log.debug("Drawing Display: {} for target : {}", displayProperty.get(), event.getDisplay());
                     displayProperty.get().draw(this.graphics);
-                } finally {
-                    this.readLock.unlock();
                 }
-            } else
-                log.debug("No display set. Skipping Draw");
-
+            } finally {
+                this.readLock.unlock();
+            }
         } else
             throw new RuntimeException("Unsupported event type: " + event.getEventType().getName());
     }
@@ -150,14 +147,14 @@ abstract public class DisplayManager<T extends Graphics> {
         if (newDisplay != null) {
             initDefaults(newDisplay);
 
-            newDisplay.active.setValid(true);
+            newDisplay.setActive(true);
             newDisplay.visible.setValid(true);
             newDisplay.enabled.setValid(true);
 
             //Perform a recursive property initialization on child nodes
             newDisplay.doAction((node, arg) -> {
                 log.debug("Initializing Properties for Node: {}", node);
-                node.active.setValid(true);
+                node.setActive(true);
                 node.visible.setValid(true);
                 node.enabled.setValid(true);
             }, true);
