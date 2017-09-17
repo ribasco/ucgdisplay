@@ -5,8 +5,7 @@ import com.ibasco.pidisplay.core.Graphics;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.beans.PropertyChangeListener;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
-import com.ibasco.pidisplay.core.events.EventHandler;
-import com.ibasco.pidisplay.core.events.ValueChangeEvent;
+import com.ibasco.pidisplay.core.enums.TextWrapStyle;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +19,13 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
 
     protected ObservableProperty<TextAlignment> textAlignment = new ObservableProperty<>(TextAlignment.LEFT);
 
-    protected ObservableProperty<String> abbreviateChar = new ObservableProperty<>(StringUtils.EMPTY);
-
     protected ObservableProperty<Integer> startIndex = new ObservableProperty<>(0);
-    //endregion
 
-    //region Event Handler Properties
-    private EventHandler<ValueChangeEvent<String>> onTextChange;
+    protected ObservableProperty<TextWrapStyle> textWrapStyle = new ObservableProperty<>(TextWrapStyle.CONTINUOUS);
+
+    protected ObservableProperty<Integer> scrollTop = new ObservableProperty<>(0);
+
+    protected ObservableProperty<Integer> scrollLeft = new ObservableProperty<>(0);
     //endregion
 
     //region Constructor
@@ -44,12 +43,36 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
 
     protected DisplayText(Integer x, Integer y, Integer width, Integer height, String text) {
         super(x, y, width, height);
-        redrawOnChange(this.text, this.textAlignment, this.startIndex);
+        redrawOnChange(this.text, this.textAlignment, this.startIndex, this.scrollTop, this.scrollLeft);
         this.text.setValid(text);
     }
     //endregion
 
     //region Property Getters/Setters
+    public Integer getScrollTop() {
+        return scrollTop.get();
+    }
+
+    public void setScrollTop(Integer scrollTop) {
+        this.scrollTop.set(scrollTop);
+    }
+
+    public Integer getScrollLeft() {
+        return scrollLeft.get();
+    }
+
+    public void setScrollLeft(Integer scrollLeft) {
+        this.scrollLeft.set(scrollLeft);
+    }
+
+    public TextWrapStyle getTextWrapStyle() {
+        return textWrapStyle.get();
+    }
+
+    public void setTextWrapStyle(TextWrapStyle textWrapStyle) {
+        this.textWrapStyle.set(textWrapStyle);
+    }
+
     public Integer getStartIndex() {
         return startIndex.get();
     }
@@ -84,19 +107,16 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     //endregion
 
     //region Event Handler Getter/Setters
-    public EventHandler<ValueChangeEvent<String>> getOnTextChange() {
-        return onTextChange;
-    }
-
     public void setOnTextChange(PropertyChangeListener<String> onTextChange) {
         this.text.addListener(onTextChange);
     }
     //endregion
 
-    abstract public void clear();
-
-    protected String truncateText(String text, String truncStr, int maxWidth) {
-        return StringUtils.abbreviate(text, truncStr, maxWidth);
+    /**
+     * Clears the text property
+     */
+    public void clear() {
+        this.text.set(StringUtils.repeat(" ", getMaxWidth() * getMaxHeight()));
     }
 
     protected String alignText(String text, TextAlignment alignment, int maxWidth) {

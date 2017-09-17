@@ -2,7 +2,6 @@ package com.ibasco.pidisplay.core;
 
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 
-@SuppressWarnings("WeakerAccess")
 abstract public class DisplayRegion implements Region {
 
     protected ObservableProperty<Integer> x = new ObservableProperty<>();
@@ -67,10 +66,14 @@ abstract public class DisplayRegion implements Region {
     }
 
     public void setMinWidth(Integer minWidth) {
+        if (minWidth > maxWidth.get())
+            throw new IllegalArgumentException(String.format("Minimum width cannot be greater than the maximum width (min: %d, max: %d)", minWidth, maxWidth.get()));
         this.minWidth.set(minWidth);
     }
 
     public void setMinHeight(Integer minHeight) {
+        if (minHeight > maxHeight.get())
+            throw new IllegalArgumentException(String.format("Minimum height cannot be greater than the maximum height (min: %d, max: %d)", minHeight, maxHeight.get()));
         this.minHeight.set(minHeight);
     }
 

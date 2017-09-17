@@ -1,5 +1,7 @@
 package com.ibasco.pidisplay.core;
 
+import java.util.Optional;
+
 public interface Dialog<A> {
-    DialogResult<A> getResult();
+    Optional<A> getResult();
 }

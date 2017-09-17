@@ -134,7 +134,7 @@ abstract public class DisplayNode<T extends Graphics>
             throw new IllegalArgumentException("Graphics object must not be null");
         EventDispatcher.checkEventDispatchThread();
         if (!isActive()) {
-            log.debug("Display '{}' Not active. Drawing Skipped", this);
+            log.debug("Display '{}' Not active. Skipped", this);
             return;
         }
         doAction(DisplayNode::drawNode, graphics);
