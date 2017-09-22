@@ -57,6 +57,7 @@ public class StdGpioLcdAdapter extends BaseLcdGpioAdapter {
     public void initialize() {
         this.rsPin = setupLcdPin(LcdPin.RS);
         this.enPin = setupLcdPin(LcdPin.EN);
+
         //Setup data pins
         final LcdPin[] allDataPins = LcdPin.getAllDataPins();
         for (int i = 0; i < allDataPins.length; i++) {

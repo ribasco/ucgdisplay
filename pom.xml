@@ -25,6 +25,7 @@
         <guava.version>23.0</guava.version>
         <sl4j.version>1.7.25</sl4j.version>
         <logback.version>1.2.3</logback.version>
+        <commons.text.version>1.1</commons.text.version>
         <junit.version>RELEASE</junit.version>
     </properties>
 
@@ -95,6 +96,11 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons.text.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

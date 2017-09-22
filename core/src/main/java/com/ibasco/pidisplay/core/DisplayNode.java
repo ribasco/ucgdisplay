@@ -23,6 +23,8 @@ abstract public class DisplayNode<T extends Graphics>
     protected ObservableProperty<Boolean> enabled = new ObservableProperty<>(false);
 
     protected ObservableProperty<Boolean> active = new ObservableProperty<>(false);
+
+    protected ObservableProperty<Boolean> focused = new ObservableProperty<>(false);
     //endregion
 
     private List<DisplayNode<T>> children = new ArrayList<>();
@@ -71,6 +73,14 @@ abstract public class DisplayNode<T extends Graphics>
         this.name.set(name);
     }
 
+    public boolean isFocused() {
+        return focused.get();
+    }
+
+    public void setFocused(boolean focused) {
+        this.focused.set(focused);
+    }
+
     public boolean isEnabled() {
         return enabled.get();
     }
@@ -108,17 +118,23 @@ abstract public class DisplayNode<T extends Graphics>
 
     //endregion
 
-    public void setOnVisibilityChange(PropertyChangeListener<Boolean> listener) {
+    //region Listener Setters
+    public void setOnVisible(PropertyChangeListener<Boolean> listener) {
         visible.addListener(listener);
     }
 
-    public void setOnActiveChange(PropertyChangeListener<Boolean> listener) {
+    public void setOnActive(PropertyChangeListener<Boolean> listener) {
         active.addListener(listener);
     }
 
-    public void setOnEnableChange(PropertyChangeListener<Boolean> listener) {
+    public void setOnEnable(PropertyChangeListener<Boolean> listener) {
         enabled.addListener(listener);
     }
+
+    public void setOnFocus(PropertyChangeListener<Boolean> listener) {
+        focused.addListener(listener);
+    }
+    //endregion
 
     /**
      * The primary method used by the system to draw the component
@@ -137,6 +153,7 @@ abstract public class DisplayNode<T extends Graphics>
             log.debug("Display '{}' Not active. Skipped", this);
             return;
         }
+        this.drawNode(graphics);
         doAction(DisplayNode::drawNode, graphics);
     }
 
@@ -171,8 +188,9 @@ abstract public class DisplayNode<T extends Graphics>
      * @see #doAction(DisplayNode, DisplayAction, Object, int)
      */
     protected <Y> void doAction(DisplayAction<T, Y> action, Y arg) {
-        if (!hasChildren())
+        if (!hasChildren()) {
             return;
+        }
         doAction(this, action, arg, 0);
     }
 

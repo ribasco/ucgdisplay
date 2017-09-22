@@ -48,11 +48,19 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
         return super.get();
     }
 
+    public T getInvalid() {
+        return super.get();
+    }
+
     private void invalidate(T oldVal) {
         if (valid) {
             valid = false;
             fireChangeEvent(oldVal);
         }
+    }
+
+    public boolean isValid() {
+        return valid;
     }
 
     private void fireChangeEvent(T oldVal) {
