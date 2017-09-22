@@ -26,9 +26,9 @@ public class EventDispatcher {
 
     private AtomicBoolean started = new AtomicBoolean(false);
 
-    public static final String THREAD_NAME = "pi-event-dispatcher";
+    public static final String THREAD_NAME = "pi-display-edt";
 
-    private static final ThreadGroup THREAD_GROUP = new ThreadGroup("pi-events");
+    private static final ThreadGroup THREAD_GROUP = new ThreadGroup("pi-display");
 
     private Thread dispatchThread;
 

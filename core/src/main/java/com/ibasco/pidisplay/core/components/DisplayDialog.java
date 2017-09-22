@@ -4,14 +4,21 @@ import com.ibasco.pidisplay.core.Dialog;
 import com.ibasco.pidisplay.core.DisplayNode;
 import com.ibasco.pidisplay.core.Graphics;
 
-abstract public class DisplayDialog<T extends Graphics> extends DisplayNode<T> implements Dialog {
+import java.util.Optional;
 
-    protected DisplayDialog(Integer x, Integer y, Integer width, Integer height) {
-        super(x, y, width, height);
+abstract public class DisplayDialog<T extends Graphics, B> extends DisplayNode<T> implements Dialog<B> {
+
+    protected DisplayDialog() {
+        super(null, null, null, null);
     }
 
     @Override
     protected void drawNode(T graphics) {
 
+    }
+
+    @Override
+    public Optional<B> getResult() {
+        return null;
     }
 }

@@ -22,7 +22,7 @@ import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 /**
  * Improved LCD Implementation for HD44780. Compatible with the Pi4J {@link LCD} interface.
  *
- * This class is not Thread-Safe
+ * This class is not guaranteed to be thread-safe
  *
  * @author Rafael Ibasco
  */
@@ -189,7 +189,7 @@ public class LcdDriver extends LCDBase implements LCD {
         //Verify the row and column sizes
         //Make sure we don't go beyod the maximum limit
         if ((cols * rows) > MAX_CHARACTERS)
-            throw new IllegalArgumentException("Unsupported row/column size");
+            throw new IllegalStateException("Unsupported row/column size");
 
         //----------------------------------------------------------------------------------------------
         //Row Offsets

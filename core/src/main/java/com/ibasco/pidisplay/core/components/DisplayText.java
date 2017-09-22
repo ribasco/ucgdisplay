@@ -6,9 +6,14 @@ import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.beans.PropertyChangeListener;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.enums.TextWrapStyle;
+import com.ibasco.pidisplay.core.util.TextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
 
@@ -43,7 +48,7 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
 
     protected DisplayText(Integer x, Integer y, Integer width, Integer height, String text) {
         super(x, y, width, height);
-        redrawOnChange(this.text, this.textAlignment, this.startIndex, this.scrollTop, this.scrollLeft);
+        redrawOnChange(this.text, this.textAlignment, this.textWrapStyle, this.startIndex, this.scrollTop, this.scrollLeft);
         this.text.setValid(text);
     }
     //endregion
@@ -90,10 +95,10 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     }
 
     public void setText(String text, Object... args) {
-        if (!this.width.isSet()) {
+        if (!this.width.isSet())
             this.width.setValid(text.length());
-        }
-        this.text.set((args == null || args.length == 0) ? text : String.format(text, args));
+        text = (args == null || args.length == 0) ? text : String.format(text, args);
+        this.text.set(text);
     }
 
     public TextAlignment getTextAlignment() {
@@ -112,11 +117,50 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     }
     //endregion
 
+    protected List<String> lines = new ArrayList<>();
+
     /**
      * Clears the text property
      */
     public void clear() {
-        this.text.set(StringUtils.repeat(" ", getMaxWidth() * getMaxHeight()));
+        this.text.set(StringUtils.EMPTY);
+    }
+
+    /**
+     * @return Returns the total number of lines in the text
+     */
+    public int lineCount() {
+        return lines.size();
+    }
+
+    /**
+     * @return Returns the total number of words detected within the text
+     */
+    public int wordCount() {
+        return TextUtils.countWords(this.text.get());
+    }
+
+    protected void refreshLines(String text) {
+        int width = this.width.get();
+        text = wrapText(text, width);
+        lines = Arrays.asList(StringUtils.splitPreserveAllTokens(text, "\n"));
+        //log.debug("Lines refreshed (Total: {})", lines.size());
+    }
+
+    protected String wrapText(String text, int maxWidth) {
+        switch (textWrapStyle.get()) {
+            case WORD:
+                return TextUtils.wrapWord(text, maxWidth);
+            case CONTINUOUS:
+                return TextUtils.wrapContinuous(text, maxWidth);
+            default: {
+                if (!StringUtils.isBlank(text) && text.length() >= maxWidth) {
+                    log.debug("Defaulting to no wrap : {}", text.substring(0, maxWidth - 1));
+                    return text.substring(0, maxWidth - 1);
+                }
+            }
+        }
+        return text;
     }
 
     protected String alignText(String text, TextAlignment alignment, int maxWidth) {

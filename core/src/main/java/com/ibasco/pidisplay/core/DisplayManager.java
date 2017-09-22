@@ -7,6 +7,8 @@ import com.ibasco.pidisplay.core.events.InvocationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -29,6 +31,8 @@ abstract public class DisplayManager<T extends Graphics> {
     private final Lock readLock = readWriteLock.readLock();
 
     private final Lock writeLock = readWriteLock.writeLock();
+
+    private Deque<DisplayNode<T>> displayStack = new ArrayDeque<>();
 
     protected DisplayManager(T graphics) {
         this.graphics = Objects.requireNonNull(graphics, "Graphics must not be null");
@@ -147,14 +151,14 @@ abstract public class DisplayManager<T extends Graphics> {
         if (newDisplay != null) {
             initDefaults(newDisplay);
 
-            newDisplay.setActive(true);
+            newDisplay.active.setValid(true);
             newDisplay.visible.setValid(true);
             newDisplay.enabled.setValid(true);
 
             //Perform a recursive property initialization on child nodes
             newDisplay.doAction((node, arg) -> {
                 log.debug("Initializing Properties for Node: {}", node);
-                node.setActive(true);
+                node.active.setValid(true);
                 node.visible.setValid(true);
                 node.enabled.setValid(true);
             }, true);
