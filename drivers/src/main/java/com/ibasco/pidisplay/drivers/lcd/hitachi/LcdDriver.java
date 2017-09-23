@@ -4,7 +4,6 @@ import com.ibasco.pidisplay.core.annotations.DisplayDriver;
 import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.StdGpioLcdAdapter;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.enums.*;
-import com.ibasco.pidisplay.drivers.lcd.hitachi.exceptions.LcdNotInitializedException;
 import com.pi4j.component.lcd.LCD;
 import com.pi4j.component.lcd.LCDBase;
 import com.pi4j.io.gpio.GpioFactory;
@@ -15,12 +14,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 
 /**
- * Improved LCD Implementation for HD44780. Compatible with the Pi4J {@link LCD} interface.
+ * Character Display Driver for HD44780. Compatible with the Pi4J {@link LCD} interface.
  *
  * This class is not guaranteed to be thread-safe
  *
@@ -76,14 +74,11 @@ public class LcdDriver extends LCDBase implements LCD {
     private volatile byte displayControl;
     private volatile byte displayMode;
 
-    //TODO: Remove this
-    private AtomicBoolean initialized = new AtomicBoolean();
-    private AtomicBoolean initializing = new AtomicBoolean();
-
     private final int cols;
     private final int rows;
 
     private final byte[] rowOffsets = new byte[4];
+
     private LcdGpioAdapter lcdGpioAdapter;
 
     private Map<Integer, byte[]> charDataMap = new HashMap<>();
@@ -150,17 +145,7 @@ public class LcdDriver extends LCDBase implements LCD {
         this.displayFunction = (byte) (operationMode.getValue() | LCD_1LINE | charSize.getValue());
         this.cols = cols;
         this.rows = rows;
-        begin(charSize);
-    }
-
-    /**
-     * Initializes the LCD. This uses the default 5x8 dot display configuration.
-     *
-     * @throws IOException
-     *         Thrown when there is a problem during the initialization phase
-     */
-    private void begin() throws IOException {
-        begin(LcdCharSize.DOTS_5X8);
+        initializeLcd(charSize);
     }
 
     /**
@@ -172,14 +157,7 @@ public class LcdDriver extends LCDBase implements LCD {
      * @throws IOException
      *         Thrown when there is a problem during the initialization phase
      */
-    private void begin(LcdCharSize charSize) throws IOException {
-
-        //fail fast
-        if (this.initialized.get() || this.initializing.get())
-            throw new IllegalStateException("LCD has already been initialized");
-
-        this.initializing.set(true);
-
+    private void initializeLcd(LcdCharSize charSize) throws IOException {
         //Initialize Pins (if applicable)
         lcdGpioAdapter.initialize();
 
@@ -282,10 +260,6 @@ public class LcdDriver extends LCDBase implements LCD {
         this.displayMode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
         // set the entry mode
         command(LCD_ENTRYMODESET | this.displayMode);
-
-        //Flag as initialized
-        this.initialized.set(true);
-        this.initializing.set(false);
     }
 
     /**
@@ -466,8 +440,6 @@ public class LcdDriver extends LCDBase implements LCD {
      */
     @Override
     public void write(byte data) {
-        if (!initializing.get() && !initialized.get())
-            throw new IllegalStateException("LCD has not been initialized. Please call begin() method");
         send(data, LcdRegisterSelectState.DATA);
     }
 
@@ -510,9 +482,6 @@ public class LcdDriver extends LCDBase implements LCD {
      */
     private synchronized void send(byte value, LcdRegisterSelectState regSelectState) {
         try {
-            if (!initializing.get() && !initialized.get())
-                throw new LcdNotInitializedException();
-
             //Set Register Select State (Command or Data)
             lcdGpioAdapter.setRegSelectState(regSelectState);
 
