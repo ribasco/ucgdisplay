@@ -55,8 +55,8 @@ public class StdGpioLcdAdapter extends BaseLcdGpioAdapter {
 
     @Override
     public void initialize() {
-        this.rsPin = setupLcdPin(LcdPin.RS);
-        this.enPin = setupLcdPin(LcdPin.EN);
+        this.rsPin = setupLcdPin(LcdPin.RS, PinState.LOW);
+        this.enPin = setupLcdPin(LcdPin.EN, PinState.LOW);
 
         //Setup data pins
         final LcdPin[] allDataPins = LcdPin.getAllDataPins();
@@ -107,10 +107,6 @@ public class StdGpioLcdAdapter extends BaseLcdGpioAdapter {
         this.enPin.high();
         this.enPin.low();
         delayMicroseconds(100);
-    }
-
-    private GpioPinDigitalOutput setupLcdPin(LcdPin lcdPin) {
-        return setupLcdPin(lcdPin, PinState.LOW);
     }
 
     private GpioPinDigitalOutput setupLcdPin(LcdPin lcdPin, PinState defaultState) {

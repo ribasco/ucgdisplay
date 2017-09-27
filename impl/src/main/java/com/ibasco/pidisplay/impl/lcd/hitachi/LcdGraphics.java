@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Graphics implementation for LCD Display
+ * Graphics implementation for Character Display Graphics
  *
  * @author Rafael Ibasco
  */
@@ -49,7 +49,7 @@ public class LcdGraphics implements Graphics {
 
     private CharBuffer[] buffer;
 
-    public LcdGraphics(LcdDriver driver) {
+    LcdGraphics(LcdDriver driver) {
         this.driver = driver;
         char[] cbuf = new char[driver.getColumnCount() * driver.getRowCount()];
         Arrays.fill(cbuf, ' ');

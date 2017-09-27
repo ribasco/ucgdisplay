@@ -2,7 +2,6 @@ package com.ibasco.pidisplay.impl.lcd.hitachi;
 
 import com.google.common.base.Charsets;
 import com.ibasco.pidisplay.core.AbstractDisplay;
-import com.ibasco.pidisplay.core.events.EventDispatcher;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.ByteBuffer;
@@ -25,10 +24,9 @@ abstract public class LcdDisplay extends AbstractDisplay<LcdGraphics> {
         return StringUtils.EMPTY;
     }
 
-    @Override
     public void draw(LcdGraphics graphics) {
-        if (!EventDispatcher.THREAD_NAME.equals(Thread.currentThread().getName()))
-            throw new RuntimeException("This method should only be called from the event dispatcher thread");
+        /*if (!EventDispatcher.threadName.equals(Thread.currentThread().getName()))
+            throw new RuntimeException("This method should only be called from the event dispatcher thread");*/
         if (getWidth() == -1)
             setWidth(graphics.getWidth());
         if (getHeight() == -1)

@@ -1,7 +1,12 @@
 package com.ibasco.pidisplay.core.beans;
 
-public interface Observable<T> {
-    void removeListener(PropertyChangeListener<T> listener);
+import java.util.Set;
 
-    void addListener(PropertyChangeListener<T> listener);
+//TODO: Make obsolete
+public interface Observable<T> {
+    void removeListener(PropertyChangeListener<? super T> listener);
+
+    void addListener(PropertyChangeListener<? super T> listener);
+
+    Set<PropertyChangeListener<? super T>> getListeners();
 }

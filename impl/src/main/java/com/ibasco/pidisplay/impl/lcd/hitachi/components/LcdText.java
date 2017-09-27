@@ -3,6 +3,7 @@ package com.ibasco.pidisplay.impl.lcd.hitachi.components;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.components.DisplayText;
 import com.ibasco.pidisplay.core.util.RegexTextProcessor;
+import com.ibasco.pidisplay.core.util.TextUtils;
 import com.ibasco.pidisplay.core.util.date.DateTimeUtils;
 import com.ibasco.pidisplay.impl.lcd.hitachi.LcdGraphics;
 import org.apache.commons.lang3.StringUtils;
@@ -166,7 +167,12 @@ public class LcdText extends DisplayText<LcdGraphics> {
         //Only align text if the property is set and if the node is
         //currently in visible state
         if (textAlignment.isSet() && isVisible())
-            text = alignText(text.trim(), textAlignment.get(), maxWidth);
+            text = TextUtils.alignText(text.trim(), textAlignment.get(), maxWidth);
         graphics.drawText(text);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("LcdText (id: %d, text: %s)", getId(), (text != null) ? text.getInvalid() : "N/A");
     }
 }

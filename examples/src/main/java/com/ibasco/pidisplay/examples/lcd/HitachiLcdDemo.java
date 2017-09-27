@@ -4,13 +4,12 @@ import com.ibasco.pidisplay.components.RotaryEncoder;
 import com.ibasco.pidisplay.components.RotaryState;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.enums.TextWrapStyle;
-import com.ibasco.pidisplay.core.events.EventDispatcher;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdDriver;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdTemplates;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.Mcp23017LcdAdapter;
-import com.ibasco.pidisplay.impl.lcd.hitachi.LcdManager;
+import com.ibasco.pidisplay.impl.lcd.hitachi.LcdController;
 import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdPane;
 import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdText;
 import com.pi4j.component.button.Button;
@@ -47,7 +46,9 @@ public class HitachiLcdDemo {
     private final Button button1;
     private final Button btnSelect;
 
-    private LcdManager lcdManager;
+    private LcdController lcd;
+
+    private LcdController lcdSecondary;
 
     private LcdDriver lcdDriver;
 
@@ -78,12 +79,20 @@ public class HitachiLcdDemo {
         executorService = Executors.newScheduledThreadPool(5, lcdThreadFactory);
 
         //initialize lcdDriver adapter
-        Mcp23017LcdAdapter lcdAdapter = new Mcp23017LcdAdapter(mcpProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD);
+        Mcp23017LcdAdapter lcdAdapter = new Mcp23017LcdAdapter(mcpProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017);
 
         //initialize lcd driver
         lcdDriver = new LcdDriver(lcdAdapter, 20, 4);
 
-        lcdManager = new LcdManager(lcdDriver);
+        //initialize secondary lcd driver
+        //LcdDriver lcdDriver2 = new LcdDriver(new StdGpioLcdAdapter(LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017), 16, 2);
+
+        lcd = new LcdController(lcdDriver);
+        //lcdSecondary = new LcdController(lcdDriver2);
+
+        //LcdDialog<String> dialog = new LcdDialog<>();
+
+        //Optional<String> result = lcd.showDialog(dialog);
 
         byte[] returnChar = new byte[]{
                 0b00000,
@@ -218,8 +227,7 @@ public class HitachiLcdDemo {
                 //success = lcdMenu.doPrevious();
                 break;
             case "select":
-                log.info("Select Button Pressed");
-                lcdManager.setActiveDisplay(null);
+                lcd.hide();
                 break;
             default:
                 success = false;
@@ -269,7 +277,7 @@ public class HitachiLcdDemo {
         }
 
         LcdPane group = paneList.get(startPos.get());
-        lcdManager.setActiveDisplay(group);
+        lcd.show(group);
     }
 
     public void run() throws Exception {
@@ -291,12 +299,14 @@ public class HitachiLcdDemo {
         paneList.add(pane3);
 
         LcdText header = ((LcdText) pane3.getChildren().get(0));
-        LcdText content = (LcdText) pane3.getChildren().get(1);
+        LcdText mainContent = (LcdText) pane3.getChildren().get(1);
+        LcdText rightContent = (LcdText) pane3.getChildren().get(2);
         LcdText footer = (LcdText) pane3.getChildren().get(3);
+
         header.setTextAlignment(TextAlignment.CENTER);
         footer.setTextAlignment(TextAlignment.CENTER);
 
-        lcdManager.setActiveDisplay(paneList.get(startPos.get()));
+        lcd.show(paneList.get(startPos.get()));
 
         label1.setWidth(20);
         label1.setHeight(4);
@@ -311,10 +321,11 @@ public class HitachiLcdDemo {
                 state = !state;
                 label1.setScrollTop(i);
                 //label1.setScrollLeft(x);
-                content.setText("Counter: " + i);
-                //content.setVisible(state);
+                mainContent.setText("Counter: " + i);
+                mainContent.setVisible(state);
                 header.setVisible(!state);
                 footer.setVisible(state);
+                rightContent.setVisible(!state);
                 //pane3.setVisible(state);
                 delay(1000);
             }
@@ -328,7 +339,7 @@ public class HitachiLcdDemo {
         log.info("Shutting down...");
         gpio.shutdown();
         executorService.shutdown();
-        EventDispatcher.shutdown();
+        lcd.shutdown();
         executorService.awaitTermination(5, TimeUnit.SECONDS);
     }
 }
