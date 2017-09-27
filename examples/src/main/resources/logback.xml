@@ -62,8 +62,9 @@
     </root>
 
     <logger name="com.ibasco.pidisplay.core" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.core.events.EventDispatcher" level="INFO"/>
-    <logger name="com.ibasco.pidisplay.core.DisplayManager" level="INFO"/>
+    <logger name="com.ibasco.pidisplay.core.SimpleEventDispatcher" level="INFO"/>
+    <logger name="com.ibasco.pidisplay.core.DisplayController" level="DEBUG"/>
+    <logger name="com.ibasco.pidisplay.core.DisplayNode" level="INFO"/>
     <logger name="com.ibasco.pidisplay.core.util" level="INFO"/>
     <logger name="com.ibasco.pidisplay.impl" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.drivers" level="ERROR"/>

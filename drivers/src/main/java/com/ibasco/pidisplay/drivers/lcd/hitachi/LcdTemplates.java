@@ -12,7 +12,7 @@ public class LcdTemplates {
     /**
      * Pin mapping configuration for the popular adafruit LCD I2C using MCP23017
      */
-    public static final LcdPinMapConfig ADAFRUIT_I2C_RGBLCD = new LcdPinMapConfig()
+    public static final LcdPinMapConfig ADAFRUIT_I2C_RGBLCD_MCP23017 = new LcdPinMapConfig()
             .map(LcdPin.RS, MCP23017Pin.GPIO_B7)
             .map(LcdPin.EN, MCP23017Pin.GPIO_B5)
             .map(LcdPin.DATA_4, MCP23017Pin.GPIO_B4)

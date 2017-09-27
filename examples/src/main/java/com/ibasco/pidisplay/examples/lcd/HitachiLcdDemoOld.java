@@ -1,7 +1,6 @@
 package com.ibasco.pidisplay.examples.lcd;
 
 import com.ibasco.pidisplay.core.enums.TextAlignment;
-import com.ibasco.pidisplay.core.events.EventDispatcher;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdDriver;
@@ -78,7 +77,7 @@ public class HitachiLcdDemoOld {
         executorService = Executors.newScheduledThreadPool(5, lcdThreadFactory);
 
         //initialize lcdDriver adapter
-        Mcp23017LcdAdapter lcdAdapter = new Mcp23017LcdAdapter(mcpProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD);
+        Mcp23017LcdAdapter lcdAdapter = new Mcp23017LcdAdapter(mcpProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017);
 
         //initialize lcd driver
         lcdDriver = new LcdDriver(lcdAdapter, 20, 4);
@@ -287,7 +286,7 @@ public class HitachiLcdDemoOld {
         //((GpioButtonComponent) button1).close();
         gpio.shutdown();
         executorService.shutdown();
-        EventDispatcher.shutdown();
+        //lcdMenu.shutdown();
         executorService.awaitTermination(5, TimeUnit.SECONDS);
     }
 

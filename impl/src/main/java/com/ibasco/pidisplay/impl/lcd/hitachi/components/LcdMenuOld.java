@@ -3,9 +3,6 @@ package com.ibasco.pidisplay.impl.lcd.hitachi.components;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
-import com.ibasco.pidisplay.core.Display;
-import com.ibasco.pidisplay.core.DisplayManager;
-import com.ibasco.pidisplay.core.Graphics;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.events.EventHandler;
 import com.ibasco.pidisplay.core.util.Node;
@@ -22,8 +19,6 @@ import org.slf4j.LoggerFactory;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.util.*;
-
-import static com.ibasco.pidisplay.core.events.EventDispatcher.addHandler;
 
 @SuppressWarnings("WeakerAccess")
 @Deprecated
@@ -249,45 +244,37 @@ public class LcdMenuOld extends LcdDisplay {
 
     public void setOnNavNext(EventHandler<? super LcdMenuNavEvent> handler) {
         this.onNavNext = handler;
-        addHandler(LcdMenuNavEvent.LCD_NAV_NEXT, handler);
+        //addHandler(LcdMenuNavEvent.LCD_NAV_NEXT, handler);
     }
 
     public void setOnNavPrevious(EventHandler<? super LcdMenuNavEvent> handler) {
         this.onNavPrevious = handler;
-        addHandler(LcdMenuNavEvent.LCD_NAV_PREVIOUS, handler);
+        //addHandler(LcdMenuNavEvent.LCD_NAV_PREVIOUS, handler);
     }
 
     public void setOnNavEnter(EventHandler<? super LcdMenuNavEvent> handler) {
         this.onNavEnter = handler;
-        addHandler(LcdMenuNavEvent.LCD_NAV_ENTER, handler);
+        //addHandler(LcdMenuNavEvent.LCD_NAV_ENTER, handler);
     }
 
     public void setOnNavExit(EventHandler<? super LcdMenuNavEvent> handler) {
         this.onNavExit = handler;
-        addHandler(LcdMenuNavEvent.LCD_NAV_EXIT, handler);
+        //addHandler(LcdMenuNavEvent.LCD_NAV_EXIT, handler);
     }
 
     public void setOnItemSelected(EventHandler<? super LcdMenuItemEvent> handler) {
         this.onItemSelected = handler;
-        addHandler(LcdMenuItemEvent.LCD_ITEM_SELECTED, handler);
+        //addHandler(LcdMenuItemEvent.LCD_ITEM_SELECTED, handler);
     }
 
     public void setOnItemFocus(EventHandler<? super LcdMenuItemEvent> handler) {
         this.onItemFocus = handler;
-        addHandler(LcdMenuItemEvent.LCD_ITEM_FOCUS, handler);
+        //addHandler(LcdMenuItemEvent.LCD_ITEM_FOCUS, handler);
     }
     //</editor-fold>
 
-    /**
-     * This method should also be called by the {@link DisplayManager}
-     *
-     * @param graphics
-     *         The {@link Graphics} interface to be used for drawing to the {@link
-     *         Display}
-     */
     @Override
-    public void draw(LcdGraphics graphics) {
-        super.draw(graphics);
+    protected void drawNode(LcdGraphics graphics) {
         graphics.clear();
 
         int maxRows = getHeight();
