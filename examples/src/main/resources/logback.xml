@@ -62,7 +62,7 @@
     </root>
 
     <logger name="com.ibasco.pidisplay.core" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.core.SimpleEventDispatcher" level="INFO"/>
+    <logger name="com.ibasco.pidisplay.core.DefaultEventDispatcher" level="INFO"/>
     <logger name="com.ibasco.pidisplay.core.DisplayController" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.core.DisplayNode" level="INFO"/>
     <logger name="com.ibasco.pidisplay.core.util" level="INFO"/>

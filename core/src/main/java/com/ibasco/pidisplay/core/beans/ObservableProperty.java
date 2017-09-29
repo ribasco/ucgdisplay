@@ -1,5 +1,6 @@
 package com.ibasco.pidisplay.core.beans;
 
+import com.google.common.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,7 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
 
     private boolean valid = true;
 
-    private Set<PropertyChangeListener<T>> listeners = new HashSet<>();
+    private Set<PropertyChangeListener<? super T>> listeners = new HashSet<>();
 
     public ObservableProperty() {
         this(null);
@@ -64,20 +65,30 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
     }
 
     private void fireChangeEvent(T oldVal) {
-        listeners.forEach(l -> l.changed(this, oldVal, super.get()));
+        for (PropertyChangeListener<? super T> listener : listeners) {
+            listener.changed(this, oldVal, super.get());
+        }
     }
 
     @Override
-    public void addListener(PropertyChangeListener<T> listener) {
+    public void addListener(PropertyChangeListener<? super T> listener) {
         listeners.add(listener);
     }
 
     @Override
-    public void removeListener(PropertyChangeListener<T> listener) {
+    public void removeListener(PropertyChangeListener<? super T> listener) {
         listeners.remove(listener);
     }
 
-    public Set<PropertyChangeListener<T>> getListeners() {
+    @Override
+    public Set<PropertyChangeListener<? super T>> getListeners() {
         return listeners;
+    }
+
+    @Override
+    public String toString() {
+        TypeToken<T> type = new TypeToken<T>(getClass()) {
+        };
+        return String.format("ObservableProperty (%s) = (%s)", type.getType().getTypeName(), this.getInvalid());
     }
 }

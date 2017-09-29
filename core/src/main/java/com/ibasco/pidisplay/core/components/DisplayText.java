@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
 
     private static final Logger log = LoggerFactory.getLogger(DisplayText.class);
@@ -28,9 +29,7 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
 
     protected ObservableProperty<TextWrapStyle> textWrapStyle = new ObservableProperty<>(TextWrapStyle.CONTINUOUS);
 
-    protected ObservableProperty<Integer> scrollTop = new ObservableProperty<>(0);
-
-    protected ObservableProperty<Integer> scrollLeft = new ObservableProperty<>(0);
+    protected List<String> lines = new ArrayList<>();
     //endregion
 
     //region Constructor
@@ -46,30 +45,13 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
         this(null, null, width, height, text);
     }
 
-    protected DisplayText(Integer x, Integer y, Integer width, Integer height, String text) {
-        super(x, y, width, height);
-        redrawOnChange(this.text, this.textAlignment, this.textWrapStyle, this.startIndex, this.scrollTop, this.scrollLeft);
+    protected DisplayText(Integer left, Integer top, Integer width, Integer height, String text) {
+        super(left, top, width, height);
         this.text.setValid(text);
     }
     //endregion
 
     //region Property Getters/Setters
-    public Integer getScrollTop() {
-        return scrollTop.get();
-    }
-
-    public void setScrollTop(Integer scrollTop) {
-        this.scrollTop.set(scrollTop);
-    }
-
-    public Integer getScrollLeft() {
-        return scrollLeft.get();
-    }
-
-    public void setScrollLeft(Integer scrollLeft) {
-        this.scrollLeft.set(scrollLeft);
-    }
-
     public TextWrapStyle getTextWrapStyle() {
         return textWrapStyle.get();
     }
@@ -117,7 +99,15 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     }
     //endregion
 
-    protected List<String> lines = new ArrayList<>();
+    @Override
+    protected List<ObservableProperty> getChangeListeners() {
+        List<ObservableProperty> changeListeners = super.getChangeListeners();
+        changeListeners.add(this.text);
+        changeListeners.add(this.textAlignment);
+        changeListeners.add(this.textWrapStyle);
+        changeListeners.add(this.startIndex);
+        return changeListeners;
+    }
 
     /**
      * Clears the text property
@@ -129,7 +119,7 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     /**
      * @return Returns the total number of lines in the text
      */
-    public int lineCount() {
+    public int getLineCount() {
         return lines.size();
     }
 
@@ -140,36 +130,21 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
         return TextUtils.countWords(this.text.get());
     }
 
+    /**
+     * Refresh the line buffer contents. This will initially wrap the text based on the width of this component, split
+     * it into an array of lines (using carraige return character) and store them in an internal list.
+     *
+     * @param text
+     *         The {@link String} to process
+     */
     protected void refreshLines(String text) {
         int width = this.width.get();
-        text = wrapText(text, width);
+        text = TextUtils.wrapText(text, width, textWrapStyle.get());
         lines = Arrays.asList(StringUtils.splitPreserveAllTokens(text, "\n"));
-        //log.debug("Lines refreshed (Total: {})", lines.size());
     }
 
-    protected String wrapText(String text, int maxWidth) {
-        switch (textWrapStyle.get()) {
-            case WORD:
-                return TextUtils.wrapWord(text, maxWidth);
-            case CONTINUOUS:
-                return TextUtils.wrapContinuous(text, maxWidth);
-            default: {
-                if (!StringUtils.isBlank(text) && text.length() >= maxWidth) {
-                    log.debug("Defaulting to no wrap : {}", text.substring(0, maxWidth - 1));
-                    return text.substring(0, maxWidth - 1);
-                }
-            }
-        }
-        return text;
-    }
-
-    protected String alignText(String text, TextAlignment alignment, int maxWidth) {
-        if (TextAlignment.LEFT.equals(alignment))
-            return StringUtils.rightPad(text, maxWidth);
-        else if (TextAlignment.RIGHT.equals(alignment))
-            return StringUtils.leftPad(text, maxWidth);
-        else if (TextAlignment.CENTER.equals(alignment))
-            return StringUtils.center(text, maxWidth);
-        return text;
+    @Override
+    public String toString() {
+        return String.format("%s Text: %s", super.toString(), StringUtils.abbreviate(StringUtils.defaultIfBlank(text.getInvalid(), "N/A"), 20));
     }
 }

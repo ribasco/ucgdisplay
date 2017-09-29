@@ -32,12 +32,12 @@ public class LcdText extends DisplayText<LcdGraphics> {
         this(null, null, text);
     }
 
-    public LcdText(Integer x, Integer y, String text) {
-        this(x, y, null, null, text);
+    public LcdText(Integer left, Integer top, String text) {
+        this(left, top, null, null, text);
     }
 
-    public LcdText(Integer x, Integer y, Integer width, Integer height, String text) {
-        super(x, y, width, height, text);
+    public LcdText(Integer left, Integer top, Integer width, Integer height, String text) {
+        super(left, top, width, height, text);
         this.textProcessor.get().register("date", DateTimeUtils::formatCurrentDateTime);
     }
     //endregion
@@ -47,8 +47,8 @@ public class LcdText extends DisplayText<LcdGraphics> {
         //Calculate default dimensions
         calcPrefDimen(graphics);
 
-        int startCol = this.x.get();
-        int startRow = this.y.get();
+        int startCol = this.leftPos.get();
+        int startRow = this.topPos.get();
         int width = this.width.get();
         int height = this.height.get();
 
@@ -120,8 +120,8 @@ public class LcdText extends DisplayText<LcdGraphics> {
         int maxDisplayHeight = graphics.getHeight();
         int textLength = this.text.getDefault(StringUtils.EMPTY).length();
 
-        Integer x = this.x.getDefault(0);
-        Integer y = this.y.getDefault(0);
+        Integer x = this.leftPos.getDefault(0);
+        Integer y = this.topPos.getDefault(0);
         Integer maxWidth = this.maxWidth.getDefault(maxDisplayWidth);
         Integer maxHeight = this.maxHeight.getDefault(maxDisplayHeight);
         Integer width = this.width.getDefault(textLength);
@@ -146,8 +146,8 @@ public class LcdText extends DisplayText<LcdGraphics> {
         if (height < minHeight)
             height = minHeight;
 
-        this.x.setValid(x);
-        this.y.setValid(y);
+        this.leftPos.setValid(x);
+        this.topPos.setValid(y);
         this.maxWidth.setValid(maxWidth);
         this.maxHeight.setValid(maxHeight);
         this.minWidth.setValid(minWidth);
@@ -169,10 +169,5 @@ public class LcdText extends DisplayText<LcdGraphics> {
         if (textAlignment.isSet() && isVisible())
             text = TextUtils.alignText(text.trim(), textAlignment.get(), maxWidth);
         graphics.drawText(text);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("LcdText (id: %d, text: %s)", getId(), (text != null) ? text.getInvalid() : "N/A");
     }
 }

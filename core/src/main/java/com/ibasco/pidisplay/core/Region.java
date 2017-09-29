@@ -1,9 +1,9 @@
 package com.ibasco.pidisplay.core;
 
 public interface Region {
-    Integer getX();
+    Integer getLeftPos();
 
-    Integer getY();
+    Integer getTopPos();
 
     Integer getWidth();
 

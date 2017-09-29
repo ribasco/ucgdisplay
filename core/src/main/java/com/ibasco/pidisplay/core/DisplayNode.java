@@ -1,19 +1,35 @@
 package com.ibasco.pidisplay.core;
 
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
-import com.ibasco.pidisplay.core.beans.PropertyChangeListener;
-import com.ibasco.pidisplay.core.events.EventDispatcher;
+import com.ibasco.pidisplay.core.events.DisplayEvent;
+import com.ibasco.pidisplay.core.events.Event;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * The base class for all display components.
+ *
+ * @param <T>
+ *         The underlying type of the {@link Graphics} implementation used by this display node
+ *
+ * @author Rafael Ibasco
+ */
+@SuppressWarnings("WeakerAccess")
 abstract public class DisplayNode<T extends Graphics>
-        extends DisplayRegion implements Display<T> {
+        extends DisplayRegion {
 
+    //region Static Properties
     private static final Logger log = LoggerFactory.getLogger(DisplayNode.class);
+
+    private static final AtomicLong idCounter = new AtomicLong(0);
+    //endregion
 
     //region Properties
     protected ObservableProperty<String> name = new ObservableProperty<>(this.getClass().getSimpleName().toLowerCase());
@@ -25,15 +41,23 @@ abstract public class DisplayNode<T extends Graphics>
     protected ObservableProperty<Boolean> active = new ObservableProperty<>(false);
 
     protected ObservableProperty<Boolean> focused = new ObservableProperty<>(false);
-    //endregion
+
+    protected ObservableProperty<Integer> scrollTop = new ObservableProperty<>(0);
+
+    protected ObservableProperty<Integer> scrollLeft = new ObservableProperty<>(0);
 
     private List<DisplayNode<T>> children = new ArrayList<>();
 
-    private static final AtomicInteger idCtr = new AtomicInteger(0);
+    private DisplayNode<T> parent;
 
-    protected DisplayNode<T> parent;
+    private final long id = idCounter.incrementAndGet();
 
-    private int id = idCtr.incrementAndGet();
+    private AtomicBoolean initialized = new AtomicBoolean(false);
+
+    EventDispatcher eventDispatcher;
+    //endregion
+
+    //region Inner Classes
 
     /**
      * Represents an action that will be performed on a {@link DisplayNode}
@@ -44,24 +68,23 @@ abstract public class DisplayNode<T extends Graphics>
      *         The type of the argument for the operation being called
      */
     @FunctionalInterface
-    protected interface DisplayAction<X extends Graphics, Y> {
+    protected interface Action<X extends Graphics, Y> {
         void doAction(DisplayNode<X> node, Y arg);
     }
+    //endregion
 
     //region Constructor
     protected DisplayNode(Integer width, Integer height) {
         this(null, null, width, height);
     }
 
-    protected DisplayNode(Integer x, Integer y, Integer width, Integer height) {
-        super(x, y, width, height);
-        redrawOnChange(this.x, this.y, this.visible, this.width, this.height,
-                this.minWidth, this.minHeight, this.maxWidth, this.maxHeight);
+    protected DisplayNode(Integer left, Integer top, Integer width, Integer height) {
+        super(left, top, width, height);
     }
     //endregion
 
-    //region Property Getter/Setters
-    public int getId() {
+    //region Property Value Getter/Setters
+    public long getId() {
         return id;
     }
 
@@ -116,25 +139,58 @@ abstract public class DisplayNode<T extends Graphics>
         this.parent = parent;
     }
 
+    public Integer getScrollTop() {
+        return scrollTop.get();
+    }
+
+    public void setScrollTop(Integer scrollTop) {
+        this.scrollTop.set(scrollTop);
+    }
+
+    public Integer getScrollLeft() {
+        return scrollLeft.get();
+    }
+
+    public void setScrollLeft(Integer scrollLeft) {
+        this.scrollLeft.set(scrollLeft);
+    }
+
+    boolean isInitialized() {
+        return initialized.get();
+    }
+
+    void setInitialized(boolean initialized) {
+        this.initialized.set(initialized);
+    }
     //endregion
 
-    //region Listener Setters
-    public void setOnVisible(PropertyChangeListener<Boolean> listener) {
-        visible.addListener(listener);
+    //region Property Object Getters
+    public ObservableProperty<Boolean> activeProperty() {
+        return active;
     }
 
-    public void setOnActive(PropertyChangeListener<Boolean> listener) {
-        active.addListener(listener);
+    public ObservableProperty<Boolean> visibleProperty() {
+        return visible;
     }
 
-    public void setOnEnable(PropertyChangeListener<Boolean> listener) {
-        enabled.addListener(listener);
+    public ObservableProperty<Boolean> enabledProperty() {
+        return enabled;
     }
 
-    public void setOnFocus(PropertyChangeListener<Boolean> listener) {
-        focused.addListener(listener);
+    public ObservableProperty<Boolean> focusedProperty() {
+        return focused;
+    }
+
+    public ObservableProperty<Integer> scrollTopProperty() {
+        return scrollTop;
+    }
+
+    public ObservableProperty<Integer> scrollLeftProperty() {
+        return scrollLeft;
     }
     //endregion
+
+    //region Abstract Methods
 
     /**
      * The primary method used by the system to draw the component
@@ -143,21 +199,35 @@ abstract public class DisplayNode<T extends Graphics>
      *         The {@link Graphics} implementation used by this node
      */
     abstract protected void drawNode(T graphics);
-
-    @Override
-    public final void draw(T graphics) {
-        if (graphics == null)
-            throw new IllegalArgumentException("Graphics object must not be null");
-        EventDispatcher.checkEventDispatchThread();
-        if (!isActive()) {
-            log.debug("Display '{}' Not active. Skipped", this);
-            return;
-        }
-        this.drawNode(graphics);
-        doAction(DisplayNode::drawNode, graphics);
-    }
+    //endregion
 
     //region Protected Methods
+
+    /**
+     * @return A {@link List} of {@link ObservableProperty} instances that needs to be redrawn for every change event
+     * that occurs.
+     */
+    protected List<ObservableProperty> getChangeListeners() {
+        List<ObservableProperty> changeListeners = new ArrayList<>();
+        changeListeners.add(this.leftPos);
+        changeListeners.add(this.topPos);
+        changeListeners.add(this.visible);
+        changeListeners.add(this.width);
+        changeListeners.add(this.height);
+        changeListeners.add(this.minWidth);
+        changeListeners.add(this.minHeight);
+        changeListeners.add(this.maxWidth);
+        changeListeners.add(this.maxHeight);
+        changeListeners.add(this.scrollTop);
+        changeListeners.add(this.scrollLeft);
+        changeListeners.add(this.focused);
+        return changeListeners;
+    }
+
+    protected void redraw() {
+        fireEvent(new DisplayEvent<>(DisplayEvent.DISPLAY_DRAW, this));
+    }
+
     protected void add(DisplayNode<T> component) {
         component.visible.setValid(true);
         component.parent = this;
@@ -182,15 +252,55 @@ abstract public class DisplayNode<T extends Graphics>
         return this.children != null && this.children.size() > 0;
     }
 
-    /**
-     * Defaults to {@link #doAction(DisplayNode, DisplayAction, Object, int)} with a default depth level of 0
-     *
-     * @see #doAction(DisplayNode, DisplayAction, Object, int)
-     */
-    protected <Y> void doAction(DisplayAction<T, Y> action, Y arg) {
-        if (!hasChildren()) {
+    protected void fireEvent(Event event) {
+        if (this.eventDispatcher == null) {
+            log.warn("Event fired but event dispatcher is not set");
             return;
         }
+        this.eventDispatcher.dispatch(event);
+    }
+    //endregion
+
+    //region Package-Private Methods
+
+    /**
+     * To be called by the {@link DisplayController} and should not be called elsewhere
+     *
+     * @param graphics
+     *         The {@link Graphics} driver to use for this node
+     */
+    final void draw(T graphics) {
+        if (eventDispatcher != null && !eventDispatcher.isEventDispatchThread())
+            throw new IllegalStateException("This should not be called outside the event dispatcher thread");
+        if (graphics == null)
+            throw new IllegalArgumentException("Graphics object must not be null");
+        if (!isActive()) {
+            log.debug("Display '{}' Not active. Skipped", this);
+            return;
+        }
+        //Draw the current node
+        this.drawNode(graphics);
+        //Draw the child nodes (if it exists)
+        doAction(DisplayNode::drawNode, graphics);
+    }
+
+    /**
+     * Defaults to {@link #doAction(Action, Object)} with a default argument of null
+     *
+     * @see #doAction(Action, Object)
+     */
+    <Y> void doAction(Action<T, Y> action) {
+        doAction(action, null);
+    }
+
+    /**
+     * Defaults to {@link #doAction(DisplayNode, Action, Object, int)} with a default depth level of 0
+     *
+     * @see #doAction(DisplayNode, Action, Object, int)
+     */
+    <Y> void doAction(Action<T, Y> action, Y arg) {
+        if (!hasChildren())
+            return;
         doAction(this, action, arg, 0);
     }
 
@@ -200,7 +310,7 @@ abstract public class DisplayNode<T extends Graphics>
      * @param component
      *         The {@link DisplayNode} to process
      * @param action
-     *         The {@link DisplayAction} which contains the operations to be performed on the child nodes
+     *         The {@link Action} which contains the operations to be performed on the child nodes
      * @param arg
      *         The argument of the operation
      * @param depth
@@ -208,45 +318,35 @@ abstract public class DisplayNode<T extends Graphics>
      * @param <Y>
      *         The type of the argument of the operation
      */
-    protected <Y> void doAction(DisplayNode<T> component, DisplayAction<T, Y> action, Y arg, int depth) {
+    private <Y> void doAction(DisplayNode<T> component, Action<T, Y> action, Y arg, int depth) {
+        //Perform action on the top level first
         for (DisplayNode<T> node : component.getChildren()) {
             action.doAction(node, arg);
             doAction(node, action, arg, depth + 1);
         }
     }
-
-    @SuppressWarnings("unchecked")
-    protected void redrawOnChange(ObservableProperty... properties) {
-        if (properties != null) {
-            PropertyChangeListener changeListener = (observable, oldValue, newValue) -> this.redraw();
-            for (ObservableProperty property : properties)
-                property.addListener(changeListener);
-        }
-    }
     //endregion
 
     //region Equals/HashCode
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         DisplayNode<?> that = (DisplayNode<?>) o;
-
-        if (id != that.id) return false;
-        return name.equals(that.name);
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + id;
-        return result;
+        return new HashCodeBuilder().append(this.id).toHashCode();
     }
+
     //endregion
 
     @Override
     public String toString() {
-        return String.format("%s (id: %d)", getName(), getId());
+        String name = StringUtils.defaultIfBlank(this.name.getInvalid(), this.getClass().getSimpleName());
+        return String.format("[%s#%d]", StringUtils.capitalize(name), this.id);
     }
 }
