@@ -7,6 +7,8 @@ public class Event {
 
     private EventType<? extends Event> eventType;
 
+    private boolean consumed = false;
+
     public Event(EventType<? extends Event> eventType) {
         this.eventType = eventType;
     }
@@ -14,4 +16,13 @@ public class Event {
     public EventType<? extends Event> getEventType() {
         return eventType;
     }
+
+    public boolean isConsumed() {
+        return consumed;
+    }
+
+    public void consume() {
+        this.consumed = true;
+    }
+
 }

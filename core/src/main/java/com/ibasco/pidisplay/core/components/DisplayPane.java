@@ -46,4 +46,8 @@ abstract public class DisplayPane<T extends Graphics> extends DisplayNode<T> {
     protected void drawNode(T graphics) {
         //no implementation
     }
+
+    public void close() {
+
+    }
 }

@@ -266,7 +266,7 @@ public class HitachiLcdDemo {
     private AtomicInteger startPos = new AtomicInteger(0);
 
     private void rotaryChange(long l, RotaryState state) {
-        log.info("Rotary Change: {}, State: {}", startPos, state);
+        log.debug("Rotary Change: {}, State: {}", startPos, state);
 
         if (state == RotaryState.DOWN) {
             if ((startPos.get() + 1) <= (paneList.size() - 1))
@@ -280,12 +280,24 @@ public class HitachiLcdDemo {
         lcd.show(group);
     }
 
+    private List<LcdPane> createPanes(String textFormat, int total) {
+        List<LcdPane> lcdPanes = new ArrayList<>();
+        for (int i = 0; i < total; i++) {
+            LcdPane pane = new LcdPane();
+            pane.add(new LcdText(0, 0, String.format("Page Header (%d)", i)));
+            pane.add(new LcdText(0, 1, String.format(textFormat, i)));
+            pane.setName("Pane" + (i + 4));
+            lcdPanes.add(pane);
+        }
+        return lcdPanes;
+    }
+
     public void run() throws Exception {
         log.info("Running LCD Display");
 
-        pane1.setName("Pane #1");
-        pane2.setName("Pane #2");
-        pane3.setName("Pane #3");
+        pane1.setName("Pane1");
+        pane2.setName("Pane2");
+        pane3.setName("Pane3");
 
         pane1.add(label1);
         pane2.add(new LcdText("Hello World"));
@@ -297,6 +309,7 @@ public class HitachiLcdDemo {
         paneList.add(pane1);
         paneList.add(pane2);
         paneList.add(pane3);
+        paneList.addAll(createPanes("Item %d", 50));
 
         LcdText header = ((LcdText) pane3.getChildren().get(0));
         LcdText mainContent = (LcdText) pane3.getChildren().get(1);
@@ -316,11 +329,11 @@ public class HitachiLcdDemo {
 
         CompletableFuture.runAsync(() -> {
             boolean state = false;
-            log.info("Line Count: {}, Width: {}", label1.lineCount(), label1.getWidth());
+            log.info("Line Count: {}, Width: {}", label1.getLineCount(), label1.getWidth());
             for (int i = 0, x = 0; i < 100; i++, x++) {
                 state = !state;
                 label1.setScrollTop(i);
-                //label1.setScrollLeft(x);
+                //label1.setScrollLeft(leftPos);
                 mainContent.setText("Counter: " + i);
                 mainContent.setVisible(state);
                 header.setVisible(!state);

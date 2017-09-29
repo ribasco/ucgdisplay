@@ -4,9 +4,9 @@ import com.ibasco.pidisplay.core.beans.ObservableProperty;
 
 abstract public class DisplayRegion implements Region {
 
-    protected ObservableProperty<Integer> x = new ObservableProperty<>();
+    protected ObservableProperty<Integer> leftPos = new ObservableProperty<>();
 
-    protected ObservableProperty<Integer> y = new ObservableProperty<>();
+    protected ObservableProperty<Integer> topPos = new ObservableProperty<>();
 
     protected ObservableProperty<Integer> width = new ObservableProperty<>();
 
@@ -20,9 +20,9 @@ abstract public class DisplayRegion implements Region {
 
     protected ObservableProperty<Integer> maxHeight = new ObservableProperty<>();
 
-    public DisplayRegion(Integer x, Integer y, Integer width, Integer height) {
-        this.x.setValid(x);
-        this.y.setValid(y);
+    public DisplayRegion(Integer left, Integer top, Integer width, Integer height) {
+        this.leftPos.setValid(left);
+        this.topPos.setValid(top);
         this.width.setValid(width);
         this.height.setValid(height);
         this.minWidth.setValid(width);
@@ -31,12 +31,12 @@ abstract public class DisplayRegion implements Region {
         this.maxHeight.setValid(height);
     }
 
-    public void setX(Integer x) {
-        this.x.set(x);
+    public void setLeftPos(Integer leftPos) {
+        this.leftPos.set(leftPos);
     }
 
-    public void setY(Integer y) {
-        this.y.set(y);
+    public void setTopPos(Integer topPos) {
+        this.topPos.set(topPos);
     }
 
     public void setWidth(Integer width) {
@@ -88,13 +88,13 @@ abstract public class DisplayRegion implements Region {
     }
 
     @Override
-    public Integer getX() {
-        return x.get();
+    public Integer getLeftPos() {
+        return leftPos.get();
     }
 
     @Override
-    public Integer getY() {
-        return y.get();
+    public Integer getTopPos() {
+        return topPos.get();
     }
 
     @Override

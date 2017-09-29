@@ -1,7 +1,5 @@
 package com.ibasco.pidisplay.core;
 
-import com.ibasco.pidisplay.core.events.Event;
-import com.ibasco.pidisplay.core.events.EventDispatcher;
 import com.ibasco.pidisplay.core.util.RegexTextProcessor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -13,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 @Deprecated
-abstract public class AbstractDisplay<T extends Graphics> implements Display<T> {
+abstract public class AbstractDisplay<T extends Graphics> extends DisplayNode<T> {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractDisplay.class);
 
@@ -36,6 +34,7 @@ abstract public class AbstractDisplay<T extends Graphics> implements Display<T> 
     }
 
     private AbstractDisplay(String name) {
+        super(null, null);
         this.name = name;
         registerVar(CMD_DATE, this::formatDateTime);
     }
@@ -56,27 +55,6 @@ abstract public class AbstractDisplay<T extends Graphics> implements Display<T> 
         this.name = name;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    protected <X extends Event> void fireEvent(X event) {
-        EventDispatcher.dispatch(event);
-    }
-
-    @Override
     public void redraw() {
         //fireEvent(new DisplayEvent(DisplayEvent.DISPLAY_DRAW, this));
     }

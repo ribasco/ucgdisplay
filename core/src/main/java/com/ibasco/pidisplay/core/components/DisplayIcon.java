@@ -3,7 +3,7 @@ package com.ibasco.pidisplay.core.components;
 import com.ibasco.pidisplay.core.DisplayNode;
 import com.ibasco.pidisplay.core.Graphics;
 
-public class DisplayIcon<T extends Graphics> extends DisplayNode<T> {
+abstract public class DisplayIcon<T extends Graphics> extends DisplayNode<T> {
     protected DisplayIcon(Integer width, Integer height) {
         super(width, height);
     }
