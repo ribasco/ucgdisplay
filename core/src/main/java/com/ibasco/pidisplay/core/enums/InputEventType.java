@@ -93,6 +93,6 @@ public enum InputEventType {
 
     @Override
     public String toString() {
-        return String.format("%s(%d)", this.name(), this.value);
+        return String.format("%s (%d)", this.name(), this.value);
     }
 }
