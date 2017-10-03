@@ -56,8 +56,13 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
     private void invalidate(T oldVal) {
         if (valid) {
             valid = false;
+            invalidated();
             fireChangeEvent(oldVal);
         }
+    }
+
+    protected void invalidated() {
+        //to be overridden
     }
 
     public boolean isValid() {
