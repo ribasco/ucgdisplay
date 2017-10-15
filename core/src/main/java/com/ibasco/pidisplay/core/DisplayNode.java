@@ -2,13 +2,13 @@ package com.ibasco.pidisplay.core;
 
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.events.DisplayEvent;
-import com.ibasco.pidisplay.core.events.Event;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -22,8 +22,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Rafael Ibasco
  */
 @SuppressWarnings("WeakerAccess")
-abstract public class DisplayNode<T extends Graphics>
-        extends DisplayRegion {
+abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
 
     //region Static Properties
     private static final Logger log = LoggerFactory.getLogger(DisplayNode.class);
@@ -32,19 +31,28 @@ abstract public class DisplayNode<T extends Graphics>
     //endregion
 
     //region Properties
-    protected ObservableProperty<String> name = new ObservableProperty<>(this.getClass().getSimpleName().toLowerCase());
+    protected ObservableProperty<String> name = createProperty(this.getClass().getSimpleName().toLowerCase());
 
-    protected ObservableProperty<Boolean> visible = new ObservableProperty<>(false);
+    protected ObservableProperty<Boolean> visible = createProperty(true, false);
 
-    protected ObservableProperty<Boolean> enabled = new ObservableProperty<>(false);
+    /**
+     * Input is disabled when enabled property is false
+     */
+    protected ObservableProperty<Boolean> enabled = createProperty(true, false);
 
-    protected ObservableProperty<Boolean> active = new ObservableProperty<>(false);
+    /**
+     * A node is considered "active" if it is currently displayed on the screen. If set to false, draw requests will not
+     * be processed
+     */
+    protected ObservableProperty<Boolean> active = createProperty(true, false);
 
-    protected ObservableProperty<Boolean> focused = new ObservableProperty<>(false);
+    protected ObservableProperty<Boolean> focused = createProperty(true, false);
 
-    protected ObservableProperty<Integer> scrollTop = new ObservableProperty<>(0);
+    protected ObservableProperty<Integer> scrollTop = createProperty(true, 0);
 
-    protected ObservableProperty<Integer> scrollLeft = new ObservableProperty<>(0);
+    protected ObservableProperty<Integer> scrollLeft = createProperty(true, 0);
+
+    protected ObservableProperty<Boolean> focusable = createProperty(false);
 
     private List<DisplayNode<T>> children = new ArrayList<>();
 
@@ -55,6 +63,8 @@ abstract public class DisplayNode<T extends Graphics>
     private AtomicBoolean initialized = new AtomicBoolean(false);
 
     EventDispatcher eventDispatcher;
+
+    EventManager eventManager;
     //endregion
 
     //region Inner Classes
@@ -96,11 +106,19 @@ abstract public class DisplayNode<T extends Graphics>
         this.name.set(name);
     }
 
+    public void setFocusable(boolean focusable) {
+        this.focusable.set(focusable);
+    }
+
+    public boolean isFocusable() {
+        return this.focusable.get();
+    }
+
     public boolean isFocused() {
         return focused.get();
     }
 
-    public void setFocused(boolean focused) {
+    protected void setFocused(boolean focused) {
         this.focused.set(focused);
     }
 
@@ -228,6 +246,11 @@ abstract public class DisplayNode<T extends Graphics>
         fireEvent(new DisplayEvent<>(DisplayEvent.DISPLAY_DRAW, this));
     }
 
+    protected void add(DisplayNode<T>... nodes) {
+        if (nodes != null && nodes.length > 0)
+            Arrays.stream(nodes).forEach(this::add);
+    }
+
     protected void add(DisplayNode<T> component) {
         component.visible.setValid(true);
         component.parent = this;
@@ -274,14 +297,17 @@ abstract public class DisplayNode<T extends Graphics>
             throw new IllegalStateException("This should not be called outside the event dispatcher thread");
         if (graphics == null)
             throw new IllegalArgumentException("Graphics object must not be null");
+
+        //Do not process inactive nodes
         if (!isActive()) {
             log.debug("Display '{}' Not active. Skipped", this);
             return;
         }
-        //Draw the current node
-        this.drawNode(graphics);
+
         //Draw the child nodes (if it exists)
         doAction(DisplayNode::drawNode, graphics);
+        //Draw the current node
+        this.drawNode(graphics);
     }
 
     /**
@@ -327,6 +353,35 @@ abstract public class DisplayNode<T extends Graphics>
     }
     //endregion
 
+    public <E extends Event> void addEventHandler(final EventType<E> eventType, final EventHandler<? super E> handler) {
+        if (eventManager != null)
+            eventManager.register(eventType, handler);
+        else
+            log.warn("NODE_ADD_EVENT_HANDLER => Skipped event handler registration for {}. Reason: {}", this, "Not yet initialized");
+    }
+
+    public <E extends Event> void removeEventHandler(final EventType<E> eventType, final EventHandler<? super E> handler) {
+        if (eventManager != null)
+            eventManager.unregister(eventType, handler);
+        else
+            log.warn("NODE_REM_EVENT_HANDLER => Skipped event handler registration for {}. Reason: {}", this, "Not yet initialized");
+    }
+
+    protected <B> ObservableProperty<B> createProperty(B defaultValue) {
+        return createProperty(false, defaultValue);
+    }
+
+    protected <B> ObservableProperty<B> createProperty(boolean redrawInvalid, B defaultValue) {
+        if (!redrawInvalid)
+            return new ObservableProperty<>(defaultValue);
+        return new ObservableProperty<B>(defaultValue) {
+            @Override
+            protected void invalidated(B oldValue, B newValue) {
+                //log.debug("Redrawing invalidated node : {}", DisplayNode.this);
+            }
+        };
+    }
+
     //region Equals/HashCode
 
     @Override
@@ -346,7 +401,7 @@ abstract public class DisplayNode<T extends Graphics>
 
     @Override
     public String toString() {
-        String name = StringUtils.defaultIfBlank(this.name.getInvalid(), this.getClass().getSimpleName());
+        String name = StringUtils.defaultIfBlank(this.name.get(), this.getClass().getSimpleName());
         return String.format("[%s#%d]", StringUtils.capitalize(name), this.id);
     }
 }

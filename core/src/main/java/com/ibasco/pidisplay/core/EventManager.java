@@ -1,9 +1,5 @@
 package com.ibasco.pidisplay.core;
 
-import com.ibasco.pidisplay.core.events.Event;
-import com.ibasco.pidisplay.core.events.EventHandler;
-import com.ibasco.pidisplay.core.events.EventType;
-
 import java.util.Collection;
 
 /**

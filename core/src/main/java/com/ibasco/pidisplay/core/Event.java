@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.events;
+package com.ibasco.pidisplay.core;
 
 
 public class Event {

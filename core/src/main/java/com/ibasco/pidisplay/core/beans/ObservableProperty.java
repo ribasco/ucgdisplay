@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class ObservableProperty<T> extends PropertyBase<T> implements Observable<T> {
@@ -25,15 +26,11 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
 
     @Override
     public void set(T newValue) {
-        set(newValue, super.get() != newValue);
+        set(newValue, !Objects.equals(super.get(), newValue));
     }
 
     public void setValid(T newValue) {
         set(newValue, false);
-    }
-
-    public void setInvalid(T newValue) {
-        set(newValue, true);
     }
 
     private void set(T newValue, boolean invalidate) {
@@ -45,23 +42,16 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
 
     @Override
     public T get() {
-        valid = true;
-        return super.get();
-    }
-
-    public T getInvalid() {
         return super.get();
     }
 
     private void invalidate(T oldVal) {
-        if (valid) {
-            valid = false;
-            invalidated();
-            fireChangeEvent(oldVal);
-        }
+        log.debug("INVALIDATED_PROPERTY => old: {}, new: {}", oldVal, super.get());
+        invalidated(oldVal, super.get());
+        fireChangeEvent(oldVal);
     }
 
-    protected void invalidated() {
+    protected void invalidated(T oldValue, T newValue) {
         //to be overridden
     }
 
@@ -94,6 +84,6 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
     public String toString() {
         TypeToken<T> type = new TypeToken<T>(getClass()) {
         };
-        return String.format("ObservableProperty (%s) = (%s)", type.getType().getTypeName(), this.getInvalid());
+        return String.format("ObservableProperty (%s) = (%s)", type.getType().getTypeName(), get());
     }
 }

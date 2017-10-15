@@ -1,10 +1,10 @@
 package com.ibasco.pidisplay.impl.lcd.hitachi.events;
 
 import com.ibasco.pidisplay.core.DisplayNode;
-import com.ibasco.pidisplay.core.events.Event;
-import com.ibasco.pidisplay.core.events.EventType;
+import com.ibasco.pidisplay.core.Event;
+import com.ibasco.pidisplay.core.EventType;
 import com.ibasco.pidisplay.core.util.Node;
-import com.ibasco.pidisplay.impl.lcd.hitachi.LcdGraphics;
+import com.ibasco.pidisplay.impl.lcd.hitachi.CharGraphics;
 
 public class LcdMenuNavEvent extends LcdEvent {
     public static final EventType<LcdMenuNavEvent> LCD_NAV_NEXT = new EventType<>("LCD_NAV_NEXT");
@@ -17,7 +17,7 @@ public class LcdMenuNavEvent extends LcdEvent {
 
     private Node selectedNode;
 
-    public LcdMenuNavEvent(EventType<? extends Event> eventType, Node selectedNode, DisplayNode<LcdGraphics> display) {
+    public LcdMenuNavEvent(EventType<? extends Event> eventType, Node selectedNode, DisplayNode<CharGraphics> display) {
         super(eventType, display);
         this.selectedNode = selectedNode;
     }

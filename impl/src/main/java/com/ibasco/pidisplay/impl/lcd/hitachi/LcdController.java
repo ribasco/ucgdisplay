@@ -5,12 +5,17 @@ import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdDriver;
 
 import java.util.concurrent.ExecutorService;
 
-public class LcdController extends DisplayController<LcdGraphics> {
+/**
+ * The character display controller
+ *
+ * @author Rafael Ibasco
+ */
+public class LcdController extends DisplayController<CharGraphics> {
     public LcdController(LcdDriver driver) {
         this(driver, null);
     }
 
     public LcdController(LcdDriver driver, ExecutorService executorService) {
-        super(new LcdGraphics(driver), executorService);
+        super(new CharGraphics(driver), executorService);
     }
 }

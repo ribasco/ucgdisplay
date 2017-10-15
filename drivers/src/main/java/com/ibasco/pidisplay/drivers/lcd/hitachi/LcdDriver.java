@@ -20,7 +20,7 @@ import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 /**
  * Character Display Driver for HD44780. Compatible with the Pi4J {@link LCD} interface.
  *
- * This class is not guaranteed to be thread-safe
+ * Note: This class is NOT thread-safe
  *
  * @author Rafael Ibasco
  */
@@ -480,7 +480,7 @@ public class LcdDriver extends LCDBase implements LCD {
      *         Indicate whether you are sending in command mode or in data mode. Set {@link PinState#LOW} to set
      *         in <code>COMMAND</code> mode. Set to {@link PinState#HIGH} for <code>DATA</code> mode.
      */
-    private synchronized void send(byte value, LcdRegisterSelectState regSelectState) {
+    private void send(byte value, LcdRegisterSelectState regSelectState) {
         try {
             //Set Register Select State (Command or Data)
             lcdGpioAdapter.setRegSelectState(regSelectState);

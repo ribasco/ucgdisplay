@@ -1,8 +1,7 @@
 package com.ibasco.pidisplay.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.ibasco.pidisplay.core.events.Event;
-import com.ibasco.pidisplay.core.events.EventHandler;
+import com.ibasco.pidisplay.core.events.InvocationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +52,14 @@ public class DefaultEventDispatcher implements EventDispatcher {
             this.dispatchExecService = Executors.newSingleThreadExecutor(factory);
         } else
             this.dispatchExecService = executorService;
+        this.eventManager.register(InvocationEvent.INVOKE_LATER, this::invocationHandler);
         start();
+    }
+
+    private void invocationHandler(InvocationEvent event) {
+        if (!isEventDispatchThread())
+            throw new IllegalStateException("Not on event dispatch thread");
+        event.getRunnable().run();
     }
 
     /**
@@ -82,8 +88,9 @@ public class DefaultEventDispatcher implements EventDispatcher {
         this.eventQueue.add(event);
     }
 
+    @Override
     public void invokeLater(Runnable runnable) {
-
+        dispatch(new InvocationEvent(InvocationEvent.INVOKE_LATER, runnable));
     }
 
     private void start() {

@@ -10,8 +10,6 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.ibasco.pidisplay.core.enums.InputEventType.EV_KEY;
-
 public class DevInputTest {
 
     private static final Logger log = LoggerFactory.getLogger(DevInputTest.class);
@@ -41,11 +39,11 @@ public class DevInputTest {
         try (LinuxFile file = new LinuxFile(fs.getCanonicalPath(), "r")) {
             while (!shutdown.get()) {
                 byte[] data = new byte[16];
-                int bread = file.read(data, 0, data.length);
-                if (bread > 0) {
-                    InputEventData inputEvent = createInputEvent(data);
+                int bytesRead = file.read(data, 0, data.length);
+                if (bytesRead > 0) {
+                    InputEventData inputEvent = createInputEventData(data, bytesRead);
                     //Only process key events for now
-                    if (inputEvent.getType() == EV_KEY)
+                    //if (inputEvent.getType() == EV_KEY)
                         log.info("Event = {}", inputEvent);
                 }
             }
@@ -53,7 +51,7 @@ public class DevInputTest {
         }
     }
 
-    private InputEventData createInputEvent(byte[] data) {
+    private InputEventData createInputEventData(byte[] data, int bufferSize) {
         ByteBuffer buffer = ByteUtils.wrapDirectBuffer(data);
         int tvSeconds = buffer.getInt();
         int tvMicroSeconds = buffer.getInt();

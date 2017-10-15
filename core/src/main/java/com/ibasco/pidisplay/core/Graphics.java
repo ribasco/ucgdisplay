@@ -1,6 +1,5 @@
 package com.ibasco.pidisplay.core;
 
-import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
 
 /**
@@ -34,16 +33,17 @@ public interface Graphics {
 
     void drawText(String text);
 
-    void drawText(int y, String text);
+    /*
+        void drawText(int y, String text);
 
-    void drawText(String text, int x, int y);
+        void drawText(String text, int x, int y);
 
-    void drawText(String text, Object... args);
+        void drawText(String text, Object... args);
 
-    void drawText(int y, String text, TextAlignment alignment);
+        void drawText(int y, String text, TextAlignment alignment);
 
-    void drawText(int y, String text, TextAlignment alignment, Object... arguments);
-
+        void drawText(int y, String text, TextAlignment alignment, Object... arguments);
+    */
     int getWidth();
 
     int getHeight();

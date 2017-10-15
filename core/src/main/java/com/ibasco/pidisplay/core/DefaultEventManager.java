@@ -2,9 +2,6 @@ package com.ibasco.pidisplay.core;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.ibasco.pidisplay.core.events.Event;
-import com.ibasco.pidisplay.core.events.EventHandler;
-import com.ibasco.pidisplay.core.events.EventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,10 +25,12 @@ public class DefaultEventManager implements EventManager {
 
     @Override
     public <T extends Event> void register(final EventType<T> eventType, final EventHandler<? super T> handler) {
-        log.debug("Adding Event Handler for: {}", eventType.getName());
         try {
             writeLock.lock();
-            handlers.put(eventType, handler);
+            if (handlers.put(eventType, handler))
+                log.debug("REGISTER_HANDLER => Registered handler '{}' for Type '{}'", handler, eventType);
+            else
+                log.debug("REGISTER_HANDLER => Could not register handler '{}' for Type '{}'", handler, eventType);
         } finally {
             writeLock.unlock();
         }
@@ -39,10 +38,12 @@ public class DefaultEventManager implements EventManager {
 
     @Override
     public <T extends Event> void unregister(final EventType<T> eventType, final EventHandler<? super T> handler) {
-        log.debug("Removing Event Handler: {}", eventType);
         try {
             writeLock.lock();
-            handlers.remove(eventType, handler);
+            if (handlers.remove(eventType, handler))
+                log.debug("UNREGISTER_HANDLER => Unregistered handler '{}' for Type '{}'", handler, eventType);
+            else
+                log.debug("UNREGISTER_HANDLER => Could not unregister handler '{}' for Type '{}'", handler, eventType);
         } finally {
             this.writeLock.unlock();
         }

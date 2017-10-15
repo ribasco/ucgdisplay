@@ -16,9 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author Rafael Ibasco
  */
-public class LcdGraphics implements Graphics {
+public class CharGraphics implements Graphics {
 
-    private static final Logger log = LoggerFactory.getLogger(LcdGraphics.class);
+    private static final Logger log = LoggerFactory.getLogger(CharGraphics.class);
 
     private LcdDriver driver;
 
@@ -49,7 +49,7 @@ public class LcdGraphics implements Graphics {
 
     private CharBuffer[] buffer;
 
-    LcdGraphics(LcdDriver driver) {
+    CharGraphics(LcdDriver driver) {
         this.driver = driver;
         char[] cbuf = new char[driver.getColumnCount() * driver.getRowCount()];
         Arrays.fill(cbuf, ' ');
@@ -90,28 +90,33 @@ public class LcdGraphics implements Graphics {
     @Override
     public void drawText(char data) {
         driver.write(data);
+        colOffset.incrementAndGet();
     }
 
     @Override
     public void drawText(char[] data) {
         driver.write(data);
+        colOffset.addAndGet(data.length - 1);
     }
 
     @Override
     public void drawText(byte[] data) {
         driver.write(data);
+        colOffset.addAndGet(data.length);
     }
 
     @Override
     public void drawText(byte data) {
         driver.write(data);
+        this.colOffset.incrementAndGet();
     }
 
     @Override
     public void drawText(String text) {
         driver.write(text);
+        colOffset.addAndGet(text.length() - 1);
     }
-
+/*
     @Override
     public void drawText(int y, String text) {
         driver.write(y, text);
@@ -135,7 +140,7 @@ public class LcdGraphics implements Graphics {
     @Override
     public void drawText(int y, String text, TextAlignment alignment, Object... arguments) {
         driver.write(y, text, toLcdTextAlignment(alignment), arguments);
-    }
+    }*/
 
     @Override
     public int getWidth() {
@@ -160,7 +165,17 @@ public class LcdGraphics implements Graphics {
         return a;
     }
 
+    public int getColOffset() {
+        return colOffset.get();
+    }
+
+    public int getRowOffset() {
+        return rowOffset.get();
+    }
+
     @Override
     public void flush() {
     }
+
+
 }

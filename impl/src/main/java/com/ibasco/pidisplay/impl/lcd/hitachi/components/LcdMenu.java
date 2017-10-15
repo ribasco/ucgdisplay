@@ -1,15 +1,15 @@
 package com.ibasco.pidisplay.impl.lcd.hitachi.components;
 
 import com.ibasco.pidisplay.core.components.DisplayMenu;
-import com.ibasco.pidisplay.impl.lcd.hitachi.LcdGraphics;
+import com.ibasco.pidisplay.impl.lcd.hitachi.CharGraphics;
 
-public class LcdMenu extends DisplayMenu<LcdGraphics> {
+public class LcdMenu extends DisplayMenu<CharGraphics> {
     public LcdMenu() {
 
     }
 
     @Override
-    public void drawNode(LcdGraphics graphics) {
+    public void drawNode(CharGraphics graphics) {
 
     }
 }
