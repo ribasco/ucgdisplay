@@ -291,7 +291,7 @@ public class HitachiLcdDemoOld {
     }
 
     private void delay(int interval) {
-        ThreadUtils.sleepUninterrupted(interval);
+        ThreadUtils.sleep(interval);
     }
 
     public static void main(String[] args) throws Exception {

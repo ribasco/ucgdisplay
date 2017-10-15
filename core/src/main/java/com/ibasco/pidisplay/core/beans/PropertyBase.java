@@ -2,7 +2,7 @@ package com.ibasco.pidisplay.core.beans;
 
 abstract public class PropertyBase<T> implements Property<T> {
 
-    private T value;
+    private T value = null;
 
     public PropertyBase(T value) {
         this.value = value;

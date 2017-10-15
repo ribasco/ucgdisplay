@@ -11,7 +11,7 @@ public class ByteUtils {
         ByteBuffer buffer = ByteBuffer.allocateDirect(data.length)
                 .order(ByteOrder.LITTLE_ENDIAN)
                 .put(data);
-        buffer.flip();
+        buffer.rewind();
         return buffer;
     }
 }

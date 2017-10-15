@@ -1,10 +1,10 @@
 package com.ibasco.pidisplay.impl.lcd.hitachi.events;
 
 import com.ibasco.pidisplay.core.DisplayNode;
-import com.ibasco.pidisplay.core.events.Event;
-import com.ibasco.pidisplay.core.events.EventType;
+import com.ibasco.pidisplay.core.Event;
+import com.ibasco.pidisplay.core.EventType;
 import com.ibasco.pidisplay.core.util.Node;
-import com.ibasco.pidisplay.impl.lcd.hitachi.LcdGraphics;
+import com.ibasco.pidisplay.impl.lcd.hitachi.CharGraphics;
 
 import java.util.Objects;
 
@@ -18,7 +18,7 @@ public class LcdMenuItemEvent extends LcdEvent {
 
     private int selectedIndex;
 
-    public LcdMenuItemEvent(EventType<? extends Event> eventType, Node<String> selectedItem, int selectedIndex, DisplayNode<LcdGraphics> display) {
+    public LcdMenuItemEvent(EventType<? extends Event> eventType, Node<String> selectedItem, int selectedIndex, DisplayNode<CharGraphics> display) {
         super(eventType, display);
         this.selectedItem = selectedItem;
         this.selectedIndex = selectedIndex;

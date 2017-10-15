@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 
 @SuppressWarnings("WeakerAccess")
 @Deprecated
-abstract public class LcdDisplay extends AbstractDisplay<LcdGraphics> {
+abstract public class LcdDisplay extends AbstractDisplay<CharGraphics> {
 
     protected static final String CMD_CHAR = "char";
 
@@ -24,7 +24,7 @@ abstract public class LcdDisplay extends AbstractDisplay<LcdGraphics> {
         return StringUtils.EMPTY;
     }
 
-    public void draw(LcdGraphics graphics) {
+    public void draw(CharGraphics graphics) {
         /*if (!EventDispatcher.threadName.equals(Thread.currentThread().getName()))
             throw new RuntimeException("This method should only be called from the event dispatcher thread");*/
         if (getWidth() == -1)

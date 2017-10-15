@@ -1,7 +1,5 @@
 package com.ibasco.pidisplay.core;
 
-import com.ibasco.pidisplay.core.events.Event;
-
 /**
  * The {@link EventDispatcher} interface
  *
@@ -9,6 +7,8 @@ import com.ibasco.pidisplay.core.events.Event;
  */
 public interface EventDispatcher {
     <T extends Event> void dispatch(T event);
+
+    void invokeLater(Runnable runnable);
 
     void shutdown();
 

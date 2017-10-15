@@ -1,12 +1,12 @@
 package com.ibasco.pidisplay.core;
 
+import com.ibasco.pidisplay.core.beans.InputEventData;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.beans.PropertyChangeListener;
 import com.ibasco.pidisplay.core.components.DisplayDialog;
 import com.ibasco.pidisplay.core.events.DisplayEvent;
-import com.ibasco.pidisplay.core.events.Event;
-import com.ibasco.pidisplay.core.events.EventHandler;
-import com.ibasco.pidisplay.core.events.EventType;
+import com.ibasco.pidisplay.core.events.RawInputEvent;
+import com.ibasco.pidisplay.core.services.InputMonitorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,9 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -28,7 +30,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author Rafael Ibasco
  */
-abstract public class DisplayController<T extends Graphics> {
+abstract public class DisplayController<T extends Graphics> implements InputMonitorService.RawInputListener {
 
     private static final Logger log = LoggerFactory.getLogger(DisplayController.class);
 
@@ -42,11 +44,11 @@ abstract public class DisplayController<T extends Graphics> {
 
     private Deque<DisplayNode<T>> displayStack = new ArrayDeque<>();
 
-    private Deque<DisplayNode<T>> hiddenDisplayStack = new ArrayDeque<>();
-
     private EventManager eventManager = new DefaultEventManager();
 
     private EventDispatcher eventDispatcher;
+
+    private AtomicBoolean interactiveMode = new AtomicBoolean(false);
 
     private final PropertyChangeListener changeListener = (a, b, c) -> drawDisplay();
 
@@ -71,13 +73,16 @@ abstract public class DisplayController<T extends Graphics> {
      */
     protected DisplayController(T graphics, ExecutorService executorService) {
         this.graphics = Objects.requireNonNull(graphics, "Graphics must not be null");
+
+        InputMonitorService.setActiveListener(this);
+
         this.eventDispatcher = new DefaultEventDispatcher(eventManager, executorService);
         //Add handlers for these specific events
-        eventManager.register(DisplayEvent.DISPLAY_DRAW, this::drawEventHandler);
+        eventManager.register(DisplayEvent.DISPLAY_DRAW, this::displayEventHandler);
     }
 
     /**
-     * Display the dialog and return the result
+     * Display the dialog and block until we get a result.
      *
      * @param displayDialog
      *         The {@link DisplayDialog} to be shown
@@ -86,8 +91,22 @@ abstract public class DisplayController<T extends Graphics> {
      *
      * @return An {@link Optional} type containing the result of the dialog
      */
-    public <A> Optional<A> showDialog(DisplayDialog<T, A> displayDialog) {
-        return displayDialog.getResult();
+    public <A> Optional<A> showAndWait(DisplayDialog<T, A> displayDialog) {
+        try {
+            CountDownLatch latch = new CountDownLatch(1);
+            //Show dialog
+            show(displayDialog);
+            //Set event handler for DialogEvent#DIALOG_RESULT
+            displayDialog.setOnDialogResult(event -> latch.countDown());
+            //Block until we get a result
+            latch.await();
+            return displayDialog.getResult();
+        } catch (InterruptedException e) {
+            throw new RuntimeException("DIALOG_INTERRUPTED", e);
+        } finally {
+            displayDialog.setOnDialogResult(null);
+            close(displayDialog);
+        }
     }
 
     /**
@@ -96,15 +115,20 @@ abstract public class DisplayController<T extends Graphics> {
      * @param nextDisplay
      *         The {@link DisplayNode}  to display
      */
-    @SuppressWarnings("unchecked")
+    //TODO: Make thread-safe
     public void show(DisplayNode<T> nextDisplay) {
         if (nextDisplay == null)
             return;
 
-        //Do not proceed if the specified display is already the active display
-        if (!displayStack.isEmpty() && displayStack.peekFirst().equals(nextDisplay)) {
-            drawDisplay();
-            return;
+        try {
+            this.readLock.lock();
+            //Do not proceed if the specified display is already the active display
+            if (!displayStack.isEmpty() && displayStack.peekFirst().equals(nextDisplay)) {
+                drawDisplay();
+                return;
+            }
+        } finally {
+            this.readLock.unlock();
         }
 
         //Get the current active display
@@ -113,42 +137,53 @@ abstract public class DisplayController<T extends Graphics> {
         //De-activate the previous display
         deactivateDisplay(prevDisplay, true);
 
-        //Remove the display from the stack (if exists)
-        if (!nextDisplay.isInitialized() || !displayStack.removeIf(d -> d.getId() == nextDisplay.getId())) {
-            //If this is a display that didn't exist on the stack initialize it's properties
-            //Initialize node properties recursively
-            initDisplayPropDefaults(nextDisplay, true);
-        }
+        try {
+            this.writeLock.lock();
+            //Remove the display from the stack (if exists) and initialize
+            if (!nextDisplay.isInitialized() || !displayStack.removeIf(d -> d.getId() == nextDisplay.getId())) {
+                //If this is a display that didn't exist on the stack initialize it's properties
+                //Initialize node properties recursively
+                initDisplayPropDefaults(nextDisplay, true);
+            }
 
-        //Push the display to the head of the stack
-        displayStack.push(nextDisplay);
+            //Push the display to the head of the stack
+            displayStack.push(nextDisplay);
+        } finally {
+            this.writeLock.unlock();
+        }
 
         clear();
 
         //Draw the new display
+        eventDispatcher.dispatch(new DisplayEvent<>(DisplayEvent.DISPLAY_SHOWING, nextDisplay));
         activateDisplay(nextDisplay, true);
         drawDisplay(nextDisplay);
+        eventDispatcher.dispatch(new DisplayEvent<>(DisplayEvent.DISPLAY_SHOWN, nextDisplay));
 
-        log.debug("DISPLAY_SHOW => From {} to {} (Is Active: {}, Stack Size: {})", prevDisplay, nextDisplay, nextDisplay.isActive(), displayStack.size());
+        log.debug("DISPLAY_SHOWN => From {} to {} (Is Active: {}, Stack Size: {})", prevDisplay, nextDisplay, nextDisplay.isActive(), displayStack.size());
     }
 
     /**
      * Hides the active display. This basically places the active display on the tail of the display stack. The previous
      * display on the stack will be displayed (if available).
      */
+    public void hide() {
+        DisplayNode<T> prevDisplay = getDisplay(true);
+        hide(prevDisplay);
+    }
+
     //TODO: Should we just have a separate stack for hidden windows? Having it to automatically re-appear
     //TODO: Contd: after all displays have been hidden defeats the purpose of hiding it in the first place. User should be
     //TODO: Cont: the one to control when and how it should be re-displayed
-    public void hide() {
-        DisplayNode<T> prevDisplay = getDisplay(true);
-
-        if (prevDisplay != null) {
+    private void hide(DisplayNode<T> display) {
+        if (display != null) {
             //#1 Deactivate the active display
-            deactivateDisplay(prevDisplay, true);
+            deactivateDisplay(display, true);
             try {
-                //#2 Place it on the end of the stack
+                //TODO: Re-evaluate if this is really necessary
+                //#2 Place it on the end of the stack?
                 writeLock.lock();
-                this.displayStack.addLast(prevDisplay);
+                this.displayStack.addLast(display);
             } finally {
                 writeLock.unlock();
             }
@@ -163,7 +198,7 @@ abstract public class DisplayController<T extends Graphics> {
             drawDisplay(newDisplay);
         }
 
-        log.debug("DISPLAY_HIDE => {}", prevDisplay);
+        log.debug("DISPLAY_HIDDEN => {}", display);
     }
 
     /**
@@ -253,6 +288,14 @@ abstract public class DisplayController<T extends Graphics> {
         return graphics;
     }
 
+    public void startInteractive() {
+
+    }
+
+    public void endInteractive() {
+
+    }
+
     /**
      * Retrieves the top most display on the stack.
      *
@@ -305,7 +348,6 @@ abstract public class DisplayController<T extends Graphics> {
             if (!this.displayStack.isEmpty()) {
                 if (remove)
                     return this.displayStack.pop();
-                //No locking is needed?
                 return this.displayStack.peekFirst();
             }
         } finally {
@@ -314,17 +356,23 @@ abstract public class DisplayController<T extends Graphics> {
         return null;
     }
 
+    //region Event Handlers
+
     /**
-     * Event Handler for {@link DisplayEvent#DISPLAY_DRAW} events
+     * Event Handler for {@link DisplayEvent}
      *
      * @param event
      *         The {@link DisplayEvent} object
      */
-    private void drawEventHandler(DisplayEvent<T> event) {
+    private void displayEventHandler(DisplayEvent<T> event) {
         //Make sure this is running on the event dispatch thread.
         checkEventDispatchThread();
-        if (event.getEventType() == DisplayEvent.DISPLAY_DRAW
-                && event.getDisplay() != null) {
+
+        if (event.getDisplay() == null)
+            return;
+
+        //Handle Draw Events
+        if (event.getEventType() == DisplayEvent.DISPLAY_DRAW) {
             try {
                 this.readLock.lock();
                 //TODO: Need to perform additional checks if the target display exists in the current node
@@ -334,9 +382,12 @@ abstract public class DisplayController<T extends Graphics> {
                 event.consume();
                 this.readLock.unlock();
             }
+        } else if (event.getEventType() == DisplayEvent.DISPLAY_HIDING) {
+            //noimpl yet
         } else
-            throw new RuntimeException("Unsupported event type: " + event.getEventType().getName());
+            throw new RuntimeException("Unhandled Event: " + event.getEventType().getName());
     }
+    //endregion
 
     /**
      * Fires a {@link DisplayEvent#DISPLAY_DRAW} to the {@link DefaultEventDispatcher} for the current display
@@ -372,7 +423,7 @@ abstract public class DisplayController<T extends Graphics> {
      * @param display
      *         The {@link DisplayNode} to initialize
      */
-    protected void initDefaultDimensions(DisplayNode<T> display) {
+    private void initDefaultDimensions(DisplayNode<T> display) {
         if (!display.maxWidth.isSet())
             display.maxWidth.setValid(graphics.getWidth());
         if (!display.maxHeight.isSet())
@@ -407,6 +458,8 @@ abstract public class DisplayController<T extends Graphics> {
         boolean success = false;
         try {
             //Inject event dispatcher instance
+            if (display.eventManager == null)
+                display.eventManager = this.eventManager;
             if (display.eventDispatcher == null)
                 display.eventDispatcher = this.eventDispatcher;
             //Initialize default dimensions
@@ -436,7 +489,7 @@ abstract public class DisplayController<T extends Graphics> {
         //Properties to be set on activation
         display.active.setValid(true);
         display.visible.setValid(true);
-        display.enabled.setValid(true);
+        //display.enabled.setValid(true);
 
         //Register change listeners
         for (ObservableProperty property : display.getChangeListeners()) {
@@ -477,7 +530,7 @@ abstract public class DisplayController<T extends Graphics> {
         //Properties to be set on deactivation
         display.active.setValid(false);
         display.visible.setValid(false);
-        display.enabled.setValid(false);
+        //display.enabled.setValid(false);
 
         //Unregister change listeners
         for (ObservableProperty property : display.getChangeListeners()) {
@@ -495,7 +548,15 @@ abstract public class DisplayController<T extends Graphics> {
                 display.isEnabled());
     }
 
-    private int createId() {
-        return -1;
+    /**
+     * Process Raw Input Events and forward it to their designated listeners
+     *
+     * @param data
+     *         The {@link InputEventData} instance containing raw input data
+     */
+    @Override
+    public void onRawInput(InputEventData data) {
+        log.debug("Received Input Event: {}", data);
+        eventDispatcher.dispatch(new RawInputEvent(RawInputEvent.ANY, data));
     }
 }

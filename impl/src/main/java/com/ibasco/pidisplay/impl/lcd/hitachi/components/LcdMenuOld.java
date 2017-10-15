@@ -3,11 +3,11 @@ package com.ibasco.pidisplay.impl.lcd.hitachi.components;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
+import com.ibasco.pidisplay.core.EventHandler;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
-import com.ibasco.pidisplay.core.events.EventHandler;
 import com.ibasco.pidisplay.core.util.Node;
+import com.ibasco.pidisplay.impl.lcd.hitachi.CharGraphics;
 import com.ibasco.pidisplay.impl.lcd.hitachi.LcdDisplay;
-import com.ibasco.pidisplay.impl.lcd.hitachi.LcdGraphics;
 import com.ibasco.pidisplay.impl.lcd.hitachi.enums.LcdMenuCursorOrientation;
 import com.ibasco.pidisplay.impl.lcd.hitachi.enums.LcdMenuItemStyle;
 import com.ibasco.pidisplay.impl.lcd.hitachi.events.LcdMenuItemEvent;
@@ -274,7 +274,7 @@ public class LcdMenuOld extends LcdDisplay {
     //</editor-fold>
 
     @Override
-    protected void drawNode(LcdGraphics graphics) {
+    protected void drawNode(CharGraphics graphics) {
         graphics.clear();
 
         int maxRows = getHeight();
@@ -308,7 +308,7 @@ public class LcdMenuOld extends LcdDisplay {
         }
     }
 
-    private void drawMenuHeader(Node<String> parentNode, LcdGraphics graphics) {
+    private void drawMenuHeader(Node<String> parentNode, CharGraphics graphics) {
         graphics.setCursor(0, 0);
         String headerText = parentNode.getName();
         int remainingChars = graphics.getWidth();
@@ -320,7 +320,7 @@ public class LcdMenuOld extends LcdDisplay {
             graphics.drawText(0);
     }
 
-    private void drawMenuItem(final int index, final Node<String> node, final LcdGraphics graphics, final boolean isSelected) {
+    private void drawMenuItem(final int index, final Node<String> node, final CharGraphics graphics, final boolean isSelected) {
         final int maxChars = graphics.getWidth();
         final ByteBuffer buffer = ByteBuffer.allocate(maxChars);
 
@@ -329,10 +329,10 @@ public class LcdMenuOld extends LcdDisplay {
         //Is the cursor set to the left position?
         if (isCursorVisible() && LcdMenuCursorOrientation.LEFT.equals(cursorOrientation)) {
             if (isSelected) {
-                buffer.put((menuCursorChar != null) ? menuCursorChar : LcdGraphics.CHAR_RIGHTARROW);
+                buffer.put((menuCursorChar != null) ? menuCursorChar : CharGraphics.CHAR_RIGHTARROW);
             } else
-                buffer.put(LcdGraphics.CHAR_SPACE);
-            buffer.put(LcdGraphics.CHAR_SPACE);
+                buffer.put(CharGraphics.CHAR_SPACE);
+            buffer.put(CharGraphics.CHAR_SPACE);
         }
 
         //Add the item prefix
@@ -340,7 +340,7 @@ public class LcdMenuOld extends LcdDisplay {
             String formattedNumber = menuItemNumberFormatter.format(index);
             buffer.put(formattedNumber.getBytes());
         } else if (itemStyle == LcdMenuItemStyle.BULLETED) {
-            buffer.put(LcdGraphics.CHAR_BULLETPOINT);
+            buffer.put(CharGraphics.CHAR_BULLETPOINT);
         }
 
         String text = node.getName();
@@ -356,13 +356,13 @@ public class LcdMenuOld extends LcdDisplay {
 
         //Add the right side cursor
         if (isCursorVisible() && isSelected && rightCursorOffset > 0) {
-            buffer.put(LcdGraphics.CHAR_SPACE);
-            buffer.put((menuCursorChar != null) ? menuCursorChar : LcdGraphics.CHAR_LEFTARROW);
+            buffer.put(CharGraphics.CHAR_SPACE);
+            buffer.put((menuCursorChar != null) ? menuCursorChar : CharGraphics.CHAR_LEFTARROW);
         }
 
         //Fill the remaining with space
         while (buffer.hasRemaining())
-            buffer.put(LcdGraphics.CHAR_SPACE);
+            buffer.put(CharGraphics.CHAR_SPACE);
 
         graphics.drawText(buffer.array());
     }

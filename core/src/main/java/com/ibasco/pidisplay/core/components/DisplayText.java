@@ -21,13 +21,11 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     private static final Logger log = LoggerFactory.getLogger(DisplayText.class);
 
     //region Properties
-    protected ObservableProperty<String> text = new ObservableProperty<>(StringUtils.EMPTY);
+    protected ObservableProperty<String> text = createProperty(true, StringUtils.EMPTY);
 
-    protected ObservableProperty<TextAlignment> textAlignment = new ObservableProperty<>(TextAlignment.LEFT);
+    protected ObservableProperty<TextAlignment> textAlignment = createProperty(true, TextAlignment.LEFT);
 
-    protected ObservableProperty<Integer> startIndex = new ObservableProperty<>(0);
-
-    protected ObservableProperty<TextWrapStyle> textWrapStyle = new ObservableProperty<>(TextWrapStyle.CONTINUOUS);
+    protected ObservableProperty<TextWrapStyle> textWrapStyle = createProperty(true, TextWrapStyle.CONTINUOUS);
 
     protected List<String> lines = new ArrayList<>();
     //endregion
@@ -58,14 +56,6 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
 
     public void setTextWrapStyle(TextWrapStyle textWrapStyle) {
         this.textWrapStyle.set(textWrapStyle);
-    }
-
-    public Integer getStartIndex() {
-        return startIndex.get();
-    }
-
-    public void setStartIndex(Integer startIndex) {
-        this.startIndex.set(startIndex);
     }
 
     public String getText() {
@@ -105,7 +95,6 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
         changeListeners.add(this.text);
         changeListeners.add(this.textAlignment);
         changeListeners.add(this.textWrapStyle);
-        changeListeners.add(this.startIndex);
         return changeListeners;
     }
 
@@ -140,11 +129,12 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     protected void refreshLines(String text) {
         int width = this.width.get();
         text = TextUtils.wrapText(text, width, textWrapStyle.get());
+        log.debug("DISPLAY_TEXT_REFRESH_BUFFER => Refreshing line buffer (Width: {})", width);
         lines = Arrays.asList(StringUtils.splitPreserveAllTokens(text, "\n"));
     }
 
     @Override
     public String toString() {
-        return String.format("%s Text: %s", super.toString(), StringUtils.abbreviate(StringUtils.defaultIfBlank(text.getInvalid(), "N/A"), 20));
+        return String.format("%s Text: %s", super.toString(), StringUtils.abbreviate(StringUtils.defaultIfBlank(text.get(), "N/A"), 20));
     }
 }

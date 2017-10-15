@@ -2,6 +2,7 @@ package com.ibasco.pidisplay.examples.lcd;
 
 import com.ibasco.pidisplay.components.RotaryEncoder;
 import com.ibasco.pidisplay.components.RotaryState;
+import com.ibasco.pidisplay.core.enums.AlertType;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.enums.TextWrapStyle;
 import com.ibasco.pidisplay.core.util.Node;
@@ -12,6 +13,8 @@ import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.Mcp23017LcdAdapter;
 import com.ibasco.pidisplay.impl.lcd.hitachi.LcdController;
 import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdPane;
 import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdText;
+import com.ibasco.pidisplay.impl.lcd.hitachi.components.LcdTextBox;
+import com.ibasco.pidisplay.impl.lcd.hitachi.components.dialog.LcdAlertDialog;
 import com.pi4j.component.button.Button;
 import com.pi4j.component.button.ButtonHoldListener;
 import com.pi4j.component.button.ButtonReleasedListener;
@@ -214,6 +217,8 @@ public class HitachiLcdDemo {
         return button;
     }
 
+    private LcdAlertDialog<String> alert = new LcdAlertDialog<>(AlertType.INFO);
+
     private ButtonReleasedListener buttonReleasedListener = buttonEvent -> {
         boolean success;
         switch ((String) buttonEvent.getButton().getTag()) {
@@ -227,7 +232,8 @@ public class HitachiLcdDemo {
                 //success = lcdMenu.doPrevious();
                 break;
             case "select":
-                lcd.hide();
+                log.info("Setting Result");
+                alert.setResult("Hello");
                 break;
             default:
                 success = false;
@@ -251,7 +257,7 @@ public class HitachiLcdDemo {
     };
 
     private void delay(int interval) {
-        ThreadUtils.sleepUninterrupted(interval);
+        ThreadUtils.sleep(interval);
     }
 
     public static void main(String[] args) throws Exception {
@@ -306,9 +312,15 @@ public class HitachiLcdDemo {
         pane3.add(new LcdText(0, 1, 15, 2, "Content"));
         pane3.add(new LcdText(15, 1, 5, 2, "Body Icon"));
         pane3.add(new LcdText(0, 3, 20, 1, "Footer"));
+
+        LcdPane inputPane = new LcdPane();
+        inputPane.add(new LcdTextBox());
+
         paneList.add(pane1);
         paneList.add(pane2);
         paneList.add(pane3);
+        paneList.add(inputPane);
+
         paneList.addAll(createPanes("Item %d", 50));
 
         LcdText header = ((LcdText) pane3.getChildren().get(0));
@@ -344,9 +356,19 @@ public class HitachiLcdDemo {
             }
         });
 
+
+
+
+        /*ThreadUtils.sleep(5000);
+
+        log.info("Showing Dialog. Blocking");
+        Optional<String> res = lcd.showAndWait(alert);
+        log.info("Dialog Result = {}", res.get());*/
+
+
         //Wait
         while (!shutdown.get()) {
-            ThreadUtils.sleepUninterrupted(500);
+            ThreadUtils.sleep(500);
         }
 
         log.info("Shutting down...");

@@ -1,24 +1,67 @@
 package com.ibasco.pidisplay.core.components;
 
-import com.ibasco.pidisplay.core.Dialog;
 import com.ibasco.pidisplay.core.DisplayNode;
+import com.ibasco.pidisplay.core.EventHandler;
 import com.ibasco.pidisplay.core.Graphics;
+import com.ibasco.pidisplay.core.beans.ObservableProperty;
+import com.ibasco.pidisplay.core.events.DialogEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
-abstract public class DisplayDialog<T extends Graphics, B> extends DisplayNode<T> implements Dialog<B> {
+@SuppressWarnings("WeakerAccess")
+abstract public class DisplayDialog<T extends Graphics, B> extends DisplayNode<T> {
+
+    private static final Logger log = LoggerFactory.getLogger(DisplayDialog.class);
+
+    private ObservableProperty<B> result = new ObservableProperty<B>() {
+        @Override
+        protected void invalidated(B oldValue, B newValue) {
+            log.debug("DISPLAY_DIALOG => Result Received. Firing Event");
+            fireEvent(new DialogEvent<>(DialogEvent.DIALOG_RESULT, DisplayDialog.this, newValue));
+        }
+    };
+
+    private ObservableProperty<EventHandler<DialogEvent>> onDialogResult;
 
     protected DisplayDialog() {
         super(null, null, null, null);
     }
 
-    @Override
-    protected void drawNode(T graphics) {
-
+    public EventHandler<DialogEvent> getOnDialogResult() {
+        return onDialogResult().get();
     }
 
-    @Override
+    public void setOnDialogResult(EventHandler<DialogEvent> eventHandler) {
+        onDialogResult().set(eventHandler);
+    }
+
+    public ObservableProperty<EventHandler<DialogEvent>> onDialogResult() {
+        if (onDialogResult == null) {
+            onDialogResult = new ObservableProperty<EventHandler<DialogEvent>>() {
+                @Override
+                protected void invalidated(EventHandler<DialogEvent> oldVal, EventHandler<DialogEvent> newVal) {
+                    if (newVal == null && oldVal != null) {
+                        DisplayDialog.this.removeEventHandler(DialogEvent.DIALOG_RESULT, oldVal);
+                        return;
+                    }
+                    DisplayDialog.this.addEventHandler(DialogEvent.DIALOG_RESULT, get());
+                }
+            };
+        }
+        return onDialogResult;
+    }
+
+    public ObservableProperty<B> resultProperty() {
+        return result;
+    }
+
+    public void setResult(B result) {
+        this.result.set(result);
+    }
+
     public Optional<B> getResult() {
-        return null;
+        return Optional.ofNullable(result.get());
     }
 }

@@ -155,33 +155,51 @@ public enum InputEventCode {
      */
     KEY_PROPS(130),
 
-    KEY_UNDO(131),	/* AC Undo */
+    /**
+     * AC Undo
+     */
+    KEY_UNDO(131),
 
     KEY_FRONT(132),
 
-    KEY_COPY(133),	/* AC Copy */
+    /**
+     * AC Copy
+     */
+    KEY_COPY(133),
 
-    KEY_OPEN(134),	/* AC Open */
+    /**
+     * AC Open
+     */
+    KEY_OPEN(134),
 
-    KEY_PASTE(135),	/* AC Paste */
+    /** AC Paste */
+    KEY_PASTE(135),
 
-    KEY_FIND(136),	/* AC Search */
+    /** AC Search */
+    KEY_FIND(136),
 
-    KEY_CUT(137),	/* AC Cut */
+    /** AC Cut */
+    KEY_CUT(137),
 
-    KEY_HELP(138),	/* AL Integrated Help Center */
+    /** AL Integrated Help Center */
+    KEY_HELP(138),
 
-    KEY_MENU(139),	/* Menu (show menu) */
+    /** Menu (show menu) */
+    KEY_MENU(139),
 
-    KEY_CALC(140),	/* AL Calculator */
+    /** AL Calculator */
+    KEY_CALC(140),
 
     KEY_SETUP(141),
 
-    KEY_SLEEP(142),	/* SC System Sleep */
+    /** SC System Sleep */
+    KEY_SLEEP(142),
 
-    KEY_WAKEUP(143),	/* System Wake Up */
+    /** System Wake Up */
+    KEY_WAKEUP(143),
 
-    KEY_FILE(144),	/* AL Local Machine Browser */
+    /** AL Local Machine Browser */
+    KEY_FILE(144),
 
     KEY_SENDFILE(145),
 
@@ -193,15 +211,18 @@ public enum InputEventCode {
 
     KEY_PROG2(149),
 
-    KEY_WWW(150),	/* AL Internet Browser */
+    /** AL Internet Browser */
+    KEY_WWW(150),
 
     KEY_MSDOS(151),
 
-    KEY_COFFEE(152),	/* AL Terminal Lock/Screensaver */
+    /** AL Terminal Lock/Screensaver */
+    KEY_COFFEE(152),
 
     KEY_SCREENLOCK(KEY_COFFEE.code),
 
-    KEY_ROTATE_DISPLAY(153),	/* Display orientation for e.g. tablets */
+    /** Display orientation for e.g. tablets */
+    KEY_ROTATE_DISPLAY(153),
 
     KEY_DIRECTION(KEY_ROTATE_DISPLAY.code),
 
@@ -209,13 +230,16 @@ public enum InputEventCode {
 
     KEY_MAIL(155),
 
-    KEY_BOOKMARKS(156),	/* AC Bookmarks */
+    /** AC Bookmarks */
+    KEY_BOOKMARKS(156),
 
     KEY_COMPUTER(157),
 
-    KEY_BACK(158),	/* AC Back */
+    /** AC Back */
+    KEY_BACK(158),
 
-    KEY_FORWARD(159),	/* AC Forward */
+    /** AC Forward */
+    KEY_FORWARD(159),
 
     KEY_CLOSECD(160),
 
@@ -235,17 +259,22 @@ public enum InputEventCode {
 
     KEY_REWIND(168),
 
-    KEY_PHONE(169),	/* Media Select Telephone */
+    /** Media Select Telephone */
+    KEY_PHONE(169),
 
     KEY_ISO(170),
 
-    KEY_CONFIG(171),	/* AL Consumer Control Configuration */
+    /** AL Consumer Control Configuration */
+    KEY_CONFIG(171),
 
-    KEY_HOMEPAGE(172),	/* AC Home */
+    /** AC Home */
+    KEY_HOMEPAGE(172),
 
-    KEY_REFRESH(173),	/* AC Refresh */
+    /** AC Refresh */
+    KEY_REFRESH(173),
 
-    KEY_EXIT(174),	/* AC Exit */
+    /** AC Exit */
+    KEY_EXIT(174),
 
     KEY_MOVE(175),
 
@@ -259,9 +288,11 @@ public enum InputEventCode {
 
     KEY_KPRIGHTPAREN(180),
 
-    KEY_NEW(181),	/* AC New */
+    /** AC New */
+    KEY_NEW(181),
 
-    KEY_REDO(182),	/* AC Redo/Repeat */
+    /** AC Redo/Repeat */
+    KEY_REDO(182),
 
     KEY_F13(183),
 
@@ -295,11 +326,13 @@ public enum InputEventCode {
 
     KEY_PROG4(203),
 
-    KEY_DASHBOARD(204),	/* AL Dashboard */
+    /** AL Dashboard */
+    KEY_DASHBOARD(204),
 
     KEY_SUSPEND(205),
 
-    KEY_CLOSE(206),	/* AC Close */
+    /** AC Close */
+    KEY_CLOSE(206),
 
     KEY_PLAY(207),
 
@@ -307,7 +340,8 @@ public enum InputEventCode {
 
     KEY_BASSBOOST(209),
 
-    KEY_PRINT(210),	/* AC Print */
+    /** AC Print */
+    KEY_PRINT(210),
 
     KEY_HP(211),
 
@@ -325,7 +359,8 @@ public enum InputEventCode {
 
     KEY_CONNECT(218),
 
-    KEY_FINANCE(219),	/* AL Checkbook/Finance */
+    /** AL Checkbook/Finance */
+    KEY_FINANCE(219),
 
     KEY_SPORT(220),
 
@@ -333,7 +368,8 @@ public enum InputEventCode {
 
     KEY_ALTERASE(222),
 
-    KEY_CANCEL(223),	/* AC Cancel */
+    /** AC Cancel */
+    KEY_CANCEL(223),
 
     KEY_BRIGHTNESSDOWN(224),
 
@@ -341,7 +377,8 @@ public enum InputEventCode {
 
     KEY_MEDIA(226),
 
-    KEY_SWITCHVIDEOMODE(227),	/* Cycle between available video((   outputs (Monitor/LCD/TV-out/etc) */
+    /** Cycle between available video((   outputs (Monitor/LCD/TV-out/etc) */
+    KEY_SWITCHVIDEOMODE(227),
 
     KEY_KBDILLUMTOGGLE(228),
 
@@ -349,13 +386,17 @@ public enum InputEventCode {
 
     KEY_KBDILLUMUP(230),
 
-    KEY_SEND(231),	/* AC Send */
+    /** AC Send */
+    KEY_SEND(231),
 
-    KEY_REPLY(232),	/* AC Reply */
+    /** AC Reply */
+    KEY_REPLY(232),
 
-    KEY_FORWARDMAIL(233),	/* AC Forward Msg */
+    /** AC Forward Msg */
+    KEY_FORWARDMAIL(233),
 
-    KEY_SAVE(234),	/* AC Save */
+    /** AC Save */
+    KEY_SAVE(234),
 
     KEY_DOCUMENTS(235),
 
@@ -369,25 +410,33 @@ public enum InputEventCode {
 
     KEY_UNKNOWN(240),
 
-    KEY_VIDEO_NEXT(241),	/* drive next video source */
+    /** drive next video source */
+    KEY_VIDEO_NEXT(241),
 
-    KEY_VIDEO_PREV(242),	/* drive previous video source */
+    /** drive previous video source */
+    KEY_VIDEO_PREV(242),
 
-    KEY_BRIGHTNESS_CYCLE(243),	/* brightness up, after max is min */
+    /** brightness up, after max is min */
+    KEY_BRIGHTNESS_CYCLE(243),
 
-    KEY_BRIGHTNESS_AUTO(244),	/* Set Auto Brightness: manual brightness control is off, rely on ambient */
+    /** Set Auto Brightness: manual brightness control is off, rely on ambient */
+    KEY_BRIGHTNESS_AUTO(244),
 
     KEY_BRIGHTNESS_ZERO(KEY_BRIGHTNESS_AUTO.code),
 
-    KEY_DISPLAY_OFF(245),	/* display device to off state */
+    /** display device to off state */
+    KEY_DISPLAY_OFF(245),
 
-    KEY_WWAN(246),	/* Wireless WAN (LTE, UMTS, GSM, etc.) */
+    /** Wireless WAN (LTE, UMTS, GSM, etc.) */
+    KEY_WWAN(246),
 
     KEY_WIMAX(KEY_WWAN.code),
 
-    KEY_RFKILL(247),	/* Key that controls all radios */
+    /** Key that controls all radios */
+    KEY_RFKILL(247),
 
-    KEY_MICMUTE(248),	/* Mute / unmute the microphone */
+    /** Mute / unmute the microphone */
+    KEY_MICMUTE(248),
 
     UNKNOWN(-1);
 
@@ -407,11 +456,24 @@ public enum InputEventCode {
                 .orElse(InputEventCode.UNKNOWN.override(value));
     }
 
+    /**
+     * Overrides the code value of the current enumeration.
+     *
+     * Note: This is only meant to be used internally!
+     *
+     * @param code
+     *         The code to override the value with
+     *
+     * @return The {@link InputEventCode} instance
+     */
     InputEventCode override(int code) {
         this.code = code;
         return this;
     }
 
+    /**
+     * @return Returns a Hex Code representation of the code
+     */
     public String toHexCode() {
         return Integer.toHexString(code & 0xffff);
     }
