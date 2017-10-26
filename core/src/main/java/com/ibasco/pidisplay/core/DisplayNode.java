@@ -1,7 +1,6 @@
 package com.ibasco.pidisplay.core;
 
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
-import com.ibasco.pidisplay.core.events.DisplayEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
@@ -22,8 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Rafael Ibasco
  */
 @SuppressWarnings("WeakerAccess")
-abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
-
+abstract public class DisplayNode<T extends Graphics> extends DisplayRegion implements EventTarget {
     //region Static Properties
     private static final Logger log = LoggerFactory.getLogger(DisplayNode.class);
 
@@ -33,7 +31,9 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
     //region Properties
     protected ObservableProperty<String> name = createProperty(this.getClass().getSimpleName().toLowerCase());
 
-    protected ObservableProperty<Boolean> visible = createProperty(true, false);
+    protected ObservableProperty<Boolean> visible = createProperty(true, true);
+
+    protected ObservableProperty<Controller<T>> controller;
 
     /**
      * Input is disabled when enabled property is false
@@ -62,10 +62,12 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
 
     private AtomicBoolean initialized = new AtomicBoolean(false);
 
-    EventDispatcher eventDispatcher;
-
-    EventManager eventManager;
+    private int depth = 0;
     //endregion
+
+    ObservableProperty<EventDispatcher> eventDispatcher;
+
+    EventHandlerManager eventHandlerManager;
 
     //region Inner Classes
 
@@ -128,16 +130,14 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
 
     public void setEnabled(boolean enabled) {
         this.enabled.set(enabled);
-        doAction(DisplayNode::setEnabled, enabled);
     }
 
     public boolean isActive() {
         return active.get();
     }
 
-    public void setActive(boolean active) {
+    void setActive(boolean active) {
         this.active.set(active);
-        doAction(DisplayNode::setActive, active);
     }
 
     public boolean isVisible() {
@@ -146,7 +146,6 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
 
     public void setVisible(boolean visible) {
         this.visible.set(visible);
-        doAction(DisplayNode::setVisible, visible);
     }
 
     public DisplayNode<T> getParent() {
@@ -220,35 +219,23 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
     //endregion
 
     //region Protected Methods
-
-    /**
-     * @return A {@link List} of {@link ObservableProperty} instances that needs to be redrawn for every change event
-     * that occurs.
-     */
-    protected List<ObservableProperty> getChangeListeners() {
-        List<ObservableProperty> changeListeners = new ArrayList<>();
-        changeListeners.add(this.leftPos);
-        changeListeners.add(this.topPos);
-        changeListeners.add(this.visible);
-        changeListeners.add(this.width);
-        changeListeners.add(this.height);
-        changeListeners.add(this.minWidth);
-        changeListeners.add(this.minHeight);
-        changeListeners.add(this.maxWidth);
-        changeListeners.add(this.maxHeight);
-        changeListeners.add(this.scrollTop);
-        changeListeners.add(this.scrollLeft);
-        changeListeners.add(this.focused);
-        return changeListeners;
+    public ObservableProperty<Controller<T>> controllerProperty() {
+        if (controller == null)
+            controller = new ObservableProperty<>(null);
+        return controller;
     }
 
-    protected void redraw() {
-        fireEvent(new DisplayEvent<>(DisplayEvent.DISPLAY_DRAW, this));
+    Controller<T> getController() {
+        return controllerProperty().get();
     }
 
-    protected void add(DisplayNode<T>... nodes) {
-        if (nodes != null && nodes.length > 0)
-            Arrays.stream(nodes).forEach(this::add);
+    public void setController(Controller<T> controller) {
+        controllerProperty().set(controller);
+    }
+
+    @SafeVarargs
+    protected final void add(DisplayNode<T>... nodes) {
+        this.children.addAll(Arrays.asList(nodes));
     }
 
     protected void add(DisplayNode<T> component) {
@@ -275,37 +262,29 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
         return this.children != null && this.children.size() > 0;
     }
 
-    protected void fireEvent(Event event) {
-        if (this.eventDispatcher == null) {
-            log.warn("Event fired but event dispatcher is not set");
-            return;
-        }
-        this.eventDispatcher.dispatch(event);
+    public void fireEvent(Event event) {
+        Event.fireEvent(this, event);
     }
     //endregion
 
     //region Package-Private Methods
 
     /**
-     * To be called by the {@link DisplayController} and should not be called elsewhere
+     * To be called by the {@link Controller} and should not be called elsewhere
      *
      * @param graphics
      *         The {@link Graphics} driver to use for this node
      */
     final void draw(T graphics) {
-        if (eventDispatcher != null && !eventDispatcher.isEventDispatchThread())
-            throw new IllegalStateException("This should not be called outside the event dispatcher thread");
-        if (graphics == null)
-            throw new IllegalArgumentException("Graphics object must not be null");
+        if (isAttached())
+            this.getController().checkEventDispatchThread();
 
-        //Do not process inactive nodes
-        if (!isActive()) {
-            log.debug("Display '{}' Not active. Skipped", this);
-            return;
-        }
+        if (graphics == null)
+            throw new NullPointerException("Graphics object must not be null");
 
         //Draw the child nodes (if it exists)
         doAction(DisplayNode::drawNode, graphics);
+
         //Draw the current node
         this.drawNode(graphics);
     }
@@ -330,10 +309,16 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
         doAction(this, action, arg, 0);
     }
 
+    <Y> void doAction(Action<T, Y> action, Y arg, int depth) {
+        if (!hasChildren())
+            return;
+        doAction(this, action, arg, depth);
+    }
+
     /**
      * Performs a recursive operation on the node tree.
      *
-     * @param component
+     * @param node
      *         The {@link DisplayNode} to process
      * @param action
      *         The {@link Action} which contains the operations to be performed on the child nodes
@@ -344,27 +329,67 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
      * @param <Y>
      *         The type of the argument of the operation
      */
-    private <Y> void doAction(DisplayNode<T> component, Action<T, Y> action, Y arg, int depth) {
+    <Y> void doAction(DisplayNode<T> node, Action<T, Y> action, Y arg, int depth) {
+        node.setDepth(depth);
         //Perform action on the top level first
-        for (DisplayNode<T> node : component.getChildren()) {
-            action.doAction(node, arg);
-            doAction(node, action, arg, depth + 1);
+        for (DisplayNode<T> subNode : node.getChildren()) {
+            action.doAction(subNode, arg);
+            doAction(subNode, action, arg, depth + 1);
         }
     }
     //endregion
 
-    public <E extends Event> void addEventHandler(final EventType<E> eventType, final EventHandler<? super E> handler) {
-        if (eventManager != null)
-            eventManager.register(eventType, handler);
-        else
-            log.warn("NODE_ADD_EVENT_HANDLER => Skipped event handler registration for {}. Reason: {}", this, "Not yet initialized");
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 
-    public <E extends Event> void removeEventHandler(final EventType<E> eventType, final EventHandler<? super E> handler) {
-        if (eventManager != null)
-            eventManager.unregister(eventType, handler);
-        else
-            log.warn("NODE_REM_EVENT_HANDLER => Skipped event handler registration for {}. Reason: {}", this, "Not yet initialized");
+    public int getDepth() {
+        return depth;
+    }
+
+    final boolean isAttached() {
+        return this.controllerProperty().get() != null;
+    }
+
+    public ObservableProperty<EventDispatcher> eventDispatcherProperty() {
+        if (this.eventDispatcher == null) {
+            this.eventDispatcher = new ObservableProperty<>(eventHandlerManager);
+        }
+        return eventDispatcher;
+    }
+
+    private EventHandlerManager getEventHandlerManager() {
+        if (eventHandlerManager == null)
+            eventHandlerManager = new EventHandlerManager(this);
+        eventDispatcherProperty();
+        return eventHandlerManager;
+    }
+
+    public final EventDispatcher getEventDispatcher() {
+        return eventDispatcherProperty().get();
+    }
+
+    @Override
+    public final EventDispatchQueue getEventDispatchQueue() {
+        Controller<T> controller = controllerProperty().get();
+        if (controller != null && controller.getEventDispatchQueue() != null) {
+            return controller.getEventDispatchQueue();
+        }
+        log.warn("There is no event dispatch queue associated with '{}'", this);
+        return null;
+    }
+
+    public final void setEventDispatcher(EventDispatcher eventDispatcher) {
+        if (this.eventDispatcher != null)
+            this.eventDispatcher.set(eventDispatcher);
+    }
+
+    public final <T extends Event> void addEventHandler(final EventType<T> eventType, final EventHandler<? super T> eventHandler, EventDispatchType dispatchType) {
+        getEventHandlerManager().addEventHandler(eventType, eventHandler, dispatchType);
+    }
+
+    public final <T extends Event> void removeEventHandler(final EventType<T> eventType, final EventHandler<? super T> eventHandler, EventDispatchType dispatchType) {
+        getEventHandlerManager().removeEventHandler(eventType, eventHandler, dispatchType);
     }
 
     protected <B> ObservableProperty<B> createProperty(B defaultValue) {
@@ -377,26 +402,51 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion {
         return new ObservableProperty<B>(defaultValue) {
             @Override
             protected void invalidated(B oldValue, B newValue) {
-                //log.debug("Redrawing invalidated node : {}", DisplayNode.this);
+                if (DisplayNode.this.isActive()) {
+                    //redraw();
+                }
             }
         };
     }
 
-    //region Equals/HashCode
+    @SuppressWarnings("Duplicates")
+    @Override
+    public EventDispatchChain buildEventTargetPath(EventDispatchChain tail) {
+        DisplayNode<T> current = this;
+        //loop through all succeeding parent nodes and prepend it to the tail of the chain
+        while (current != null) {
+            if (current.eventDispatcher != null) {
+                final EventDispatcher eventDispatcherValue = current.eventDispatcher.get();
+                if (eventDispatcherValue != null)
+                    tail = tail.addFirst(eventDispatcherValue);
+            }
+            current = current.getParent();
+        }
+        //Append event dispatcher of this node's controller
+        if (getController() != null) {
+            tail = getController().buildEventTargetPath(tail);
+        } else
+            log.error("Skipping append controller dispatcher");
+        return tail;
+    }
 
+    //region Equals/HashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DisplayNode<?> that = (DisplayNode<?>) o;
-        return id == that.id;
+        return equals(that);
+    }
+
+    public <X extends Graphics> boolean equals(DisplayNode<X> tDisplayNode) {
+        return tDisplayNode.getId() == this.getId();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder().append(this.id).toHashCode();
     }
-
     //endregion
 
     @Override

@@ -5,7 +5,7 @@ import com.ibasco.pidisplay.core.EventType;
 import com.ibasco.pidisplay.core.beans.InputEventData;
 
 public class RawInputEvent extends Event {
-    public static final EventType<RawInputEvent> ANY = new EventType<>(Event.ANY, "INPUT");
+    public static final EventType<RawInputEvent> ANY = new EventType<>(Event.ANY, "INPUT_ANY");
 
     public static final EventType<RawInputEvent> KEY_PRESS = new EventType<>(ANY, "KEY_PRESS");
 

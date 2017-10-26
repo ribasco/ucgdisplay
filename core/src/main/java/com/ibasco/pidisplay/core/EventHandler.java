@@ -1,6 +1,8 @@
 package com.ibasco.pidisplay.core;
 
+import java.util.EventListener;
+
 @FunctionalInterface
-public interface EventHandler<E extends Event> {
-    void handle(E event);
+public interface EventHandler<T extends Event> extends EventListener {
+    void handle(T event);
 }

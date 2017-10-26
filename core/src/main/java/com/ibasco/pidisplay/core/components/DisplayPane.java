@@ -20,10 +20,10 @@ abstract public class DisplayPane<T extends Graphics> extends DisplayNode<T> {
     private static final Logger log = LoggerFactory.getLogger(DisplayPane.class);
 
     public DisplayPane() {
-        super(null, null);
+        this(null, null);
     }
 
-    protected DisplayPane(int width, int height) {
+    protected DisplayPane(Integer width, Integer height) {
         super(width, height);
     }
 

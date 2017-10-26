@@ -1,6 +1,7 @@
 package com.ibasco.pidisplay.core.components;
 
 import com.ibasco.pidisplay.core.DisplayNode;
+import com.ibasco.pidisplay.core.EventDispatchType;
 import com.ibasco.pidisplay.core.EventHandler;
 import com.ibasco.pidisplay.core.Graphics;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
@@ -18,7 +19,7 @@ abstract public class DisplayDialog<T extends Graphics, B> extends DisplayNode<T
     private ObservableProperty<B> result = new ObservableProperty<B>() {
         @Override
         protected void invalidated(B oldValue, B newValue) {
-            log.debug("DISPLAY_DIALOG => Result Received. Firing Event");
+            log.debug("DISPLAY_DIALOG => Firing Result Receive Event");
             fireEvent(new DialogEvent<>(DialogEvent.DIALOG_RESULT, DisplayDialog.this, newValue));
         }
     };
@@ -43,10 +44,10 @@ abstract public class DisplayDialog<T extends Graphics, B> extends DisplayNode<T
                 @Override
                 protected void invalidated(EventHandler<DialogEvent> oldVal, EventHandler<DialogEvent> newVal) {
                     if (newVal == null && oldVal != null) {
-                        DisplayDialog.this.removeEventHandler(DialogEvent.DIALOG_RESULT, oldVal);
+                        DisplayDialog.this.removeEventHandler(DialogEvent.DIALOG_RESULT, oldVal, EventDispatchType.BUBBLE);
                         return;
                     }
-                    DisplayDialog.this.addEventHandler(DialogEvent.DIALOG_RESULT, get());
+                    DisplayDialog.this.addEventHandler(DialogEvent.DIALOG_RESULT, get(), EventDispatchType.BUBBLE);
                 }
             };
         }
