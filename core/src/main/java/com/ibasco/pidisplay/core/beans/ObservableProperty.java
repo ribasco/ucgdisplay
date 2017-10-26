@@ -4,9 +4,7 @@ import com.google.common.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class ObservableProperty<T> extends PropertyBase<T> implements Observable<T> {
 
@@ -14,7 +12,7 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
 
     private boolean valid = true;
 
-    private Set<PropertyChangeListener<? super T>> listeners = new HashSet<>();
+    private PropertyListenerUtil<T> listenerUtil;
 
     public ObservableProperty() {
         this(null);
@@ -60,24 +58,17 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
     }
 
     private void fireChangeEvent(T oldVal) {
-        for (PropertyChangeListener<? super T> listener : listeners) {
-            listener.changed(this, oldVal, super.get());
-        }
+        PropertyListenerUtil.fireChangeEvent(listenerUtil, this, oldVal, super.get());
     }
 
     @Override
     public void addListener(PropertyChangeListener<? super T> listener) {
-        listeners.add(listener);
+        this.listenerUtil = PropertyListenerUtil.addListener(this.listenerUtil, listener);
     }
 
     @Override
     public void removeListener(PropertyChangeListener<? super T> listener) {
-        listeners.remove(listener);
-    }
-
-    @Override
-    public Set<PropertyChangeListener<? super T>> getListeners() {
-        return listeners;
+        this.listenerUtil = PropertyListenerUtil.removeListener(this.listenerUtil, listener);
     }
 
     @Override

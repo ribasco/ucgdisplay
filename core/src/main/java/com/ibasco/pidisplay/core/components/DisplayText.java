@@ -89,15 +89,6 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     }
     //endregion
 
-    @Override
-    protected List<ObservableProperty> getChangeListeners() {
-        List<ObservableProperty> changeListeners = super.getChangeListeners();
-        changeListeners.add(this.text);
-        changeListeners.add(this.textAlignment);
-        changeListeners.add(this.textWrapStyle);
-        return changeListeners;
-    }
-
     /**
      * Clears the text property
      */

@@ -7,7 +7,7 @@ import com.ibasco.pidisplay.core.Graphics;
 
 public class DialogEvent<T extends Graphics, B> extends DisplayEvent<T> {
 
-    public static final EventType<DialogEvent> ANY = new EventType<>(Event.ANY, "ANY");
+    public static final EventType<DialogEvent> ANY = new EventType<>(DisplayEvent.ANY, "ANY");
 
     public static final EventType<DialogEvent> DIALOG_RESULT = new EventType<>(ANY, "DIALOG_RESULT");
 

@@ -1,49 +1,73 @@
 package com.ibasco.pidisplay.core;
 
-@SuppressWarnings("WeakerAccess")
-public final class EventType<T extends Event> {
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.WeakHashMap;
 
-    public static final EventType<Event> ROOT = new EventType<>(null, "EVENT");
+public final class EventType<T extends Event> implements Serializable {
+
+    public static final EventType<Event> ALL = new EventType<>("EVENT", null);
+
+    private WeakHashMap<EventType<? extends T>, Void> subTypes;
+
+    private final EventType<? super T> parentType;
 
     private final String name;
 
-    private final EventType<? super T> superType;
-
-    public EventType(String name) {
-        this(ROOT, name);
+    public EventType(final String name) {
+        this(ALL, name);
     }
 
-    public EventType(final EventType<? super T> superType, final String name) {
+    public EventType(final EventType<? super T> parentType) {
+        this(parentType, null);
+    }
+
+    public EventType(final EventType<? super T> parentType, final String name) {
+        this.parentType = Objects.requireNonNull(parentType, "You must specify a parent type for this instance");
         this.name = name;
-        this.superType = superType;
+        parentType.validateAndRegister(this);
     }
 
-    public EventType<? super T> getSuperType() {
-        return superType;
+    private EventType(final String name, final EventType<? super T> parentType) {
+        this.parentType = parentType;
+        this.name = name;
+        if (parentType != null) {
+            if (parentType.subTypes != null) {
+                for (Iterator i = parentType.subTypes.keySet().iterator(); i.hasNext(); ) {
+                    EventType t = (EventType) i.next();
+                    if (name == null && t.name == null || (name != null && name.equals(t.name))) {
+                        i.remove();
+                    }
+                }
+            }
+            parentType.validateAndRegister(this);
+        }
     }
 
-    public String getName() {
+    public final EventType<? super T> getParentType() {
+        return parentType;
+    }
+
+    public final String getName() {
         return name;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EventType<T> eventType = (EventType<T>) o;
-
-        return name != null ? name.equals(eventType.name) : eventType.name == null;
+    public String toString() {
+        return (name != null) ? name : super.toString();
     }
 
-    @Override
-    public int hashCode() {
-        return name != null ? name.hashCode() : 0;
-    }
+    private void validateAndRegister(EventType<? extends T> newSubType) {
+        //lazy init
+        if (subTypes == null)
+            subTypes = new WeakHashMap<>();
 
-    @Override
-    public final String toString() {
-        return this.name;
+        for (EventType<? extends T> eventSubType : subTypes.keySet()) {
+            if (((eventSubType.name == null && newSubType.name == null) || (eventSubType.name != null && eventSubType.name.equals(newSubType.name)))) {
+                throw new IllegalArgumentException("EventType \"" + newSubType + "\"" + " with parent \"" + newSubType.getParentType() + "\" already exists");
+            }
+        }
+        subTypes.put(newSubType, null);
     }
 }

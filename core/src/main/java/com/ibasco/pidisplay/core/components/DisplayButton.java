@@ -5,7 +5,6 @@ import com.ibasco.pidisplay.core.Graphics;
 
 abstract public class DisplayButton<T extends Graphics> extends DisplayNode<T> {
 
-
     protected DisplayButton(Integer width, Integer height) {
         super(width, height);
     }

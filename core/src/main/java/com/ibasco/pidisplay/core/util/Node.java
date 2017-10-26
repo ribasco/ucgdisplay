@@ -1,6 +1,5 @@
 package com.ibasco.pidisplay.core.util;
 
-import com.ibasco.pidisplay.core.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +7,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * A Iterable Tree based model used by the {@link Display} library
+ * A Iterable Tree based model
  *
  * @param <T>
  *         The underlying Data Type of the {@link Node}

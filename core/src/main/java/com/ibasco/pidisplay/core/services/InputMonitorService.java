@@ -1,7 +1,10 @@
 package com.ibasco.pidisplay.core.services;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.ibasco.pidisplay.core.*;
 import com.ibasco.pidisplay.core.beans.InputEventData;
+import com.ibasco.pidisplay.core.beans.ObservableProperty;
+import com.ibasco.pidisplay.core.events.RawInputEvent;
 import com.ibasco.pidisplay.core.exceptions.NoHIDAvailableException;
 import com.ibasco.pidisplay.core.exceptions.NoPermissionToAccessException;
 import com.ibasco.pidisplay.core.util.ByteUtils;
@@ -27,7 +30,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 //TODO: Add ability to monitor multiple HIDs
 //TODO: Each HID should be in it's own thread
-public class InputMonitorService {
+public class InputMonitorService implements EventTarget {
 
     private static Logger log = LoggerFactory.getLogger(InputMonitorService.class);
 
@@ -45,6 +48,10 @@ public class InputMonitorService {
 
     private File devFs;
 
+    private ObservableProperty<EventDispatcher> eventDispatcher;
+
+    private EventHandlerManager internalDispatcher;
+
     @FunctionalInterface
     public interface RawInputListener {
         void onRawInput(InputEventData data);
@@ -58,6 +65,12 @@ public class InputMonitorService {
         startMonitoring();
     }
 
+    /**
+     * Set the current active listener. There can only be one listener.
+     *
+     * @param listener
+     *         The {@link RawInputListener} instance
+     */
     public static void setActiveListener(RawInputListener listener) {
         LazyHolder.INSTANCE._setActiveListener(listener);
     }
@@ -101,7 +114,6 @@ public class InputMonitorService {
             log.debug("Trying to initialize");
             try {
                 initialize();
-                log.debug("SUCCESSFULLY INITIALZIED");
                 inputMonitorService.execute(this::inputMonitor);
             } catch (IOException e) {
                 shutdown.set(true);
@@ -132,7 +144,8 @@ public class InputMonitorService {
                     if (readLock.tryLock()) {
                         try {
                             if (activeListener != null) {
-                                activeListener.onRawInput(inputEvent);
+                                //activeListener.onRawInput(inputEvent);
+                                eventHandlerManager().dispatchEvent(new RawInputEvent(RawInputEvent.KEY_PRESS, inputEvent), CAPTURE);
                             } else {
                                 log.debug("No active listener is set");
                             }
@@ -162,5 +175,37 @@ public class InputMonitorService {
 
     public static InputMonitorService getInstance() {
         return LazyHolder.INSTANCE;
+    }
+
+    private EventHandlerManager eventHandlerManager() {
+        if (this.internalDispatcher == null) {
+            this.internalDispatcher = new EventHandlerManager(this);
+        }
+        return this.internalDispatcher;
+    }
+
+    public ObservableProperty<EventDispatcher> eventDispatcherProperty() {
+        if (eventDispatcher == null) {
+            eventDispatcher = new ObservableProperty<>(eventHandlerManager());
+        }
+        return eventDispatcher;
+    }
+
+    public EventDispatcher getEventDispatcher() {
+        return eventDispatcherProperty().get();
+    }
+
+    public void setEventDispatcher(EventDispatcher eventDispatcher) {
+        eventDispatcherProperty().set(eventDispatcher);
+    }
+
+    @Override
+    public EventDispatchChain buildEventTargetPath(EventDispatchChain tail) {
+        return tail;
+    }
+
+    @Override
+    public EventDispatchQueue getEventDispatchQueue() {
+        return null;
     }
 }
