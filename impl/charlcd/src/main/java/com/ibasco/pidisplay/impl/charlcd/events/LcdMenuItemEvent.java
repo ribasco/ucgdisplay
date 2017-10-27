@@ -4,7 +4,7 @@ import com.ibasco.pidisplay.core.DisplayNode;
 import com.ibasco.pidisplay.core.Event;
 import com.ibasco.pidisplay.core.EventType;
 import com.ibasco.pidisplay.core.util.Node;
-import com.ibasco.pidisplay.impl.charlcd.CharGraphics;
+import com.ibasco.pidisplay.impl.charlcd.LcdCharGraphics;
 
 import java.util.Objects;
 
@@ -18,7 +18,7 @@ public class LcdMenuItemEvent extends LcdEvent {
 
     private int selectedIndex;
 
-    public LcdMenuItemEvent(EventType<? extends Event> eventType, Node<String> selectedItem, int selectedIndex, DisplayNode<CharGraphics> display) {
+    public LcdMenuItemEvent(EventType<? extends Event> eventType, Node<String> selectedItem, int selectedIndex, DisplayNode<LcdCharGraphics> display) {
         super(eventType, display);
         this.selectedItem = selectedItem;
         this.selectedIndex = selectedIndex;

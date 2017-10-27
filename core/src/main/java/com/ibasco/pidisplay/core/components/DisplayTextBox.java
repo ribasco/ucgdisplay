@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.core.components;
 
-import com.ibasco.pidisplay.core.DisplayNode;
+import com.ibasco.pidisplay.core.DisplayParent;
 import com.ibasco.pidisplay.core.Graphics;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("WeakerAccess")
-abstract public class DisplayTextBox<T extends Graphics> extends DisplayNode<T> {
+abstract public class DisplayTextBox<T extends Graphics> extends DisplayParent<T> {
 
     private static final Logger log = LoggerFactory.getLogger(DisplayTextBox.class);
 

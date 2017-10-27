@@ -35,6 +35,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
 
     private static final Logger log = LoggerFactory.getLogger(Controller.class);
 
+    //region Properties/Fields
     private T graphics;
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
@@ -43,13 +44,13 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
 
     final Lock writeLock = readWriteLock.writeLock();
 
-    private Deque<DisplayNode<T>> displayStack = new ArrayDeque<>();
+    private Deque<DisplayParent<T>> displayStack = new ArrayDeque<>();
 
     private ObservableProperty<EventDispatcher> eventDispatcher;
 
     private EventHandlerManager eventHandlerManager;
 
-    private final EventHandler<DisplayEvent> DISPLAY_EVENT_HANDLER = this::displayEventHandler;
+    private final EventHandler<DisplayEvent<? extends T>> DISPLAY_EVENT_HANDLER = this::displayEventHandler;
 
     private static final AtomicInteger nextId = new AtomicInteger(0);
 
@@ -58,10 +59,10 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
     private AtomicBoolean shutdown = new AtomicBoolean(false);
 
     private final Runnable displayRenderer = this::renderDisplayUI;
+    //endregion
 
     protected Controller(T graphics) {
         this.graphics = Objects.requireNonNull(graphics, "Graphics must not be null");
-        //InputMonitorService.setActiveListener(this);
         startRepeatInvoke(displayRenderer);
         if (LoggerFactory.getLogger(EventDispatchQueue.class).isDebugEnabled()) {
             EventDispatchQueue dispatchQueue = getEventDispatchQueue();
@@ -86,8 +87,10 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         if (!displayStack.isEmpty() && readLock.tryLock()) {
             try {
                 DisplayNode<T> activeDisplay = displayStack.peekFirst();
-                if (activeDisplay != null && activeDisplay.isActive() && activeDisplay.isAttached())
+                if (activeDisplay != null && activeDisplay.isActive() && activeDisplay.isAttached()) {
                     activeDisplay.draw(graphics);
+                    graphics.flush();
+                }
             } finally {
                 readLock.unlock();
             }
@@ -114,7 +117,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         }
     }
 
-    public void show(DisplayNode<T> newDisplay) {
+    public void show(DisplayParent<T> newDisplay) {
         log.debug("DISPLAY_SHOW_START => Display: {} (Display Stack Empty: {})", newDisplay, displayStack.isEmpty());
         if (newDisplay == null)
             return;
@@ -143,19 +146,20 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
      * @return The current {@link DisplayNode} instance that was hidden otherwise {@code null} if there was no previous
      * display available
      */
-    public DisplayNode<T> hide() {
-        DisplayNode<T> previous = hide(true);
+    @SuppressWarnings("UnusedReturnValue")
+    public DisplayParent<T> hide() {
+        DisplayParent<T> previous = hide(true);
         show(getDisplay());
         return previous;
     }
 
-    private DisplayNode<T> hide(boolean remove) {
-        DisplayNode<T> prevDisplay = getDisplay(remove);
+    private DisplayParent<T> hide(boolean remove) {
+        DisplayParent<T> prevDisplay = getDisplay(remove);
         hide(prevDisplay);
         return prevDisplay;
     }
 
-    private void hide(DisplayNode<T> display) {
+    private void hide(DisplayParent<T> display) {
         if (display == null)
             return;
         log.debug("DISPLAY_HIDE => {}", display);
@@ -171,12 +175,12 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
     }
 
     public void close() {
-        DisplayNode<T> node = getDisplay();
+        DisplayParent<T> node = getDisplay();
         close(node);
         log.debug("DISPLAY_CLOSE => {}", node);
     }
 
-    public void close(DisplayNode<T> display) {
+    public void close(DisplayParent<T> display) {
         if (display == null)
             return;
         boolean removed;
@@ -215,7 +219,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
      * @param activate
      *         Set to {@code true} to activate the {@link DisplayNode} instance
      */
-    private void setDisplayActive(DisplayNode<T> display, boolean activate) {
+    private void setDisplayActive(DisplayParent<T> display, boolean activate) {
         if (display == null)
             return;
 
@@ -223,7 +227,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         if (!activate) {
             log.debug("DISPLAY_DEACTIVATE => Deactivating {} (No lock required)", display);
             display.setActive(false);
-            display.doAction(DisplayNode::setActive, false);
+            display.doAction(DisplayNode::setActive, false); //TODO: Remove this
             return;
         }
 
@@ -248,7 +252,8 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
             if (!display.isInitialized() || !displayStack.removeIf(display::equals)) {
                 log.debug("DISPLAY_INIT => Initializing Display for the first time");
                 //Initialize node properties recursively
-                initializeDisplay(display, true);
+                initDefaultDimensions(display);
+                initializeDisplay(display);
             }
 
             //Update the active flag recursively
@@ -280,11 +285,11 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         return graphics;
     }
 
-    public DisplayNode<T> getDisplay() {
+    public DisplayParent<T> getDisplay() {
         return getDisplay(false);
     }
 
-    private DisplayNode<T> getDisplay(boolean remove) {
+    private DisplayParent<T> getDisplay(boolean remove) {
         try {
             this.readLock.lock();
             if (!this.displayStack.isEmpty()) {
@@ -314,30 +319,17 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
             display.height.setValid(graphics.getHeight());
     }
 
-    private void initializeDisplay(DisplayNode<T> display) {
-        initializeDisplay(display, false);
+    private void initializeDisplay(DisplayParent<T> display) {
+        initDefaultDimensions(display);
+        display.setInitialized(true);
+        display.doAction((node, arg) -> {
+            initDefaultDimensions(node);
+            node.setInitialized(true);
+            log.debug("{}DISPLAY_PROP_INIT => {} (Is Child: {})", node.hasParent() ? "\t\t" : "", node, node.hasParent());
+        });
     }
 
-    private void initializeDisplay(DisplayNode<T> display, boolean recursive) {
-        if (display == null)
-            return;
-        if (recursive) {
-            initializeDisplay(display);
-            display.doAction(this::initializeDisplay, true);
-            return;
-        }
-        boolean success = false;
-        try {
-            //Initialize default dimensions
-            initDefaultDimensions(display);
-            success = true;
-            log.debug("{}DISPLAY_PROP_INIT => {} (Is Child: {})", display.hasParent() ? "\t\t" : "", display, display.hasParent());
-        } finally {
-            display.setInitialized(success);
-        }
-    }
-
-    private void attachDisplay(DisplayNode<T> display) {
+    private void attachDisplay(DisplayParent<T> display) {
         if (display != null && !display.isAttached()) {
             log.debug("DISPLAY_ATTACH => Attaching Controller '{}' to display '{}'", this, display);
             //Attach to display and child nodes
@@ -353,7 +345,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
             log.debug("Display {} is already attached to a controller {}", display, display.getController());
     }
 
-    private void detachDisplay(DisplayNode<T> display) {
+    private void detachDisplay(DisplayParent<T> display) {
         if (display != null && display.isAttached()) {
             log.debug("DISPLAY_DETACH => Detached Controller '{}' from display '{}'", this, display);
             //display.removeEventHandler(DisplayEvent.ANY, DISPLAY_EVENT_HANDLER, EventDispatchType.BUBBLE);
@@ -367,7 +359,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         }
     }
 
-    private void setDisplayVisible(DisplayNode<T> display, boolean arg) {
+    private void setDisplayVisible(DisplayParent<T> display, boolean arg) {
         if (display == null)
             return;
         log.trace("{}[{}] Setting visible property to '{}' for {}", StringUtils.repeat('\t', display.getDepth() * 2), display.getDepth(), arg, display);
@@ -384,7 +376,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
      * @param displayEvent
      *         The {@link DisplayEvent} to process
      */
-    private void displayEventHandler(DisplayEvent<T> displayEvent) {
+    private void displayEventHandler(DisplayEvent<? extends T> displayEvent) {
         //Make sure we are on the event dispatch thread
         checkEventDispatchThread();
         //Process display events here

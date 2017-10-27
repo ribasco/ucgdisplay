@@ -7,8 +7,9 @@
         <groupId>com.ibasco.pidisplay</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <packaging>jar</packaging>
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>pi-display-impl-charlcd</artifactId>
 
     <dependencies>
@@ -19,6 +20,20 @@
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>
             <artifactId>pi-display-drivers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

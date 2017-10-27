@@ -33,8 +33,8 @@ public class EventDispatchChainImpl implements EventDispatchChain {
 
     public void reset() {
         //Re-initialize queue?
-        this.dispatchers.clear();
-        //this.dispatchers = new ArrayDeque<>();
+        //this.dispatchers.clear();
+        this.dispatchers = new ArrayDeque<>();
     }
 
     @Override

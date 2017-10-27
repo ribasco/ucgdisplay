@@ -26,6 +26,8 @@ public interface ListChangeListener<T> {
         }
 
         public boolean removed() {
+            if (getRemoved() == null)
+                return false;
             return !getRemoved().isEmpty();
         }
 
