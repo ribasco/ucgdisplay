@@ -21,4 +21,11 @@ public enum LcdRegisterSelectState {
     public PinState getPinState() {
         return state;
     }
+
+    @Override
+    public String toString() {
+        return "LcdRegisterSelectState{" +
+                "state=" + state +
+                '}';
+    }
 }

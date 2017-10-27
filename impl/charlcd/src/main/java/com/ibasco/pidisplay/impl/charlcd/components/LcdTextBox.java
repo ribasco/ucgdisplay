@@ -2,12 +2,12 @@ package com.ibasco.pidisplay.impl.charlcd.components;
 
 import com.ibasco.pidisplay.core.components.DisplayText;
 import com.ibasco.pidisplay.core.components.DisplayTextBox;
-import com.ibasco.pidisplay.impl.charlcd.CharGraphics;
+import com.ibasco.pidisplay.impl.charlcd.LcdCharGraphics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("WeakerAccess")
-public class LcdTextBox extends DisplayTextBox<CharGraphics> {
+public class LcdTextBox extends DisplayTextBox<LcdCharGraphics> {
 
     private static final Logger log = LoggerFactory.getLogger(LcdTextBox.class);
 
@@ -24,10 +24,10 @@ public class LcdTextBox extends DisplayTextBox<CharGraphics> {
     }
 
     @Override
-    protected DisplayText<CharGraphics> createContent() {
+    protected DisplayText<LcdCharGraphics> createContent() {
         return new LcdText(0, 0, "Text Box") {
             @Override
-            protected void drawNode(CharGraphics graphics) {
+            protected void drawNode(LcdCharGraphics graphics) {
                 super.drawNode(graphics);
                 if (blinkCursor.get()) {
                     graphics.cursorBlink(blinkCursor.get());
@@ -37,7 +37,7 @@ public class LcdTextBox extends DisplayTextBox<CharGraphics> {
     }
 
     @Override
-    protected void drawNode(CharGraphics graphics) {
+    protected void drawNode(LcdCharGraphics graphics) {
         //log.debug("Drawing LcdTextBox (Text Cursor: x={}, y={})", graphics.getColOffset(), graphics.getRowOffset());
     }
 }

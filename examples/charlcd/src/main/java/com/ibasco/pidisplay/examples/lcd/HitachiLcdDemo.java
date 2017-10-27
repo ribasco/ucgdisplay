@@ -339,7 +339,7 @@ public class HitachiLcdDemo {
         footer.setTextAlignment(TextAlignment.CENTER);
 
         lcd.clear();
-        lcd.addEventHandler(DisplayEvent.ANY, event -> log.info("Event Bubble = {}", event), EventDispatchType.BUBBLE);
+        lcd.addEventHandler(DisplayEvent.ANY, event -> log.info("Event Bubble = {}", event), EventDispatchType.CAPTURE);
 
         lcd.show(paneList.get(startPos.get()));
 

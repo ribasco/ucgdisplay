@@ -6,9 +6,32 @@ import com.ibasco.pidisplay.core.beans.ObservableListWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
+/**
+ * A {@link DisplayNode} that contains child-nodes
+ *
+ * @param <T>
+ *         The underlying {@link Graphics} driver implementation
+ *
+ * @author Rafael Ibasco
+ */
 abstract public class DisplayParent<T extends Graphics> extends DisplayNode<T> {
 
     public static final Logger log = LoggerFactory.getLogger(DisplayParent.class);
+
+    /**
+     * Represents an action that will be performed on a {@link DisplayNode}
+     *
+     * @param <X>
+     *         The underlying {@link Graphics} type of the {@link DisplayNode}
+     * @param <Y>
+     *         The type of the argument for the operation being called
+     */
+    @FunctionalInterface
+    protected interface Action<X extends Graphics, Y> {
+        void doAction(DisplayNode<X> node, Y arg);
+    }
 
     protected ObservableList<DisplayNode<T>> children = new ObservableListWrapper<DisplayNode<T>>() {
         @Override
@@ -17,7 +40,7 @@ abstract public class DisplayParent<T extends Graphics> extends DisplayNode<T> {
                 log.debug("Children list removed");
                 changeDetails.getRemoved().forEach(n -> n.setParent(null));
             } else if (changeDetails.added()) {
-                log.debug("Children list added");
+                changeDetails.getList().forEach(a -> a.setParent(DisplayParent.this));
             }
         }
     };
@@ -28,6 +51,23 @@ abstract public class DisplayParent<T extends Graphics> extends DisplayNode<T> {
 
     protected DisplayParent(Integer left, Integer top, Integer width, Integer height) {
         super(left, top, width, height);
+    }
+
+    @SafeVarargs
+    protected final void add(DisplayNode<T>... nodes) {
+        this.children.addAll(Arrays.asList(nodes));
+    }
+
+    protected void add(DisplayNode<T> component) {
+        this.children.add(component);
+    }
+
+    protected void remove(DisplayNode<T> component) {
+        this.children.remove(component);
+    }
+
+    protected boolean hasChildren() {
+        return this.children != null && this.children.size() > 0;
     }
 
     protected ObservableList<DisplayNode<T>> getChildren() {
@@ -55,7 +95,65 @@ abstract public class DisplayParent<T extends Graphics> extends DisplayNode<T> {
     //endregion
 
     @Override
+    final void draw(T graphics) {
+        super.draw(graphics);
+        doAction(DisplayNode::drawNode, graphics);
+    }
+
+    @Override
     protected void drawNode(T graphics) {
-        //draw child nodes
+        //optional
+    }
+
+    /**
+     * Defaults to {@link #doAction(Action, Object)} with a default argument of null
+     *
+     * @see #doAction(Action, Object)
+     */
+    <Y> void doAction(Action<T, Y> action) {
+        doAction(action, null);
+    }
+
+    /**
+     * Defaults to {@link #doAction(DisplayNode, Action, Object, int)} with a default depth level of 0
+     *
+     * @see #doAction(DisplayNode, Action, Object, int)
+     */
+    <Y> void doAction(Action<T, Y> action, Y arg) {
+        if (!hasChildren())
+            return;
+        doAction(this, action, arg, 0);
+    }
+
+    <Y> void doAction(Action<T, Y> action, Y arg, int depth) {
+        if (!hasChildren())
+            return;
+        doAction(this, action, arg, depth);
+    }
+
+    /**
+     * Performs a recursive operation on the node tree.
+     *
+     * @param node
+     *         The {@link DisplayNode} to process
+     * @param action
+     *         The {@link Action} which contains the operations to be performed on the child nodes
+     * @param arg
+     *         The argument of the operation
+     * @param depth
+     *         The current depth level on the node tree
+     * @param <Y>
+     *         The type of the argument of the operation
+     */
+    <Y> void doAction(DisplayNode<T> node, Action<T, Y> action, Y arg, int depth) {
+        node.setDepth(depth);
+        if (node instanceof DisplayParent) {
+            DisplayParent<T> parent = (DisplayParent<T>) node;
+            //Perform action on the top level first
+            for (DisplayNode<T> subNode : parent.getChildren()) {
+                action.doAction(subNode, arg);
+                doAction(subNode, action, arg, depth + 1);
+            }
+        }
     }
 }

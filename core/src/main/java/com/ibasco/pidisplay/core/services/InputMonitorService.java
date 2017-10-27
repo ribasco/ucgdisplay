@@ -71,6 +71,7 @@ public class InputMonitorService implements EventTarget {
      * @param listener
      *         The {@link RawInputListener} instance
      */
+    @Deprecated
     public static void setActiveListener(RawInputListener listener) {
         LazyHolder.INSTANCE._setActiveListener(listener);
     }

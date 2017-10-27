@@ -1,6 +1,7 @@
 package com.ibasco.pidisplay.drivers.lcd.hitachi;
 
 import com.ibasco.pidisplay.core.annotations.DisplayDriver;
+import com.ibasco.pidisplay.core.exceptions.DisplayDriverException;
 import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.StdGpioLcdAdapter;
 import com.ibasco.pidisplay.drivers.lcd.hitachi.enums.*;
@@ -497,7 +498,7 @@ public class LcdDriver extends LCDBase implements LCD {
                 lcdGpioAdapter.write4Bits(value);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new DisplayDriverException(String.format("Error occured during send(%s,  %s)", value, regSelectState), e);
         }
     }
 

@@ -5,7 +5,7 @@ import com.ibasco.pidisplay.core.components.DisplayText;
 import com.ibasco.pidisplay.core.util.RegexTextProcessor;
 import com.ibasco.pidisplay.core.util.TextUtils;
 import com.ibasco.pidisplay.core.util.date.DateTimeUtils;
-import com.ibasco.pidisplay.impl.charlcd.CharGraphics;
+import com.ibasco.pidisplay.impl.charlcd.LcdCharGraphics;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  * 3. Blink (speed=1sec)
  * 4. Typewriter Effect (
  */
-public class LcdText extends DisplayText<CharGraphics> {
+public class LcdText extends DisplayText<LcdCharGraphics> {
 
     private static final Logger log = LoggerFactory.getLogger(LcdText.class);
 
@@ -46,7 +46,7 @@ public class LcdText extends DisplayText<CharGraphics> {
     //endregion
 
     @Override
-    protected void drawNode(CharGraphics graphics) {
+    protected void drawNode(LcdCharGraphics graphics) {
         //Calculate default dimensions
         calcPrefDimen(graphics);
 
@@ -137,9 +137,9 @@ public class LcdText extends DisplayText<CharGraphics> {
      * Calculates the preferred dimensions
      *
      * @param graphics
-     *         The underlying {@link CharGraphics} driver
+     *         The underlying {@link LcdCharGraphics} driver
      */
-    private void calcPrefDimen(CharGraphics graphics) {
+    private void calcPrefDimen(LcdCharGraphics graphics) {
         int maxDisplayWidth = graphics.getWidth();
         int maxDisplayHeight = graphics.getHeight();
         int textLength = defaultIfEmpty(this.text.get(), StringUtils.EMPTY).length();
@@ -187,7 +187,7 @@ public class LcdText extends DisplayText<CharGraphics> {
         return text;
     }
 
-    private int drawText(String text, int maxWidth, CharGraphics graphics) {
+    private int drawText(String text, int maxWidth, LcdCharGraphics graphics) {
         //Only align text if the property is set and if the node is
         //currently in visible state
         if (textAlignment.isSet() && isVisible())

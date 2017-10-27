@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.core.components;
 
-import com.ibasco.pidisplay.core.DisplayNode;
+import com.ibasco.pidisplay.core.DisplayParent;
 import com.ibasco.pidisplay.core.EventDispatchType;
 import com.ibasco.pidisplay.core.EventHandler;
 import com.ibasco.pidisplay.core.Graphics;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 @SuppressWarnings("WeakerAccess")
-abstract public class DisplayDialog<T extends Graphics, B> extends DisplayNode<T> {
+abstract public class DisplayDialog<T extends Graphics, B> extends DisplayParent<T> {
 
     private static final Logger log = LoggerFactory.getLogger(DisplayDialog.class);
 

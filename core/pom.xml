@@ -7,9 +7,10 @@
         <groupId>com.ibasco.pidisplay</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>pi-display-core</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

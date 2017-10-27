@@ -41,11 +41,5 @@ public interface Graphics {
 
     void cursorBlink(boolean state);
 
-    default void clear(int y) {
-        clear(-1, y, -1);
-    }
-
-    void clear(int x, int y, int length);
-
     void flush();
 }

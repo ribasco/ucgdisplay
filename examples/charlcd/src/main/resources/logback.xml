@@ -66,7 +66,7 @@
     <logger name="com.ibasco.pidisplay.core.components.DisplayText" level="INFO"/>
     <logger name="com.ibasco.pidisplay.core.services.InputMonitorService" level="TRACE"/>
     <logger name="com.ibasco.pidisplay.core.EventDispatchQueue" level="INFO"/>
-    <logger name="com.ibasco.pidisplay.core.Controller" level="DEBUG"/>
+    <logger name="com.ibasco.pidisplay.core.Controller" level="INFO"/>
     <logger name="com.ibasco.pidisplay.core.DisplayNode" level="INFO"/>
     <logger name="com.ibasco.pidisplay.core.util" level="INFO"/>
     <logger name="com.ibasco.pidisplay.impl" level="DEBUG"/>

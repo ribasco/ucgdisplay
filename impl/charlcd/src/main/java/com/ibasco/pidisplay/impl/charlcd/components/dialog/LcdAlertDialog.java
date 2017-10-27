@@ -2,18 +2,18 @@ package com.ibasco.pidisplay.impl.charlcd.components.dialog;
 
 import com.ibasco.pidisplay.core.components.dialog.AlertDialog;
 import com.ibasco.pidisplay.core.enums.AlertType;
-import com.ibasco.pidisplay.impl.charlcd.CharGraphics;
+import com.ibasco.pidisplay.impl.charlcd.LcdCharGraphics;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LcdAlertDialog<B> extends AlertDialog<CharGraphics, B> {
+public class LcdAlertDialog<B> extends AlertDialog<LcdCharGraphics, B> {
 
     private static final Logger log = LoggerFactory.getLogger(LcdAlertDialog.class);
 
     private LcdText title = new LcdText(0, 0, "Title") {
         @Override
-        protected void drawNode(CharGraphics graphics) {
+        protected void drawNode(LcdCharGraphics graphics) {
             log.debug("LCD_DIALOG => Drawing Title Pane");
             super.drawNode(graphics);
         }
@@ -21,7 +21,7 @@ public class LcdAlertDialog<B> extends AlertDialog<CharGraphics, B> {
 
     private LcdText content = new LcdText(0, 1, "Content") {
         @Override
-        protected void drawNode(CharGraphics graphics) {
+        protected void drawNode(LcdCharGraphics graphics) {
             log.debug("LCD_DIALOG => Drawing Content");
             super.drawNode(graphics);
         }
@@ -33,7 +33,7 @@ public class LcdAlertDialog<B> extends AlertDialog<CharGraphics, B> {
     }
 
     @Override
-    protected void drawNode(CharGraphics graphics) {
+    protected void drawNode(LcdCharGraphics graphics) {
         log.debug("Drawing Dialog");
     }
 }

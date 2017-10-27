@@ -6,9 +6,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -54,9 +51,7 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
 
     protected ObservableProperty<Boolean> focusable = createProperty(false);
 
-    private List<DisplayNode<T>> children = new ArrayList<>();
-
-    private DisplayNode<T> parent;
+    private DisplayParent<T> parent;
 
     private final long id = idCounter.incrementAndGet();
 
@@ -69,22 +64,6 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
 
     EventHandlerManager eventHandlerManager;
 
-    //region Inner Classes
-
-    /**
-     * Represents an action that will be performed on a {@link DisplayNode}
-     *
-     * @param <X>
-     *         The underlying {@link Graphics} type of the {@link DisplayNode}
-     * @param <Y>
-     *         The type of the argument for the operation being called
-     */
-    @FunctionalInterface
-    protected interface Action<X extends Graphics, Y> {
-        void doAction(DisplayNode<X> node, Y arg);
-    }
-    //endregion
-
     //region Constructor
     protected DisplayNode(Integer width, Integer height) {
         this(null, null, width, height);
@@ -96,6 +75,14 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
     //endregion
 
     //region Property Value Getter/Setters
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
+    public int getDepth() {
+        return depth;
+    }
+
     public long getId() {
         return id;
     }
@@ -148,11 +135,11 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
         this.visible.set(visible);
     }
 
-    public DisplayNode<T> getParent() {
+    public DisplayParent<T> getParent() {
         return parent;
     }
 
-    protected void setParent(DisplayNode<T> parent) {
+    protected void setParent(DisplayParent<T> parent) {
         this.parent = parent;
     }
 
@@ -233,33 +220,8 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
         controllerProperty().set(controller);
     }
 
-    @SafeVarargs
-    protected final void add(DisplayNode<T>... nodes) {
-        this.children.addAll(Arrays.asList(nodes));
-    }
-
-    protected void add(DisplayNode<T> component) {
-        component.visible.setValid(true);
-        component.parent = this;
-        this.children.add(component);
-    }
-
-    protected void remove(DisplayNode<T> component) {
-        component.visible.setValid(false);
-        component.parent = null;
-        this.children.remove(component);
-    }
-
-    protected List<DisplayNode<T>> getChildren() {
-        return this.children;
-    }
-
     protected boolean hasParent() {
         return parent != null;
-    }
-
-    protected boolean hasChildren() {
-        return this.children != null && this.children.size() > 0;
     }
 
     public void fireEvent(Event event) {
@@ -275,77 +237,20 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
      * @param graphics
      *         The {@link Graphics} driver to use for this node
      */
-    final void draw(T graphics) {
+    void draw(T graphics) {
+        validate(graphics);
+        //Draw the current node
+        this.drawNode(graphics);
+    }
+
+    protected final void validate(T graphics) {
         if (isAttached())
             this.getController().checkEventDispatchThread();
 
         if (graphics == null)
             throw new NullPointerException("Graphics object must not be null");
-
-        //Draw the child nodes (if it exists)
-        doAction(DisplayNode::drawNode, graphics);
-
-        //Draw the current node
-        this.drawNode(graphics);
-    }
-
-    /**
-     * Defaults to {@link #doAction(Action, Object)} with a default argument of null
-     *
-     * @see #doAction(Action, Object)
-     */
-    <Y> void doAction(Action<T, Y> action) {
-        doAction(action, null);
-    }
-
-    /**
-     * Defaults to {@link #doAction(DisplayNode, Action, Object, int)} with a default depth level of 0
-     *
-     * @see #doAction(DisplayNode, Action, Object, int)
-     */
-    <Y> void doAction(Action<T, Y> action, Y arg) {
-        if (!hasChildren())
-            return;
-        doAction(this, action, arg, 0);
-    }
-
-    <Y> void doAction(Action<T, Y> action, Y arg, int depth) {
-        if (!hasChildren())
-            return;
-        doAction(this, action, arg, depth);
-    }
-
-    /**
-     * Performs a recursive operation on the node tree.
-     *
-     * @param node
-     *         The {@link DisplayNode} to process
-     * @param action
-     *         The {@link Action} which contains the operations to be performed on the child nodes
-     * @param arg
-     *         The argument of the operation
-     * @param depth
-     *         The current depth level on the node tree
-     * @param <Y>
-     *         The type of the argument of the operation
-     */
-    <Y> void doAction(DisplayNode<T> node, Action<T, Y> action, Y arg, int depth) {
-        node.setDepth(depth);
-        //Perform action on the top level first
-        for (DisplayNode<T> subNode : node.getChildren()) {
-            action.doAction(subNode, arg);
-            doAction(subNode, action, arg, depth + 1);
-        }
     }
     //endregion
-
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
-    public int getDepth() {
-        return depth;
-    }
 
     final boolean isAttached() {
         return this.controllerProperty().get() != null;
