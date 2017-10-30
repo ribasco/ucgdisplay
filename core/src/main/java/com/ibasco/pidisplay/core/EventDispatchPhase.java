@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.core;
 
-public enum EventDispatchType {
+public enum EventDispatchPhase {
     CAPTURE,
     BUBBLE,
     POST_DISPATCH
