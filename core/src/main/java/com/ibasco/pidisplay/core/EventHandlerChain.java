@@ -18,19 +18,19 @@ public class EventHandlerChain<T extends Event> {
 
     private static final Logger log = LoggerFactory.getLogger(EventHandlerChain.class);
 
-    private SetMultimap<EventDispatchType, EventHandler<? super T>> eventHandlers = HashMultimap.create();
+    private SetMultimap<EventDispatchPhase, EventHandler<? super T>> eventHandlers = HashMultimap.create();
 
     //region Event Handler Registration
     public void addEventHandler(final EventHandler<? super T> eventHandler) {
-        addEventHandler(eventHandler, EventDispatchType.CAPTURE);
-        addEventHandler(eventHandler, EventDispatchType.BUBBLE);
+        addEventHandler(eventHandler, EventDispatchPhase.CAPTURE);
+        addEventHandler(eventHandler, EventDispatchPhase.BUBBLE);
     }
 
-    public void addEventHandler(final EventHandler<? super T> eventHandler, EventDispatchType dispatchType) {
+    public void addEventHandler(final EventHandler<? super T> eventHandler, EventDispatchPhase dispatchType) {
         eventHandlers.put(dispatchType, eventHandler);
     }
 
-    public void removeEventHandler(final EventHandler<? super T> eventHandler, EventDispatchType dispatchType) {
+    public void removeEventHandler(final EventHandler<? super T> eventHandler, EventDispatchPhase dispatchType) {
         eventHandlers.remove(dispatchType, eventHandler);
     }
 
@@ -45,7 +45,7 @@ public class EventHandlerChain<T extends Event> {
      * @param event
      * @param dispatchType
      */
-    public void dispatchEvent(final Event event, EventDispatchType dispatchType) {
+    public void dispatchEvent(final Event event, EventDispatchPhase dispatchType) {
         final T evt = (T) event;
         for (EventHandler<? super T> handler : eventHandlers.get(dispatchType)) {
             //Removed garbage-colected handlers
@@ -55,7 +55,7 @@ public class EventHandlerChain<T extends Event> {
             } else
                 handler.handle(evt);
         }
-        if (EventDispatchType.POST_DISPATCH == dispatchType && eventHandlers.containsKey(dispatchType))
+        if (EventDispatchPhase.POST_DISPATCH == dispatchType && eventHandlers.containsKey(dispatchType))
             eventHandlers.get(dispatchType).forEach(h -> h.handle(evt));
     }
 }

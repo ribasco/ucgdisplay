@@ -1,26 +1,26 @@
 package com.ibasco.pidisplay.core;
 
+import com.google.common.collect.Iterables;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.components.DisplayDialog;
-import com.ibasco.pidisplay.core.events.DisplayEvent;
-import com.ibasco.pidisplay.core.events.InvocationEvent;
+import com.ibasco.pidisplay.core.enums.InputEventCode;
+import com.ibasco.pidisplay.core.events.*;
 import com.ibasco.pidisplay.core.exceptions.NotOnUIThreadException;
 import com.ibasco.pidisplay.core.services.InputMonitorService;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 /**
  * Base {@link Controller} class providing the basic functionality needed for controlling the flow of display
@@ -31,11 +31,16 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author Rafael Ibasco
  */
+@SuppressWarnings("UnusedReturnValue")
 abstract public class Controller<T extends Graphics> implements EventTarget {
 
+    //region Properties/Fields
     private static final Logger log = LoggerFactory.getLogger(Controller.class);
 
-    //region Properties/Fields
+    private static final AtomicInteger nextId = new AtomicInteger(0);
+
+    private static final ThreadGroup threadGroup = new ThreadGroup("pid-ui");
+
     private T graphics;
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
@@ -48,54 +53,59 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
 
     private ObservableProperty<EventDispatcher> eventDispatcher;
 
-    private EventHandlerManager eventHandlerManager;
-
-    private final EventHandler<DisplayEvent<? extends T>> DISPLAY_EVENT_HANDLER = this::displayEventHandler;
-
-    private static final AtomicInteger nextId = new AtomicInteger(0);
+    private ControllerEventDispatcher internalDispatcher;
 
     private final int id = nextId.incrementAndGet();
 
-    private AtomicBoolean shutdown = new AtomicBoolean(false);
-
     private final Runnable displayRenderer = this::renderDisplayUI;
+
+    private Thread uiThread;
+
+    private final EventHandler<DisplayEvent> displayEventHandlerCallback = this::displayEventHandler;
+
+    private InputMonitorService inputMonitorService = InputMonitorService.getInstance();
+
+    private final ThreadFactory factory = r -> {
+        if (uiThread == null) {
+            log.debug("Creating UI Thread");
+            uiThread = new Thread(threadGroup, r);
+            uiThread.setName(String.format("pid-ui-%d", id));
+            uiThread.setDaemon(true);
+            return uiThread;
+        }
+        //throw new ControllerException("UI-Thread already exists", this);
+        return new Thread(threadGroup, r);
+    };
+
+    private final ExecutorService uiService = Executors.newSingleThreadExecutor(factory);
+
+    private AtomicBoolean shutdown = new AtomicBoolean(true);
+
+    private EventDispatchQueue dispatchQueue;
     //endregion
 
+    private Iterator<DisplayNode<T>> focusableNodes = null;
+
+    private DisplayNode<T> focusCurrent = null;
+
+    private Lock focusLock = new ReentrantLock();
+
     protected Controller(T graphics) {
+        log.debug("Creating new Controller instance");
         this.graphics = Objects.requireNonNull(graphics, "Graphics must not be null");
-        startRepeatInvoke(displayRenderer);
+        startUIThread();
         if (LoggerFactory.getLogger(EventDispatchQueue.class).isDebugEnabled()) {
             EventDispatchQueue dispatchQueue = getEventDispatchQueue();
-            startRepeatInvoke(new EventQueueMonitor(dispatchQueue, 20));
+            startRepeatInvoke(new EventQueueMonitor(dispatchQueue, 10));
         }
+        addEventHandler(KeyEvent.ANY, this::onKeyEvent, CAPTURE);
     }
 
-    final Runnable getDisplayRenderer() {
-        return displayRenderer;
-    }
-
-    public final boolean isUIThread() {
-        return getEventDispatchQueue().isDispatchThread();
-    }
-
-    /**
-     * Handles the rendering of the display. This method is only meant to be called from within the event/UI thread
-     */
-    private void renderDisplayUI() {
-        checkEventDispatchThread();
-        //try to aquire the lock but do not block the event loop!
-        if (!displayStack.isEmpty() && readLock.tryLock()) {
-            try {
-                DisplayNode<T> activeDisplay = displayStack.peekFirst();
-                if (activeDisplay != null && activeDisplay.isActive() && activeDisplay.isAttached()) {
-                    activeDisplay.draw(graphics);
-                    graphics.flush();
-                }
-            } finally {
-                readLock.unlock();
-            }
+    private void onKeyEvent(KeyEvent keyEvent) {
+        if (keyEvent.getInputEventCode() == InputEventCode.KEY_TAB) {
+            log.debug("Focus next item");
+            focusNext();
         }
-        ThreadUtils.sleep(5);
     }
 
     public <A> Optional<A> showAndWait(DisplayDialog<T, A> displayDialog) {
@@ -117,42 +127,168 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         }
     }
 
+    public boolean grabInputFocus() {
+        return inputMonitorService.setActiveTarget(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <A> CompletableFuture<Optional<A>> showAndWaitAsync(DisplayDialog<T, A> displayDialog) {
+        CompletableFuture<Optional<A>> future = new CompletableFuture<>();
+        show(displayDialog);
+        displayDialog.setOnDialogResult((DialogEvent event) -> {
+            Optional<A> r = Optional.of((A) event.getResult());
+            future.complete(r);
+        });
+        return future;
+    }
+
+    private void displayEventHandler(DisplayEvent<T> displayEvent) {
+        if (displayEvent.getEventType() == DisplayEvent.DISPLAY_SHOW) {
+            if (displayEvent.getDisplay() instanceof DisplayParent)
+                _show((DisplayParent<T>) displayEvent.getDisplay());
+        }
+    }
+
     public void show(DisplayParent<T> newDisplay) {
+        _show(newDisplay);
+        /*attachDisplay(newDisplay);
+        fireEvent(newDisplay, new DisplayEvent<>(DisplayEvent.DISPLAY_SHOW, newDisplay));*/
+    }
+
+    private void _show(DisplayParent<T> newDisplay) {
         log.debug("DISPLAY_SHOW_START => Display: {} (Display Stack Empty: {})", newDisplay, displayStack.isEmpty());
         if (newDisplay == null)
             return;
 
         //#1) Hide the current display display
-        final DisplayNode<T> previousDisplay = hide(false);
+        final DisplayParent<T> previousDisplay = hide(false);
 
         //Attach the display to this controller before triggering the event
         attachDisplay(newDisplay);
 
-        fireEvent(newDisplay, new DisplayEvent<>(DisplayEvent.DISPLAY_SHOWING, newDisplay));
+        fireEvent(new DisplayEvent<>(DisplayEvent.DISPLAY_SHOWING, newDisplay));
         setDisplayActive(newDisplay, true); //#3) Activate the new display
-        fireEvent(newDisplay, new DisplayEvent<>(DisplayEvent.DISPLAY_SHOWN, newDisplay));
+        fireEvent(new DisplayEvent<>(DisplayEvent.DISPLAY_SHOWN, newDisplay));
 
         log.debug("DISPLAY_SHOW_END => From {} to {} (Is Active: {}, Stack Size: {})", previousDisplay, newDisplay, newDisplay.isActive(), displayStack.size());
     }
 
-    /**
-     * Hides the current active display. The next display from the top of the stack will be shown.
-     *
-     * <blockquote>
-     * Note: This deactivates and removes the current display from the internal stack but the display remains attached
-     * to the underlying display controller.
-     * </blockquote>
-     *
-     * @return The current {@link DisplayNode} instance that was hidden otherwise {@code null} if there was no previous
-     * display available
-     */
-    @SuppressWarnings("UnusedReturnValue")
-    public DisplayParent<T> hide() {
+    public final DisplayParent<T> hide() {
         DisplayParent<T> previous = hide(true);
         show(getDisplay());
         return previous;
     }
 
+    public final void close() {
+        DisplayParent<T> node = getDisplay();
+        close(node);
+        log.debug("DISPLAY_CLOSE => {}", node);
+    }
+
+    public final void close(DisplayParent<T> display) {
+        if (display == null)
+            return;
+        boolean removed;
+        try {
+            log.debug("Obtaining write lock for Display: {}", display);
+            this.writeLock.lock();
+            log.debug("Closing Display: {}", display);
+            fireEvent(new DisplayEvent<>(DisplayEvent.DISPLAY_CLOSING, display));
+
+            setDisplayActive(display, false);
+            clear();
+
+            //Remove from the stack
+            removed = displayStack.removeIf(display::equals);
+
+            detachDisplay(display);
+            fireEvent(new DisplayEvent<>(DisplayEvent.DISPLAY_CLOSED, display));
+        } finally {
+            this.writeLock.unlock();
+        }
+
+        //Do we have a display remaining in the stack?
+        if (removed && !displayStack.isEmpty()) {
+            show(getDisplay());
+        }
+
+        log.debug("DISPLAY_CLOSE => {}", display);
+    }
+
+    public final void clear() {
+        log.debug("DISPLAY_CLEAR => {}", getDisplay());
+        graphics.clear();
+    }
+
+    public Graphics getGraphics() {
+        return graphics;
+    }
+
+    public final DisplayParent<T> getDisplay() {
+        return getDisplay(false);
+    }
+
+    public final void shutdown() throws InterruptedException {
+        log.debug("Shutting down display controller");
+        getEventDispatchQueue().shutdown();
+        shutdown.set(true);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "#" + this.getId();
+    }
+
+    private void refreshFocusableNodes() {
+        DisplayParent<T> activeNode = getDisplay();
+        if (activeNode != null && activeNode.hasChildren()) {
+            try {
+                focusLock.lock();
+                List<DisplayNode<T>> focusableNodeList = activeNode.getChildren().stream()
+                        .filter(p -> p.isActive() && p.isFocusable())
+                        .collect(Collectors.toList());
+                focusableNodes = Iterables.cycle(focusableNodeList).iterator();
+                log.debug("FOCUS_REFRESH => Refreshed focusable nodes");
+                focusNext();
+            } finally {
+                focusLock.unlock();
+            }
+        }
+    }
+
+    public DisplayNode<T> focusCurrent() {
+        try {
+            focusLock.lock();
+            if (focusCurrent == null && getDisplay() != null)
+                focusCurrent = focusNext();
+            return focusCurrent;
+        } finally {
+            focusLock.unlock();
+        }
+    }
+
+    public DisplayNode<T> focusNext() {
+        try {
+            focusLock.lock();
+            if (focusableNodes.hasNext()) {
+                if (focusCurrent != null)
+                    fireEvent(new FocusEvent(this, focusCurrent, FocusEvent.EXIT_FOCUS, this.graphics));
+                focusCurrent = focusableNodes.next();
+                fireEvent(new FocusEvent(this, focusCurrent, FocusEvent.ENTER_FOCUS, this.graphics));
+                return focusCurrent;
+            } else {
+                if (focusCurrent != null) {
+                    fireEvent(new FocusEvent(this, focusCurrent, FocusEvent.EXIT_FOCUS, this.graphics));
+                    focusCurrent = null;
+                }
+            }
+        } finally {
+            focusLock.unlock();
+        }
+        return null;
+    }
+
+    //region Private Methods
     private DisplayParent<T> hide(boolean remove) {
         DisplayParent<T> prevDisplay = getDisplay(remove);
         hide(prevDisplay);
@@ -163,52 +299,15 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         if (display == null)
             return;
         log.debug("DISPLAY_HIDE => {}", display);
-        fireEvent(display, new DisplayEvent<>(DisplayEvent.DISPLAY_HIDING, display));
+        fireEvent(new DisplayEvent<>(DisplayEvent.DISPLAY_HIDING, display));
 
         //#1 Deactivate the display
         setDisplayActive(display, false);
         //#2 Clear the screen
         clear();
 
-        fireEvent(display, new DisplayEvent<>(DisplayEvent.DISPLAY_HIDDEN, display));
+        fireEvent(new DisplayEvent<>(DisplayEvent.DISPLAY_HIDDEN, display));
         log.debug("DISPLAY_HIDDEN => {}", display);
-    }
-
-    public void close() {
-        DisplayParent<T> node = getDisplay();
-        close(node);
-        log.debug("DISPLAY_CLOSE => {}", node);
-    }
-
-    public void close(DisplayParent<T> display) {
-        if (display == null)
-            return;
-        boolean removed;
-        try {
-            log.debug("Obtaining write lock for Display: {}", display);
-            this.writeLock.lock();
-            log.debug("Closing Display: {}", display);
-            fireEvent(display, new DisplayEvent<>(DisplayEvent.DISPLAY_CLOSING, display));
-
-            setDisplayActive(display, false);
-            clear();
-
-            //Remove from the stack
-            removed = displayStack.removeIf(display::equals);
-
-            fireEvent(display, new DisplayEvent<>(DisplayEvent.DISPLAY_CLOSED, display));
-            detachDisplay(display);
-        } finally {
-            this.writeLock.unlock();
-        }
-
-        //Do we have a display remaining in the stack?
-        if (removed && !displayStack.isEmpty()) {
-            //TODO: Use show(newDisplay) instead?
-            show(getDisplay());
-        }
-
-        log.debug("DISPLAY_CLOSE => {}", display);
     }
 
     /**
@@ -227,17 +326,14 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         if (!activate) {
             log.debug("DISPLAY_DEACTIVATE => Deactivating {} (No lock required)", display);
             display.setActive(false);
-            display.doAction(DisplayNode::setActive, false); //TODO: Remove this
             return;
         }
 
         //Is the display already at the head of the stack?
         if (inHead(display)) {
             log.debug("DISPLAY_ACTIVATE => Display is already at the head of the stack : {}", display);
-            if (!display.isActive()) {
+            if (!display.isActive())
                 display.setActive(true);
-                display.doAction(DisplayNode::setActive, true);
-            }
             return;
         }
 
@@ -245,48 +341,69 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         //or it is located at the lower end of the stack, so we need to push it back to the head
         try {
             this.writeLock.lock();
+
             //Clear the screen only after we obtain the lock
             clear();
 
             //Remove the display from the stack (if exists) and initialize
             if (!display.isInitialized() || !displayStack.removeIf(display::equals)) {
-                log.debug("DISPLAY_INIT => Initializing Display for the first time");
+                log.debug("DISPLAY_INIT => Initializing Display '{}' for the first time", display);
                 //Initialize node properties recursively
-                initDefaultDimensions(display);
                 initializeDisplay(display);
             }
 
             //Update the active flag recursively
             display.setActive(true);
-            display.doAction(DisplayNode::setActive, true);
 
             //Put the display to the head of the stack
             displayStack.push(display);
+
+            refreshFocusableNodes();
         } finally {
             this.writeLock.unlock();
         }
     }
 
-    private boolean inHead(DisplayNode<T> display) {
-        try {
-            this.readLock.lock();
-            return !displayStack.isEmpty() && displayStack.peekFirst().equals(display);
-        } finally {
-            this.readLock.unlock();
+    /**
+     * Start UI Thread
+     */
+    private void startUIThread() {
+        shutdown.set(false);
+        uiService.execute(() -> {
+            while (!shutdown.get()) {
+                displayRenderer.run();
+                ThreadUtils.sleep(5);
+            }
+        });
+    }
+
+    /**
+     * Handles the rendering of the display.
+     */
+    private void renderDisplayUI() {
+        //This method is only meant to be called from within the event/UI thread
+        checkEventDispatchThread();
+        //try to aquire the lock but do not block the event loop!
+        if (readLock.tryLock()) {
+            try {
+                if (!displayStack.isEmpty()) {
+                    DisplayParent<T> activeDisplay = displayStack.peekFirst();
+                    if (activeDisplay != null && activeDisplay.isActive()) {
+                        activeDisplay.draw(graphics);
+                        if (graphics.isDirty()) {
+                            graphics.flush();
+                            activeDisplay.postFlush(graphics);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            } finally {
+                readLock.unlock();
+            }
+        } else {
+            ThreadUtils.sleep(100);
         }
-    }
-
-    public void clear() {
-        log.debug("DISPLAY_CLEAR => {}", getDisplay());
-        graphics.clear();
-    }
-
-    public T getGraphics() {
-        return graphics;
-    }
-
-    public DisplayParent<T> getDisplay() {
-        return getDisplay(false);
     }
 
     private DisplayParent<T> getDisplay(boolean remove) {
@@ -303,108 +420,81 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         return null;
     }
 
-    void checkEventDispatchThread() {
-        if (!getEventDispatchQueue().isDispatchThread())
-            throw new NotOnUIThreadException("Not currently in event dispatcher thread");
-    }
-
-    private void initDefaultDimensions(DisplayNode<T> display) {
-        if (!display.maxWidth.isSet())
-            display.maxWidth.setValid(graphics.getWidth());
-        if (!display.maxHeight.isSet())
-            display.maxHeight.setValid(graphics.getHeight());
-        if (!display.width.isSet())
-            display.width.setValid(graphics.getWidth());
-        if (!display.height.isSet())
-            display.height.setValid(graphics.getHeight());
+    private boolean inHead(DisplayNode<T> display) {
+        try {
+            this.readLock.lock();
+            return !displayStack.isEmpty() && displayStack.peekFirst().equals(display);
+        } finally {
+            this.readLock.unlock();
+        }
     }
 
     private void initializeDisplay(DisplayParent<T> display) {
-        initDefaultDimensions(display);
+        display.doAction(DisplayNode::initDimensions, this.graphics);
         display.setInitialized(true);
-        display.doAction((node, arg) -> {
-            initDefaultDimensions(node);
-            node.setInitialized(true);
-            log.debug("{}DISPLAY_PROP_INIT => {} (Is Child: {})", node.hasParent() ? "\t\t" : "", node, node.hasParent());
-        });
     }
 
     private void attachDisplay(DisplayParent<T> display) {
         if (display != null && !display.isAttached()) {
             log.debug("DISPLAY_ATTACH => Attaching Controller '{}' to display '{}'", this, display);
             //Attach to display and child nodes
-            //display.addEventHandler(DisplayEvent.ANY, DISPLAY_EVENT_HANDLER, EventDispatchType.BUBBLE);
+            display.addEventHandler(DisplayEvent.ANY, displayEventHandlerCallback, EventDispatchPhase.CAPTURE);
+            display.doAction((node, arg) -> node.addEventHandler(DisplayEvent.ANY, arg, EventDispatchPhase.CAPTURE), displayEventHandlerCallback);
             display.setController(this);
-            //Attach on Child nodes
-            display.doAction((node, controller) -> {
-                log.debug("{}+ ATTACH => Attaching Controller '{}' to display '{}'", "\t", this, node);
-                //node.addEventHandler(DisplayEvent.ANY, DISPLAY_EVENT_HANDLER, EventDispatchType.BUBBLE);
-                node.setController(controller);
-            }, this);
-        } else
-            log.debug("Display {} is already attached to a controller {}", display, display.getController());
+        }
     }
 
     private void detachDisplay(DisplayParent<T> display) {
         if (display != null && display.isAttached()) {
             log.debug("DISPLAY_DETACH => Detached Controller '{}' from display '{}'", this, display);
-            //display.removeEventHandler(DisplayEvent.ANY, DISPLAY_EVENT_HANDLER, EventDispatchType.BUBBLE);
+            display.removeEventHandler(DisplayEvent.ANY, displayEventHandlerCallback, EventDispatchPhase.CAPTURE);
+            display.doAction((node, arg) -> node.removeEventHandler(DisplayEvent.ANY, arg, EventDispatchPhase.CAPTURE), displayEventHandlerCallback);
             display.setController(null);
-            //Detach on Child nodes
-            display.doAction((node, sArg) -> {
-                log.debug("{}+ DETACH => Attaching Controller '{}' to display '{}'", "\t", this, node);
-                //node.removeEventHandler(DisplayEvent.ANY, DISPLAY_EVENT_HANDLER, EventDispatchType.BUBBLE);
-                node.setController(null);
-            }, null);
         }
     }
+    //endregion
 
-    private void setDisplayVisible(DisplayParent<T> display, boolean arg) {
-        if (display == null)
-            return;
-        log.trace("{}[{}] Setting visible property to '{}' for {}", StringUtils.repeat('\t', display.getDepth() * 2), display.getDepth(), arg, display);
-        display.visible.setValid(arg);
-        display.doAction((node, sArg) -> {
-            log.trace("{}[{}] Setting visible property to '{}' for {}", StringUtils.repeat('\t', display.getDepth() * 2), node.getDepth(), sArg, node);
-            node.visible.setValid(sArg);
-        }, arg);
+    //region Package-Private methods
+    void checkEventDispatchThread() {
+        /*if (!getEventDispatchQueue().isDispatchThread())
+            throw new NotOnUIThreadException("Not currently in event dispatcher thread");*/
+        if (!Thread.currentThread().equals(uiThread))
+            throw new NotOnUIThreadException("Not currently in event dispatcher thread");
     }
 
-    /**
-     * Process Display Events
-     *
-     * @param displayEvent
-     *         The {@link DisplayEvent} to process
-     */
-    private void displayEventHandler(DisplayEvent<? extends T> displayEvent) {
-        //Make sure we are on the event dispatch thread
-        checkEventDispatchThread();
-        //Process display events here
+    final Runnable getDisplayRenderer() {
+        return displayRenderer;
     }
+
+    final int getId() {
+        return id;
+    }
+    //endregion
 
     //region Event Handling Operations
     public final void fireEvent(Event event) {
-        //fireEvent(this, event);
         getEventDispatchQueue().postEvent(event);
     }
 
     public final void fireEvent(EventTarget target, Event event) {
-        EventUtil.fireEvent(target, event);
+        Event evt = event.copyEvent(this, target);
+        //EventUtil.fireEvent(target, event);
+        getEventDispatchQueue().postEvent(evt);
     }
 
-    public final <T extends Event> void addEventHandler(final EventType<T> eventType, final EventHandler<? super T> eventHandler, EventDispatchType dispatchType) {
+    public final <E extends Event> void addEventHandler(final EventType<E> eventType, final EventHandler<? super E> eventHandler, EventDispatchPhase dispatchType) {
         getEventHandlerManager().addEventHandler(eventType, eventHandler, dispatchType);
     }
 
-    public final <T extends Event> void removeEventHandler(final EventType<T> eventType, final EventHandler<? super T> eventHandler, EventDispatchType dispatchType) {
+    public final <E extends Event> void removeEventHandler(final EventType<E> eventType, final EventHandler<? super E> eventHandler, EventDispatchPhase dispatchType) {
         getEventHandlerManager().removeEventHandler(eventType, eventHandler, dispatchType);
     }
 
     public final EventHandlerManager getEventHandlerManager() {
-        if (this.eventHandlerManager == null)
-            eventHandlerManager = new EventHandlerManager(this);
+        if (this.internalDispatcher == null)
+            internalDispatcher = new ControllerEventDispatcher(this);
         eventDispatcherProperty();
-        return eventHandlerManager;
+        return internalDispatcher.getEventHandlerManager();
     }
 
     public final EventDispatcher getEventDispatcher() {
@@ -413,35 +503,40 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
 
     public final ObservableProperty<EventDispatcher> eventDispatcherProperty() {
         if (this.eventDispatcher == null) {
-            this.eventDispatcher = new ObservableProperty<>(eventHandlerManager);
+            this.eventDispatcher = new ObservableProperty<>(internalDispatcher);
         }
         return eventDispatcher;
     }
 
     @Override
     public EventDispatchChain buildEventTargetPath(EventDispatchChain tail) {
-        if (this.eventHandlerManager != null)
-            tail = tail.addFirst(this.eventHandlerManager);
-
-        //prepend event dispatcher of input listener
-        if (InputMonitorService.getInstance().getEventDispatcher() != null) {
-            tail.addFirst(InputMonitorService.getInstance().getEventDispatcher());
-        }
-        log.trace("CONTROLLER_EVENT_PATH => {}", tail.toString());
+        DisplayNode activeNode = getDisplay();
+        if (activeNode != null)
+            tail = activeNode.buildEventTargetPath(tail);
+        if (this.internalDispatcher != null)
+            tail = tail.addFirst(this.internalDispatcher);
+        log.debug("CONTROLLER_EVENT_PATH => {}", tail.toString());
         return tail;
+    }
+
+    public boolean isShutdown() {
+        return shutdown.get();
     }
 
     @Override
     public final EventDispatchQueue getEventDispatchQueue() {
-        return EventUtil.getEventDispatchQueue(this);
+        if (dispatchQueue == null)
+            dispatchQueue = EventUtil.getEventDispatchQueue(this);
+        return dispatchQueue;
     }
+
+    void setDispatchQueue(EventDispatchQueue dispatchQueue) {
+        this.dispatchQueue = dispatchQueue;
+    }
+
     //endregion
 
-    final int getId() {
-        return id;
-    }
-
-    //region UI/Event Loop Invocation
+    //UI/Event Operations
     public final void invokeOnce(final Runnable... runnable) {
         fireEvent(new InvocationEvent(InvocationEvent.INVOKE_ONCE, runnable));
     }
@@ -454,15 +549,4 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         fireEvent(new InvocationEvent(InvocationEvent.INVOKE_REPEAT_END, runnable));
     }
     //endregion
-
-    public void shutdown() throws InterruptedException {
-        log.debug("Shutting down display controller");
-        getEventDispatchQueue().shutdown();
-        shutdown.set(true);
-    }
-
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + "#" + this.getId();
-    }
 }

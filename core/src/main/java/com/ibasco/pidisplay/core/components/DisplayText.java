@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
@@ -21,7 +22,9 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     private static final Logger log = LoggerFactory.getLogger(DisplayText.class);
 
     //region Properties
-    protected ObservableProperty<String> text = createProperty(true, StringUtils.EMPTY);
+    protected StringBuilder buffer = new StringBuilder();
+
+    protected ObservableProperty<String> text = createProperty(true, StringUtils.EMPTY, this::onInvalidatedText);
 
     protected ObservableProperty<TextAlignment> textAlignment = createProperty(true, TextAlignment.LEFT);
 
@@ -45,7 +48,7 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
 
     protected DisplayText(Integer left, Integer top, Integer width, Integer height, String text) {
         super(left, top, width, height);
-        this.text.setValid(text);
+        setText(text);
     }
     //endregion
 
@@ -58,8 +61,32 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
         this.textWrapStyle.set(textWrapStyle);
     }
 
+    public int getLength() {
+        return Objects.toString(text.get(), "").length();
+    }
+
     public String getText() {
         return text.get();
+    }
+
+    public void deleteText(int offset) {
+        buffer.deleteCharAt(offset);
+        updateText();
+    }
+
+    public void deleteText(int start, int end) {
+        buffer.delete(start, end);
+        updateText();
+    }
+
+    public void appendText(String text) {
+        buffer.append(text);
+        updateText();
+    }
+
+    public void insertText(int offset, String text) {
+        buffer.insert(offset, text);
+        updateText();
     }
 
     public void setText(String text) {
@@ -67,10 +94,20 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     }
 
     public void setText(String text, Object... args) {
+        if (text == null) {
+            this.text.set(null);
+            return;
+        }
         if (!this.width.isSet())
             this.width.setValid(text.length());
         text = (args == null || args.length == 0) ? text : String.format(text, args);
-        this.text.set(text);
+        buffer.setLength(0);
+        buffer.append(text);
+        this.text.set(buffer.toString());
+    }
+
+    private void updateText() {
+        setText(buffer.toString());
     }
 
     public TextAlignment getTextAlignment() {
@@ -80,7 +117,6 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     public void setTextAlignment(TextAlignment textAlignment) {
         this.textAlignment.set(textAlignment);
     }
-
     //endregion
 
     //region Event Handler Getter/Setters
@@ -93,7 +129,8 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
      * Clears the text property
      */
     public void clear() {
-        this.text.set(StringUtils.EMPTY);
+        this.buffer.setLength(0);
+        updateText();
     }
 
     /**
@@ -106,7 +143,7 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     /**
      * @return Returns the total number of words detected within the text
      */
-    public int wordCount() {
+    public int getWordCount() {
         return TextUtils.countWords(this.text.get());
     }
 
@@ -117,11 +154,21 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
      * @param text
      *         The {@link String} to process
      */
-    protected void refreshLines(String text) {
-        int width = this.width.get();
-        text = TextUtils.wrapText(text, width, textWrapStyle.get());
-        log.debug("DISPLAY_TEXT_REFRESH_BUFFER => Refreshing line buffer (Width: {})", width);
+    protected void refreshLines(String text, int charWidth) {
+        text = TextUtils.wrapText(text, charWidth, textWrapStyle.get());
         lines = Arrays.asList(StringUtils.splitPreserveAllTokens(text, "\n"));
+    }
+
+    /**
+     * Called when text has been modified
+     *
+     * @param oldValue
+     *         The old text value
+     * @param newValue
+     *         The new text value
+     */
+    protected void onInvalidatedText(String oldValue, String newValue) {
+        //no implementation
     }
 
     @Override

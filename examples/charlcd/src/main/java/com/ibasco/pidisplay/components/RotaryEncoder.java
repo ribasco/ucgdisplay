@@ -28,6 +28,8 @@ public class RotaryEncoder {
 
         inputA = gpio.provisionDigitalInputPin(pinA, "PinA", PinPullResistance.PULL_UP);
         inputB = gpio.provisionDigitalInputPin(pinB, "PinB", PinPullResistance.PULL_UP);
+        //inputA.setDebounce(64);
+        //inputB.setDebounce(64);
 
         GpioPinListenerDigital inputListener = (GpioPinDigitalStateChangeEvent gpdsce) -> {
             if (lock.tryLock()) {

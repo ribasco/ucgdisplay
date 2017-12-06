@@ -316,8 +316,8 @@ public class LcdMenuOld extends LcdDisplay {
         headerText = StringUtils.abbreviate(headerText, DEFAULT_MENU_ITEM_ABBR, remainingChars);
         headerText = alignText(headerText, headerTextAlignment, remainingChars - 1);
         graphics.drawText(headerText);
-        if (parentNode.hasParent())
-            graphics.drawText(0);
+        /*if (parentNode.hasParent())
+            graphics.drawText(0);*/
     }
 
     private void drawMenuItem(final int index, final Node<String> node, final LcdCharGraphics graphics, final boolean isSelected) {
@@ -364,7 +364,7 @@ public class LcdMenuOld extends LcdDisplay {
         while (buffer.hasRemaining())
             buffer.put(LcdCharGraphics.CHAR_SPACE);
 
-        graphics.drawText(buffer.array());
+        //graphics.drawText(buffer.array());
     }
 
     private String alignText(String text, TextAlignment alignment, int maxWidth) {

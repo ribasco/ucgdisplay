@@ -1,8 +1,9 @@
 package com.ibasco.pidisplay.core;
 
 public interface EventTarget {
-    EventDispatchType CAPTURE = EventDispatchType.CAPTURE;
-    EventDispatchType BUBBLE = EventDispatchType.BUBBLE;
+    EventDispatchPhase CAPTURE = EventDispatchPhase.CAPTURE;
+    EventDispatchPhase BUBBLE = EventDispatchPhase.BUBBLE;
+    EventDispatchPhase POST_DISPATCH = EventDispatchPhase.POST_DISPATCH;
 
     EventDispatchChain buildEventTargetPath(EventDispatchChain tail);
 

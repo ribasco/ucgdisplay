@@ -1,8 +1,9 @@
 package com.ibasco.pidisplay.core.beans;
 
 import java.util.*;
+import java.util.function.Consumer;
 
-abstract public class BaseObservableList<T> implements ObservableList<T> {
+abstract public class BaseObservableList<T> implements ObservableList<T>, Iterable<T> {
     private ListListenerUtil<T> listListenerUtil;
 
     protected List<T> backingList;
@@ -145,5 +146,10 @@ abstract public class BaseObservableList<T> implements ObservableList<T> {
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
         return backingList.subList(fromIndex, toIndex);
+    }
+
+    @Override
+    public void forEach(Consumer<? super T> action) {
+        backingList.forEach(action);
     }
 }

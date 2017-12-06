@@ -1,0 +1,179 @@
+package com.ibasco.pidisplay.drivers.lcd.hd44780.adapters;
+
+import com.ibasco.pidisplay.drivers.lcd.hd44780.BaseLcdGpioAdapter;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.LcdPinMapConfig;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.LcdPin;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.LcdReadWriteState;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.LcdRegisterSelectState;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.exceptions.InvalidPinMappingException;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.exceptions.PinNotSupportedException;
+import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
+import com.pi4j.gpio.extension.mcp.MCP23017Pin;
+import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinMode;
+import com.pi4j.io.gpio.PinState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Map;
+
+import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
+
+/**
+ * LCD GPIO Adapter for the MCP23017 Port Expander.
+ *
+ * @author Rafael Ibasco
+ */
+public class Mcp23017LcdAdapter extends BaseLcdGpioAdapter {
+    private static final Logger log = LoggerFactory.getLogger(Mcp23017LcdAdapter.class);
+    private MCP23017GpioProvider provider;
+    private byte[] dataPins = new byte[8];
+    private byte enablePin = 0;
+
+    public Mcp23017LcdAdapter(MCP23017GpioProvider provider, LcdPinMapConfig pinMapConfig) {
+        super(pinMapConfig);
+        this.provider = provider;
+
+        //Retrieve the local pin addresses of each data pin
+        LcdPin[] lcdDataPins = LcdPin.values();
+        for (int i = 0; i < 8; i++) {
+            dataPins[i] = pinToLocalAddr(lcdDataPins[i]);
+            log.debug("Mapped '{}' Pin to Local Address = {}", lcdDataPins[i].name(), dataPins[i]);
+        }
+        enablePin = pinToLocalAddr(LcdPin.EN); //enable pin
+        log.debug("Mapped 'Enable' Pin to Local Address = {}", enablePin);
+    }
+
+    @Override
+    protected void validate(LcdPinMapConfig pinMapConfig) throws InvalidPinMappingException {
+        for (Map.Entry<LcdPin, Pin> mappedPin : pinMapConfig.getAllPins()) {
+            if (!MCP23017GpioProvider.NAME.equals(mappedPin.getValue().getProvider())) {
+                throw new InvalidPinMappingException(pinMapConfig);
+            }
+        }
+    }
+
+    @Override
+    public void initialize() {
+        pinMode(LcdPin.RS, PinMode.DIGITAL_OUTPUT);
+        pinMode(LcdPin.EN, PinMode.DIGITAL_OUTPUT);
+        pinMode(LcdPin.BACKLIGHT, PinMode.DIGITAL_OUTPUT);
+        pinMode(LcdPin.DATA_4, PinMode.DIGITAL_OUTPUT);
+        pinMode(LcdPin.DATA_5, PinMode.DIGITAL_OUTPUT);
+        pinMode(LcdPin.DATA_6, PinMode.DIGITAL_OUTPUT);
+        pinMode(LcdPin.DATA_7, PinMode.DIGITAL_OUTPUT);
+        if (isMapped(LcdPin.RW))
+            pinMode(LcdPin.RW, PinMode.DIGITAL_OUTPUT);
+    }
+
+    @Override
+    public void write4Bits(byte value) throws IOException {
+        //Read the state of all 16 pins
+        short out = provider.getState();
+
+        //Since we are in 4-bit mode, just read the last four data pins of the array
+        for (int i = 4; i < 8; i++) {
+            out &= ~(1 << dataPins[i]);
+            out |= ((value >> (i - 4)) & 0x1) << dataPins[i]; //i - 4 (offset)
+        }
+
+        out &= ~(1 << enablePin); //enable: low
+
+        //update the state
+        provider.setState(out);
+
+        //Pulse enable for the changes to take effect
+        out |= (1 << enablePin); //enable: high
+        provider.setState(out);
+        out &= ~(1 << enablePin); //enable: low
+        provider.setState(out);
+        delayMicroseconds(100);
+    }
+
+    @Override
+    public void write8Bits(byte value) {
+        for (int i = 0; i < 8; i++) {
+            pinMode(dataPins[i], PinMode.DIGITAL_OUTPUT);
+            digitalWrite(dataPins[i], (value >> i) & 0x01);
+        }
+        pulseEnable();
+    }
+
+    @Override
+    public void setRegSelectState(LcdRegisterSelectState state) {
+        digitalWrite(LcdPin.RS, state.getPinState());
+    }
+
+    @Override
+    public void setReadWriteState(LcdReadWriteState state) {
+        //Only write to pin if it is mapped
+        if (isMapped(LcdPin.RW))
+            digitalWrite(LcdPin.RW, state.getPinState());
+    }
+
+    @Override
+    public void setEnableState(PinState state) {
+        digitalWrite(LcdPin.EN, state);
+    }
+
+    /**
+     * Convenience method to pulse the enable pin of the Lcd
+     */
+    private void pulseEnable() {
+        digitalWrite(LcdPin.EN, PinState.LOW);
+        digitalWrite(LcdPin.EN, PinState.HIGH);
+        digitalWrite(LcdPin.EN, PinState.LOW);
+        delayMicroseconds(100);
+    }
+
+    /**
+     * Computes the pin index based on the specified {@link LcdPin}
+     *
+     * @param pin
+     *         The {@link Pin} of the interface
+     *
+     * @return The computed index of the MCP {@link Pin}
+     */
+    private byte pinToLocalAddr(LcdPin pin) {
+        //get the actual pin that is mapped to the lcd pin
+        Pin mPin = getMappedPin(pin);
+        return mPin != null ? pinToLocalAddr(mPin) : -1;
+    }
+
+    /**
+     * Computes the pin index based on the specified {@link Pin}.
+     *
+     * @param pin
+     *         The {@link Pin} of the interface
+     *
+     * @return The computed index of the MCP {@link Pin}
+     */
+    private byte pinToLocalAddr(Pin pin) {
+        //2^(n-1) = b       #where n = index (0 to 15)
+        //n = logb/log(2)   #find n index
+        if (!MCP23017GpioProvider.NAME.equals(pin.getProvider()))
+            throw new PinNotSupportedException(pin, MCP23017GpioProvider.NAME);
+        int idx = (int) (Math.log(((pin.getAddress() > 1000) ? pin.getAddress() - 1000 : pin.getAddress())) / Math.log(2) + 1);
+        return (byte) ((pin.getAddress() > 1000 ? idx + 8 : idx) - 1);
+    }
+
+    private void digitalWrite(LcdPin pin, PinState state) {
+        provider.setState(getMappedPin(pin), state);
+    }
+
+    private void digitalWrite(byte localAddr, int state) {
+        if (localAddr > (MCP23017Pin.ALL.length - 1))
+            throw new IllegalArgumentException("Invalid local address");
+        provider.setState(MCP23017Pin.ALL[localAddr], (state == 0) ? PinState.LOW : PinState.HIGH);
+    }
+
+    private void pinMode(LcdPin pin, PinMode mode) {
+        if (isMapped(pin))
+            provider.setMode(getMappedPin(pin), mode);
+    }
+
+    private void pinMode(byte localAddr, PinMode mode) {
+        provider.setMode(MCP23017Pin.ALL[localAddr], mode);
+    }
+}

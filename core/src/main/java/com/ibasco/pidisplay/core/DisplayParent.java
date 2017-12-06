@@ -3,10 +3,11 @@ package com.ibasco.pidisplay.core;
 import com.ibasco.pidisplay.core.beans.ListChangeListener;
 import com.ibasco.pidisplay.core.beans.ObservableList;
 import com.ibasco.pidisplay.core.beans.ObservableListWrapper;
+import com.ibasco.pidisplay.core.events.FocusEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * A {@link DisplayNode} that contains child-nodes
@@ -37,9 +38,10 @@ abstract public class DisplayParent<T extends Graphics> extends DisplayNode<T> {
         @Override
         protected void invalidatedList(ListChangeListener.Change<? extends DisplayNode<T>> changeDetails) {
             if (changeDetails.removed()) {
-                log.debug("Children list removed");
+                log.debug("PARENT_CHILD_REMOVED => Child node Removed");
                 changeDetails.getRemoved().forEach(n -> n.setParent(null));
             } else if (changeDetails.added()) {
+                log.debug("PARENT_CHILD_ADDED => Child node Added");
                 changeDetails.getList().forEach(a -> a.setParent(DisplayParent.this));
             }
         }
@@ -55,11 +57,7 @@ abstract public class DisplayParent<T extends Graphics> extends DisplayNode<T> {
 
     @SafeVarargs
     protected final void add(DisplayNode<T>... nodes) {
-        this.children.addAll(Arrays.asList(nodes));
-    }
-
-    protected void add(DisplayNode<T> component) {
-        this.children.add(component);
+        Collections.addAll(this.children, nodes);
     }
 
     protected void remove(DisplayNode<T> component) {
@@ -75,10 +73,42 @@ abstract public class DisplayParent<T extends Graphics> extends DisplayNode<T> {
     }
 
     //region Propagated Properties
+
+    @Override
+    protected void postFlush(T graphics) {
+        doAction(DisplayNode::postFlush, graphics);
+    }
+
+    @Override
+    void setInitialized(boolean initialized) {
+        super.setInitialized(initialized);
+        doAction(DisplayNode::setInitialized, initialized);
+    }
+
+    @Override
+    public void setController(Controller<T> controller) {
+        super.setController(controller);
+        doAction(DisplayNode::setController, controller);
+    }
+
     @Override
     void setActive(boolean active) {
         super.setActive(active);
-        doAction(DisplayNode::setActive, active);
+        //doAction(DisplayNode::setActive, active);
+        doAction((node, activated) -> {
+            node.setActive(activated);
+            if (node.isFocusable()) {
+                if (activated) {
+                    log.debug("Adding focus event handler for : {}", node);
+                    node.addEventHandler(FocusEvent.ENTER_FOCUS, node.focusEnterEventHandler, CAPTURE);
+                    node.addEventHandler(FocusEvent.EXIT_FOCUS, node.focusExitEventHandler, CAPTURE);
+                } else {
+                    log.debug("Removing focus event handler for : {}", node);
+                    node.addEventHandler(FocusEvent.ENTER_FOCUS, node.focusEnterEventHandler, CAPTURE);
+                    node.addEventHandler(FocusEvent.EXIT_FOCUS, node.focusExitEventHandler, CAPTURE);
+                }
+            }
+        }, active);
     }
 
     @Override

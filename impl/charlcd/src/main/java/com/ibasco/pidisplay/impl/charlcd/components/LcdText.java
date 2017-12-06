@@ -1,11 +1,11 @@
 package com.ibasco.pidisplay.impl.charlcd.components;
 
+import com.ibasco.pidisplay.core.CharGraphics;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.components.DisplayText;
 import com.ibasco.pidisplay.core.util.RegexTextProcessor;
 import com.ibasco.pidisplay.core.util.TextUtils;
 import com.ibasco.pidisplay.core.util.date.DateTimeUtils;
-import com.ibasco.pidisplay.impl.charlcd.LcdCharGraphics;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  * 3. Blink (speed=1sec)
  * 4. Typewriter Effect (
  */
-public class LcdText extends DisplayText<LcdCharGraphics> {
+public class LcdText extends DisplayText<CharGraphics> {
 
     private static final Logger log = LoggerFactory.getLogger(LcdText.class);
 
@@ -46,7 +46,7 @@ public class LcdText extends DisplayText<LcdCharGraphics> {
     //endregion
 
     @Override
-    protected void drawNode(LcdCharGraphics graphics) {
+    protected void drawNode(CharGraphics graphics) {
         //Calculate default dimensions
         calcPrefDimen(graphics);
 
@@ -66,8 +66,8 @@ public class LcdText extends DisplayText<LcdCharGraphics> {
         }
 
         //Pre-process text
-        String text = processText(this.text.get());
-        refreshLines(text);
+        String text = processText(getText());
+        refreshLines(text, this.width.get());
 
         //calculate row offset limit relative to the height
         int rowOffsetLimit = (startRow + height) - 1;
@@ -80,25 +80,17 @@ public class LcdText extends DisplayText<LcdCharGraphics> {
         int topOffset = this.scrollTop.getDefault(0);
         int leftOffset = this.scrollLeft.getDefault(0);
         int rowOffset = startRow;
-        int colOffset = 0;
 
         for (int lineCtr = 0, lineIdx = topOffset; (lineCtr < height) && (lineIdx < lines.size()); lineCtr++, lineIdx = lineCtr + topOffset) {
             if (lineCtr < lines.size()) {
                 String line = lines.get(lineIdx);
                 if ((leftOffset > 0) && (leftOffset < line.length()))
                     line = line.substring(leftOffset);
-                colOffset += drawText(line, width, graphics) - 1;
+                drawText(line, width, graphics);
             }
-            //(rowOffset < (lines.size() - 1)
-            if (++rowOffset <= rowOffsetLimit) {
-                colOffset = 0;
+            if (++rowOffset <= rowOffsetLimit)
                 graphics.setCursor(startCol, rowOffset);
-            }
         }
-        //Set the last known cursor position
-        //log.debug("Setting last known cursor: x={}, y={} (Graphics: x={}, y={})", colOffset, rowOffset - 1, graphics.getColOffset(), graphics.getRowOffset());
-
-        graphics.setCursor(colOffset, ((rowOffset - 1) < 0) ? 0 : rowOffset - 1);
     }
 
     /**
@@ -125,7 +117,7 @@ public class LcdText extends DisplayText<LcdCharGraphics> {
      *
      * @return The actual height calculated for the given text
      */
-    private int calculateActualHeight(int maxWidth) {
+    private int calcTextHeight(int maxWidth) {
         String text = this.text.get();
         if (StringUtils.isEmpty(text) || text.length() <= maxWidth)
             return 1;
@@ -137,9 +129,9 @@ public class LcdText extends DisplayText<LcdCharGraphics> {
      * Calculates the preferred dimensions
      *
      * @param graphics
-     *         The underlying {@link LcdCharGraphics} driver
+     *         The underlying {@link CharGraphics} driver
      */
-    private void calcPrefDimen(LcdCharGraphics graphics) {
+    private void calcPrefDimen(CharGraphics graphics) {
         int maxDisplayWidth = graphics.getWidth();
         int maxDisplayHeight = graphics.getHeight();
         int textLength = defaultIfEmpty(this.text.get(), StringUtils.EMPTY).length();
@@ -148,8 +140,8 @@ public class LcdText extends DisplayText<LcdCharGraphics> {
         Integer y = defaultIfNull(this.topPos.get(), 0);
         Integer maxWidth = defaultIfNull(this.maxWidth.get(), maxDisplayWidth);
         Integer maxHeight = defaultIfNull(this.maxHeight.get(), maxDisplayHeight);
-        Integer width = defaultIfNull(this.width.get(), textLength);
-        Integer height = defaultIfNull(this.height.get(), calculateActualHeight(maxWidth));
+        Integer width = defaultIfNull(this.width.get(), maxDisplayWidth);
+        Integer height = defaultIfNull(this.height.get(), calcTextHeight(maxWidth));
         Integer minWidth = defaultIfNull(this.minWidth.get(), (textLength < maxWidth) ? textLength : 1);
         Integer minHeight = defaultIfNull(this.minHeight.get(), 1);
 
@@ -187,12 +179,11 @@ public class LcdText extends DisplayText<LcdCharGraphics> {
         return text;
     }
 
-    private int drawText(String text, int maxWidth, LcdCharGraphics graphics) {
+    private void drawText(String text, int maxWidth, CharGraphics graphics) {
         //Only align text if the property is set and if the node is
         //currently in visible state
         if (textAlignment.isSet() && isVisible())
             text = TextUtils.alignText(text.trim(), textAlignment.get(), maxWidth);
         graphics.drawText(text);
-        return StringUtils.stripEnd(text, StringUtils.SPACE).length();
     }
 }

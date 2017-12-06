@@ -15,17 +15,25 @@ abstract public class BasicEventDispatcher implements EventDispatcher {
     private BasicEventDispatcher previousDispatcher;
     private BasicEventDispatcher nextDispatcher;
 
+    /**
+     * Dispatches the event in capture and bubbling phases.
+     *
+     * @param event
+     * @param tail
+     *
+     * @return
+     */
     @Override
     public Event dispatchEvent(Event event, final EventDispatchChain tail) {
-        log.trace("Dispatching Pre-Event (capture): {}", event);
-        event = dispatchEvent(event, EventDispatchType.CAPTURE);
+        log.trace("Dispatching Capturing Event: {}", event);
+        event = dispatchEvent(event, EventDispatchPhase.CAPTURE);
         if (event.isConsumed()) {
             return null;
         }
         event = tail.dispatchEvent(event);
         if (event != null) {
-            log.trace("Dispatching Post-Event (bubble): {}", event);
-            event = dispatchEvent(event, EventDispatchType.BUBBLE);
+            log.trace("Dispatching Bubbling Event: {}", event);
+            event = dispatchEvent(event, EventDispatchPhase.BUBBLE);
             if (event.isConsumed()) {
                 return null;
             }
@@ -33,7 +41,7 @@ abstract public class BasicEventDispatcher implements EventDispatcher {
         return event;
     }
 
-    public Event dispatchEvent(Event event, EventDispatchType dispatchType) {
+    public Event dispatchEvent(Event event, EventDispatchPhase dispatchType) {
         return event;
     }
 
