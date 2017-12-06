@@ -1,37 +1,27 @@
 package com.ibasco.pidisplay.core;
 
-import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
+import com.ibasco.pidisplay.core.drivers.DisplayDriver;
+
+import java.io.Flushable;
 
 /**
  * Generic Graphics Interface
  *
  * @author Rafael Ibasco
  */
-public interface Graphics {
-
-    default void setCursor(int x, int y) {
-        throw new NotImplementedException();
-    }
-
-    default void drawText(char data) {
-        throw new NotImplementedException();
-    }
-
-    default void drawText(char[] data) {
-        throw new NotImplementedException();
-    }
-
-    default void drawText(byte[] data) {
-        throw new NotImplementedException();
-    }
-
-    void drawText(byte data);
-
-    default void drawText(int data) {
-        drawText((byte) data);
-    }
+public interface Graphics extends Flushable {
 
     void drawText(String text);
+
+    void setDisplayCursor(int x, int y);
+
+    void setCursor(int x, int y);
+
+    void setCursorBlink(boolean state);
+
+    int getCursorX();
+
+    int getCursorY();
 
     int getWidth();
 
@@ -39,7 +29,7 @@ public interface Graphics {
 
     void clear();
 
-    void cursorBlink(boolean state);
+    boolean isDirty();
 
-    void flush();
+    DisplayDriver getDriver();
 }

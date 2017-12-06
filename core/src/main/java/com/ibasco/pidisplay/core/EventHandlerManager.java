@@ -21,7 +21,7 @@ public class EventHandlerManager extends BasicEventDispatcher {
     }
 
     //region Registration Methods
-    public final <T extends Event> void addEventHandler(final EventType<T> eventType, final EventHandler<? super T> eventHandler, EventDispatchType dispatchType) {
+    public final <T extends Event> void addEventHandler(final EventType<T> eventType, final EventHandler<? super T> eventHandler, EventDispatchPhase dispatchType) {
         if (dispatchType == null)
             throw new NullPointerException("Event dispatch type must not be null");
         EventHandlerChain<T> eventHandlerChain = (EventHandlerChain<T>) eventHandlerMap.computeIfAbsent(eventType, eventType12 -> new EventHandlerChain<>());
@@ -34,7 +34,7 @@ public class EventHandlerManager extends BasicEventDispatcher {
             eventHandlerChain.removeEventHandler(eventHandler);
     }
 
-    public final <T extends Event> void removeEventHandler(final EventType<T> eventType, final EventHandler<? super T> eventHandler, EventDispatchType dispatchType) {
+    public final <T extends Event> void removeEventHandler(final EventType<T> eventType, final EventHandler<? super T> eventHandler, EventDispatchPhase dispatchType) {
         EventHandlerChain<T> eventHandlerChain = (EventHandlerChain<T>) eventHandlerMap.get(eventType);
         if (eventHandlerChain != null) {
             eventHandlerChain.removeEventHandler(eventHandler, dispatchType);
@@ -47,7 +47,7 @@ public class EventHandlerManager extends BasicEventDispatcher {
     //endregion
 
     @Override
-    public final Event dispatchEvent(Event event, EventDispatchType dispatchType) {
+    public final Event dispatchEvent(Event event, EventDispatchPhase dispatchType) {
         EventType<? extends Event> eventType = event.getEventType();
         //iterate through the event parent type and dispatch the event
         while (eventType != null) {

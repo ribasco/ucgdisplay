@@ -4,8 +4,12 @@ import com.ibasco.pidisplay.core.Event;
 import com.ibasco.pidisplay.core.EventType;
 import com.ibasco.pidisplay.core.beans.InputEventData;
 
+import java.util.Objects;
+
 public class RawInputEvent extends Event {
     public static final EventType<RawInputEvent> ANY = new EventType<>(Event.ANY, "INPUT_ANY");
+
+    public static final EventType<RawInputEvent> RAW_INPUT = new EventType<>(ANY, "RAW_INPUT");
 
     public static final EventType<RawInputEvent> KEY_PRESS = new EventType<>(ANY, "KEY_PRESS");
 
@@ -22,6 +26,7 @@ public class RawInputEvent extends Event {
         this.rawInputEventData = rawInputData;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public EventType<? extends RawInputEvent> getEventType() {
         return (EventType<? extends RawInputEvent>) super.getEventType();
@@ -29,5 +34,10 @@ public class RawInputEvent extends Event {
 
     public InputEventData getRawInputEventData() {
         return rawInputEventData;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " [" + Objects.toString(rawInputEventData, "N/A") + "]";
     }
 }

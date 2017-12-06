@@ -13,7 +13,7 @@
     <dependencies>
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>
-            <artifactId>pi-display-drivers</artifactId>
+            <artifactId>pi-display-drivers-hd44780</artifactId>
         </dependency>
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>

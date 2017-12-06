@@ -1,9 +1,9 @@
 package com.ibasco.pidisplay.core.services;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.ibasco.pidisplay.core.*;
+import com.ibasco.pidisplay.core.EventHandlerManager;
+import com.ibasco.pidisplay.core.EventTarget;
 import com.ibasco.pidisplay.core.beans.InputEventData;
-import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.events.RawInputEvent;
 import com.ibasco.pidisplay.core.exceptions.NoHIDAvailableException;
 import com.ibasco.pidisplay.core.exceptions.NoPermissionToAccessException;
@@ -20,8 +20,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static com.ibasco.pidisplay.core.EventUtil.fireEvent;
 
 /**
  * The class responsible for dispatching Raw System Input Events. There can only be one active listener at a time.
@@ -30,7 +31,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 //TODO: Add ability to monitor multiple HIDs
 //TODO: Each HID should be in it's own thread
-public class InputMonitorService implements EventTarget {
+public class InputMonitorService {
 
     private static Logger log = LoggerFactory.getLogger(InputMonitorService.class);
 
@@ -38,24 +39,11 @@ public class InputMonitorService implements EventTarget {
 
     private AtomicBoolean shutdown = new AtomicBoolean(true);
 
-    private RawInputListener activeListener = null;
-
-    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-
-    private Lock readLock = readWriteLock.readLock();
-
-    private Lock writeLock = readWriteLock.writeLock();
-
     private File devFs;
 
-    private ObservableProperty<EventDispatcher> eventDispatcher;
+    private EventTarget activeTarget = null;
 
-    private EventHandlerManager internalDispatcher;
-
-    @FunctionalInterface
-    public interface RawInputListener {
-        void onRawInput(InputEventData data);
-    }
+    private Lock lock = new ReentrantLock();
 
     private static class LazyHolder {
         private static final InputMonitorService INSTANCE = new InputMonitorService();
@@ -65,24 +53,16 @@ public class InputMonitorService implements EventTarget {
         startMonitoring();
     }
 
-    /**
-     * Set the current active listener. There can only be one listener.
-     *
-     * @param listener
-     *         The {@link RawInputListener} instance
-     */
-    @Deprecated
-    public static void setActiveListener(RawInputListener listener) {
-        LazyHolder.INSTANCE._setActiveListener(listener);
-    }
-
-    private void _setActiveListener(RawInputListener listener) {
-        try {
-            writeLock.lock();
-            activeListener = listener;
-        } finally {
-            writeLock.unlock();
+    public boolean setActiveTarget(EventTarget target) {
+        if (lock.tryLock()) {
+            try {
+                this.activeTarget = target;
+            } finally {
+                lock.unlock();
+            }
+            return true;
         }
+        return false;
     }
 
     public void shutdown() {
@@ -110,7 +90,6 @@ public class InputMonitorService implements EventTarget {
     }
 
     private void startMonitoring() {
-
         if (shutdown.compareAndSet(true, false)) {
             log.debug("Trying to initialize");
             try {
@@ -129,6 +108,15 @@ public class InputMonitorService implements EventTarget {
         shutdown.set(true);
     }
 
+    private EventHandlerManager eventHandlerManager;
+
+    public EventHandlerManager eventHandlerManager() {
+        if (eventHandlerManager == null) {
+            eventHandlerManager = new EventHandlerManager(this);
+        }
+        return eventHandlerManager;
+    }
+
     /**
      * Main method responsible for monitoring system input events
      */
@@ -139,32 +127,30 @@ public class InputMonitorService implements EventTarget {
                 byte[] data = new byte[16];
                 //Block until we receive bytes
                 int bytesRead = file.read(data, 0, data.length);
-                //Process the event data
-                if (bytesRead > 0) {
-                    InputEventData inputEvent = createInputEventData(data, bytesRead);
-                    if (readLock.tryLock()) {
-                        try {
-                            if (activeListener != null) {
-                                //activeListener.onRawInput(inputEvent);
-                                eventHandlerManager().dispatchEvent(new RawInputEvent(RawInputEvent.KEY_PRESS, inputEvent), CAPTURE);
-                            } else {
-                                log.debug("No active listener is set");
-                            }
-                        } finally {
-                            readLock.unlock();
-                        }
+                try {
+                    lock.lock();
+                    //Process the event data
+                    if (activeTarget == null)
+                        continue;
+                    if (bytesRead > 0) {
+                        InputEventData inputEventData = createInputEventData(data);
+                        fireEvent(activeTarget, new RawInputEvent(RawInputEvent.RAW_INPUT, inputEventData));
                     } else {
                         log.debug("Unable to obtain read lock for input monitor. A write-operation is in-progress.");
                     }
+                } finally {
+                    lock.unlock();
                 }
+                //ThreadUtils.sleep(5);
             }
-            log.debug("INPUT => Exiting Input monitoring event loop");
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
+        log.debug("INPUT => Exiting Input monitoring event loop");
     }
 
-    private InputEventData createInputEventData(byte[] data, int bufferSize) {
+    @SuppressWarnings("Duplicates")
+    private InputEventData createInputEventData(byte[] data) {
         ByteBuffer buffer = ByteUtils.wrapDirectBuffer(data);
         int tvSeconds = buffer.getInt();
         int tvMicroSeconds = buffer.getInt();
@@ -176,37 +162,5 @@ public class InputMonitorService implements EventTarget {
 
     public static InputMonitorService getInstance() {
         return LazyHolder.INSTANCE;
-    }
-
-    private EventHandlerManager eventHandlerManager() {
-        if (this.internalDispatcher == null) {
-            this.internalDispatcher = new EventHandlerManager(this);
-        }
-        return this.internalDispatcher;
-    }
-
-    public ObservableProperty<EventDispatcher> eventDispatcherProperty() {
-        if (eventDispatcher == null) {
-            eventDispatcher = new ObservableProperty<>(eventHandlerManager());
-        }
-        return eventDispatcher;
-    }
-
-    public EventDispatcher getEventDispatcher() {
-        return eventDispatcherProperty().get();
-    }
-
-    public void setEventDispatcher(EventDispatcher eventDispatcher) {
-        eventDispatcherProperty().set(eventDispatcher);
-    }
-
-    @Override
-    public EventDispatchChain buildEventTargetPath(EventDispatchChain tail) {
-        return tail;
-    }
-
-    @Override
-    public EventDispatchQueue getEventDispatchQueue() {
-        return null;
     }
 }

@@ -4,6 +4,8 @@ import com.ibasco.pidisplay.core.DisplayNode;
 import com.ibasco.pidisplay.core.Event;
 import com.ibasco.pidisplay.core.EventType;
 import com.ibasco.pidisplay.core.Graphics;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class DisplayEvent<T extends Graphics> extends Event {
 
@@ -36,6 +38,29 @@ public class DisplayEvent<T extends Graphics> extends Event {
 
     public DisplayNode<T> getDisplay() {
         return display;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DisplayEvent<?> that = (DisplayEvent<?>) o;
+
+        return new EqualsBuilder()
+                .append(eventType, that.eventType)
+                .append(getClass(), that.getClass())
+                .append(display, that.display)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(eventType)
+                .append(getClass())
+                .append(display)
+                .toHashCode();
     }
 
     @Override

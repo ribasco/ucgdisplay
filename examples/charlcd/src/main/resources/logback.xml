@@ -63,11 +63,13 @@
 
     <logger name="com.ibasco.pidisplay.core" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.core.beans" level="INFO"/>
-    <logger name="com.ibasco.pidisplay.core.components.DisplayText" level="INFO"/>
-    <logger name="com.ibasco.pidisplay.core.services.InputMonitorService" level="TRACE"/>
+    <logger name="com.ibasco.pidisplay.core.beans.ObservableProperty" level="INFO"/>
+    <logger name="com.ibasco.pidisplay.core.components" level="DEBUG"/>
+    <logger name="com.ibasco.pidisplay.core.services.InputMonitorService" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.core.EventDispatchQueue" level="INFO"/>
-    <logger name="com.ibasco.pidisplay.core.Controller" level="INFO"/>
-    <logger name="com.ibasco.pidisplay.core.DisplayNode" level="INFO"/>
+    <logger name="com.ibasco.pidisplay.core.Controller" level="DEBUG"/>
+    <logger name="com.ibasco.pidisplay.core.DisplayParent" level="DEBUG"/>
+    <logger name="com.ibasco.pidisplay.core.DisplayNode" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.core.util" level="INFO"/>
     <logger name="com.ibasco.pidisplay.impl" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.drivers" level="DEBUG"/>

@@ -3,9 +3,9 @@ package com.ibasco.pidisplay.examples.lcd;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
-import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdDriver;
-import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdTemplates;
-import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.Mcp23017LcdAdapter;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.Hd44780DisplayDriver;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.LcdTemplates;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.adapters.Mcp23017LcdAdapter;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdMenuOld;
 import com.ibasco.pidisplay.impl.charlcd.enums.LcdMenuCursorOrientation;
 import com.ibasco.pidisplay.impl.charlcd.enums.LcdMenuItemStyle;
@@ -48,7 +48,7 @@ public class HitachiLcdDemoOld {
     private final Button button3;
     private final Button button4;
 
-    private LcdDriver lcdDriver;
+    private Hd44780DisplayDriver lcdDriver;
 
     private LcdMenuOld lcdMenu;
 
@@ -80,7 +80,7 @@ public class HitachiLcdDemoOld {
         Mcp23017LcdAdapter lcdAdapter = new Mcp23017LcdAdapter(mcpProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017);
 
         //initialize lcd driver
-        lcdDriver = new LcdDriver(lcdAdapter, 20, 4);
+        lcdDriver = new Hd44780DisplayDriver(lcdAdapter, 20, 4);
 
         byte[] returnChar = new byte[]{
                 0b00000,
@@ -294,7 +294,7 @@ public class HitachiLcdDemoOld {
         ThreadUtils.sleep(interval);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         try {
             new HitachiLcdDemoOld().run();
             log.info("Shutdown Successful");

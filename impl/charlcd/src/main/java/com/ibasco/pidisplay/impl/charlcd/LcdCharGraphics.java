@@ -1,180 +1,145 @@
 package com.ibasco.pidisplay.impl.charlcd;
 
 import com.ibasco.pidisplay.core.CharGraphics;
-import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdDriver;
+import com.ibasco.pidisplay.core.GraphicsBuffer;
+import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
+import com.ibasco.pidisplay.core.util.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
-/**
- * Graphics implementation for Character Display Graphics. This class is thread-safe.
- * *
- *
- * @author Rafael Ibasco
- */
 public class LcdCharGraphics implements CharGraphics {
 
-    private static final Logger log = LoggerFactory.getLogger(LcdCharGraphics.class);
+    public static final Logger log = LoggerFactory.getLogger(LcdCharGraphics.class);
 
-    private LcdDriver driver;
+    @Deprecated
+    public static final byte CHAR_SPACE = 32;
+    @Deprecated
+    public static final byte CHAR_RIGHTARROW = 1;
+    @Deprecated
+    public static final byte CHAR_BULLETPOINT = 2;
+    @Deprecated
+    public static final byte CHAR_LEFTARROW = 3;
 
-    //<editor-fold desc="Custom Character Constants">
-    public static final byte CHAR_RIGHTARROW = 0x7E;
+    private CharDisplayDriver driver;
 
-    public static final byte CHAR_LEFTARROW = 0x7F;
-
-    public static final byte CHAR_SPACE = (byte) 0xA0;
-
-    public static final byte CHAR_BULLETPOINT = (byte) 0xA5;
-
-    public static final byte[] CHAR_CUSTOM_RETURN = new byte[]{
-            0b00100,
-            0b01110,
-            0b10101,
-            0b00100,
-            0b00100,
-            0b00100,
-            0b11100,
-            0b00000
-    };
-    //</editor-fold>
-
-    private final ByteBuffer buffer;
+    private GraphicsBuffer buffer;
 
     private final Object mutex = new Object();
 
-    LcdCharGraphics(LcdDriver driver) {
-        //buffer index calculation = col + (row * maxCols)
+    public LcdCharGraphics(CharDisplayDriver driver) {
         this.driver = driver;
-        log.debug("Initialized Buffer Dimensions to {} x {}", driver.getColumnCount(), driver.getRowCount());
-        buffer = ByteBuffer.allocateDirect(driver.getColumnCount() * driver.getRowCount());
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        resetBuffer();
+        this.buffer = GraphicsBuffer.allocate(driver.getWidth(), driver.getHeight());
     }
 
     @Override
-    public void clear() {
+    public void setDisplayCursor(int x, int y) {
         synchronized (mutex) {
-            resetBuffer();
-        }
-    }
-
-    @Override
-    public void cursorBlink(boolean state) {
-        synchronized (mutex) {
-            driver.cursor(state);
-            driver.blink(state);
+            this.driver.setCursor(x, y);
         }
     }
 
     @Override
     public void setCursor(int x, int y) {
         synchronized (mutex) {
-            validateOffsets(x, y);
-            int bufferIdx = x + (y * getWidth());
-            buffer.position(bufferIdx);
-            log.trace("Setting Cursor: x={}, y={}, idx={} ({})", x, y, buffer.position(), bufferIdx);
+            this.buffer.cursor(x, y);
         }
-    }
-
-    @Override
-    public void drawText(char data) {
-        writeBuffer(data);
-    }
-
-    @Override
-    public void drawText(char[] data) {
-        writeBuffer(data);
-    }
-
-    @Override
-    public void drawText(byte[] data) {
-        writeBuffer(data);
-    }
-
-    @Override
-    public void drawText(byte data) {
-        writeBuffer(data);
     }
 
     @Override
     public void drawText(String text) {
-        if (StringUtils.isBlank(text))
+        if (StringUtils.isEmpty(text))
             return;
-        writeBuffer(text.getBytes());
+        synchronized (mutex) {
+            this.buffer.put(text.getBytes());
+        }
+    }
+
+    @Override
+    public int getCursorX() {
+        synchronized (mutex) {
+            return buffer.cursorX();
+        }
+    }
+
+    @Override
+    public int getCursorY() {
+        synchronized (mutex) {
+            return buffer.cursorY();
+        }
     }
 
     @Override
     public int getWidth() {
-        return driver.getColumnCount();
+        return driver.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return driver.getRowCount();
+        return driver.getHeight();
     }
 
-    public final ByteBuffer getBuffer() {
-        return buffer.asReadOnlyBuffer();
-    }
-
-    private void writeBuffer(char... data) {
-        if (data == null)
-            return;
-        if (data.length == 1) {
-            writeBuffer((byte) data[0]);
-            return;
-        }
-        writeBuffer(new String(data).getBytes());
-    }
-
-    private void writeBuffer(byte... data) {
-        if (!buffer.hasRemaining()) {
-            log.warn("No available space remaining in buffer (Size: {})", buffer.capacity());
-            return;
-        }
+    @Override
+    public void clear() {
         synchronized (mutex) {
-            if (data.length > buffer.remaining()) {
-                log.warn("Data length is greater than the remaining size in buffer. Data has been trimmed");
-                buffer.put(data, 0, buffer.remaining());
-                return;
-            }
-            buffer.put(data);
+            buffer.clear(true);
         }
     }
 
-    private void resetBuffer() {
-        buffer.rewind();
-        while (buffer.hasRemaining())
-            buffer.put((byte) 32); //fill with space
-        buffer.clear();
+    @Override
+    public boolean isDirty() {
+        synchronized (mutex) {
+            return buffer.isModified();
+        }
+    }
+
+    @Override
+    public void setCursorBlink(boolean state) {
+        synchronized (mutex) {
+            driver.blink(state);
+            driver.cursor(state);
+        }
+    }
+
+    @Override
+    public void setAutoscroll(boolean state) {
+        synchronized (mutex) {
+            driver.autoscroll(state);
+        }
+    }
+
+    @Override
+    public void setBlink(boolean state) {
+        synchronized (mutex) {
+            driver.blink(state);
+        }
+    }
+
+    @Override
+    public CharDisplayDriver getDriver() {
+        return driver;
+    }
+
+    public GraphicsBuffer getBuffer() {
+        synchronized (mutex) {
+            return buffer.duplicate();
+        }
     }
 
     @Override
     public void flush() {
         synchronized (mutex) {
-            buffer.rewind();
-            int row = 0;
-            while (buffer.hasRemaining()) {
-                int size = (buffer.remaining() < getWidth()) ? buffer.remaining() : getWidth();
-                byte[] rowData = new byte[size];
-                buffer.get(rowData);
-                driver.setCursorPosition(row++, 0);
-                driver.write(rowData);
+            if (!buffer.isModified())
+                return;
+            log.debug("Buffer modified...flushing");
+            byte[] tmp = new byte[getWidth()];
+            for (int row = 0; row < getHeight(); row++) {
+                buffer.get(row, tmp);
+                driver.setCursor(0, row);
+                driver.write(ArrayUtils.replaceNullBytes(tmp, (byte) 32));
             }
-            resetBuffer();
-        }
-    }
-
-    private void validateOffsets(int x, int y) {
-        if (x > (getWidth() - 1)) {
-            throw new IllegalStateException("Invalid Column Offset: " + x);
-        }
-        if (y > (getHeight() - 1)) {
-            throw new IllegalStateException("Invalid Row Offset: " + y);
+            buffer.save();
+            driver.setCursor(buffer.cursorX(), buffer.cursorY());
         }
     }
 }

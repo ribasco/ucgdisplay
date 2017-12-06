@@ -11,16 +11,13 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class EventDispatchQueue {
 
     public static final Logger log = LoggerFactory.getLogger(EventDispatchQueue.class);
 
     //region Private Fields
-    private Deque<Event> queue = new LinkedBlockingDeque<>();
+    private BlockingDeque<Event> queue = new LinkedBlockingDeque<>();
 
     private Set<InvocationRecord> runnables = new LinkedHashSet<>();
 
@@ -45,15 +42,9 @@ public class EventDispatchQueue {
         log.error(throwable.getMessage(), throwable);
     }
 
-    private final ExecutorService eventService = Executors.newSingleThreadExecutor(threadFactory);
+    private final ExecutorService dispatchService = Executors.newSingleThreadExecutor(threadFactory);
 
     private AtomicBoolean started = new AtomicBoolean(false);
-
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-
-    private final Lock readLock = readWriteLock.readLock();
-
-    private final Lock writeLock = readWriteLock.writeLock();
 
     /**
      * Holds a thread-local instance for {@link EventDispatchChainRecord}. Only one record instance per thread may
@@ -68,7 +59,7 @@ public class EventDispatchQueue {
     private static class InvocationRecord {
         private boolean invokeOnce = false;
         private Runnable runnable;
-        private boolean invoked = false;
+        private boolean running = false;
 
         public InvocationRecord(Runnable runnable, boolean invokeOnce) {
             if (runnable == null)
@@ -132,7 +123,7 @@ public class EventDispatchQueue {
      */
     EventDispatchQueue() {
         started.set(true);
-        eventService.execute(this::eventLoop);
+        dispatchService.execute(this::eventLoop);
     }
 
     /**
@@ -141,25 +132,11 @@ public class EventDispatchQueue {
     boolean isDispatchThread() {
         if (uiThread == null)
             throw new IllegalStateException("Event Dispatch Thread not yet started");
-        return Thread.currentThread() == uiThread;
+        return Thread.currentThread().equals(uiThread);
     }
 
     Deque<Event> getEventQueue() {
         return this.queue;
-    }
-
-    public void unregisterRunnable(Runnable... runnables) {
-        for (Runnable runnable : runnables)
-            unregisterRunnable(runnable);
-    }
-
-    public void registerRunnable(Runnable... runnables) {
-        registerRunnable(false, runnables);
-    }
-
-    public void registerRunnable(boolean invokeOnce, Runnable... runnables) {
-        for (Runnable runnable : runnables)
-            registerRunnable(runnable, invokeOnce);
     }
 
     /**
@@ -170,35 +147,25 @@ public class EventDispatchQueue {
      * Note: This is the same as calling {@code registerRunnable(Runnable, true)}
      * </blockquote>
      *
-     * @param runnable
+     * @param runnables
      *         The {@link Runnable} instance
      */
-    public void registerRunnable(Runnable runnable) {
-        registerRunnable(runnable, false);
+    void registerRunnable(Runnable... runnables) {
+        registerRunnable(false, runnables);
     }
 
-    public void registerRunnable(Runnable runnable, boolean invokeOnce) {
-        if (runnable == null)
+    void registerRunnable(boolean invokeOnce, Runnable... runnables) {
+        if (runnables == null)
             return;
-        try {
-            log.debug("START: Registering runnable");
-            writeLock.lock();
-            runnables.add(new InvocationRecord(runnable, invokeOnce));
-        } finally {
-            writeLock.unlock();
-            log.debug("END: Registering runnable");
-        }
+        for (Runnable runnable : runnables)
+            this.runnables.add(new InvocationRecord(runnable, invokeOnce));
     }
 
-    void unregisterRunnable(Runnable runnable) {
-        if (runnable == null)
+    void unregisterRunnable(Runnable... runnables) {
+        if (runnables == null)
             return;
-        try {
-            writeLock.lock();
-            runnables.removeIf(r -> r.runnable.equals(runnable));
-        } finally {
-            writeLock.unlock();
-        }
+        for (Runnable runnable : runnables)
+            this.runnables.removeIf(r -> r.runnable.equals(runnable));
     }
     //endregion
 
@@ -209,52 +176,34 @@ public class EventDispatchQueue {
         log.trace("EVENT_QUEUE => [{}] Entering ", Thread.currentThread().getName());
         while (started.get()) {
             //Return a thread-specific singleton instance of EventDispatchChainRecord
-            Event event = queue.poll();
-            //1) Process events
-            processEvent(event);
-            //2) Process Runnables
-            processRunnables();
+            try {
+                Event event = queue.takeLast();
+                //1) Process events
+                processEvent(event);
+                //2) Process Runnables
+                processRunnables();
+            } catch (InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
         }
         log.trace("EVENT_QUEUE => [{}] Exiting", Thread.currentThread().getName());
         shutdownLatch.countDown();
     }
 
     private void processRunnables() {
-        if (readLock.tryLock()) {
-            try {
-                for (InvocationRecord record : runnables) {
-                    if (!record.invoked) {
-                        record.runnable.run();
-                        record.invoked = true;
-                    }
+        //try to obtain a read lock, if not available try again later.
+        if (runnables.isEmpty())
+            return;
+        Iterator<InvocationRecord> it = runnables.iterator();
+        while (it.hasNext()) {
+            InvocationRecord record = it.next();
+            if (!record.running) {
+                record.running = true;
+                record.runnable.run();
+                record.running = false;
+                if (record.invokeOnce) {
+                    it.remove();
                 }
-            } finally {
-                readLock.unlock();
-                cleanup();
-            }
-        }
-    }
-
-    /**
-     * Remove one-time invocations
-     */
-    private void cleanup() {
-        //do not block if lock is not available
-        if (writeLock.tryLock()) {
-            try {
-                Iterator<InvocationRecord> it = runnables.iterator();
-                while (it.hasNext()) {
-                    InvocationRecord record = it.next();
-                    if (record.invoked) {
-                        if (record.invokeOnce) {
-                            log.debug("EVENT_QUEUE_REMOVE => Removed one-time invocations");
-                            it.remove();
-                        } else
-                            record.invoked = false;
-                    }
-                }
-            } finally {
-                writeLock.unlock();
             }
         }
     }
@@ -291,12 +240,15 @@ public class EventDispatchQueue {
                     log.warn("Event target is null for event : {}", event);
                     return;
                 }
-                eventTarget.buildEventTargetPath(eventDispatchChain).dispatchEvent(event);
+                EventDispatchChain chain = eventTarget.buildEventTargetPath(eventDispatchChain);
+                log.debug("EVENT_DISPATCH_PATH => {} (Target: {})", chain, event.getTarget());
+                chain.dispatchEvent(event);
+                log.debug("EVENT_DISPATCH_END => Event : {}", event);
             } finally {
                 if (!event.isConsumed())
                     event.consume();
                 record.release();
-                log.debug("EVENT_DISPATCH_END => Event : {}", event);
+                log.debug("EVENT_DISPATCH_RELEASE => Event : {}", event);
             }
         }
     }
@@ -312,6 +264,10 @@ public class EventDispatchQueue {
         log.debug("EVENT_QUEUE_POST => Post {} (New Size: {})", event, queue.size());
     }
 
+    public boolean isStarted() {
+        return started.get();
+    }
+
     /**
      * Performs a graceful shutdown of the Event Loop
      */
@@ -319,6 +275,6 @@ public class EventDispatchQueue {
         started.set(false);
         shutdownLatch.await(1, TimeUnit.MINUTES);
         runnables.clear();
-        eventService.shutdown(); //just in case ?
+        dispatchService.shutdown(); //just in case ?
     }
 }

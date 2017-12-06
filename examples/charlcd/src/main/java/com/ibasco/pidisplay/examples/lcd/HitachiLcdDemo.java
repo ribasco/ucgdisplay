@@ -2,16 +2,16 @@ package com.ibasco.pidisplay.examples.lcd;
 
 import com.ibasco.pidisplay.components.RotaryEncoder;
 import com.ibasco.pidisplay.components.RotaryState;
-import com.ibasco.pidisplay.core.EventDispatchType;
+import com.ibasco.pidisplay.core.EventDispatchPhase;
 import com.ibasco.pidisplay.core.enums.AlertType;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.enums.TextWrapStyle;
 import com.ibasco.pidisplay.core.events.DisplayEvent;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
-import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdDriver;
-import com.ibasco.pidisplay.drivers.lcd.hitachi.LcdTemplates;
-import com.ibasco.pidisplay.drivers.lcd.hitachi.adapters.Mcp23017LcdAdapter;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.Hd44780DisplayDriver;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.LcdTemplates;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.adapters.Mcp23017LcdAdapter;
 import com.ibasco.pidisplay.impl.charlcd.LcdController;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdPane;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdText;
@@ -53,9 +53,9 @@ public class HitachiLcdDemo {
 
     private LcdController lcd;
 
-    private LcdDriver lcdDriver;
+    private Hd44780DisplayDriver lcdDriver;
 
-    private LcdDriver lcdDriver2;
+    private Hd44780DisplayDriver lcdDriver2;
 
     private AtomicBoolean shutdown = new AtomicBoolean(false);
 
@@ -87,7 +87,7 @@ public class HitachiLcdDemo {
         Mcp23017LcdAdapter lcdAdapter = new Mcp23017LcdAdapter(mcpProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017);
 
         //initialize lcd driver
-        lcdDriver = new LcdDriver(lcdAdapter, 20, 4);
+        lcdDriver = new Hd44780DisplayDriver(lcdAdapter, 20, 4);
 
         /*LcdPinMapConfig gpioLcdPinMap = new LcdPinMapConfig()
                 .map(LcdPin.RS, RaspiPin.GPIO_21)
@@ -222,6 +222,12 @@ public class HitachiLcdDemo {
         return button;
     }
 
+    private LcdPane pane1 = new LcdPane();
+    private LcdPane pane2 = new LcdPane();
+    private LcdPane pane3 = new LcdPane();
+    private List<LcdPane> paneList = new ArrayList<>();
+    private LcdText label1 = new LcdText();
+    private AtomicInteger startPos = new AtomicInteger(0);
     private LcdAlertDialog<String> alert = new LcdAlertDialog<>(AlertType.INFO);
 
     private ButtonReleasedListener buttonReleasedListener = buttonEvent -> {
@@ -229,7 +235,10 @@ public class HitachiLcdDemo {
         switch ((String) buttonEvent.getButton().getTag()) {
             case "back":
                 //success = lcdMenu.doExit();
-                lcd.hide();
+                //lcd.hide();
+                LcdPane group = paneList.get(startPos.incrementAndGet());
+                log.info("Switching to next display : {}", group);
+                lcd.show(group);
                 break;
             case "next":
                 //success = lcdMenu.doNext();
@@ -238,8 +247,9 @@ public class HitachiLcdDemo {
                 //success = lcdMenu.doPrevious();
                 break;
             case "select":
-                log.info("Setting Result");
-                alert.setResult("Hello");
+                //log.info("Setting Result");
+                //alert.setResult("Hello");
+                log.info("Focus Current: {}", lcd.focusNext());
                 break;
             default:
                 success = false;
@@ -270,12 +280,7 @@ public class HitachiLcdDemo {
         new HitachiLcdDemo().run();
     }
 
-    private LcdPane pane1 = new LcdPane();
-    private LcdPane pane2 = new LcdPane();
-    private LcdPane pane3 = new LcdPane();
-    private List<LcdPane> paneList = new ArrayList<>();
-    private LcdText label1 = new LcdText();
-    private AtomicInteger startPos = new AtomicInteger(0);
+
 
     private void rotaryChange(long l, RotaryState state) {
         log.info("Rotary Change: {}, State: {}", startPos, state);
@@ -308,20 +313,41 @@ public class HitachiLcdDemo {
     public void run() throws Exception {
         log.info("Running LCD Display");
 
+        if (!lcd.grabInputFocus()) {
+            log.error("Unable to grab input focus for controller : {}", lcd);
+            return;
+        } else
+            log.info("Successfully acquired input focus for controller {}", lcd);
+
         pane1.setName("Pane1");
         pane2.setName("Pane2");
         pane3.setName("Pane3");
 
         pane1.add(label1);
         pane2.add(new LcdText("Pane #2"));
-
         pane3.add(new LcdText(0, 0, 20, 1, "Header"));
         pane3.add(new LcdText(0, 1, 15, 2, "Content"));
         pane3.add(new LcdText(15, 1, 5, 2, "Body Icon"));
         pane3.add(new LcdText(0, 3, 20, 1, "Footer"));
 
         LcdPane inputPane = new LcdPane();
-        inputPane.add(new LcdTextBox());
+
+        LcdText lblUsername = new LcdText(0, 0, "Username: ");
+        lblUsername.setWidth(20);
+        lblUsername.setTextAlignment(TextAlignment.RIGHT);
+        LcdText lblPassword = new LcdText(0, 2, "Password: ");
+        lblPassword.setWidth(20);
+        lblPassword.setTextAlignment(TextAlignment.RIGHT);
+
+        LcdTextBox tbUsername = new LcdTextBox(0, 1, 20, 1);
+        tbUsername.setTextAlignment(TextAlignment.RIGHT);
+        LcdTextBox tbPassword = new LcdTextBox(0, 3, 20, 1);
+        tbPassword.setTextAlignment(TextAlignment.RIGHT);
+
+        inputPane.add(lblUsername);
+        inputPane.add(tbUsername);
+        inputPane.add(lblPassword);
+        inputPane.add(tbPassword);
 
         paneList.add(pane1);
         paneList.add(pane2);
@@ -335,11 +361,11 @@ public class HitachiLcdDemo {
         LcdText rightContent = (LcdText) pane3.getChildren().get(2);
         LcdText footer = (LcdText) pane3.getChildren().get(3);
 
-        header.setTextAlignment(TextAlignment.CENTER);
+        header.setTextAlignment(TextAlignment.RIGHT);
         footer.setTextAlignment(TextAlignment.CENTER);
 
         lcd.clear();
-        lcd.addEventHandler(DisplayEvent.ANY, event -> log.info("Event Bubble = {}", event), EventDispatchType.CAPTURE);
+        lcd.addEventHandler(DisplayEvent.ANY, event -> log.info("Event Bubble = {}", event), EventDispatchPhase.CAPTURE);
 
         lcd.show(paneList.get(startPos.get()));
 
@@ -353,7 +379,7 @@ public class HitachiLcdDemo {
         CompletableFuture.runAsync(() -> {
             while (!shutdown.get()) {
                 //log.info("Line Count: {}, Width: {}", label1.getLineCount(), label1.getWidth());
-                for (int i = 0, x = 0; i < 100; i++, x++) {
+                for (int i = 0, x = 0; i < 50; i++, x++) {
                     label1.setScrollTop(i);
                     //log.info("Scrolling Line: {}", i);
                     delay(1000);
@@ -364,8 +390,6 @@ public class HitachiLcdDemo {
         //Toggle visible states
         CompletableFuture.runAsync(new Runnable() {
             boolean state = false;
-            int ctr = 0;
-
             @Override
             public void run() {
                 while (!shutdown.get()) {
@@ -387,7 +411,7 @@ public class HitachiLcdDemo {
                     /*if (mainContent.isActive())
                         log.info("Updating Counter: {}", i);*/
                     mainContent.setText("Counter: " + i);
-                    delay(500);
+                    delay(100);
                 }
             }
         });

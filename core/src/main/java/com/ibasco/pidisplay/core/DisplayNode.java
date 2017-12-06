@@ -1,6 +1,7 @@
 package com.ibasco.pidisplay.core;
 
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
+import com.ibasco.pidisplay.core.events.FocusEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
@@ -24,6 +25,11 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
 
     private static final AtomicLong idCounter = new AtomicLong(0);
     //endregion
+
+    @FunctionalInterface
+    protected interface InvalidatedCallback<T> {
+        void invalidated(T oldValue, T newValue);
+    }
 
     //region Properties
     protected ObservableProperty<String> name = createProperty(this.getClass().getSimpleName().toLowerCase());
@@ -58,11 +64,17 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
     private AtomicBoolean initialized = new AtomicBoolean(false);
 
     private int depth = 0;
+
+    private AtomicBoolean dirty = new AtomicBoolean(true);
     //endregion
 
     ObservableProperty<EventDispatcher> eventDispatcher;
 
     EventHandlerManager eventHandlerManager;
+
+    final EventHandler<FocusEvent> focusEnterEventHandler = this::onFocusEnter;
+
+    final EventHandler<FocusEvent> focusExitEventHandler = this::onFocusExit;
 
     //region Constructor
     protected DisplayNode(Integer width, Integer height) {
@@ -73,6 +85,13 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
         super(left, top, width, height);
     }
     //endregion
+
+    protected void onFocusEnter(FocusEvent focusEvent) {
+    }
+
+    protected void onFocusExit(FocusEvent focusEvent) {
+
+    }
 
     //region Property Value Getter/Setters
     public void setDepth(int depth) {
@@ -95,7 +114,7 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
         this.name.set(name);
     }
 
-    public void setFocusable(boolean focusable) {
+    protected void setFocusable(boolean focusable) {
         this.focusable.set(focusable);
     }
 
@@ -125,6 +144,12 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
 
     void setActive(boolean active) {
         this.active.set(active);
+        if (active)
+            onActivate();
+    }
+
+    protected void onActivate() {
+
     }
 
     public boolean isVisible() {
@@ -203,6 +228,10 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
      *         The {@link Graphics} implementation used by this node
      */
     abstract protected void drawNode(T graphics);
+
+    protected void postFlush(T graphics) {
+
+    }
     //endregion
 
     //region Protected Methods
@@ -212,7 +241,7 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
         return controller;
     }
 
-    Controller<T> getController() {
+    public Controller<T> getController() {
         return controllerProperty().get();
     }
 
@@ -232,10 +261,27 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
     //region Package-Private Methods
 
     /**
+     * Initialize default dimensions
+     *
+     * @param graphics
+     *         The {@link Graphics} driver of this node
+     */
+    void initDimensions(T graphics) {
+        if (!this.maxWidth.isSet())
+            this.maxWidth.setValid(graphics.getWidth());
+        if (!this.maxHeight.isSet())
+            this.maxHeight.setValid(graphics.getHeight());
+        if (!this.width.isSet())
+            this.width.setValid(graphics.getWidth());
+        if (!this.height.isSet())
+            this.height.setValid(graphics.getHeight());
+    }
+
+    /**
      * To be called by the {@link Controller} and should not be called elsewhere
      *
      * @param graphics
-     *         The {@link Graphics} driver to use for this node
+     *         The underlying {@link Graphics} driver used by this node
      */
     void draw(T graphics) {
         validate(graphics);
@@ -243,7 +289,13 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
         this.drawNode(graphics);
     }
 
-    protected final void validate(T graphics) {
+    /**
+     * Validate {@link DisplayNode} state
+     *
+     * @param graphics
+     *         The underlying {@link Graphics} driver used by this node
+     */
+    final void validate(T graphics) {
         if (isAttached())
             this.getController().checkEventDispatchThread();
 
@@ -253,7 +305,7 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
     //endregion
 
     final boolean isAttached() {
-        return this.controllerProperty().get() != null;
+        return getController() != null;
     }
 
     public ObservableProperty<EventDispatcher> eventDispatcherProperty() {
@@ -289,12 +341,18 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
             this.eventDispatcher.set(eventDispatcher);
     }
 
-    public final <T extends Event> void addEventHandler(final EventType<T> eventType, final EventHandler<? super T> eventHandler, EventDispatchType dispatchType) {
-        getEventHandlerManager().addEventHandler(eventType, eventHandler, dispatchType);
+    public final <E extends Event> void addEventHandler(final EventType<E> eventType, final EventHandler<? super E> eventHandler) {
+        addEventHandler(eventType, eventHandler, CAPTURE);
+        addEventHandler(eventType, eventHandler, BUBBLE);
+        addEventHandler(eventType, eventHandler, POST_DISPATCH);
     }
 
-    public final <T extends Event> void removeEventHandler(final EventType<T> eventType, final EventHandler<? super T> eventHandler, EventDispatchType dispatchType) {
-        getEventHandlerManager().removeEventHandler(eventType, eventHandler, dispatchType);
+    public final <E extends Event> void addEventHandler(final EventType<E> eventType, final EventHandler<? super E> eventHandler, EventDispatchPhase phase) {
+        getEventHandlerManager().addEventHandler(eventType, eventHandler, phase);
+    }
+
+    public final <E extends Event> void removeEventHandler(final EventType<E> eventType, final EventHandler<? super E> eventHandler, EventDispatchPhase phase) {
+        getEventHandlerManager().removeEventHandler(eventType, eventHandler, phase);
     }
 
     protected <B> ObservableProperty<B> createProperty(B defaultValue) {
@@ -302,23 +360,34 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
     }
 
     protected <B> ObservableProperty<B> createProperty(boolean redrawInvalid, B defaultValue) {
+        return createProperty(redrawInvalid, defaultValue, null);
+    }
+
+    protected <B> ObservableProperty<B> createProperty(boolean redrawInvalid, B defaultValue, InvalidatedCallback<B> callback) {
         if (!redrawInvalid)
             return new ObservableProperty<>(defaultValue);
         return new ObservableProperty<B>(defaultValue) {
             @Override
             protected void invalidated(B oldValue, B newValue) {
-                if (DisplayNode.this.isActive()) {
-                    //redraw();
-                }
+                if (callback != null)
+                    callback.invalidated(oldValue, newValue);
             }
         };
+    }
+
+    boolean isDirty() {
+        return dirty.get();
+    }
+
+    void setDirty(boolean dirty) {
+        this.dirty.set(dirty);
     }
 
     @SuppressWarnings("Duplicates")
     @Override
     public EventDispatchChain buildEventTargetPath(EventDispatchChain tail) {
         DisplayNode<T> current = this;
-        //loop through all succeeding parent nodes and prepend it to the tail of the chain
+        //loop through all parent nodes and prepend it to the tail of the chain
         while (current != null) {
             if (current.eventDispatcher != null) {
                 final EventDispatcher eventDispatcherValue = current.eventDispatcher.get();
@@ -328,10 +397,10 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
             current = current.getParent();
         }
         //Append event dispatcher of this node's controller
-        if (getController() != null) {
+        /*if (getController() != null) {
             tail = getController().buildEventTargetPath(tail);
         } else
-            log.error("Skipping append controller dispatcher");
+            log.error("Skipping append controller dispatcher");*/
         return tail;
     }
 

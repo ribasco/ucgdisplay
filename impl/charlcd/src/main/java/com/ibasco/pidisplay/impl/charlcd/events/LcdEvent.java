@@ -7,7 +7,6 @@ import com.ibasco.pidisplay.core.events.DisplayEvent;
 import com.ibasco.pidisplay.impl.charlcd.LcdCharGraphics;
 
 public class LcdEvent extends DisplayEvent<LcdCharGraphics> {
-
     public LcdEvent(EventType<? extends Event> eventType, DisplayNode<LcdCharGraphics> display) {
         super(eventType, display);
     }
