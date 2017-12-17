@@ -8,7 +8,6 @@ import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.events.FocusEvent;
 import com.ibasco.pidisplay.core.events.KeyEvent;
 import com.ibasco.pidisplay.core.ui.Graphics;
-import com.ibasco.pidisplay.core.util.GraphicsUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,16 +50,6 @@ abstract public class DisplayTextBox<T extends Graphics> extends DisplayParent<T
         removeEventHandler(KeyEvent.ANY, rawInputEventHandler, CAPTURE);
     }
 
-    private int fixCaretPos(int pos) {
-        int tmp = pos;
-        if (tmp < 0)
-            tmp = 0;
-        int max = (getWidth() * getHeight()) - 1;
-        if (tmp > max)
-            tmp = max;
-        return tmp;
-    }
-
     public ObservableProperty<Integer> caretProperty() {
         return this.caretPos;
     }
@@ -99,8 +88,6 @@ abstract public class DisplayTextBox<T extends Graphics> extends DisplayParent<T
         }
         updateCaretPos();
     }
-
-    abstract protected DisplayText<T> getContent();
 
     public void setText(String text) {
         getContent().setText(text);
@@ -164,23 +151,15 @@ abstract public class DisplayTextBox<T extends Graphics> extends DisplayParent<T
         getContent().clear();
     }
 
-    void updateCaretPos() {
-        if (!isFocused())
-            return;
-        final Graphics graphics = this.getController().getGraphics();
-        int startX = getLeftPos(), startY = getTopPos();
-        int endX = startX + (getWidth() - 1);
-        int endY = startY + (getHeight() - 1);
-        int x = calcXOffset();
-        int y = calcYOffset();
-        if (x > endX)
-            x = endX;
-        if (y > endY)
-            y = endY;
-        log.debug("Updating Caret (X={}, Y={}, Node={}, Focused={})", x, y, this, isFocused());
-        graphics.setCursor(x, y);
-        graphics.setDisplayCursor(x, y);
-    }
+    abstract protected int fixCaretPos(int pos);
+
+    abstract protected DisplayText<T> getContent();
+
+    abstract protected void updateCaretPos();
+
+    abstract protected int calcXOffset();
+
+    abstract protected int calcYOffset();
 
     @Override
     protected void postFlush(T graphics) {
@@ -188,13 +167,5 @@ abstract public class DisplayTextBox<T extends Graphics> extends DisplayParent<T
         if (isFocused()) {
             updateCaretPos();
         }
-    }
-
-    int calcXOffset() {
-        return getLeftPos() + GraphicsUtils.calcXOffset(getWidth(), this.caretPos.get());
-    }
-
-    int calcYOffset() {
-        return getTopPos() + GraphicsUtils.calcYOffset(getWidth(), getHeight(), this.caretPos.get());
     }
 }
