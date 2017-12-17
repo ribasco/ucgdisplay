@@ -1,13 +1,16 @@
 package com.ibasco.pidisplay.impl.charlcd;
 
-import com.ibasco.pidisplay.core.CharGraphics;
-import com.ibasco.pidisplay.core.GraphicsBuffer;
 import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
+import com.ibasco.pidisplay.core.ui.CharGraphics;
+import com.ibasco.pidisplay.core.ui.GraphicsBuffer;
 import com.ibasco.pidisplay.core.util.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A thread-safe implementation of the {@link CharGraphics} interface
+ */
 public class LcdCharGraphics implements CharGraphics {
 
     public static final Logger log = LoggerFactory.getLogger(LcdCharGraphics.class);
@@ -87,7 +90,7 @@ public class LcdCharGraphics implements CharGraphics {
     }
 
     @Override
-    public boolean isDirty() {
+    public boolean hasChanges() {
         synchronized (mutex) {
             return buffer.isModified();
         }
@@ -129,13 +132,14 @@ public class LcdCharGraphics implements CharGraphics {
     @Override
     public void flush() {
         synchronized (mutex) {
+            //do not proceed if there are no changes since the last flush
             if (!buffer.isModified())
                 return;
-            log.debug("Buffer modified...flushing");
             byte[] tmp = new byte[getWidth()];
             for (int row = 0; row < getHeight(); row++) {
                 buffer.get(row, tmp);
                 driver.setCursor(0, row);
+                //replace null bytes with space
                 driver.write(ArrayUtils.replaceNullBytes(tmp, (byte) 32));
             }
             buffer.save();

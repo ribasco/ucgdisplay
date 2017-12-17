@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.core.util;
 
-import com.ibasco.pidisplay.core.GraphicsBuffer;
+import com.ibasco.pidisplay.core.ui.GraphicsBuffer;
 import org.apache.commons.lang3.StringUtils;
 
 public class GraphicsUtils {

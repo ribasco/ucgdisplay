@@ -1,15 +1,15 @@
 package com.ibasco.pidisplay.impl.charlcd.components;
 
-import com.ibasco.pidisplay.core.components.DisplayMenu;
-import com.ibasco.pidisplay.impl.charlcd.LcdCharGraphics;
+import com.ibasco.pidisplay.core.ui.CharGraphics;
+import com.ibasco.pidisplay.core.ui.components.DisplayMenu;
 
-public class LcdMenu extends DisplayMenu<LcdCharGraphics> {
+public class LcdMenu extends DisplayMenu<CharGraphics> {
     public LcdMenu() {
 
     }
 
     @Override
-    public void drawNode(LcdCharGraphics graphics) {
+    public void drawNode(CharGraphics graphics) {
 
     }
 }

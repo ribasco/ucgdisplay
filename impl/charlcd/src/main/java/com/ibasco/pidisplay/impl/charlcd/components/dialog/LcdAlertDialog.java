@@ -1,8 +1,8 @@
 package com.ibasco.pidisplay.impl.charlcd.components.dialog;
 
-import com.ibasco.pidisplay.core.CharGraphics;
-import com.ibasco.pidisplay.core.components.dialog.AlertDialog;
 import com.ibasco.pidisplay.core.enums.AlertType;
+import com.ibasco.pidisplay.core.ui.CharGraphics;
+import com.ibasco.pidisplay.core.ui.components.dialog.AlertDialog;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

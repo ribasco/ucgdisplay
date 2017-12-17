@@ -3,7 +3,7 @@ package com.ibasco.pidisplay.examples.lcd;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.Hd44780DisplayDriver;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.HD44780DisplayDriver;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.LcdTemplates;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.adapters.Mcp23017LcdAdapter;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdMenuOld;
@@ -48,7 +48,7 @@ public class HitachiLcdDemoOld {
     private final Button button3;
     private final Button button4;
 
-    private Hd44780DisplayDriver lcdDriver;
+    private HD44780DisplayDriver lcdDriver;
 
     private LcdMenuOld lcdMenu;
 
@@ -80,7 +80,7 @@ public class HitachiLcdDemoOld {
         Mcp23017LcdAdapter lcdAdapter = new Mcp23017LcdAdapter(mcpProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017);
 
         //initialize lcd driver
-        lcdDriver = new Hd44780DisplayDriver(lcdAdapter, 20, 4);
+        lcdDriver = new HD44780DisplayDriver(lcdAdapter, 20, 4);
 
         byte[] returnChar = new byte[]{
                 0b00000,

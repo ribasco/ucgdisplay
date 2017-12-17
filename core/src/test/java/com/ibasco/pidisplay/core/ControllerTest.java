@@ -2,6 +2,7 @@ package com.ibasco.pidisplay.core;
 
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.events.DisplayEvent;
+import com.ibasco.pidisplay.core.ui.Graphics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

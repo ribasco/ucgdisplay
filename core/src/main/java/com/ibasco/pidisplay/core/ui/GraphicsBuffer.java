@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core;
+package com.ibasco.pidisplay.core.ui;
 
 import com.ibasco.pidisplay.core.exceptions.OffsetOutOfBoundsException;
 import com.ibasco.pidisplay.core.util.ArrayUtils;
@@ -21,8 +21,6 @@ public class GraphicsBuffer {
     private final ByteBuffer buffer;
 
     private byte[] savedBytes;
-
-    private int lastSavedPos = -1;
 
     private int width;
 
@@ -99,6 +97,14 @@ public class GraphicsBuffer {
         return this;
     }
 
+    /**
+     * Puts a string to the buffer. Used for testing only.
+     *
+     * @param data
+     *         The {@link String} data to write to the buffer
+     *
+     * @return This buffer
+     */
     GraphicsBuffer put(String data) {
         buffer.put(Objects.toString(data, "").getBytes());
         return this;
@@ -150,7 +156,6 @@ public class GraphicsBuffer {
      * @return This buffer
      */
     public GraphicsBuffer save() {
-        //lastSavedPos = ArrayUtils.merge(savedBytes, array());
         System.arraycopy(array(), 0, savedBytes, 0, savedBytes.length);
         return this;
     }
@@ -184,24 +189,7 @@ public class GraphicsBuffer {
 
     public GraphicsBuffer reset() {
         Arrays.fill(savedBytes, (byte) 0);
-        lastSavedPos = -1;
         return this;
-    }
-
-    public int lastSavedPos() {
-        return lastSavedPos;
-    }
-
-    public int lastSavedPosX() {
-        if (lastSavedPos < 0)
-            return -1;
-        return GraphicsUtils.calcXOffset(getWidth(), checkOffset(lastSavedPos));
-    }
-
-    public int lastSavedPosY() {
-        if (lastSavedPos < 0)
-            return -1;
-        return GraphicsUtils.calcYOffset(getWidth(), getHeight(), checkOffset(lastSavedPos));
     }
 
     public void clear() {
@@ -244,11 +232,6 @@ public class GraphicsBuffer {
         int pos = buffer.position();
         return pos >= max ? pos - 1 : pos;
     }
-
-    /*private int calculateOffset(int x, int y) {
-        checkBounds(x, y);
-        return checkOffset(x + (y * getWidth()));
-    }*/
 
     private int checkOffset(int offset) {
         int max = (width * height) - 1;

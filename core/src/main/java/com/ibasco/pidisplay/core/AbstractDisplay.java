@@ -1,5 +1,6 @@
 package com.ibasco.pidisplay.core;
 
+import com.ibasco.pidisplay.core.ui.Graphics;
 import com.ibasco.pidisplay.core.util.RegexTextProcessor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

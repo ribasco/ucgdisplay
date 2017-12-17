@@ -1,9 +1,9 @@
 package com.ibasco.pidisplay.impl.charlcd.components;
 
-import com.ibasco.pidisplay.core.CharGraphics;
 import com.ibasco.pidisplay.core.DisplayNode;
 import com.ibasco.pidisplay.core.beans.ObservableList;
-import com.ibasco.pidisplay.core.components.DisplayPane;
+import com.ibasco.pidisplay.core.ui.CharGraphics;
+import com.ibasco.pidisplay.core.ui.components.DisplayPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,10 +32,5 @@ public class LcdPane extends DisplayPane<CharGraphics> {
     @Override
     public boolean hasChildren() {
         return super.hasChildren();
-    }
-
-    @Override
-    protected void onActivate() {
-        log.debug("{} activated.", this);
     }
 }

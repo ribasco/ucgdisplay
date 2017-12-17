@@ -4,8 +4,8 @@ import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
 import com.ibasco.pidisplay.core.enums.ScrollDirection;
 import com.ibasco.pidisplay.core.enums.TextDirection;
 import com.ibasco.pidisplay.core.exceptions.DisplayDriverException;
-import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.adapters.StdGpioLcdAdapter;
+import com.ibasco.pidisplay.core.exceptions.NotYetImplementedException;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.adapters.GpioLcdAdapter;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.*;
 import com.pi4j.component.lcd.LCD;
 import com.pi4j.io.gpio.GpioFactory;
@@ -28,8 +28,8 @@ import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
  * @author Rafael Ibasco
  */
 @SuppressWarnings("All")
-public class Hd44780DisplayDriver implements CharDisplayDriver {
-    private static final Logger log = LoggerFactory.getLogger(Hd44780DisplayDriver.class);
+public class HD44780DisplayDriver implements CharDisplayDriver {
+    private static final Logger log = LoggerFactory.getLogger(HD44780DisplayDriver.class);
 
     //Maximum number of characters supported
     private static final int MAX_CHARACTERS = 80;
@@ -96,8 +96,8 @@ public class Hd44780DisplayDriver implements CharDisplayDriver {
      * @param lcdPinMap
      *         The Pin mapping configuration
      */
-    public Hd44780DisplayDriver(LcdPinMapConfig lcdPinMap, int cols, int rows) throws IOException {
-        this(new StdGpioLcdAdapter(GpioFactory.getDefaultProvider(), lcdPinMap), cols, rows);
+    public HD44780DisplayDriver(LcdPinMapConfig lcdPinMap, int cols, int rows) throws IOException {
+        this(new GpioLcdAdapter(GpioFactory.getDefaultProvider(), lcdPinMap), cols, rows);
     }
 
     /**
@@ -106,7 +106,7 @@ public class Hd44780DisplayDriver implements CharDisplayDriver {
      * @param lcdGpioAdapter
      *         The adapter interface to use for communicating with the LCD device
      */
-    public Hd44780DisplayDriver(LcdGpioAdapter lcdGpioAdapter, int cols, int rows) throws IOException {
+    public HD44780DisplayDriver(LcdGpioAdapter lcdGpioAdapter, int cols, int rows) throws IOException {
         this(lcdGpioAdapter, cols, rows, LcdOperationMode.FOURBIT);
     }
 
@@ -122,7 +122,7 @@ public class Hd44780DisplayDriver implements CharDisplayDriver {
      * @param operationMode
      *         The operation mode (4-bit or 8-bit)
      */
-    public Hd44780DisplayDriver(LcdGpioAdapter lcdGpioAdapter, int cols, int rows, LcdOperationMode operationMode) throws IOException {
+    public HD44780DisplayDriver(LcdGpioAdapter lcdGpioAdapter, int cols, int rows, LcdOperationMode operationMode) throws IOException {
         this(lcdGpioAdapter, cols, rows, operationMode, LcdCharSize.DOTS_5X8);
     }
 
@@ -140,7 +140,7 @@ public class Hd44780DisplayDriver implements CharDisplayDriver {
      * @param charSize
      *         The supported character size of the LCD device (5x8 or 5x10)
      */
-    public Hd44780DisplayDriver(LcdGpioAdapter lcdGpioAdapter, int cols, int rows, LcdOperationMode operationMode, LcdCharSize charSize) throws IOException {
+    public HD44780DisplayDriver(LcdGpioAdapter lcdGpioAdapter, int cols, int rows, LcdOperationMode operationMode, LcdCharSize charSize) throws IOException {
         if (lcdGpioAdapter == null || operationMode == null || charSize == null)
             throw new IllegalArgumentException(String.format("Invalid arguments found in the constructor. (Adapter=%s, Operation Mode=%s, Char Size=%s)", lcdGpioAdapter, operationMode, charSize));
         this.lcdGpioAdapter = lcdGpioAdapter;
@@ -345,7 +345,7 @@ public class Hd44780DisplayDriver implements CharDisplayDriver {
     @Override
     public void backlight(boolean state) {
         //verify that the backlight is mapped
-        throw new NotImplementedException("The backlight functionality is not yet implemented");
+        throw new NotYetImplementedException("The backlight functionality is not yet implemented");
     }
 
     /**
@@ -366,7 +366,7 @@ public class Hd44780DisplayDriver implements CharDisplayDriver {
      * Scroll the display either left or right. This scroll the display without changing the RAM
      *
      * @param direction
-     *         The {@link LcdScrollDirection} enum
+     *         The {@link ScrollDirection} enum
      */
     @Override
     public void scrollDisplay(ScrollDirection direction) {

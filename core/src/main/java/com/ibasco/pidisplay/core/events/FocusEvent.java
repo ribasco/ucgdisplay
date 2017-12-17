@@ -3,7 +3,7 @@ package com.ibasco.pidisplay.core.events;
 import com.ibasco.pidisplay.core.Event;
 import com.ibasco.pidisplay.core.EventTarget;
 import com.ibasco.pidisplay.core.EventType;
-import com.ibasco.pidisplay.core.Graphics;
+import com.ibasco.pidisplay.core.ui.Graphics;
 
 public class FocusEvent extends Event {
 

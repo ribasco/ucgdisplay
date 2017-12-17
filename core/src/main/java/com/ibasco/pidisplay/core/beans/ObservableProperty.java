@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-public class ObservableProperty<T> extends PropertyBase<T> implements Observable<T> {
+public class ObservableProperty<T> extends PropertyBase<T> {
 
     private static final Logger log = LoggerFactory.getLogger(ObservableProperty.class);
 
@@ -61,12 +61,10 @@ public class ObservableProperty<T> extends PropertyBase<T> implements Observable
         PropertyListenerUtil.fireChangeEvent(listenerUtil, this, oldVal, super.get());
     }
 
-    @Override
     public void addListener(PropertyChangeListener<? super T> listener) {
         this.listenerUtil = PropertyListenerUtil.addListener(this.listenerUtil, listener);
     }
 
-    @Override
     public void removeListener(PropertyChangeListener<? super T> listener) {
         this.listenerUtil = PropertyListenerUtil.removeListener(this.listenerUtil, listener);
     }

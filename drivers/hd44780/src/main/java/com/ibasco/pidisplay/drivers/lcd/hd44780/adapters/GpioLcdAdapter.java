@@ -18,9 +18,9 @@ import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
  *
  * @author Rafael Ibasco
  */
-public class StdGpioLcdAdapter extends BaseLcdGpioAdapter {
+public class GpioLcdAdapter extends BaseLcdGpioAdapter {
 
-    private static final Logger log = LoggerFactory.getLogger(StdGpioLcdAdapter.class);
+    private static final Logger log = LoggerFactory.getLogger(GpioLcdAdapter.class);
 
     private GpioController controller = GpioFactory.getInstance();
 
@@ -34,11 +34,11 @@ public class StdGpioLcdAdapter extends BaseLcdGpioAdapter {
 
     private GpioPinDigitalOutput[] dataPins = new GpioPinDigitalOutput[8];
 
-    public StdGpioLcdAdapter(LcdPinMapConfig pinMapConfig) {
+    public GpioLcdAdapter(LcdPinMapConfig pinMapConfig) {
         this(GpioFactory.getDefaultProvider(), pinMapConfig);
     }
 
-    public StdGpioLcdAdapter(GpioProvider provider, LcdPinMapConfig pinMapConfig) throws IllegalArgumentException {
+    public GpioLcdAdapter(GpioProvider provider, LcdPinMapConfig pinMapConfig) throws IllegalArgumentException {
         super(pinMapConfig);
         this.provider = provider;
     }
