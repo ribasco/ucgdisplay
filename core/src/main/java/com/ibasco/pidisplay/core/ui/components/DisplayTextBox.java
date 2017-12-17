@@ -1,13 +1,13 @@
-package com.ibasco.pidisplay.core.components;
+package com.ibasco.pidisplay.core.ui.components;
 
 import com.ibasco.pidisplay.core.DisplayParent;
 import com.ibasco.pidisplay.core.EventHandler;
-import com.ibasco.pidisplay.core.Graphics;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.enums.InputEventCode;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.events.FocusEvent;
 import com.ibasco.pidisplay.core.events.KeyEvent;
+import com.ibasco.pidisplay.core.ui.Graphics;
 import com.ibasco.pidisplay.core.util.GraphicsUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

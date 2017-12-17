@@ -9,7 +9,7 @@ import com.ibasco.pidisplay.core.enums.TextWrapStyle;
 import com.ibasco.pidisplay.core.events.DisplayEvent;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.Hd44780DisplayDriver;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.HD44780DisplayDriver;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.LcdTemplates;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.adapters.Mcp23017LcdAdapter;
 import com.ibasco.pidisplay.impl.charlcd.LcdController;
@@ -53,9 +53,9 @@ public class HitachiLcdDemo {
 
     private LcdController lcd;
 
-    private Hd44780DisplayDriver lcdDriver;
+    private HD44780DisplayDriver lcdDriver;
 
-    private Hd44780DisplayDriver lcdDriver2;
+    private HD44780DisplayDriver lcdDriver2;
 
     private AtomicBoolean shutdown = new AtomicBoolean(false);
 
@@ -87,7 +87,7 @@ public class HitachiLcdDemo {
         Mcp23017LcdAdapter lcdAdapter = new Mcp23017LcdAdapter(mcpProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017);
 
         //initialize lcd driver
-        lcdDriver = new Hd44780DisplayDriver(lcdAdapter, 20, 4);
+        lcdDriver = new HD44780DisplayDriver(lcdAdapter, 20, 4);
 
         /*LcdPinMapConfig gpioLcdPinMap = new LcdPinMapConfig()
                 .map(LcdPin.RS, RaspiPin.GPIO_21)
@@ -281,7 +281,6 @@ public class HitachiLcdDemo {
     }
 
 
-
     private void rotaryChange(long l, RotaryState state) {
         log.info("Rotary Change: {}, State: {}", startPos, state);
 
@@ -332,12 +331,10 @@ public class HitachiLcdDemo {
 
         LcdPane inputPane = new LcdPane();
 
-        LcdText lblUsername = new LcdText(0, 0, "Username: ");
-        lblUsername.setWidth(20);
-        lblUsername.setTextAlignment(TextAlignment.RIGHT);
-        LcdText lblPassword = new LcdText(0, 2, "Password: ");
-        lblPassword.setWidth(20);
-        lblPassword.setTextAlignment(TextAlignment.RIGHT);
+        LcdText lblUsername = new LcdText(0, 0, 20, 1, "Username: ");
+        lblUsername.setTextAlignment(TextAlignment.CENTER);
+        LcdText lblPassword = new LcdText(0, 2, 20, 1, "Password: ");
+        lblPassword.setTextAlignment(TextAlignment.CENTER);
 
         LcdTextBox tbUsername = new LcdTextBox(0, 1, 20, 1);
         tbUsername.setTextAlignment(TextAlignment.RIGHT);
@@ -390,6 +387,7 @@ public class HitachiLcdDemo {
         //Toggle visible states
         CompletableFuture.runAsync(new Runnable() {
             boolean state = false;
+
             @Override
             public void run() {
                 while (!shutdown.get()) {

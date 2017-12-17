@@ -1,7 +1,7 @@
 package com.ibasco.pidisplay.impl.charlcd.components;
 
-import com.ibasco.pidisplay.core.CharGraphics;
-import com.ibasco.pidisplay.core.components.DisplayTextBox;
+import com.ibasco.pidisplay.core.ui.CharGraphics;
+import com.ibasco.pidisplay.core.ui.components.DisplayTextBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,20 +26,12 @@ public class LcdTextBox extends DisplayTextBox<CharGraphics> {
 
     @Override
     protected LcdText getContent() {
-        if (this.content == null) {
-            this.content = new LcdText(getLeftPos(), getTopPos(), getWidth(), getHeight(), "") {
-                @Override
-                protected void onInvalidatedText(String oldValue, String newValue) {
-                    //LcdTextBox.this.onTextInvalidated(oldValue, newValue);
-                }
-            };
-        }
+        if (this.content == null)
+            this.content = new LcdText(getLeftPos(), getTopPos(), getWidth(), getHeight(), "");
         return this.content;
     }
 
     @Override
     protected void drawNode(CharGraphics graphics) {
-        //log.debug("Drawing LcdTextBox (Text Cursor: x={}, y={})", graphics.getColOffset(), graphics.getRowOffset());
-        //graphics.drawText(StringUtils.repeat('_', getWidth()));
     }
 }

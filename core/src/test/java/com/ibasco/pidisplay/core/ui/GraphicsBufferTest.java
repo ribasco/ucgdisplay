@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core;
+package com.ibasco.pidisplay.core.ui;
 
 import com.ibasco.pidisplay.core.util.GraphicsUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -75,45 +75,6 @@ class GraphicsBufferTest {
         log.debug("Data Retrieved: {}", new String(buffer.array()));
         buffer.clear(true);
         log.debug("Data Retrieved: {} (after clear)", new String(buffer.array()));
-    }
-
-    @Test
-    void testSaveDiff() {
-        //Write #1
-        buffer.cursor(0, 0);
-        buffer.put("hello");
-        buffer.cursor(14, 0);
-        buffer.put("world");
-        buffer.save();
-
-        assertTrue(buffer.lastSavedPos() > 0);
-        assertNotNull(buffer.recall());
-        assertNull(buffer.diff());
-        log.debug("Initial: ");
-        show(buffer.recall());
-
-        //Write #2
-        buffer.cursor(5, 3);
-        buffer.put("lorem ipsum");
-        assertNotNull(buffer.diff());
-        log.debug("Added: ");
-        show(buffer.diff());
-        buffer.save();
-
-        //Write #3
-        log.debug("Diff #3: (x={}, y={})", buffer.cursorX(), buffer.cursorY());
-        buffer.cursor(0, 1);
-        buffer.put("what the");
-        buffer.cursor(10, 2);
-        buffer.put("TEST");
-        buffer.put("12345");
-        show(buffer.diff());
-        buffer.save();
-
-        assertTrue(buffer.lastSavedPos() > 0);
-
-        log.debug("Merged: (x={}, y={})", buffer.lastSavedPosX(), buffer.lastSavedPosY());
-        show(buffer.recall());
     }
 
     private void show(byte[] data) {

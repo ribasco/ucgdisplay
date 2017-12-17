@@ -1,7 +1,7 @@
-package com.ibasco.pidisplay.core.components;
+package com.ibasco.pidisplay.core.ui.components;
 
 import com.ibasco.pidisplay.core.DisplayNode;
-import com.ibasco.pidisplay.core.Graphics;
+import com.ibasco.pidisplay.core.ui.Graphics;
 
 abstract public class DisplayButton<T extends Graphics> extends DisplayNode<T> {
 

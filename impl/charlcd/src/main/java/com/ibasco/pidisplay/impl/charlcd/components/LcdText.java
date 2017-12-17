@@ -1,8 +1,8 @@
 package com.ibasco.pidisplay.impl.charlcd.components;
 
-import com.ibasco.pidisplay.core.CharGraphics;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
-import com.ibasco.pidisplay.core.components.DisplayText;
+import com.ibasco.pidisplay.core.ui.CharGraphics;
+import com.ibasco.pidisplay.core.ui.components.DisplayText;
 import com.ibasco.pidisplay.core.util.RegexTextProcessor;
 import com.ibasco.pidisplay.core.util.TextUtils;
 import com.ibasco.pidisplay.core.util.date.DateTimeUtils;
@@ -15,8 +15,6 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
  * TODO: Add the following text effects
- * 1. Scroll from left to right (speed=500ms)
- * 2. Scroll from right to left (speed=500ms)
  * 3. Blink (speed=1sec)
  * 4. Typewriter Effect (
  */

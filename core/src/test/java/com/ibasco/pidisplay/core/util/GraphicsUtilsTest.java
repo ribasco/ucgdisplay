@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.core.util;
 
-import com.ibasco.pidisplay.core.GraphicsBuffer;
+import com.ibasco.pidisplay.core.ui.GraphicsBuffer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

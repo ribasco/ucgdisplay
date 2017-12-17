@@ -2,16 +2,16 @@ package com.ibasco.pidisplay.core;
 
 import com.google.common.collect.Iterables;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
-import com.ibasco.pidisplay.core.components.DisplayDialog;
 import com.ibasco.pidisplay.core.enums.InputEventCode;
 import com.ibasco.pidisplay.core.events.*;
 import com.ibasco.pidisplay.core.exceptions.NotOnUIThreadException;
 import com.ibasco.pidisplay.core.services.InputMonitorService;
+import com.ibasco.pidisplay.core.ui.Graphics;
+import com.ibasco.pidisplay.core.ui.components.DisplayDialog;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -390,14 +390,12 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
                     DisplayParent<T> activeDisplay = displayStack.peekFirst();
                     if (activeDisplay != null && activeDisplay.isActive()) {
                         activeDisplay.draw(graphics);
-                        if (graphics.isDirty()) {
+                        if (graphics.hasChanges()) {
                             graphics.flush();
                             activeDisplay.postFlush(graphics);
                         }
                     }
                 }
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
             } finally {
                 readLock.unlock();
             }

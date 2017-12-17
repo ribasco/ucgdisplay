@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core;
+package com.ibasco.pidisplay.core.ui;
 
 import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
 

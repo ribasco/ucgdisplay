@@ -4,6 +4,7 @@ import com.ibasco.pidisplay.core.beans.InputEventData;
 import com.ibasco.pidisplay.core.enums.InputEventType;
 import com.ibasco.pidisplay.core.events.KeyEvent;
 import com.ibasco.pidisplay.core.events.RawInputEvent;
+import com.ibasco.pidisplay.core.ui.Graphics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

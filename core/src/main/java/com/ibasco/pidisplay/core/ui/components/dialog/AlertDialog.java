@@ -1,9 +1,9 @@
-package com.ibasco.pidisplay.core.components.dialog;
+package com.ibasco.pidisplay.core.ui.components.dialog;
 
-import com.ibasco.pidisplay.core.Graphics;
-import com.ibasco.pidisplay.core.components.DisplayDialog;
-import com.ibasco.pidisplay.core.components.DisplayText;
 import com.ibasco.pidisplay.core.enums.AlertType;
+import com.ibasco.pidisplay.core.ui.Graphics;
+import com.ibasco.pidisplay.core.ui.components.DisplayDialog;
+import com.ibasco.pidisplay.core.ui.components.DisplayText;
 
 abstract public class AlertDialog<T extends Graphics, B> extends DisplayDialog<T, B> {
 

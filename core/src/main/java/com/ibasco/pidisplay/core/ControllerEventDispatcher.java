@@ -1,5 +1,7 @@
 package com.ibasco.pidisplay.core;
 
+import com.ibasco.pidisplay.core.ui.Graphics;
+
 public class ControllerEventDispatcher extends MultiEventDispatcher {
 
     private EventHandlerManager eventHandlerManager;

@@ -4,6 +4,7 @@ import com.ibasco.pidisplay.core.beans.ListChangeListener;
 import com.ibasco.pidisplay.core.beans.ObservableList;
 import com.ibasco.pidisplay.core.beans.ObservableListWrapper;
 import com.ibasco.pidisplay.core.events.FocusEvent;
+import com.ibasco.pidisplay.core.ui.Graphics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,13 +38,10 @@ abstract public class DisplayParent<T extends Graphics> extends DisplayNode<T> {
     protected ObservableList<DisplayNode<T>> children = new ObservableListWrapper<DisplayNode<T>>() {
         @Override
         protected void invalidatedList(ListChangeListener.Change<? extends DisplayNode<T>> changeDetails) {
-            if (changeDetails.removed()) {
-                log.debug("PARENT_CHILD_REMOVED => Child node Removed");
+            if (changeDetails.removed())
                 changeDetails.getRemoved().forEach(n -> n.setParent(null));
-            } else if (changeDetails.added()) {
-                log.debug("PARENT_CHILD_ADDED => Child node Added");
+            else if (changeDetails.added())
                 changeDetails.getList().forEach(a -> a.setParent(DisplayParent.this));
-            }
         }
     };
 
@@ -73,7 +71,6 @@ abstract public class DisplayParent<T extends Graphics> extends DisplayNode<T> {
     }
 
     //region Propagated Properties
-
     @Override
     protected void postFlush(T graphics) {
         doAction(DisplayNode::postFlush, graphics);
@@ -94,7 +91,6 @@ abstract public class DisplayParent<T extends Graphics> extends DisplayNode<T> {
     @Override
     void setActive(boolean active) {
         super.setActive(active);
-        //doAction(DisplayNode::setActive, active);
         doAction((node, activated) -> {
             node.setActive(activated);
             if (node.isFocusable()) {

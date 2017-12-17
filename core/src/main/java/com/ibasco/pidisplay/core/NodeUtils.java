@@ -1,5 +1,7 @@
 package com.ibasco.pidisplay.core;
 
+import com.ibasco.pidisplay.core.ui.Graphics;
+
 /**
  * Utility methods for {@link DisplayNode}
  *

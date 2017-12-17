@@ -2,6 +2,7 @@ package com.ibasco.pidisplay.core;
 
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.events.FocusEvent;
+import com.ibasco.pidisplay.core.ui.Graphics;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
@@ -146,10 +147,16 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
         this.active.set(active);
         if (active)
             onActivate();
+        else
+            onDeactivate();
+    }
+
+    protected void onDeactivate() {
+        //no implementation. meant to be overriden by sub-classes
     }
 
     protected void onActivate() {
-
+        //no implementation. meant to be overriden by sub-classes
     }
 
     public boolean isVisible() {
@@ -230,7 +237,7 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
     abstract protected void drawNode(T graphics);
 
     protected void postFlush(T graphics) {
-
+        //no implementation. meant to be overriden by sub-classes
     }
     //endregion
 

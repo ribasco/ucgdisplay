@@ -1,11 +1,11 @@
-package com.ibasco.pidisplay.core.components;
+package com.ibasco.pidisplay.core.ui.components;
 
 import com.ibasco.pidisplay.core.DisplayNode;
-import com.ibasco.pidisplay.core.Graphics;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.beans.PropertyChangeListener;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.enums.TextWrapStyle;
+import com.ibasco.pidisplay.core.ui.Graphics;
 import com.ibasco.pidisplay.core.util.TextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -53,6 +53,18 @@ abstract public class DisplayText<T extends Graphics> extends DisplayNode<T> {
     //endregion
 
     //region Property Getters/Setters
+    public ObservableProperty<String> textProperty() {
+        return text;
+    }
+
+    public ObservableProperty<TextAlignment> textAlignmentProperty() {
+        return textAlignment;
+    }
+
+    public ObservableProperty<TextWrapStyle> textWrapStyleProperty() {
+        return textWrapStyle;
+    }
+
     public TextWrapStyle getTextWrapStyle() {
         return textWrapStyle.get();
     }

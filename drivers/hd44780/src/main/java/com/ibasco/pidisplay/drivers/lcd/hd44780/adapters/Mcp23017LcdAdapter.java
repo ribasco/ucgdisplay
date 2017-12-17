@@ -29,7 +29,7 @@ public class Mcp23017LcdAdapter extends BaseLcdGpioAdapter {
     private static final Logger log = LoggerFactory.getLogger(Mcp23017LcdAdapter.class);
     private MCP23017GpioProvider provider;
     private byte[] dataPins = new byte[8];
-    private byte enablePin = 0;
+    private byte enablePin;
 
     public Mcp23017LcdAdapter(MCP23017GpioProvider provider, LcdPinMapConfig pinMapConfig) {
         super(pinMapConfig);
