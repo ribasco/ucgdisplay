@@ -1,7 +1,7 @@
 package com.ibasco.pidisplay.core.ui.components.dialog;
 
 import com.ibasco.pidisplay.core.ui.Graphics;
-import com.ibasco.pidisplay.core.ui.components.DisplayDialog;
+import com.ibasco.pidisplay.core.ui.components.Dialog;
 
-public class KeyboardDialog<T extends Graphics> extends DisplayDialog<T, Object> {
+public class KeyboardDialog<T extends Graphics> extends Dialog<T, Object> {
 }

@@ -3,13 +3,13 @@ package com.ibasco.pidisplay.core.ui.components;
 import com.ibasco.pidisplay.core.DisplayNode;
 import com.ibasco.pidisplay.core.ui.Graphics;
 
-abstract public class DisplayButton<T extends Graphics> extends DisplayNode<T> {
+abstract public class Button<T extends Graphics> extends DisplayNode<T> {
 
-    protected DisplayButton(Integer width, Integer height) {
+    protected Button(Integer width, Integer height) {
         super(width, height);
     }
 
-    protected DisplayButton(Integer left, Integer top, Integer width, Integer height) {
+    protected Button(Integer left, Integer top, Integer width, Integer height) {
         super(left, top, width, height);
     }
 }

@@ -13,15 +13,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author Rafael Ibasco
  */
-abstract public class DisplayPane<T extends Graphics> extends DisplayParent<T> {
+abstract public class Pane<T extends Graphics> extends DisplayParent<T> {
 
-    private static final Logger log = LoggerFactory.getLogger(DisplayPane.class);
+    private static final Logger log = LoggerFactory.getLogger(Pane.class);
 
-    public DisplayPane() {
+    public Pane() {
         this(null, null);
     }
 
-    protected DisplayPane(Integer width, Integer height) {
+    protected Pane(Integer width, Integer height) {
         super(width, height);
     }
 }

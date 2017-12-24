@@ -5,7 +5,7 @@ import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.enums.ProgressStyle;
 import com.ibasco.pidisplay.core.ui.Graphics;
 
-abstract public class DisplayProgress extends DisplayNode {
+abstract public class Progress extends DisplayNode {
 
     private static final int DEFAULT_WIDTH = 4;
 
@@ -19,7 +19,7 @@ abstract public class DisplayProgress extends DisplayNode {
 
     protected ObservableProperty<Integer> maxValue = new ObservableProperty<>(100);
 
-    public DisplayProgress() {
+    public Progress() {
         super(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
