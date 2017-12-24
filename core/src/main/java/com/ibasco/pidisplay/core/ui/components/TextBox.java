@@ -13,19 +13,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("WeakerAccess")
-abstract public class DisplayTextBox<T extends Graphics> extends DisplayParent<T> {
+abstract public class TextBox<T extends Graphics> extends DisplayParent<T> {
 
-    private static final Logger log = LoggerFactory.getLogger(DisplayTextBox.class);
+    private static final Logger log = LoggerFactory.getLogger(TextBox.class);
 
     protected final EventHandler<KeyEvent> rawInputEventHandler = this::onKeyEvent;
 
     protected ObservableProperty<Integer> caretPos = createProperty(0);
 
-    protected DisplayTextBox(Integer width, Integer height) {
+    protected TextBox(Integer width, Integer height) {
         this(null, null, width, height);
     }
 
-    protected DisplayTextBox(Integer left, Integer top, Integer width, Integer height) {
+    protected TextBox(Integer left, Integer top, Integer width, Integer height) {
         super(left, top, width, height);
         add(getContent());
         setFocusable(true);
@@ -153,7 +153,7 @@ abstract public class DisplayTextBox<T extends Graphics> extends DisplayParent<T
 
     abstract protected int fixCaretPos(int pos);
 
-    abstract protected DisplayText<T> getContent();
+    abstract protected Text<T> getContent();
 
     abstract protected void updateCaretPos();
 
