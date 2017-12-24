@@ -10,21 +10,26 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DisplayTextBoxTest {
+class TextBoxTest {
 
-    public static final Logger log = LoggerFactory.getLogger(DisplayTextBoxTest.class);
+    public static final Logger log = LoggerFactory.getLogger(TextBoxTest.class);
 
-    private DisplayTextBox textBox;
+    private TextBox textBox;
 
     @BeforeEach
     void setUp() {
-        textBox = new DisplayTextBox(5, 1, 5, 3) {
-            private DisplayText content;
+        textBox = new TextBox(5, 1, 5, 3) {
+            private Text content;
 
             @Override
-            protected DisplayText getContent() {
+            protected int fixCaretPos(int pos) {
+                return 0;
+            }
+
+            @Override
+            protected Text getContent() {
                 if (content == null) {
-                    content = new DisplayText() {
+                    content = new Text() {
                         @Override
                         protected void drawNode(Graphics graphics) {
 
@@ -32,6 +37,21 @@ class DisplayTextBoxTest {
                     };
                 }
                 return content;
+            }
+
+            @Override
+            protected void updateCaretPos() {
+
+            }
+
+            @Override
+            protected int calcXOffset() {
+                return 0;
+            }
+
+            @Override
+            protected int calcYOffset() {
+                return 0;
             }
         };
     }
