@@ -145,10 +145,22 @@ abstract public class DisplayNode<T extends Graphics> extends DisplayRegion impl
 
     void setActive(boolean active) {
         this.active.set(active);
-        if (active)
+        T graphics = getController().getGraphics();
+        if (active) {
+            initialize(graphics);
             onActivate();
-        else
+        } else {
+            cleanUp(graphics);
             onDeactivate();
+        }
+    }
+
+    protected void initialize(T graphics) {
+
+    }
+
+    protected void cleanUp(T graphics) {
+
     }
 
     protected void onDeactivate() {

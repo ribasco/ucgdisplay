@@ -38,7 +38,9 @@ public class GraphicsBuffer {
         checkDimensions();
         this.size = width * height;
         this.buffer = (buffer == null) ? ByteBuffer.allocate(size).order(ByteOrder.LITTLE_ENDIAN) : buffer;
+        clear(true);
         this.savedBytes = new byte[size];
+        reset();
     }
 
     public static GraphicsBuffer allocate(int width, int height) {
@@ -188,7 +190,7 @@ public class GraphicsBuffer {
     }
 
     public GraphicsBuffer reset() {
-        Arrays.fill(savedBytes, (byte) 0);
+        Arrays.fill(savedBytes, (byte) 32);
         return this;
     }
 
@@ -198,7 +200,7 @@ public class GraphicsBuffer {
 
     public void clear(boolean resetValues) {
         if (resetValues)
-            Arrays.fill(buffer.array(), (byte) 0);
+            Arrays.fill(buffer.array(), (byte) 32);
         buffer.clear();
     }
 

@@ -4,7 +4,6 @@ import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
 import com.ibasco.pidisplay.core.enums.ScrollDirection;
 import com.ibasco.pidisplay.core.enums.TextDirection;
 import com.ibasco.pidisplay.core.exceptions.DisplayDriverException;
-import com.ibasco.pidisplay.core.exceptions.NotYetImplementedException;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.adapters.GpioLcdAdapter;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.*;
 import com.pi4j.component.lcd.LCD;
@@ -337,18 +336,6 @@ public class HD44780DisplayDriver implements CharDisplayDriver {
     }
 
     /**
-     * Set backlight on/off. Make sure backlight pin is mapped before using this.
-     *
-     * @param state
-     *         {@code True} to turn on the LCD Backlight.
-     */
-    @Override
-    public void backlight(boolean state) {
-        //verify that the backlight is mapped
-        throw new NotYetImplementedException("The backlight functionality is not yet implemented");
-    }
-
-    /**
      * This mode moves all the text one space to the left each time a letter is added.
      *
      * Right/Left justifification from the cursor position.
@@ -400,35 +387,13 @@ public class HD44780DisplayDriver implements CharDisplayDriver {
     public void createChar(int num, byte[] charData) {
         if (num > 7)
             throw new IllegalArgumentException("You can only specify a maximum of 8 custom characters (0 to 7)");
+        if (charData.length > 8 || charData.length < 8)
+            throw new IllegalArgumentException("A total of 8 bytes of data are required to define a custom character");
         num &= 0x7; // we only have 8 locations 0-7
         command(LCD_SETCGRAMADDR | (num << 3));
         for (int i = 0; i < 8; i++)
             write(charData[i]);
         command(LCD_SETDDRAMADDR);
-        this.charDataMap.put(num, charData);
-    }
-
-    /**
-     * Checks if the custom character number has been defined by {@link #createChar(int, byte[])}
-     *
-     * @param charNum
-     *         The character number representing the custom character
-     *
-     * @return Returns {@code True} if the custom character number has been defined by {@link #createChar(int, byte[])}
-     */
-    @Override
-    public boolean isCharDefined(int charNum) {
-        return this.charDataMap.containsKey(charNum);
-    }
-
-    /**
-     * Returns a {@link Map} of defined custom characters
-     *
-     * @return Returns a {@link Map} of defined custom characters
-     */
-    @Override
-    public Map<Integer, byte[]> getCharDataMap() {
-        return charDataMap;
     }
 
     /**

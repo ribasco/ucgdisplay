@@ -16,6 +16,6 @@ public class LcdController extends Controller<CharGraphics> {
 
     @Override
     public CharGraphics getGraphics() {
-        return (CharGraphics) super.getGraphics();
+        return super.getGraphics();
     }
 }
