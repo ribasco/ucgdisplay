@@ -2,7 +2,7 @@ package com.ibasco.pidisplay.impl.charlcd.components;
 
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.ui.CharGraphics;
-import com.ibasco.pidisplay.core.ui.components.DisplayText;
+import com.ibasco.pidisplay.core.ui.components.Text;
 import com.ibasco.pidisplay.core.util.RegexTextProcessor;
 import com.ibasco.pidisplay.core.util.TextUtils;
 import com.ibasco.pidisplay.core.util.date.DateTimeUtils;
@@ -18,7 +18,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
  * 3. Blink (speed=1sec)
  * 4. Typewriter Effect (
  */
-public class LcdText extends DisplayText<CharGraphics> {
+public class LcdText extends Text<CharGraphics> {
 
     private static final Logger log = LoggerFactory.getLogger(LcdText.class);
 

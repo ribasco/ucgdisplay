@@ -1,9 +1,10 @@
 package com.ibasco.pidisplay.impl.charlcd;
 
 import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
+import com.ibasco.pidisplay.core.ui.CharData;
 import com.ibasco.pidisplay.core.ui.CharGraphics;
+import com.ibasco.pidisplay.core.ui.CharManager;
 import com.ibasco.pidisplay.core.ui.GraphicsBuffer;
-import com.ibasco.pidisplay.core.util.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,8 @@ public class LcdCharGraphics implements CharGraphics {
 
     private final Object mutex = new Object();
 
+    private CharManager charManager;
+
     public LcdCharGraphics(CharDisplayDriver driver) {
         this.driver = driver;
         this.buffer = GraphicsBuffer.allocate(driver.getWidth(), driver.getHeight());
@@ -50,9 +53,33 @@ public class LcdCharGraphics implements CharGraphics {
     }
 
     @Override
+    public CharManager charManager() {
+        if (charManager == null) {
+            charManager = new LcdCharManager(this.driver);
+        }
+        return charManager;
+    }
+
+    @Override
+    public void drawChar(int index) {
+
+    }
+
+    @Override
+    public void drawChar(String key) {
+        buffer.put(charManager.processText());
+    }
+
+    @Override
+    public void drawChar(CharData charData) {
+
+    }
+
+    @Override
     public void drawText(String text) {
         if (StringUtils.isEmpty(text))
             return;
+        //TODO: Pre-process custom character directives here
         synchronized (mutex) {
             this.buffer.put(text.getBytes());
         }
@@ -119,6 +146,19 @@ public class LcdCharGraphics implements CharGraphics {
     }
 
     @Override
+    public void clearLine() {
+        clearLine(buffer.cursorY());
+    }
+
+    @Override
+    public void clearLine(int lineNumber) {
+        synchronized (mutex) {
+            buffer.cursor(0, lineNumber);
+            buffer.put(StringUtils.repeat(StringUtils.SPACE, getWidth()).getBytes());
+        }
+    }
+
+    @Override
     public CharDisplayDriver getDriver() {
         return driver;
     }
@@ -131,16 +171,18 @@ public class LcdCharGraphics implements CharGraphics {
 
     @Override
     public void flush() {
+        //do not proceed if there are no changes since the last flush
+        if (!buffer.isModified())
+            return;
+
         synchronized (mutex) {
-            //do not proceed if there are no changes since the last flush
-            if (!buffer.isModified())
-                return;
             byte[] tmp = new byte[getWidth()];
             for (int row = 0; row < getHeight(); row++) {
                 buffer.get(row, tmp);
                 driver.setCursor(0, row);
                 //replace null bytes with space
-                driver.write(ArrayUtils.replaceNullBytes(tmp, (byte) 32));
+                //ArrayUtils.replaceNullBytes(tmp, (byte) 32)
+                driver.write(tmp);
             }
             buffer.save();
             driver.setCursor(buffer.cursorX(), buffer.cursorY());
