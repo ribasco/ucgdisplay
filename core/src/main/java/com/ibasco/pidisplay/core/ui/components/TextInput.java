@@ -13,19 +13,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("WeakerAccess")
-abstract public class TextBox<T extends Graphics> extends DisplayParent<T> {
+abstract public class TextInput<T extends Graphics> extends DisplayParent<T> {
 
-    private static final Logger log = LoggerFactory.getLogger(TextBox.class);
+    private static final Logger log = LoggerFactory.getLogger(TextInput.class);
 
     protected final EventHandler<KeyEvent> rawInputEventHandler = this::onKeyEvent;
 
     protected ObservableProperty<Integer> caretPos = createProperty(0);
 
-    protected TextBox(Integer width, Integer height) {
+    protected TextInput(Integer width, Integer height) {
         this(null, null, width, height);
     }
 
-    protected TextBox(Integer left, Integer top, Integer width, Integer height) {
+    protected TextInput(Integer left, Integer top, Integer width, Integer height) {
         super(left, top, width, height);
         add(getContent());
         setFocusable(true);

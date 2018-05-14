@@ -1,6 +1,7 @@
 package com.ibasco.pidisplay.examples.lcd;
 
 import com.ibasco.pidisplay.core.enums.TextAlignment;
+import com.ibasco.pidisplay.core.providers.MCP23017GpioProviderExt;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.HD44780DisplayDriver;
@@ -15,7 +16,6 @@ import com.pi4j.component.button.Button;
 import com.pi4j.component.button.ButtonHoldListener;
 import com.pi4j.component.button.ButtonReleasedListener;
 import com.pi4j.component.button.impl.GpioButtonComponent;
-import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
 import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.*;
 import com.pi4j.io.i2c.I2CBus;
@@ -40,7 +40,7 @@ public class HitachiLcdDemoOld {
     private final GpioController gpio = GpioFactory.getInstance();
 
     private ScheduledExecutorService executorService;
-    private MCP23017GpioProvider mcpProvider;
+    private MCP23017GpioProviderExt mcpProvider;
     private final I2CBus bus;
     private final GpioPinDigitalOutput lcdBacklightPin;
     private final Button button1;
@@ -59,7 +59,7 @@ public class HitachiLcdDemoOld {
         bus = I2CFactory.getInstance(I2CBus.BUS_1);
 
         // create custom MCP23017 GPIO provider
-        mcpProvider = new MCP23017GpioProvider(bus, ADDR_MCP23017);
+        mcpProvider = new MCP23017GpioProviderExt(bus, ADDR_MCP23017);
 
         //LCD
         lcdBacklightPin = gpio.provisionDigitalOutputPin(mcpProvider, MCP23017Pin.GPIO_B6, "LCD - Backlight");

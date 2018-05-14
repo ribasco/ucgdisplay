@@ -2,7 +2,7 @@ package com.ibasco.pidisplay.core.ui.components;
 
 import com.ibasco.pidisplay.core.ui.Graphics;
 
-abstract public class Password<T extends Graphics> extends TextBox<T> {
+abstract public class Password<T extends Graphics> extends TextInput<T> {
 
     protected Password(Integer width, Integer height) {
         super(width, height);

@@ -9,4 +9,14 @@ public interface CharGraphics extends Graphics {
     void setAutoscroll(boolean state);
 
     void setBlink(boolean state);
+
+    void clearLine();
+
+    void clearLine(int lineNumber);
+
+    CharManager charManager();
+
+    void drawChar(String key);
+
+    void drawChar(CharData charData);
 }

@@ -1,5 +1,6 @@
 package com.ibasco.pidisplay.drivers.lcd.hd44780.adapters;
 
+import com.ibasco.pidisplay.core.providers.MCP23017GpioProviderExt;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.BaseLcdGpioAdapter;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.LcdPinMapConfig;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.LcdPin;
@@ -7,7 +8,6 @@ import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.LcdReadWriteState;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.LcdRegisterSelectState;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.exceptions.InvalidPinMappingException;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.exceptions.PinNotSupportedException;
-import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
 import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
@@ -27,11 +27,11 @@ import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
  */
 public class Mcp23017LcdAdapter extends BaseLcdGpioAdapter {
     private static final Logger log = LoggerFactory.getLogger(Mcp23017LcdAdapter.class);
-    private MCP23017GpioProvider provider;
+    private MCP23017GpioProviderExt provider;
     private byte[] dataPins = new byte[8];
     private byte enablePin;
 
-    public Mcp23017LcdAdapter(MCP23017GpioProvider provider, LcdPinMapConfig pinMapConfig) {
+    public Mcp23017LcdAdapter(MCP23017GpioProviderExt provider, LcdPinMapConfig pinMapConfig) {
         super(pinMapConfig);
         this.provider = provider;
 
@@ -48,7 +48,7 @@ public class Mcp23017LcdAdapter extends BaseLcdGpioAdapter {
     @Override
     protected void validate(LcdPinMapConfig pinMapConfig) throws InvalidPinMappingException {
         for (Map.Entry<LcdPin, Pin> mappedPin : pinMapConfig.getAllPins()) {
-            if (!MCP23017GpioProvider.NAME.equals(mappedPin.getValue().getProvider())) {
+            if (!MCP23017GpioProviderExt.NAME.equals(mappedPin.getValue().getProvider())) {
                 throw new InvalidPinMappingException(pinMapConfig);
             }
         }
@@ -152,8 +152,8 @@ public class Mcp23017LcdAdapter extends BaseLcdGpioAdapter {
     private byte pinToLocalAddr(Pin pin) {
         //2^(n-1) = b       #where n = index (0 to 15)
         //n = logb/log(2)   #find n index
-        if (!MCP23017GpioProvider.NAME.equals(pin.getProvider()))
-            throw new PinNotSupportedException(pin, MCP23017GpioProvider.NAME);
+        if (!MCP23017GpioProviderExt.NAME.equals(pin.getProvider()))
+            throw new PinNotSupportedException(pin, MCP23017GpioProviderExt.NAME);
         int idx = (int) (Math.log(((pin.getAddress() > 1000) ? pin.getAddress() - 1000 : pin.getAddress())) / Math.log(2) + 1);
         return (byte) ((pin.getAddress() > 1000 ? idx + 8 : idx) - 1);
     }

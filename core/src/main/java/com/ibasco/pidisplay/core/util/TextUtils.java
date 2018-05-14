@@ -46,7 +46,7 @@ public class TextUtils {
         StringBuilder tmp = new StringBuilder();
         int start, end;
         for (start = 0, end = start + maxWidth; (start < text.length()) && (end < text.length() - 1); start += maxWidth, end = start + maxWidth) {
-            tmp.append(text.substring(start, end));
+            tmp.append(text, start, end);
             tmp.append("\n");
         }
         tmp.append(text.substring(start));

@@ -3,35 +3,46 @@ package com.ibasco.pidisplay.examples.lcd;
 import com.ibasco.pidisplay.components.RotaryEncoder;
 import com.ibasco.pidisplay.components.RotaryState;
 import com.ibasco.pidisplay.core.EventDispatchPhase;
+import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
 import com.ibasco.pidisplay.core.enums.AlertType;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.enums.TextWrapStyle;
 import com.ibasco.pidisplay.core.events.DisplayEvent;
+import com.ibasco.pidisplay.core.util.ByteUtils;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.HD44780DisplayDriver;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.LcdTemplates;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.adapters.Mcp23017LcdAdapter;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.CharProxyDisplayDriver;
 import com.ibasco.pidisplay.impl.charlcd.LcdController;
+import com.ibasco.pidisplay.impl.charlcd.components.LcdListView;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdPane;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdText;
-import com.ibasco.pidisplay.impl.charlcd.components.LcdTextBox;
+import com.ibasco.pidisplay.impl.charlcd.components.LcdTextInput;
 import com.ibasco.pidisplay.impl.charlcd.components.dialog.LcdAlertDialog;
-import com.pi4j.component.button.Button;
 import com.pi4j.component.button.ButtonHoldListener;
 import com.pi4j.component.button.ButtonReleasedListener;
 import com.pi4j.component.button.impl.GpioButtonComponent;
-import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
-import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.io.i2c.I2CBus;
+import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
+import com.pi4j.io.serial.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tritonus.share.sampled.TAudioFormat;
+import org.tritonus.share.sampled.file.TAudioFileFormat;
 
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,17 +56,15 @@ public class HitachiLcdDemo {
     private final GpioController gpio = GpioFactory.getInstance();
 
     private ScheduledExecutorService executorService;
-    private MCP23017GpioProvider mcpProvider;
+    //private MCP23017GpioProviderExt mcpProvider;
     private final I2CBus bus;
-    private final GpioPinDigitalOutput lcdBacklightPin;
-    private final Button button1;
-    private final Button btnSelect;
+    //private final GpioPinDigitalOutput lcdBacklightPin;
+    //private final Button button1;
+    //private final Button btnSelect;
 
     private LcdController lcd;
 
-    private HD44780DisplayDriver lcdDriver;
-
-    private HD44780DisplayDriver lcdDriver2;
+    private CharDisplayDriver lcdDriver;
 
     private AtomicBoolean shutdown = new AtomicBoolean(false);
 
@@ -66,11 +75,11 @@ public class HitachiLcdDemo {
         bus = I2CFactory.getInstance(I2CBus.BUS_1);
 
         // create custom MCP23017 GPIO provider
-        mcpProvider = new MCP23017GpioProvider(bus, ADDR_MCP23017);
+        //mcpProvider = new MCP23017GpioProviderExt(bus, ADDR_MCP23017);
 
         //LCD
-        lcdBacklightPin = gpio.provisionDigitalOutputPin(mcpProvider, MCP23017Pin.GPIO_B6, "LCD - Backlight");
-        lcdBacklightPin.setShutdownOptions(true, PinState.LOW);
+        //lcdBacklightPin = gpio.provisionDigitalOutputPin(mcpProvider, MCP23017Pin.GPIO_B6, "LCD - Backlight");
+        //lcdBacklightPin.setShutdownOptions(true, PinState.LOW);
 
         //initialize executor service
         ThreadFactory lcdThreadFactory = new ThreadFactory() {
@@ -84,10 +93,11 @@ public class HitachiLcdDemo {
         executorService = Executors.newScheduledThreadPool(5, lcdThreadFactory);
 
         //initialize lcdDriver adapter
-        Mcp23017LcdAdapter lcdAdapter = new Mcp23017LcdAdapter(mcpProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017);
+        //Mcp23017LcdAdapter lcdAdapter = new Mcp23017LcdAdapter(mcpProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017);
 
         //initialize lcd driver
-        lcdDriver = new HD44780DisplayDriver(lcdAdapter, 20, 4);
+        //lcdDriver = new HD44780DisplayDriver(lcdAdapter, 20, 4);
+        lcdDriver = new CharProxyDisplayDriver(0x15, 20, 4);
 
         /*LcdPinMapConfig gpioLcdPinMap = new LcdPinMapConfig()
                 .map(LcdPin.RS, RaspiPin.GPIO_21)
@@ -99,6 +109,7 @@ public class HitachiLcdDemo {
 
         StdGpioLcdAdapter gpioLcdAdapter = new StdGpioLcdAdapter(gpioLcdPinMap);
         lcdDriver2 = new LcdDriver(gpioLcdAdapter, 16, 2);*/
+
 
         lcd = new LcdController(lcdDriver);
 
@@ -116,16 +127,16 @@ public class HitachiLcdDemo {
         lcdDriver.createChar(0, returnChar);
 
         //toggle lcd backlight
-        lcdBacklightPin.high();
+        //lcdBacklightPin.high();
 
-        rotaryEncoder = new RotaryEncoder(RaspiPin.GPIO_05, RaspiPin.GPIO_04, -1);
-        rotaryEncoder.setListener(this::rotaryChange);
+        //rotaryEncoder = new RotaryEncoder(RaspiPin.GPIO_05, RaspiPin.GPIO_04, -1);
+        //rotaryEncoder.setListener(this::rotaryChange);
 
         //Initialize Buttons
-        button1 = createButton(RaspiPin.GPIO_06, "Back", "back", 3500, buttonHoldListener);
-        btnSelect = createButton(RaspiPin.GPIO_01, "Select", "select");
+        //button1 = createButton(RaspiPin.GPIO_06, "Back", "back", 3500, buttonHoldListener);
+        //btnSelect = createButton(RaspiPin.GPIO_27, "Select", "select"); //rotary encoder
 
-        Node<String> menuEntries = createMenuEntries();
+        //Node<String> menuEntries = createMenuEntries();
 
         //printNodeTree(menuEntries);
     }
@@ -309,14 +320,96 @@ public class HitachiLcdDemo {
         return lcdPanes;
     }
 
-    public void run() throws Exception {
-        log.info("Running LCD Display");
+    private void testPlay(String filename) {
+        try {
+            File file = new File(filename);
+            showAudioProps(file);
+            AudioInputStream in = AudioSystem.getAudioInputStream(file);
+            AudioInputStream din;
+            AudioFormat baseFormat = in.getFormat();
+            AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
+            din = AudioSystem.getAudioInputStream(decodedFormat, in);
 
+            log.info("Setting Equalizer Settings");
+            // DecodedMpegAudioInputStream properties
+            if (din instanceof javazoom.spi.PropertiesContainer) {
+                Map properties = ((javazoom.spi.PropertiesContainer) din).properties();
+                float[] equalizer = (float[]) properties.get("mp3.equalizer");
+                equalizer[0] = 0.5f;
+                equalizer[31] = 0.25f;
+            }
+
+            // Play now.
+            rawplay(decodedFormat, din);
+            in.close();
+        } catch (Exception e) {
+            //Handle exception.
+        }
+    }
+
+    private void showAudioProps(File file) throws IOException, UnsupportedAudioFileException {
+        AudioFileFormat baseFileFormat;
+        AudioFormat baseFormat;
+        baseFileFormat = AudioSystem.getAudioFileFormat(file);
+        baseFormat = baseFileFormat.getFormat();
+        String author = null;
+        Integer bitrate = null;
+        Long duration = null;
+
+        // TAudioFileFormat properties
+        if (baseFileFormat instanceof TAudioFileFormat) {
+            Map properties = baseFileFormat.properties();
+            author = (String) properties.get("author");
+            duration = (Long) properties.get("duration");
+            /*key = "mp3.id3tag.v2";
+            InputStream tag = (InputStream) properties.get(key);*/
+        }
+        // TAudioFormat properties
+        if (baseFormat instanceof TAudioFormat) {
+            Map properties = baseFormat.properties();
+            bitrate = (Integer) properties.get("bitrate");
+        }
+        log.info("Author: {}, Bitrate: {}, Duration: {}", author, bitrate, duration);
+    }
+
+    private void rawplay(AudioFormat targetFormat, AudioInputStream din) throws IOException, LineUnavailableException {
+        byte[] buffer = new byte[4096];
+        SourceDataLine line = getLine(targetFormat);
+        if (line != null) {
+            // Start
+            line.start();
+            int nBytesRead = 0, nBytesWritten = 0;
+            while (nBytesRead != -1) {
+                nBytesRead = din.read(buffer, 0, buffer.length);
+                if (nBytesRead != -1) {
+                    nBytesWritten = line.write(buffer, 0, nBytesRead);
+                }
+                delay(15);
+            }
+            // Stop
+            line.drain();
+            line.stop();
+            line.close();
+            din.close();
+        }
+    }
+
+    private SourceDataLine getLine(AudioFormat audioFormat) throws LineUnavailableException {
+        SourceDataLine res = null;
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
+        res = (SourceDataLine) AudioSystem.getLine(info);
+        res.open(audioFormat);
+        return res;
+    }
+
+    private void showTest1() {
+
+        /*
         if (!lcd.grabInputFocus()) {
             log.error("Unable to grab input focus for controller : {}", lcd);
             return;
         } else
-            log.info("Successfully acquired input focus for controller {}", lcd);
+            log.info("Successfully acquired input focus for controller {}", lcd);*/
 
         pane1.setName("Pane1");
         pane2.setName("Pane2");
@@ -336,9 +429,9 @@ public class HitachiLcdDemo {
         LcdText lblPassword = new LcdText(0, 2, 20, 1, "Password: ");
         lblPassword.setTextAlignment(TextAlignment.CENTER);
 
-        LcdTextBox tbUsername = new LcdTextBox(0, 1, 20, 1);
+        LcdTextInput tbUsername = new LcdTextInput(0, 1, 20, 1);
         tbUsername.setTextAlignment(TextAlignment.RIGHT);
-        LcdTextBox tbPassword = new LcdTextBox(0, 3, 20, 1);
+        LcdTextInput tbPassword = new LcdTextInput(0, 3, 20, 1);
         tbPassword.setTextAlignment(TextAlignment.RIGHT);
 
         inputPane.add(lblUsername);
@@ -402,24 +495,214 @@ public class HitachiLcdDemo {
             }
         });
 
+
         //Set counter
         CompletableFuture.runAsync(() -> {
             while (!shutdown.get()) {
                 for (int i = 0, x = 0; i < 101; i++, x++) {
-                    /*if (mainContent.isActive())
-                        log.info("Updating Counter: {}", i);*/
-                    mainContent.setText("Counter: " + i);
-                    delay(100);
+                    mainContent.setText("Holy: " + i);
+                    delay(200);
                 }
             }
         });
 
+        CompletableFuture.runAsync(() -> {
+            String soundPath = getClass().getClassLoader().getResource("Alert2.mp3").getPath();
+            log.info("Playing MP3 Sound: {}", soundPath);
+            testPlay(soundPath);
+        });
+    }
+
+
+    private void showTest2() {
+
+        LcdPane alarmClockPane = new LcdPane();
+        LcdText day = new LcdText(0, 0, 20, 1, "");
+        day.setTextAlignment(TextAlignment.LEFT);
+        LcdText date = new LcdText(0, 1, 20, 1, "");
+        date.setTextAlignment(TextAlignment.LEFT);
+        LcdText time = new LcdText(0, 3, 20, 1, "");
+        time.setTextAlignment(TextAlignment.LEFT);
+
+        alarmClockPane.add(day);
+        alarmClockPane.add(date);
+        alarmClockPane.add(time);
+
+        alarmClockPane.activeProperty().addListener((observable, oldValue, newValue) -> {
+            log.info("Alarm Clock Pane Shown");
+            CompletableFuture.runAsync(new Runnable() {
+                @Override
+                public void run() {
+                    /*String file = getClass().getClassLoader().getResource("Alert2.mp3").getPath();
+                    testPlay(file);*/
+                }
+            }).whenComplete((aVoid, throwable) -> log.info("Play music complete"));
+            log.info("Has Children: {}", alarmClockPane.hasChildren());
+        });
+
+        lcd.clear();
+        lcd.show(alarmClockPane);
+
+        CompletableFuture.runAsync(() -> {
+            while (!shutdown.get()) {
+                ZonedDateTime dateTime = ZonedDateTime.now();
+
+                String dayValue = dateTime.format(DateTimeFormatter.ofPattern("EEEE, z Z"));
+                String dateValue = dateTime.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy"));
+                String timeValue = dateTime.format(DateTimeFormatter.ofPattern("hh:mm:ss a"));
+
+                day.setText(dayValue);
+                date.setText(dateValue);
+                time.setText(timeValue);
+
+                delay(500);
+            }
+        }).whenComplete((aVoid, throwable) -> {
+            if (throwable != null)
+                log.error("Error", throwable);
+            shutdown.set(true);
+        });
+    }
+
+    private void showListViewTest() {
+        LcdListView<String> listView = new LcdListView<>();
+        listView.getItems().add("Item 1 ${CUA}");
+        listView.getItems().add("Item 2");
+        listView.getItems().add("Item 3");
+        listView.getItems().add("Item 4");
+        listView.getItems().add("Item 5");
+        listView.getItems().add("Item 6");
+        listView.getItems().add("Item 7");
+        listView.getItems().add("Item 8");
+        listView.getItems().add("Item 9");
+        listView.getItems().add("Item 10");
+
+        lcd.show(listView);
+
+        CompletableFuture.runAsync(new Runnable() {
+            @Override
+            public void run() {
+                delay(5000);
+                log.info("REMOVING ITEMS");
+                listView.getItems().remove(0);
+            }
+        });
+    }
+
+    private Serial setupSerialComms() {
+        // create an instance of the serial communications class
+        final Serial serial = SerialFactory.createInstance();
+
+        // create and register the serial data listener
+        serial.addListener((SerialDataEventListener) event -> {
+
+            // NOTE! - It is extremely important to read the data received from the
+            // serial port.  If it does not get read from the receive buffer, the
+            // buffer will continue to grow and consume memory.
+
+            // print out the data received to the console
+            try {
+                //console.println("[HEX DATA]   " + event.getHexByteString());
+                ByteBuffer buf = event.getByteBuffer().order(ByteOrder.LITTLE_ENDIAN);
+
+                byte header = buf.get();
+                byte flags = buf.get();
+                short size = buf.getShort();
+                if (size > 256) {
+                    log.error("Invalid payload size: {}", size);
+                    return;
+                }
+                byte[] payload = new byte[size];
+                if (size > 0)
+                    buf.get(payload);
+                byte footer = buf.get();
+
+                log.info("Header: {}, Flags: {}, Size: {}, Payload: {}, Footer: {}", Integer.toHexString(header), Integer.toHexString(flags), size, ByteUtils.bytesToHex(payload), Integer.toHexString(footer));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        try {
+            // create serial config object
+            SerialConfig config = new SerialConfig();
+
+            // set default serial settings (device, baud rate, flow control, etc)
+            //
+            // by default, use the DEFAULT com port on the Raspberry Pi (exposed on GPIO header)
+            // NOTE: this utility method will determine the default serial port for the
+            //       detected platform and board/model.  For all Raspberry Pi models
+            //       except the 3B, it will return "/dev/ttyAMA0".  For Raspberry Pi
+            //       model 3B may return "/dev/ttyS0" or "/dev/ttyAMA0" depending on
+            //       environment configuration.
+            config.device(SerialPort.getDefaultPort())
+                    .baud(Baud._115200)
+                    .dataBits(DataBits._8)
+                    .parity(Parity.NONE)
+                    .stopBits(StopBits._1)
+                    .flowControl(FlowControl.NONE);
+
+            // display connection details
+            log.info(" Connecting to: " + config.toString(),
+                    " We are sending ASCII data on the serial port every 1 second.",
+                    " Data received on serial port will be displayed below.");
+
+
+            // open the default serial device/port with the configuration settings
+            serial.open(config);
+
+            log.info("Now listening for serial events");
+            return serial;
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+        }
+        return null;
+    }
+
+    private void run() throws Exception {
+        log.info("Running LCD Display");
+        //showListViewTest();
+
+        Serial ser = setupSerialComms();
+
+        GpioPinDigitalInput inputPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_27, "ALERT_PIN");
+        inputPin.addListener((GpioPinListenerDigital) event -> log.info("Alert Pin Triggered: {}", event.getState().getValue()));
+
+        LcdPane testPane = new LcdPane();
+        LcdText header = new LcdText(0, 0, 20, 1, "Counter Test");
+        header.setTextAlignment(TextAlignment.CENTER);
+        LcdText counter = new LcdText(0, 1, 20, 1, "0");
+        LcdText footer = new LcdText(0, 3, 20, 1, "Scrolling");
+
+        counter.setTextAlignment(TextAlignment.LEFT);
+        testPane.add(header);
+        testPane.add(counter);
+        testPane.add(footer);
+        lcd.show(testPane);
+
+        I2CDevice device = ((CharProxyDisplayDriver) lcdDriver).getDevice();
+        int r = device.read();
+        log.info("Got data from slave: 0x{}", Integer.toHexString(r));
+
+
+        int ctr = 0;
+        boolean state = false;
+        int scrollLeft = 0;
         //Wait
         while (!shutdown.get()) {
+            if (ctr > 1000)
+                ctr = 0;
+            if (scrollLeft == 9)
+                scrollLeft = 0;
+            counter.setText(String.valueOf(ctr++));
+            header.setVisible(state);
+            footer.setScrollLeft(scrollLeft++);
+            state = !state;
             ThreadUtils.sleep(500);
         }
 
         log.info("Shutting down...");
+        ser.close();
         gpio.shutdown();
         executorService.shutdown();
         lcd.shutdown();
