@@ -4,8 +4,6 @@ package com.ibasco.pidisplay.core.drivers;
 import com.ibasco.pidisplay.core.enums.ScrollDirection;
 import com.ibasco.pidisplay.core.enums.TextDirection;
 
-import java.util.Map;
-
 public interface CharDisplayDriver extends DisplayDriver {
     void home();
 
@@ -15,8 +13,6 @@ public interface CharDisplayDriver extends DisplayDriver {
 
     void cursor(boolean state);
 
-    void backlight(boolean state);
-
     void autoscroll(boolean state);
 
     void scrollDisplay(ScrollDirection scrollDirection);
@@ -24,8 +20,4 @@ public interface CharDisplayDriver extends DisplayDriver {
     void textDirection(TextDirection textDirection);
 
     void createChar(int num, byte[] charData);
-
-    boolean isCharDefined(int charNum);
-
-    Map<Integer, byte[]> getCharDataMap();
 }

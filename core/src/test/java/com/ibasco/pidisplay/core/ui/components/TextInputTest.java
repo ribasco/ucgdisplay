@@ -10,15 +10,15 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TextBoxTest {
+class TextInputTest {
 
-    public static final Logger log = LoggerFactory.getLogger(TextBoxTest.class);
+    public static final Logger log = LoggerFactory.getLogger(TextInputTest.class);
 
-    private TextBox textBox;
+    private TextInput textInput;
 
     @BeforeEach
     void setUp() {
-        textBox = new TextBox(5, 1, 5, 3) {
+        textInput = new TextInput(5, 1, 5, 3) {
             private Text content;
 
             @Override
@@ -59,58 +59,58 @@ class TextBoxTest {
     @Test
     @DisplayName("Test set text")
     void testSetText() {
-        textBox.setText("Hello World");
-        assertEquals("Hello World", textBox.getContent().getText());
-        assertEquals(11, textBox.getContent().getLength());
-        log.debug("Caret: {}, X = {}, Y = {}", textBox.getCaret(), textBox.getCaretX(), textBox.getCaretY());
+        textInput.setText("Hello World");
+        assertEquals("Hello World", textInput.getContent().getText());
+        assertEquals(11, textInput.getContent().getLength());
+        log.debug("Caret: {}, X = {}, Y = {}", textInput.getCaret(), textInput.getCaretX(), textInput.getCaretY());
     }
 
     @Test
     @DisplayName("Test set null text")
     void testSetNullText() {
-        textBox.setText(null);
-        log.debug("Content: {}", textBox.getContent().getText());
-        assertNull(textBox.getContent().getText());
+        textInput.setText(null);
+        log.debug("Content: {}", textInput.getContent().getText());
+        assertNull(textInput.getContent().getText());
     }
 
     @Test
     @DisplayName("Test append text")
     void testAppendText() {
-        textBox.appendText("Hello");
-        textBox.appendText("World");
-        assertEquals("HelloWorld", textBox.getContent().getText());
+        textInput.appendText("Hello");
+        textInput.appendText("World");
+        assertEquals("HelloWorld", textInput.getContent().getText());
     }
 
     @Test
     @DisplayName("Test clear text")
     void testClearText() {
-        textBox.appendText("Hello");
-        textBox.clear();
-        assertNotNull(textBox.getContent().getText());
-        assertTrue(StringUtils.isEmpty(textBox.getContent().getText()));
-        assertEquals(0, textBox.getContent().getLength());
+        textInput.appendText("Hello");
+        textInput.clear();
+        assertNotNull(textInput.getContent().getText());
+        assertTrue(StringUtils.isEmpty(textInput.getContent().getText()));
+        assertEquals(0, textInput.getContent().getLength());
     }
 
     @Test
     @DisplayName("Test insert text")
     void testInsertText() {
-        textBox.setText("test");
-        textBox.insertText(0, "1");
-        assertEquals("1test", textBox.getContent().getText());
-        textBox.insertText(5, "2");
-        assertEquals("1test2", textBox.getContent().getText());
+        textInput.setText("test");
+        textInput.insertText(0, "1");
+        assertEquals("1test", textInput.getContent().getText());
+        textInput.insertText(5, "2");
+        assertEquals("1test2", textInput.getContent().getText());
     }
 
     @Test
     @DisplayName("Test delete text")
     void testDeleteText() {
-        textBox.setText("Hello");
-        assertEquals(4, textBox.getCaret());
-        textBox.deleteText(2);
-        assertEquals("Hel", textBox.getContent().getText());
-        assertEquals(2, textBox.getCaret());
-        assertThrows(StringIndexOutOfBoundsException.class, () -> textBox.deleteText(5));
-        assertEquals("Hel", textBox.getContent().getText());
-        assertEquals(2, textBox.getCaret());
+        textInput.setText("Hello");
+        assertEquals(4, textInput.getCaret());
+        textInput.deleteText(2);
+        assertEquals("Hel", textInput.getContent().getText());
+        assertEquals(2, textInput.getCaret());
+        assertThrows(StringIndexOutOfBoundsException.class, () -> textInput.deleteText(5));
+        assertEquals("Hel", textInput.getContent().getText());
+        assertEquals(2, textInput.getCaret());
     }
 }

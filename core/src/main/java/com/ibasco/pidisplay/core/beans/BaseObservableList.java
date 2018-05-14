@@ -56,7 +56,7 @@ abstract public class BaseObservableList<T> implements ObservableList<T>, Iterab
     public boolean add(T t) {
         boolean added = backingList.add(t);
         if (added)
-            fireChangeEvent(new ListChangeListener.SingleChange<>(this));
+            fireChangeEvent(new ListChangeListener.SingleChange<>(this, backingList.size() - 1));
         return added;
     }
 
@@ -68,7 +68,7 @@ abstract public class BaseObservableList<T> implements ObservableList<T>, Iterab
     public boolean remove(Object o) {
         boolean removed = backingList.remove(o);
         if (removed)
-            fireChangeEvent(new ListChangeListener.SingleChange<>(this));
+            fireChangeEvent(new ListChangeListener.SingleChange<>(this, 0));
         return removed;
     }
 
@@ -79,7 +79,6 @@ abstract public class BaseObservableList<T> implements ObservableList<T>, Iterab
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
-
         return backingList.addAll(c);
     }
 

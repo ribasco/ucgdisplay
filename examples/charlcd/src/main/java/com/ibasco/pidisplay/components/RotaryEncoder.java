@@ -3,12 +3,15 @@ package com.ibasco.pidisplay.components;
 import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
 public class RotaryEncoder {
+    private static final Logger log = LoggerFactory.getLogger(RotaryEncoder.class);
 
     private Lock lock = new ReentrantLock(true);
 
@@ -32,6 +35,7 @@ public class RotaryEncoder {
         //inputB.setDebounce(64);
 
         GpioPinListenerDigital inputListener = (GpioPinDigitalStateChangeEvent gpdsce) -> {
+            log.info("Got Event: {} for {} = {}", gpdsce, gpdsce.getPin().getName(), gpdsce.getState());
             if (lock.tryLock()) {
                 int stateA = inputA.getState().getValue();
                 int stateB = inputB.getState().getValue();

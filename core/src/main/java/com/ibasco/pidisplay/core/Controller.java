@@ -7,7 +7,7 @@ import com.ibasco.pidisplay.core.events.*;
 import com.ibasco.pidisplay.core.exceptions.NotOnUIThreadException;
 import com.ibasco.pidisplay.core.services.InputMonitorService;
 import com.ibasco.pidisplay.core.ui.Graphics;
-import com.ibasco.pidisplay.core.ui.components.DisplayDialog;
+import com.ibasco.pidisplay.core.ui.components.Dialog;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
 
     private final EventHandler<DisplayEvent> displayEventHandlerCallback = this::displayEventHandler;
 
-    private InputMonitorService inputMonitorService = InputMonitorService.getInstance();
+    private InputMonitorService inputMonitorService;// = InputMonitorService.getInstance();
 
     private final ThreadFactory factory = r -> {
         if (uiThread == null) {
@@ -108,22 +108,22 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         }
     }
 
-    public <A> Optional<A> showAndWait(DisplayDialog<T, A> displayDialog) {
+    public <A> Optional<A> showAndWait(Dialog<T, A> dialog) {
         try {
             CountDownLatch latch = new CountDownLatch(1);
             //Show dialog
-            show(displayDialog);
+            show(dialog);
             //Set event handler for DialogEvent#DIALOG_RESULT
-            displayDialog.setOnDialogResult(event -> latch.countDown());
+            dialog.setOnDialogResult(event -> latch.countDown());
             //Block until we get a result
             latch.await();
-            return displayDialog.getResult();
+            return dialog.getResult();
         } catch (InterruptedException e) {
             throw new RuntimeException("DIALOG_INTERRUPTED", e);
         } finally {
-            displayDialog.setOnDialogResult(null);
-            log.info("DIALOG_CLOSING => Closing...{}", displayDialog);
-            close(displayDialog);
+            dialog.setOnDialogResult(null);
+            log.info("DIALOG_CLOSING => Closing...{}", dialog);
+            close(dialog);
         }
     }
 
@@ -132,10 +132,10 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
     }
 
     @SuppressWarnings("unchecked")
-    public <A> CompletableFuture<Optional<A>> showAndWaitAsync(DisplayDialog<T, A> displayDialog) {
+    public <A> CompletableFuture<Optional<A>> showAndWaitAsync(Dialog<T, A> dialog) {
         CompletableFuture<Optional<A>> future = new CompletableFuture<>();
-        show(displayDialog);
-        displayDialog.setOnDialogResult((DialogEvent event) -> {
+        show(dialog);
+        dialog.setOnDialogResult((DialogEvent event) -> {
             Optional<A> r = Optional.of((A) event.getResult());
             future.complete(r);
         });
@@ -151,8 +151,6 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
 
     public void show(DisplayParent<T> newDisplay) {
         _show(newDisplay);
-        /*attachDisplay(newDisplay);
-        fireEvent(newDisplay, new DisplayEvent<>(DisplayEvent.DISPLAY_SHOW, newDisplay));*/
     }
 
     private void _show(DisplayParent<T> newDisplay) {
@@ -220,7 +218,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         graphics.clear();
     }
 
-    public Graphics getGraphics() {
+    public T getGraphics() {
         return graphics;
     }
 
@@ -372,7 +370,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         uiService.execute(() -> {
             while (!shutdown.get()) {
                 displayRenderer.run();
-                ThreadUtils.sleep(5);
+                ThreadUtils.sleep(10);
             }
         });
     }

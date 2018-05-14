@@ -36,7 +36,6 @@ public class GraphicsUtils {
                 //log.debug("{}|{}|", GraphicsUtils.calcYOffset(width, height, i), sb.toString());
                 output.append(GraphicsUtils.calcYOffset(width, height, i));
                 output.append("|");
-                output.append("");
                 if (GraphicsUtils.calcYOffset(width, height, i) < height)
                     output.append("\n");
             }

@@ -2,27 +2,27 @@ package com.ibasco.pidisplay.impl.charlcd.components;
 
 import com.ibasco.pidisplay.core.ui.CharGraphics;
 import com.ibasco.pidisplay.core.ui.Graphics;
-import com.ibasco.pidisplay.core.ui.components.DisplayTextBox;
+import com.ibasco.pidisplay.core.ui.components.TextInput;
 import com.ibasco.pidisplay.core.util.GraphicsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("WeakerAccess")
-public class LcdTextBox extends DisplayTextBox<CharGraphics> {
+public class LcdTextInput extends TextInput<CharGraphics> {
 
-    private static final Logger log = LoggerFactory.getLogger(LcdTextBox.class);
+    private static final Logger log = LoggerFactory.getLogger(LcdTextInput.class);
 
     private LcdText content;
 
-    public LcdTextBox() {
+    public LcdTextInput() {
         this(null, null);
     }
 
-    public LcdTextBox(Integer width, Integer height) {
+    public LcdTextInput(Integer width, Integer height) {
         this(null, null, width, height);
     }
 
-    public LcdTextBox(Integer left, Integer top, Integer width, Integer height) {
+    public LcdTextInput(Integer left, Integer top, Integer width, Integer height) {
         super(left, top, width, height);
     }
 

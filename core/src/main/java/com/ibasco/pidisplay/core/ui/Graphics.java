@@ -46,14 +46,23 @@ public interface Graphics {
     void setCursorBlink(boolean state);
 
     /**
-     * @return The current x-coordinate
+     * @return The current x-coordinate of the display cursor
      */
     int getCursorX();
 
+    /**
+     * @return The current y-coordinate of the display cursor
+     */
     int getCursorY();
 
+    /**
+     * @return The maximum width of the display
+     */
     int getWidth();
 
+    /**
+     * @return The maximum height of the display
+     */
     int getHeight();
 
     /**
@@ -73,5 +82,8 @@ public interface Graphics {
      */
     void flush();
 
+    /**
+     * @return Returns the underlying {@link DisplayDriver} of this implementation
+     */
     DisplayDriver getDriver();
 }

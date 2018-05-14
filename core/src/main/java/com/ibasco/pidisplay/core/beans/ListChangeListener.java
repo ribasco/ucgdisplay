@@ -126,8 +126,12 @@ public interface ListChangeListener<T> {
     }
 
     final class SingleChange<T> extends Change<T> {
-        public SingleChange(List<T> list) {
+
+        private int index;
+
+        public SingleChange(List<T> list, int index) {
             super(list);
+            this.index = index;
         }
 
         @Override
@@ -137,7 +141,7 @@ public interface ListChangeListener<T> {
 
         @Override
         public int getFromIndex() {
-            return 0;
+            return index;
         }
 
         @Override

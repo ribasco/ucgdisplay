@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.BufferOverflowException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -26,6 +28,18 @@ class LcdCharGraphicsTest {
         when(driver.getWidth()).thenReturn(20);
         when(driver.getHeight()).thenReturn(4);
         graphics = new LcdCharGraphics(driver);
+    }
+
+    @Test
+    void testHuh() throws Exception {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                log.info("HELLO");
+            }
+        }, 5000);
+        Thread.sleep(10000);
     }
 
     @Test
