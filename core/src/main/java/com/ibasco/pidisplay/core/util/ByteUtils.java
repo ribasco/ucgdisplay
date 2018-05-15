@@ -41,7 +41,23 @@ public class ByteUtils {
         return new String(data).getBytes(charset);
     }
 
-    public static void printBytes(StringBuilder requestData, byte[] out) {
+    public static void printHexBytes(StringBuilder sb, byte[] data) {
+        sb.append("[Size: ");
+        sb.append(data.length);
+        sb.append("] = ");
+        for (byte b : data) {
+            sb.append(String.format("%02x", b));
+            sb.append(" ");
+        }
+    }
 
+    public static String toHexString(byte[] data) {
+        StringBuilder sb = new StringBuilder(data.length * 2);
+        return toHexString(sb, data);
+    }
+
+    public static String toHexString(StringBuilder sb, byte[] data) {
+        printHexBytes(sb, data);
+        return sb.toString();
     }
 }

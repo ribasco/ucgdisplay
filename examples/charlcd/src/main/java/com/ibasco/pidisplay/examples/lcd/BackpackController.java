@@ -15,12 +15,13 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@SuppressWarnings("Duplicates")
-public class BackpackController implements SerialDataEventListener, Closeable {
+@SuppressWarnings({"Duplicates", "WeakerAccess", "unused"})
+public class BackpackController implements Closeable {
 
     private static final Logger log = getLogger(BackpackController.class);
 
@@ -42,38 +43,39 @@ public class BackpackController implements SerialDataEventListener, Closeable {
     public static final int READY = 3; //pi has completed boot process and main program is running
 
     //Instructions
-    private static final int MSG_SYS = 0x0;
-    private static final int MSG_SYS_GETFREEMEM = 0x1;
-    private static final int MSG_SYS_GETSTATUS = 0x2;
-    private static final int MSG_SYS_SETSTATUS = 0x3;
+    public static final int MSG_SYS = 0x0;
+    public static final int MSG_SYS_GETFREEMEM = 0x1;
+    public static final int MSG_SYS_GETSTATUS = 0x2;
+    public static final int MSG_SYS_SETSTATUS = 0x3;
     public static final int MSG_SYS_EEPROM_GET = 0x4;
     public static final int MSG_SYS_EEPROM_SET = 0x5;
+    public static final int MSG_SYS_INPUT = 0x6;
 
-    private static final int MSG_LED = 0x3C;
-    private static final int MSG_LED_ON = 0X3D;
-    private static final int MSG_LED_OFF = 0x3E;
-    private static final int MSG_LED_FADE = 0x3F;
-    private static final int MSG_LED_BLINK = 0x40;
-    private static final int MSG_LED_PULSE = 0x41;
+    public static final int MSG_LED = 0x3C;
+    public static final int MSG_LED_ON = 0X3D;
+    public static final int MSG_LED_OFF = 0x3E;
+    public static final int MSG_LED_FADE = 0x3F;
+    public static final int MSG_LED_BLINK = 0x40;
+    public static final int MSG_LED_PULSE = 0x41;
 
-    private static final int MSG_7SEG = 0x8C;
-    private static final int MSG_7SEG_SETSTATE = 0x8D;
-    private static final int MSG_7SEG_SETCOLON_STATE = 0x8E;
-    private static final int MSG_7SEG_SETCOLON_BLINK_STATE = 0x8F;
-    private static final int MSG_7SEG_SETCOLON_BLINK_INTERVAL = 0x90;
-    private static final int MSG_7SEG_SETEFFECT = 0x91;
-    private static final int MSG_7SEG_SETEFFECT_STATE = 0x92;
-    private static final int MSG_7SEG_SETTIME = 0x93;
-    private static final int MSG_7SEG_SETNUMBER = 0x94;
-    private static final int MSG_7SEG_SETDIGIT_BLINK_STATE = 0x95;
-    private static final int MSG_7SEG_SETDIGIT_BLINK_INTERVAL = 0x96;
-    private static final int MSG_7SEG_BRIGHTNESS = 0x97;
-    private static final int MSG_7SEG_SETHOUR = 0x98;
-    private static final int MSG_7SEG_SETMINUTES = 0x99;
+    public static final int MSG_7SEG = 0x8C;
+    public static final int MSG_7SEG_SETSTATE = 0x8D;
+    public static final int MSG_7SEG_SETCOLON_STATE = 0x8E;
+    public static final int MSG_7SEG_SETCOLON_BLINK_STATE = 0x8F;
+    public static final int MSG_7SEG_SETCOLON_BLINK_INTERVAL = 0x90;
+    public static final int MSG_7SEG_SETEFFECT = 0x91;
+    public static final int MSG_7SEG_SETEFFECT_STATE = 0x92;
+    public static final int MSG_7SEG_SETTIME = 0x93;
+    public static final int MSG_7SEG_SETNUMBER = 0x94;
+    public static final int MSG_7SEG_SETDIGIT_BLINK_STATE = 0x95;
+    public static final int MSG_7SEG_SETDIGIT_BLINK_INTERVAL = 0x96;
+    public static final int MSG_7SEG_BRIGHTNESS = 0x97;
+    public static final int MSG_7SEG_SETHOUR = 0x98;
+    public static final int MSG_7SEG_SETMINUTES = 0x99;
 
-    private static final int MSG_RELAY = 0x64;
-    private static final int MSG_RELAY_SETSTATE = 0x65;
-    private static final int MSG_RELAY_GETSTATE = 0x66;
+    public static final int MSG_RELAY = 0x64;
+    public static final int MSG_RELAY_SETSTATE = 0x65;
+    public static final int MSG_RELAY_GETSTATE = 0x66;
 
     public static final int ROTARY_NONE = 0x0;
     public static final int ROTARY_LEFT = 0x1;
@@ -84,6 +86,12 @@ public class BackpackController implements SerialDataEventListener, Closeable {
     public static final int BUTTON_HELD = 0x6;
     public static final int BUTTON_LONG_PRESS = 0x7;
     public static final int TOGGLE_SW_STATE = 0x8;
+
+    public static final int BUTTON_A = 49;
+    public static final int BUTTON_B = 47;
+    public static final int BUTTON_C = 51; //rotary encoder button
+    public static final int BUTTON_SNOOZE = 27;
+    public static final int BUTTON_TOGGLESW = 3;
 
     @Override
     public void close() throws IOException {
@@ -102,7 +110,6 @@ public class BackpackController implements SerialDataEventListener, Closeable {
         NONE(0),
         ROTATING(1),
         KNIGHT_RIDER(2);
-
         int code;
 
         SegmentEffect(int code) {
@@ -132,22 +139,41 @@ public class BackpackController implements SerialDataEventListener, Closeable {
         }
     }
 
+    public enum LcdState {
+        IDLE(0x0),
+        WAKEUP(0x1),
+        ACQUIRED(0x2),
+        RELEASED(0x3);
+
+        private byte code;
+
+        LcdState(int i) {
+            this.code = (byte) i;
+        }
+
+        public byte getCode() {
+            return code;
+        }
+
+        public static LcdState valueOf(int code) {
+            return Arrays.stream(LcdState.values()).filter(c -> c.getCode() == (byte) code).findFirst().orElse(null);
+        }
+    }
+
     public BackpackController(BackpackI2CDriver i2cDriver) {
         this.i2cDriver = i2cDriver;
         this.displayDriver = new BackpackCharDisplayDriver(20, 4, i2cDriver);
         this.serialDriver = createSerial();
         assert serialDriver != null;
-        serialDriver.addListener();
+        serialDriver.addListener(this::dataReceived);
     }
 
     public void setInputEventHandler(BackpackInputEventHandler eventHandler) {
         this.inputEventHandler = eventHandler;
     }
 
-    @Override
-    public void dataReceived(SerialDataEvent event) {
+    private void dataReceived(SerialDataEvent event) {
         try {
-            log.info("Serial Data received");
             byte[] data = event.getBytes();
 
             ByteBuffer buf = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
@@ -157,18 +183,20 @@ public class BackpackController implements SerialDataEventListener, Closeable {
                 ctr++;
                 Packet p = new Packet(buf);
 
-                //Handle input events
-                if (p.getHeader() == 0x6 && p.getSize() == 2) {
+                //Input events
+                if (p.getHeader() == MSG_SYS_INPUT && p.getSize() == 2) {
                     byte eventCode = p.getPayload().get();
                     byte eventValue = p.getPayload().get();
                     inputEventHandler.handleEvent(eventCode, eventValue);
                 }
                 //Handle display events
-                else if (p.getHeader() == 0x78) {
+                else if (p.getHeader() == BackpackCharDisplayDriver.MSG_LCD) {
                     byte data1 = p.getPayload().get();
                     byte data2 = p.getPayload().get();
-                    log.info("Display Event (Data 1: {}, Data 2: {})", data1, data2);
-
+                    if (data1 == BackpackCharDisplayDriver.MSG_LCD_STATE) {
+                        LcdState state = LcdState.valueOf(data2);
+                        log.info("LCD State Change: {} (Code: {})", state, data1);
+                    }
                 } else {
                     log.warn("Unhandled serialDriver event (Header: {}, Size: {})", p.getHeader(), p.getSize());
                 }

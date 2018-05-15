@@ -143,7 +143,7 @@ public class BackpackI2CDriver implements BackpackDriver, Closeable {
             buffer.get(out);
 
             StringBuilder requestData = new StringBuilder();
-            ByteUtils.printBytes(requestData, out);
+            ByteUtils.printHexBytes(requestData, out);
 
             log.debug("Sending RequestPacket. (Data: {}, Payload Size: {})", requestData.toString(), data.length);
 
