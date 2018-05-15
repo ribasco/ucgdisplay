@@ -18,13 +18,13 @@ public class CharManager {
 
     private static final int MAX_LCD_CHARS = 8;
 
-    private List<CharData> cache = new ArrayList<>(8);
+    private List<CharData> charCache = new ArrayList<>(8);
 
     private byte cacheIndex = 0;
 
     private RegexByteProcessor textProcessor = new RegexByteProcessor();
 
-    private Set<CharData> registry = new HashSet<>();
+    private Set<CharData> charRegistry = new HashSet<>();
 
     public static final Logger log = getLogger(CharManager.class);
 
@@ -47,11 +47,11 @@ public class CharManager {
     }
 
     public boolean registerChar(CharData charData) {
-        return registry.add(charData);
+        return charRegistry.add(charData);
     }
 
     public boolean unregisterChar(CharData charData) {
-        return registry.remove(charData);
+        return charRegistry.remove(charData);
     }
 
     public void registerProcessor(String variableName, Function<String, String> processor) {
@@ -69,7 +69,7 @@ public class CharManager {
                 if (cycleAllocation)
                     cacheIndex = 0;
                 else
-                    throw new IllegalStateException("Unable to allocate character. Character cache is FULL");
+                    throw new IllegalStateException("Unable to allocate character. Character charCache is FULL");
             }
             if (!isRegistered(charData)) {
                 if (autoRegister)
@@ -79,7 +79,7 @@ public class CharManager {
             }
             allocationIndex = cacheIndex++;
             driver.createChar(allocationIndex, charData.getBytes());
-            cache.add(allocationIndex, charData);
+            charCache.add(allocationIndex, charData);
         }
         return allocationIndex;
     }
@@ -87,26 +87,26 @@ public class CharManager {
     public CharData getCharData(String key) {
         if (StringUtils.isEmpty(key))
             return null;
-        return registry.stream().filter(cd -> key.equals(cd.getKey())).findFirst().orElse(null);
+        return charRegistry.stream().filter(cd -> key.equals(cd.getKey())).findFirst().orElse(null);
     }
 
     private boolean isRegistered(CharData charData) {
-        return registry.contains(charData);
+        return charRegistry.contains(charData);
     }
 
     private boolean isAllocated(CharData charData) {
-        return cache.contains(charData);
+        return charCache.contains(charData);
     }
 
     public byte getAllocationIndex(String key) {
-        CharData cData = cache.stream().filter(c -> c.getKey().equals(key)).findFirst().orElse(null);
+        CharData cData = charCache.stream().filter(c -> c.getKey().equals(key)).findFirst().orElse(null);
         if (cData == null)
             return -1;
         return getAllocationIndex(cData);
     }
 
     public byte getAllocationIndex(CharData charData) {
-        return (byte) cache.indexOf(charData);
+        return (byte) charCache.indexOf(charData);
     }
 
     public boolean isAutoRegister() {

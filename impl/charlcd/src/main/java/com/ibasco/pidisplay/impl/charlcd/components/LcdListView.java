@@ -35,6 +35,15 @@ public class LcdListView<X> extends ListView<CharGraphics, X> {
 
     private ObservableProperty<CharData> itemIconSelected = createProperty(Chars.BULLET_POINT_SELECTED);
 
+    private ObservableProperty<ListViewItemFactory> itemFactory = createProperty(this::drawListItem);
+
+    @FunctionalInterface
+    public interface ListViewItemFactory {
+        <Y> void drawItem(Y item, CharGraphics graphics, boolean focused, boolean selected, int pageIndex, int realIndex);
+    }
+
+
+
     public CharData getItemIcon() {
         return itemIcon.get();
     }
@@ -57,6 +66,14 @@ public class LcdListView<X> extends ListView<CharGraphics, X> {
 
     public void setItemIconFocused(CharData itemIconFocused) {
         this.itemIconFocused.set(itemIconFocused);
+    }
+
+    public ListViewItemFactory getItemFactory() {
+        return itemFactory.get();
+    }
+
+    public void setItemFactory(ListViewItemFactory itemFactory) {
+        this.itemFactory.set(itemFactory);
     }
 
     @Override
@@ -83,27 +100,24 @@ public class LcdListView<X> extends ListView<CharGraphics, X> {
         int top = super.topPos.getDefault(0);
         int left = super.leftPos.getDefault(0);
 
-        int maxHeight = graphics.getHeight();
-        int maxWidth = graphics.getWidth();
-
         RangeMap<Integer, List<X>> rangeMap = createPageRangeMap(height);
         Map.Entry<Range<Integer>, List<X>> entry = rangeMap.getEntry(getFocusedIndex());
 
         if (entry != null) {
             List<X> pageEntries = entry.getValue();
-            int index = getFocusedIndex() - entry.getKey().lowerEndpoint();
-            //graphics.clear();
+            int pageIndex = getFocusedIndex() - entry.getKey().lowerEndpoint();
             for (int i = 0; i < pageEntries.size(); i++) {
                 int x = left;
                 int y = i + top;
+                int realIndex = entry.getKey().lowerEndpoint() + i;
                 graphics.clearLine(y);
                 graphics.setCursor(x, y);
-                drawListItem(pageEntries.get(i), graphics, index == i, getSelectedIndices().contains(getFocusedIndex()));
+                itemFactory.get().drawItem(pageEntries.get(i), graphics, pageIndex == i, getSelectedIndices().contains(realIndex), pageIndex, realIndex);
             }
         }
     }
 
-    private void drawListItem(X item, CharGraphics graphics, boolean focused, boolean selected) {
+    private <Y> void drawListItem(Y item, CharGraphics graphics, boolean focused, boolean selected, int pageIndex, int realIndex) {
         String text = StringUtils.left(Objects.toString(item, ""), graphics.getWidth());
         if (focused) {
             graphics.drawChar(itemIconFocused.get());

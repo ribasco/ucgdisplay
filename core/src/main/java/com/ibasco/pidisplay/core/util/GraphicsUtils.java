@@ -33,7 +33,7 @@ public class GraphicsUtils {
             char c = (data[i] == 0) ? ' ' : (char) data[i];
             output.append(c);
             if (GraphicsUtils.calcXOffset(width, i) == width - 1) {
-                //log.debug("{}|{}|", GraphicsUtils.calcYOffset(width, height, i), sb.toString());
+                //log.debug("{}|{}|", GraphicsUtils.calcYOffset(width, height, i), sb.toHexString());
                 output.append(GraphicsUtils.calcYOffset(width, height, i));
                 output.append("|");
                 if (GraphicsUtils.calcYOffset(width, height, i) < height)

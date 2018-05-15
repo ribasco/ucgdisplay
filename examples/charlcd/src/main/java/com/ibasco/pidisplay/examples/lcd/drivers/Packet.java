@@ -34,43 +34,37 @@ public class Packet {
     private MsgType type;
     private MsgStatus status;
 
-    public Packet(byte[] data) throws PacketException {
-        this(ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
-    }
-
     public Packet(ByteBuffer data) throws PacketException {
         decode(data);
     }
 
-    protected void decode(ByteBuffer tmp) throws PacketException {
-        this.header = tmp.get();
-        this.flags = tmp.get();
+    private void decode(ByteBuffer data) throws PacketException {
+        this.header = data.get();
+        this.flags = data.get();
         initializeFlags(this.flags);
-        this.size = tmp.getShort();
+        this.size = data.getShort();
 
         StringBuilder responseData = new StringBuilder();
-        ByteUtils.printBytes(responseData, tmp.array());
+        ByteUtils.printHexBytes(responseData, data.array());
 
         int packetSize = this.size + MIN_PACKET_SIZE;
         log.debug("Declared Payload Size: {}", this.size);
         log.debug("Computed Packet Size: {}", packetSize);
 
         //Validate total packet size (payload size + min packet size)
-        if (packetSize > MAX_PACKET_SIZE) {
+        if (packetSize > MAX_PACKET_SIZE)
             throw new PacketException(String.format("Size mismatch (MAX = %d, ACTUAL = %d)", MAX_PACKET_SIZE, packetSize));
-        }
 
         //Extract payload if available
         if (this.size > 0) {
             byte[] payload = new byte[this.size];
-            tmp.get(payload);
+            data.get(payload);
             this.payload = ByteBuffer.wrap(payload).order(ByteOrder.LITTLE_ENDIAN);
         }
 
         //Validate footer
-        if (tmp.get() != MSG_FOOTER) {
+        if (data.get() != MSG_FOOTER)
             throw new PacketException("Corruption in the received data packet: " + StringUtils.truncate(responseData.toString(), 100));
-        }
     }
 
     private void initializeFlags(byte bFlags) {

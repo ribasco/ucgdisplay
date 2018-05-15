@@ -4,6 +4,7 @@ import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
 import com.ibasco.pidisplay.core.enums.ScrollDirection;
 import com.ibasco.pidisplay.core.enums.TextDirection;
 import com.ibasco.pidisplay.examples.lcd.exceptions.BackpackDriverException;
+import com.ibasco.pidisplay.examples.lcd.exceptions.CreateCharException;
 import com.ibasco.pidisplay.examples.lcd.exceptions.I2CException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ public class BackpackCharDisplayDriver implements CharDisplayDriver {
     public static final int MSG_LCD_CLEAR = 0x86;
     public static final int MSG_LCD_SETCURSOR = 0x87;
     public static final int MSG_LCD_WRITE = 0x88;
+    public static final byte MSG_LCD_STATE = (byte) 0x89;
 
     private int width;
 
@@ -104,11 +106,11 @@ public class BackpackCharDisplayDriver implements CharDisplayDriver {
         try {
             ResponsePacket response = sendRequest(MSG_LCD_CREATECHAR, payload).get();
             byte location = response.getPayload().get();
-            if (response.isSuccess()) {
-                log.info("Create char request sent: {}", location);
-            } else {
-                log.error("Problem create char for location: {}", location);
+            if (!response.isSuccess()) {
+                log.error("Unable to create char for LCD: (location: {})", location);
             }
+            if (location != num)
+                throw new CreateCharException(String.format("Char location mismatch (Expected: %d, Actual: %d)", num, location));
         } catch (InterruptedException | ExecutionException e) {
             log.error(e.getMessage(), e);
         }

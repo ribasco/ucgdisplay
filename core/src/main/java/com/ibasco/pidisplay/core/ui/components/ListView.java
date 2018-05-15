@@ -1,11 +1,10 @@
 package com.ibasco.pidisplay.core.ui.components;
 
 import com.ibasco.pidisplay.core.DisplayParent;
-import com.ibasco.pidisplay.core.EventHandler;
 import com.ibasco.pidisplay.core.beans.ObservableList;
 import com.ibasco.pidisplay.core.beans.ObservableListWrapper;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
-import com.ibasco.pidisplay.core.events.ListViewEvent;
+import com.ibasco.pidisplay.core.events.ListViewItemEvent;
 import com.ibasco.pidisplay.core.ui.Graphics;
 
 import java.util.ArrayList;
@@ -19,9 +18,12 @@ abstract public class ListView<T extends Graphics, X> extends DisplayParent<T> {
 
     private Set<Integer> selectedIndices = new HashSet<>();
 
-    private ObservableProperty<EventHandler<ListViewEvent>> onSelectedItem;
-
-    private ObservableProperty<Integer> focusedIndex = createProperty(0);
+    private ObservableProperty<Integer> focusedIndex = createProperty(true, 0, (oldValue, newValue) -> {
+        if (oldValue != null)
+            fireEvent(new ListViewItemEvent(ListViewItemEvent.ITEM_EXIT_FOCUS, oldValue));
+        if (newValue != null)
+            fireEvent(new ListViewItemEvent(ListViewItemEvent.ITEM_ENTER_FOCUS, newValue));
+    });
 
     public ListView(java.util.List<X> items) {
         super(null, null);
@@ -31,6 +33,7 @@ abstract public class ListView<T extends Graphics, X> extends DisplayParent<T> {
 
     public void select(int index) {
         selectedIndices.add(index);
+        fireEvent(new ListViewItemEvent(ListViewItemEvent.ITEM_SELECTED, index));
     }
 
     public void select(Object item) {
@@ -50,6 +53,7 @@ abstract public class ListView<T extends Graphics, X> extends DisplayParent<T> {
 
     public void clearSelection(int index) {
         selectedIndices.remove(index);
+        fireEvent(new ListViewItemEvent(ListViewItemEvent.ITEM_DESELECTED, index));
     }
 
     public void clearSelection() {

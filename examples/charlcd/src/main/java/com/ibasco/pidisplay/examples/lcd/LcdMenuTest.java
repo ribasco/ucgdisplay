@@ -3,6 +3,7 @@ package com.ibasco.pidisplay.examples.lcd;
 import com.ibasco.pidisplay.core.EventDispatchPhase;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.events.ListViewItemEvent;
+import com.ibasco.pidisplay.core.ui.CharGraphics;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
 import com.ibasco.pidisplay.examples.lcd.drivers.BackpackI2CDriver;
 import com.ibasco.pidisplay.examples.lcd.exceptions.I2CException;
@@ -63,15 +64,17 @@ public class LcdMenuTest {
     }
 
     public void run() throws Exception {
-        lcdListView.addEventHandler(ListViewItemEvent.ITEM_FOCUSED, event -> log.info("Item Focus: {}", event.getIndex()), EventDispatchPhase.CAPTURE);
+        lcdListView.addEventHandler(ListViewItemEvent.ITEM_ENTER_FOCUS, event -> log.info("Enter Focus: {}", event.getIndex()), EventDispatchPhase.CAPTURE);
+        lcdListView.addEventHandler(ListViewItemEvent.ITEM_EXIT_FOCUS, event -> log.info("Exit Focus: {}", event.getIndex()), EventDispatchPhase.CAPTURE);
         lcdListView.addEventHandler(ListViewItemEvent.ITEM_SELECTED, event -> log.info("Item Selected: {}", event.getIndex()), EventDispatchPhase.CAPTURE);
+        lcdListView.addEventHandler(ListViewItemEvent.ITEM_DESELECTED, event -> log.info("Item Deselected: {}", event.getIndex()), EventDispatchPhase.CAPTURE);
+        lcdListView.setItemFactory(this::itemFactory);
 
         for (int i = 0; i < 100; i++) {
             lcdListView.getItems().add("Entry: " + i);
         }
 
         lcdController.show(lcdListView);
-        //textHeader.setText("Event Test");
 
         while (!shutdown.get()) {
             ThreadUtils.sleep(35000);
@@ -80,26 +83,29 @@ public class LcdMenuTest {
         bpController.close();
     }
 
+    private <Y> void itemFactory(Y item, CharGraphics charGraphics, boolean b, boolean b1, int pageIndex, int realIndex) {
+        //log.info("Custom Item Factory: {}", item);
+        charGraphics.drawText(String.format("%d) Item = %d", realIndex, pageIndex));
+    }
+
     private void inputEventHandler(int eventCode, int eventValue) {
         switch (eventCode) {
             case ROTARY_NONE:
                 break;
             case ROTARY_LEFT:
-                log.info("Left");
                 lcdListView.doPrevious();
                 break;
             case ROTARY_RIGHT:
-                log.info("Right");
                 lcdListView.doNext();
                 break;
             case BUTTON_HELD:
-                log.info("Button {} Held", eventValue);
                 break;
             case BUTTON_PRESSED:
-                log.info("Button {} Pressed", eventValue);
                 break;
             case BUTTON_RELEASED:
-                log.info("Button {} Released", eventValue);
+                if (eventValue == BUTTON_C) {
+                    lcdListView.select(lcdListView.getFocusedIndex());
+                }
                 break;
             case TOGGLE_SW_STATE:
                 textToggleSw.setText("Toggle Switch: " + ((eventValue >= 1) ? "ON" : "OFF"));
