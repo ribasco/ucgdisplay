@@ -74,6 +74,8 @@ public class LcdCharGraphics implements CharGraphics {
             synchronized (mutex) {
                 this.buffer.put(allocationIndex);
             }
+        } else {
+            log.warn("Unable to allocate chardata");
         }
     }
 
@@ -178,11 +180,11 @@ public class LcdCharGraphics implements CharGraphics {
 
         synchronized (mutex) {
             byte[] tmp = new byte[getWidth()];
+            //log.info("Flushing Data: ");
             for (int row = 0; row < getHeight(); row++) {
                 buffer.get(row, tmp);
+                //log.info("[ROW: {}] = {}", row, ByteUtils.toHexString(tmp));
                 driver.setCursor(0, row);
-                //replace null bytes with space
-                //ArrayUtils.replaceNullBytes(tmp, (byte) 32)
                 driver.write(tmp);
             }
             buffer.save();

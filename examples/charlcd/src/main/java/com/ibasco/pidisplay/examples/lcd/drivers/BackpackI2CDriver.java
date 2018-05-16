@@ -18,6 +18,7 @@ import java.nio.ByteOrder;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The I2C communications driver for the micro-controller backpack interface
@@ -164,7 +165,12 @@ public class BackpackI2CDriver implements BackpackDriver, Closeable {
 
     @Override
     public void close() {
-        executorService.shutdown();
+        try {
+            executorService.shutdownNow();
+            executorService.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
    /*public static void main(String[] args) throws Exception {
