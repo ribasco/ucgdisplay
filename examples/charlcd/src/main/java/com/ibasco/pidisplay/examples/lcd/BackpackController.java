@@ -195,7 +195,7 @@ public class BackpackController implements Closeable {
                     byte data2 = p.getPayload().get();
                     if (data1 == BackpackCharDisplayDriver.MSG_LCD_STATE) {
                         LcdState state = LcdState.valueOf(data2);
-                        log.info("LCD State Change: {} (Code: {})", state, data1);
+                        //log.info("LCD State Change: {} (Code: {})", state, data1);
                     }
                 } else {
                     log.warn("Unhandled serialDriver event (Header: {}, Size: {})", p.getHeader(), p.getSize());

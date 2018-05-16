@@ -79,6 +79,7 @@ public class CharManager {
             }
             allocationIndex = cacheIndex++;
             driver.createChar(allocationIndex, charData.getBytes());
+            log.info("Create Char: {}", allocationIndex);
             charCache.add(allocationIndex, charData);
         }
         return allocationIndex;

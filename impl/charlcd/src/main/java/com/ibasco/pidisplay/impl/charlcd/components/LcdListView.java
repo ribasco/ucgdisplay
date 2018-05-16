@@ -39,10 +39,8 @@ public class LcdListView<X> extends ListView<CharGraphics, X> {
 
     @FunctionalInterface
     public interface ListViewItemFactory {
-        <Y> void drawItem(Y item, CharGraphics graphics, boolean focused, boolean selected, int pageIndex, int realIndex);
+        <Y> void drawItem(LcdListView listView, Y item, CharGraphics graphics, boolean focused, boolean selected, int pageIndex, int realIndex);
     }
-
-
 
     public CharData getItemIcon() {
         return itemIcon.get();
@@ -112,12 +110,12 @@ public class LcdListView<X> extends ListView<CharGraphics, X> {
                 int realIndex = entry.getKey().lowerEndpoint() + i;
                 graphics.clearLine(y);
                 graphics.setCursor(x, y);
-                itemFactory.get().drawItem(pageEntries.get(i), graphics, pageIndex == i, getSelectedIndices().contains(realIndex), pageIndex, realIndex);
+                itemFactory.get().drawItem(this, pageEntries.get(i), graphics, pageIndex == i, getSelectedIndices().contains(realIndex), pageIndex, realIndex);
             }
         }
     }
 
-    private <Y> void drawListItem(Y item, CharGraphics graphics, boolean focused, boolean selected, int pageIndex, int realIndex) {
+    private <Y> void drawListItem(LcdListView<Y> listView, Y item, CharGraphics graphics, boolean focused, boolean selected, int pageIndex, int realIndex) {
         String text = StringUtils.left(Objects.toString(item, ""), graphics.getWidth());
         if (focused) {
             graphics.drawChar(itemIconFocused.get());

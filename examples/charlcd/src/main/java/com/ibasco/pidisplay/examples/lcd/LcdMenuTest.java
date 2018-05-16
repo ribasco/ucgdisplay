@@ -12,9 +12,11 @@ import com.ibasco.pidisplay.impl.charlcd.components.LcdListView;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdPane;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdText;
 import com.pi4j.io.i2c.I2CFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.ibasco.pidisplay.examples.lcd.BackpackController.*;
@@ -42,6 +44,7 @@ public class LcdMenuTest {
         lcdPaneHeader = new LcdPane();
 
         lcdListView = new LcdListView<>();
+        lcdListView.setItemFactory(this::itemFactory);
         //lcdListView.setTopPos(0);
         //lcdListView.setHeight(2);
 
@@ -68,7 +71,6 @@ public class LcdMenuTest {
         lcdListView.addEventHandler(ListViewItemEvent.ITEM_EXIT_FOCUS, event -> log.info("Exit Focus: {}", event.getIndex()), EventDispatchPhase.CAPTURE);
         lcdListView.addEventHandler(ListViewItemEvent.ITEM_SELECTED, event -> log.info("Item Selected: {}", event.getIndex()), EventDispatchPhase.CAPTURE);
         lcdListView.addEventHandler(ListViewItemEvent.ITEM_DESELECTED, event -> log.info("Item Deselected: {}", event.getIndex()), EventDispatchPhase.CAPTURE);
-        lcdListView.setItemFactory(this::itemFactory);
 
         for (int i = 0; i < 100; i++) {
             lcdListView.getItems().add("Entry: " + i);
@@ -83,9 +85,38 @@ public class LcdMenuTest {
         bpController.close();
     }
 
-    private <Y> void itemFactory(Y item, CharGraphics charGraphics, boolean b, boolean b1, int pageIndex, int realIndex) {
-        //log.info("Custom Item Factory: {}", item);
-        charGraphics.drawText(String.format("%d) Item = %d", realIndex, pageIndex));
+    private long _previousMillis = 0;
+    private long interval = 500;
+    private boolean state = true;
+
+    private <Y> void itemFactory(LcdListView<Y> listView, Y item, CharGraphics graphics, boolean focused, boolean selected, int pageIndex, int realIndex) {
+        long current = System.currentTimeMillis();
+        if ((current - _previousMillis) >= interval) {
+            state = !state;
+            _previousMillis = current;
+        }
+
+        String text = StringUtils.left(Objects.toString(item, ""), graphics.getWidth());
+
+        if (focused) {
+            graphics.drawChar(listView.getItemIconFocused());
+        } else if (selected) {
+            graphics.drawChar(listView.getItemIconSelected());
+        } else {
+            graphics.drawChar(listView.getItemIcon());
+        }
+
+        if (focused) {
+            if (state) {
+                graphics.drawText(" ");
+                graphics.drawText(text);
+            } else {
+                graphics.drawText(" ");
+            }
+        } else {
+            graphics.drawText(" ");
+            graphics.drawText(text);
+        }
     }
 
     private void inputEventHandler(int eventCode, int eventValue) {
@@ -105,6 +136,14 @@ public class LcdMenuTest {
             case BUTTON_RELEASED:
                 if (eventValue == BUTTON_C) {
                     lcdListView.select(lcdListView.getFocusedIndex());
+                } else if (eventValue == BUTTON_B) {
+                    try {
+                        shutdown.set(true);
+                        bpController.close();
+                        lcdController.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case TOGGLE_SW_STATE:

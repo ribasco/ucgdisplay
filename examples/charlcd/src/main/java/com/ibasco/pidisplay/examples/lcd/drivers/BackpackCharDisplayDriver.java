@@ -104,10 +104,11 @@ public class BackpackCharDisplayDriver implements CharDisplayDriver {
         //sendCommand(MSG_LCD_CREATECHAR, payload);
 
         try {
+            //log.info("Create Char: {}", ByteUtils.toHexString(charData));
             ResponsePacket response = sendRequest(MSG_LCD_CREATECHAR, payload).get();
             byte location = response.getPayload().get();
             if (!response.isSuccess()) {
-                log.error("Unable to create char for LCD: (location: {})", location);
+                throw new CreateCharException("Unable to create char in LCD. Device returned a failed status");
             }
             if (location != num)
                 throw new CreateCharException(String.format("Char location mismatch (Expected: %d, Actual: %d)", num, location));
