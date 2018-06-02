@@ -1,8 +1,9 @@
 package com.ibasco.pidisplay.core;
 
 /**
- * An {@code EventDispatcher} which represents a chain of event dispatchers, but
- * can still be set or replaced as a single entity.
+ * A chain of {@code EventDispatcher}s
+ *
+ * @author Rafael Ibasco
  */
 abstract public class MultiEventDispatcher extends BasicEventDispatcher {
     abstract public BasicEventDispatcher getFirstDispatcher();

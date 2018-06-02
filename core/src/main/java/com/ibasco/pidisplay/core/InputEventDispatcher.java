@@ -38,13 +38,10 @@ public class InputEventDispatcher extends BasicEventDispatcher {
 
             DisplayParent<? extends Graphics> parent = controller.getDisplay();
             if (parent != null) {
-                List<? extends DisplayNode> children = parent.getChildren()
-                        .stream()
-                        .filter(DisplayNode::isFocusable)
-                        .collect(Collectors.toList());
-                for (DisplayNode node : children) {
-                    EventHandlerManager eventHandlerManager = node.eventHandlerManager;
-                    log.debug("INPUT_DISPATCHER => Dispatching to child node = {} ({}, {})", node, dispatchType, event);
+                List<? extends DisplayNode> focusableChildNodes = parent.getChildren().stream().filter(DisplayNode::isFocusable).collect(Collectors.toList());
+                for (DisplayNode focusableNode : focusableChildNodes) {
+                    EventHandlerManager eventHandlerManager = focusableNode.eventHandlerManager;
+                    log.debug("INPUT_DISPATCHER => Dispatching to child node = {} ({}, {})", focusableNode, dispatchType, event);
                     event = eventHandlerManager.dispatchEvent(processRawInputEvent(rie), dispatchType);
                 }
             }

@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.core.util;
 
-import com.ibasco.pidisplay.core.ui.GraphicsBuffer;
+import com.ibasco.pidisplay.core.ui.DisplayBuffer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -59,7 +59,7 @@ class GraphicsUtilsTest {
     @Test
     @DisplayName("Test print display buffer")
     void testPrintDisplayBuffer() {
-        GraphicsBuffer buffer = GraphicsBuffer.allocate(20, 4);
+        DisplayBuffer buffer = DisplayBuffer.allocate(20, 4);
 
         buffer.cursor(0, 0);
         buffer.put("hello world".getBytes());

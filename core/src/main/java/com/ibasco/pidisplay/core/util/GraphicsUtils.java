@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.core.util;
 
-import com.ibasco.pidisplay.core.ui.GraphicsBuffer;
+import com.ibasco.pidisplay.core.ui.DisplayBuffer;
 import org.apache.commons.lang3.StringUtils;
 
 public class GraphicsUtils {
@@ -17,7 +17,7 @@ public class GraphicsUtils {
         return x + (y * width);
     }
 
-    public static void printBuffer(final GraphicsBuffer buffer, StringBuilder output) {
+    public static void printBuffer(final DisplayBuffer buffer, StringBuilder output) {
         printBuffer(buffer.getWidth(), buffer.getHeight(), buffer.array(), output);
     }
 

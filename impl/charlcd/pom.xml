@@ -14,6 +14,7 @@
     <artifactId>pi-display-impl-charlcd</artifactId>
 
     <dependencies>
+
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>
             <artifactId>pi-display-core</artifactId>

@@ -13,7 +13,6 @@
     <artifactId>pi-display-examples</artifactId>
 
     <dependencies>
-
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>
             <artifactId>pi-display-drivers-hd44780</artifactId>

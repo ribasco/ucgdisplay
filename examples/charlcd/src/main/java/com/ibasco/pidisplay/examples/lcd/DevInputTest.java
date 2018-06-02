@@ -32,9 +32,11 @@ public class DevInputTest {
     private static final long IOCTL_NAME = 2164278534L;
 
     private void run() throws Exception {
-        final File fs = new File("/dev/input/event0");
-        if (!fs.exists() || !fs.canRead())
-            throw new Exception("Could not access the device (Either it does not exist or you do not have read permission)");
+        final File fs = new File("/dev/input/event7");
+        if (!fs.exists())
+            throw new Exception("The file does not exist");
+        if (!fs.canRead())
+            throw new Exception("No read permissions");
         log.info("Running Dev Input Test");
         try (LinuxFile file = new LinuxFile(fs.getCanonicalPath(), "r")) {
             while (!shutdown.get()) {

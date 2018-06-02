@@ -14,9 +14,9 @@ import java.util.Objects;
 /**
  * @author Rafael Ibasco
  */
-public class GraphicsBuffer {
+public class DisplayBuffer {
 
-    public static final Logger log = LoggerFactory.getLogger(GraphicsBuffer.class);
+    public static final Logger log = LoggerFactory.getLogger(DisplayBuffer.class);
 
     private final ByteBuffer buffer;
 
@@ -28,11 +28,11 @@ public class GraphicsBuffer {
 
     private int size;
 
-    GraphicsBuffer(int width, int height) {
+    DisplayBuffer(int width, int height) {
         this(width, height, null);
     }
 
-    GraphicsBuffer(int width, int height, ByteBuffer buffer) {
+    DisplayBuffer(int width, int height, ByteBuffer buffer) {
         this.width = width;
         this.height = height;
         checkDimensions();
@@ -43,8 +43,8 @@ public class GraphicsBuffer {
         reset();
     }
 
-    public static GraphicsBuffer allocate(int width, int height) {
-        return new GraphicsBuffer(width, height);
+    public static DisplayBuffer allocate(int width, int height) {
+        return new DisplayBuffer(width, height);
     }
 
     public int getSize() {
@@ -67,9 +67,9 @@ public class GraphicsBuffer {
      * @param y
      *         The y-axis coordinate of the display
      *
-     * @return The {@link GraphicsBuffer} instance
+     * @return The {@link DisplayBuffer} instance
      */
-    public GraphicsBuffer cursor(int x, int y) {
+    public DisplayBuffer cursor(int x, int y) {
         int offset = GraphicsUtils.calcOffset(width, x, y);//calculateOffset(x, y);
         checkOffset(offset);
         buffer.position(offset);
@@ -90,11 +90,11 @@ public class GraphicsBuffer {
         return GraphicsUtils.calcXOffset(getWidth(), checkOffset(cursor()));
     }
 
-    public GraphicsBuffer duplicate() {
-        return new GraphicsBuffer(this.getWidth(), this.getHeight(), this.buffer.duplicate());
+    public DisplayBuffer duplicate() {
+        return new DisplayBuffer(this.getWidth(), this.getHeight(), this.buffer.duplicate());
     }
 
-    public GraphicsBuffer put(byte... data) {
+    public DisplayBuffer put(byte... data) {
         buffer.put(data);
         return this;
     }
@@ -107,7 +107,7 @@ public class GraphicsBuffer {
      *
      * @return This buffer
      */
-    GraphicsBuffer put(String data) {
+    DisplayBuffer put(String data) {
         buffer.put(Objects.toString(data, "").getBytes());
         return this;
     }
@@ -122,7 +122,7 @@ public class GraphicsBuffer {
      *
      * @return This buffer
      */
-    public GraphicsBuffer get(int row, byte[] dest) {
+    public DisplayBuffer get(int row, byte[] dest) {
         if (dest.length != width)
             throw new IllegalArgumentException("Invalid buffer size. Expected: " + width);
         if (row > (getHeight() - 1))
@@ -132,14 +132,14 @@ public class GraphicsBuffer {
         return this;
     }
 
-    public GraphicsBuffer get(int x, int y, byte[] dest) {
+    public DisplayBuffer get(int x, int y, byte[] dest) {
         int offset = GraphicsUtils.calcOffset(width, x, y);
         checkOffset(offset);
         System.arraycopy(buffer.array(), offset, dest, 0, dest.length);
         return this;
     }
 
-    public GraphicsBuffer get(int x, int y, int offset, byte[] buffer) {
+    public DisplayBuffer get(int x, int y, int offset, byte[] buffer) {
         checkBounds(x, y);
         int pos = GraphicsUtils.calcOffset(width, x, y);//calculateOffset(x, y);
         this.buffer.position(pos);
@@ -147,7 +147,7 @@ public class GraphicsBuffer {
         return this;
     }
 
-    public GraphicsBuffer get(byte[] buffer) {
+    public DisplayBuffer get(byte[] buffer) {
         this.buffer.get(buffer);
         return this;
     }
@@ -157,7 +157,7 @@ public class GraphicsBuffer {
      *
      * @return This buffer
      */
-    public GraphicsBuffer save() {
+    public DisplayBuffer save() {
         System.arraycopy(array(), 0, savedBytes, 0, savedBytes.length);
         return this;
     }
@@ -189,7 +189,7 @@ public class GraphicsBuffer {
         return !Arrays.equals(savedBytes, array());
     }
 
-    public GraphicsBuffer reset() {
+    public DisplayBuffer reset() {
         Arrays.fill(savedBytes, (byte) 32);
         return this;
     }
@@ -220,7 +220,7 @@ public class GraphicsBuffer {
         return buffer.limit();
     }
 
-    public GraphicsBuffer limit(int newLimit) {
+    public DisplayBuffer limit(int newLimit) {
         buffer.limit(newLimit);
         return this;
     }
