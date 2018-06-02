@@ -47,6 +47,14 @@ public class NativeUtils {
     public static int _IOWR(int g, int n, int t) {
         return _IOC(IOC_INOUT, (g), (n), sizeof(t));
     }
+
+    public static int EVIOCGVERSION() {
+        return _IOR('E', 0x01, 4);
+    }
+
+    public static int EVIOCGNAME(int length) {
+        return _IOC(_IOC_READ, 'E', 0x06, length);
+    }
 }
 
 

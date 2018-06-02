@@ -18,14 +18,14 @@ class GraphicsBufferTest {
 
     Graphics graphics;
 
-    GraphicsBuffer buffer;
+    DisplayBuffer buffer;
 
     @BeforeEach
     void setUp() {
         graphics = mock(Graphics.class);
         when(graphics.getWidth()).thenReturn(20);
         when(graphics.getHeight()).thenReturn(4);
-        buffer = GraphicsBuffer.allocate(20, 4);
+        buffer = DisplayBuffer.allocate(20, 4);
     }
 
     @Test

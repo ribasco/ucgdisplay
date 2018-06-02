@@ -4,7 +4,7 @@ import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
 import com.ibasco.pidisplay.core.ui.CharData;
 import com.ibasco.pidisplay.core.ui.CharGraphics;
 import com.ibasco.pidisplay.core.ui.CharManager;
-import com.ibasco.pidisplay.core.ui.GraphicsBuffer;
+import com.ibasco.pidisplay.core.ui.DisplayBuffer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class LcdCharGraphics implements CharGraphics {
 
     private CharDisplayDriver driver;
 
-    private GraphicsBuffer buffer;
+    private DisplayBuffer buffer;
 
     private final Object mutex = new Object();
 
@@ -35,7 +35,7 @@ public class LcdCharGraphics implements CharGraphics {
 
     public LcdCharGraphics(CharDisplayDriver driver) {
         this.driver = driver;
-        this.buffer = GraphicsBuffer.allocate(driver.getWidth(), driver.getHeight());
+        this.buffer = DisplayBuffer.allocate(driver.getWidth(), driver.getHeight());
     }
 
     @Override
@@ -166,7 +166,7 @@ public class LcdCharGraphics implements CharGraphics {
         return driver;
     }
 
-    public GraphicsBuffer getBuffer() {
+    public DisplayBuffer getBuffer() {
         synchronized (mutex) {
             return buffer.duplicate();
         }

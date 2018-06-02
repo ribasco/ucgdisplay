@@ -127,10 +127,6 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         }
     }
 
-    public boolean grabInputFocus() {
-        return inputMonitorService.setActiveTarget(this);
-    }
-
     @SuppressWarnings("unchecked")
     public <A> CompletableFuture<Optional<A>> showAndWaitAsync(Dialog<T, A> dialog) {
         CompletableFuture<Optional<A>> future = new CompletableFuture<>();
@@ -251,6 +247,8 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
             } finally {
                 focusLock.unlock();
             }
+        } else {
+            log.debug("FOCUS_REFRESH => Skipping refresh. Node does not have any children.");
         }
     }
 
