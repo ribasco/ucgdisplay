@@ -11,7 +11,6 @@
 #include <linux/uinput.h>
 #include <linux/version.h>
 #include <linux/input.h>
-
 #include <cstring>
 #include <fcntl.h>
 #include <unistd.h>
@@ -27,11 +26,13 @@
 #include <unistd.h>
 #include <map>
 #include <iostream>
+#include <utility>
 #include <vector>
 #include <thread>
 #include <future>
 #include <sys/poll.h>
 #include <algorithm>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -45,6 +46,31 @@ using namespace std;
 #define BIT(x)  (1UL<<OFF(x))
 #define LONG(x) ((x)/BITS_PER_LONG)
 #define test_bit(bit, array)    ((array[LONG(bit)] >> OFF(bit)) & 1)
+
+#define CLS_INPUT_DEVICE "com/ibasco/pidisplay/core/system/InputDevice"
+#define CLS_INPUT_EVENT_TYPE "com/ibasco/pidisplay/core/system/InputEventType"
+#define CLS_INPUT_EVENT_CODE "com/ibasco/pidisplay/core/system/InputEventCode"
+#define CLS_INPUT_DEVICE_MGR "com/ibasco/pidisplay/core/system/InputDeviceManager"
+#define CLS_RAW_INPUT_EVENT "com/ibasco/pidisplay/core/system/RawInputEvent"
+#define CLS_DEVICE_STATE_EVENT "com/ibasco/pidisplay/core/system/DeviceStateEvent"
+
+#define CLS_IOEXCEPTION "java/io/IOException"
+#define CLS_ARRAYLIST "java/util/ArrayList"
+#define CLS_HASHMAP  "java/util/HashMap"
+#define CLS_INTEGER "java/lang/Integer"
+#define CLS_THREADGROUP "java/lang/ThreadGroup"
+//#define CLS_STRING "java/lang/String"
+
+#define FSIG_INPUTEVENTCODE_ABSDATA "Ljava/util/Map;"
+#define MIDSIG_INPUTDEVICE_CTR "(Ljava/lang/String;Ljava/lang/String;[SLjava/lang/String;Ljava/util/List;)V"
+#define MIDSIG_INPUTEVENTTYPE_CTR1 "(Ljava/lang/String;ILjava/util/List;Z)V"
+#define MIDSIG_INPUTEVENTCODE_CTR1 "(Ljava/lang/String;I)V"
+#define MIDSIG_INPUTEVENTCODE_CTR2 "(Ljava/lang/String;II)V"
+#define MIDSIG_INPUTDEVMGR_CALLBACK "(Lcom/ibasco/pidisplay/core/system/RawInputEvent;)V"
+#define MIDSIG_RAWINPUTEVENT_CTR "(Lcom/ibasco/pidisplay/core/system/InputDevice;JIIILjava/lang/String;Ljava/lang/String;I)V"
+#define MIDSIG_HASHMAP_PUT "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+#define MIDSIG_HASHMAP_CTR "()V"
+
 
 static const map<int, string> events = {
         {EV_SYN,       NAME_ELEMENT(EV_SYN)},
@@ -834,21 +860,27 @@ static const map<int, map<int, string>> names = {
 };
 
 uint8_t HasEventType(int fd, int type);
-uint8_t HasKeyEvents(int device_fd);
-uint8_t HasSpecificKey(int device_fd, unsigned int key);
-int get_state(int fd, unsigned int type, unsigned long *array, size_t size);
-string typname(unsigned int type);
-string codename(unsigned int type, unsigned int code);
-int getDevices(vector<string> &entries);
 
-//Prototypes
+uint8_t HasKeyEvents(int device_fd);
+
+uint8_t HasSpecificKey(int device_fd, unsigned int key);
+
+int get_state(int fd, unsigned int type, unsigned long *array, size_t size);
+
+string typname(unsigned int type);
+
+string codename(int type, int code);
+
+int listInputDevices(vector<string> &entries);
+
 void throwIOException(JNIEnv *env, string msg);
-void listDirectory(JNIEnv *env, const string &directory_path, vector<string> *filenames);
-string getDevicePathFromFd(int fd);
-int openDevice(JNIEnv *env, string devicePath);
-void closeDevice(JNIEnv *env, int fd);
-jobject getInputDevice(JNIEnv *env, const string &devicePath);
-jobject getInputDevice(JNIEnv *env, int fd);
-void inputMonitorFunction(future<void> futureObj);
+
+int is_valid_fd(int fd);
+
+bool file_exists(const string &name);
+
+string defaultVal(const char *value);
+
+jobject createInputDeviceInfo(JNIEnv *env, int fd, const string &devicePath);
 
 #endif //PID_NATIVE_INPUTDEVHELPER_H

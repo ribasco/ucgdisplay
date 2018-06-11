@@ -9,18 +9,26 @@ extern "C" {
 #endif
 /*
  * Class:     com_ibasco_pidisplay_core_system_InputDeviceManager
- * Method:    startMonitor
+ * Method:    startInputEventMonitor
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_ibasco_pidisplay_core_system_InputDeviceManager_startMonitor
+JNIEXPORT void JNICALL Java_com_ibasco_pidisplay_core_system_InputDeviceManager_startInputEventMonitor
   (JNIEnv *, jclass);
 
 /*
  * Class:     com_ibasco_pidisplay_core_system_InputDeviceManager
- * Method:    stopMonitor
+ * Method:    stopInputEventMonitor
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_ibasco_pidisplay_core_system_InputDeviceManager_stopMonitor
+JNIEXPORT void JNICALL Java_com_ibasco_pidisplay_core_system_InputDeviceManager_stopInputEventMonitor
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_ibasco_pidisplay_core_system_InputDeviceManager
+ * Method:    refreshDeviceCache
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_pidisplay_core_system_InputDeviceManager_refreshDeviceCache
   (JNIEnv *, jclass);
 
 /*
@@ -33,28 +41,23 @@ JNIEXPORT jobject JNICALL Java_com_ibasco_pidisplay_core_system_InputDeviceManag
 
 /*
  * Class:     com_ibasco_pidisplay_core_system_InputDeviceManager
- * Method:    open
- * Signature: (Ljava/lang/String;)I
- */
-JNIEXPORT jint JNICALL Java_com_ibasco_pidisplay_core_system_InputDeviceManager_open
-  (JNIEnv *, jclass, jstring);
-
-/*
- * Class:     com_ibasco_pidisplay_core_system_InputDeviceManager
- * Method:    close
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_com_ibasco_pidisplay_core_system_InputDeviceManager_close
-  (JNIEnv *, jclass, jint);
-
-/*
- * Class:     com_ibasco_pidisplay_core_system_InputDeviceManager
  * Method:    getInputDevices
  * Signature: ()[Lcom/ibasco/pidisplay/core/system/InputDevice;
  */
 JNIEXPORT jobjectArray JNICALL Java_com_ibasco_pidisplay_core_system_InputDeviceManager_getInputDevices
   (JNIEnv *, jclass);
 
+#ifdef __cplusplus
+}
+#endif
+#endif
+/* Header for class com_ibasco_pidisplay_core_system_InputDeviceManager_DeviceStateEventListener */
+
+#ifndef _Included_com_ibasco_pidisplay_core_system_InputDeviceManager_DeviceStateEventListener
+#define _Included_com_ibasco_pidisplay_core_system_InputDeviceManager_DeviceStateEventListener
+#ifdef __cplusplus
+extern "C" {
+#endif
 #ifdef __cplusplus
 }
 #endif
