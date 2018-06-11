@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents the device of the Input Subsystem
+ * A class containing most of the necessary information regarding an Input Device of the system.
  *
  * @author Rafael Ibasco
  */
