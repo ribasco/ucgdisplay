@@ -5,6 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.Predicate;
 
+/**
+ * Array Utility Methods
+ *
+ * @author Rafael Ibasco
+ */
 public class ArrayUtils {
     public static final Logger log = LoggerFactory.getLogger(ArrayUtils.class);
 

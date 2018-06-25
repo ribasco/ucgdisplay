@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@SuppressWarnings("WeakerAccess")
 public class EventDispatchQueue {
 
     public static final Logger log = LoggerFactory.getLogger(EventDispatchQueue.class);
@@ -47,7 +48,7 @@ public class EventDispatchQueue {
     private AtomicBoolean started = new AtomicBoolean(false);
 
     /**
-     * Holds a thread-local instance for {@link EventDispatchChainRecord}. Only one record instance per thread may
+     * Holds a thread-local instance of {@link EventDispatchChainRecord}. Only one record instance per thread may
      * exist.
      */
     private static final ThreadLocal<EventDispatchChainRecord> tlDispatchChainRecord = ThreadLocal.withInitial(EventDispatchChainRecord::new);

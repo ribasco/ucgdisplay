@@ -3,7 +3,6 @@ package com.ibasco.pidisplay.core.ui.components;
 import com.ibasco.pidisplay.core.DisplayParent;
 import com.ibasco.pidisplay.core.EventHandler;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
-import com.ibasco.pidisplay.core.enums.InputEventCode;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.events.FocusEvent;
 import com.ibasco.pidisplay.core.events.KeyEvent;
@@ -72,7 +71,7 @@ abstract public class TextInput<T extends Graphics> extends DisplayParent<T> {
     }
 
     protected void onKeyEvent(KeyEvent keyEvent) {
-        if (!isFocused())
+        /*if (!isFocused())
             return;
         Character charCode = keyEvent.getCharCode();
         InputEventCode code = keyEvent.getInputEventCode();
@@ -86,7 +85,7 @@ abstract public class TextInput<T extends Graphics> extends DisplayParent<T> {
             String c = capitalize ? charCode.toString().toUpperCase() : charCode.toString();
             getContent().insertText(this.caretPos.get(), c);
         }
-        updateCaretPos();
+        updateCaretPos();*/
     }
 
     public void setText(String text) {

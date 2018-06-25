@@ -187,7 +187,8 @@ public class BackpackController implements Closeable {
                 if (p.getHeader() == MSG_SYS_INPUT && p.getSize() == 2) {
                     byte eventCode = p.getPayload().get();
                     byte eventValue = p.getPayload().get();
-                    inputEventHandler.handleEvent(eventCode, eventValue);
+                    if (inputEventHandler != null)
+                        inputEventHandler.handleEvent(eventCode, eventValue);
                 }
                 //Handle display events
                 else if (p.getHeader() == BackpackCharDisplayDriver.MSG_LCD) {

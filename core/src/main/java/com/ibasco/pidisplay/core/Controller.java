@@ -2,10 +2,9 @@ package com.ibasco.pidisplay.core;
 
 import com.google.common.collect.Iterables;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
-import com.ibasco.pidisplay.core.enums.InputEventCode;
 import com.ibasco.pidisplay.core.events.*;
 import com.ibasco.pidisplay.core.exceptions.NotOnUIThreadException;
-import com.ibasco.pidisplay.core.services.InputMonitorService;
+import com.ibasco.pidisplay.core.services.InputEventService;
 import com.ibasco.pidisplay.core.ui.Graphics;
 import com.ibasco.pidisplay.core.ui.components.Dialog;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
@@ -26,9 +25,7 @@ import java.util.stream.Collectors;
  * Base {@link Controller} class providing the basic functionality needed for controlling the flow of display
  * components.
  *
- * @param <T>
- *         The underlying type of the {@link Graphics} implementation for this controller
- *
+ * @param <T> The underlying type of the {@link Graphics} implementation for this controller
  * @author Rafael Ibasco
  */
 @SuppressWarnings("UnusedReturnValue")
@@ -45,9 +42,9 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
 
-    final Lock readLock = readWriteLock.readLock();
+    private final Lock readLock = readWriteLock.readLock();
 
-    final Lock writeLock = readWriteLock.writeLock();
+    private final Lock writeLock = readWriteLock.writeLock();
 
     private Deque<DisplayParent<T>> displayStack = new ArrayDeque<>();
 
@@ -63,7 +60,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
 
     private final EventHandler<DisplayEvent> displayEventHandlerCallback = this::displayEventHandler;
 
-    private InputMonitorService inputMonitorService;// = InputMonitorService.getInstance();
+    private InputEventService inputMonitorService = InputEventService.getInstance();
 
     private final ThreadFactory factory = r -> {
         if (uiThread == null) {
@@ -98,14 +95,18 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
             EventDispatchQueue dispatchQueue = getEventDispatchQueue();
             startRepeatInvoke(new EventQueueMonitor(dispatchQueue, 10));
         }
-        addEventHandler(KeyEvent.ANY, this::onKeyEvent, CAPTURE);
+        addEventHandler(MouseEvent.MOUSE_PRESS, this::onMousePress, CAPTURE);
+    }
+
+    private void onMousePress(InputEvent e) {
+        log.debug("INPUT EVENT => {}", e);
     }
 
     private void onKeyEvent(KeyEvent keyEvent) {
-        if (keyEvent.getInputEventCode() == InputEventCode.KEY_TAB) {
+        /*if (keyEvent.getInputEventCode() == InputEventCode.KEY_TAB) {
             log.debug("Focus next item");
             focusNext();
-        }
+        }*/
     }
 
     public <A> Optional<A> showAndWait(Dialog<T, A> dialog) {
@@ -127,7 +128,6 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public <A> CompletableFuture<Optional<A>> showAndWaitAsync(Dialog<T, A> dialog) {
         CompletableFuture<Optional<A>> future = new CompletableFuture<>();
         show(dialog);
@@ -138,18 +138,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         return future;
     }
 
-    private void displayEventHandler(DisplayEvent<T> displayEvent) {
-        if (displayEvent.getEventType() == DisplayEvent.DISPLAY_SHOW) {
-            if (displayEvent.getDisplay() instanceof DisplayParent)
-                _show((DisplayParent<T>) displayEvent.getDisplay());
-        }
-    }
-
     public void show(DisplayParent<T> newDisplay) {
-        _show(newDisplay);
-    }
-
-    private void _show(DisplayParent<T> newDisplay) {
         log.debug("DISPLAY_SHOW_START => Display: {} (Display Stack Empty: {})", newDisplay, displayStack.isEmpty());
         if (newDisplay == null)
             return;
@@ -214,6 +203,9 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         graphics.clear();
     }
 
+    /**
+     * @return The underlying {@link Graphics} implementation of tihs {@link Controller} instance
+     */
     public T getGraphics() {
         return graphics;
     }
@@ -222,15 +214,37 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         return getDisplay(false);
     }
 
+    /**
+     * Shutdown the controller instance
+     *
+     * @throws InterruptedException Thrown when shutdown process is interrupted
+     */
     public final void shutdown() throws InterruptedException {
         log.debug("Shutting down display controller");
         getEventDispatchQueue().shutdown();
         shutdown.set(true);
     }
 
+    /**
+     * Requests that the input event service redirects all input events to this controller
+     *
+     * @return Returns <code>true</code> if the request is successful
+     */
+    public boolean requestInputFocus() {
+        log.debug("Requesting Input Focus for {}", this);
+        return InputEventService.getInstance().setActiveTarget(this);
+    }
+
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "#" + this.getId();
+    }
+
+    private void displayEventHandler(DisplayEvent<T> displayEvent) {
+        if (displayEvent.getEventType() == DisplayEvent.DISPLAY_SHOW) {
+            if (displayEvent.getDisplay() instanceof DisplayParent)
+                show((DisplayParent<T>) displayEvent.getDisplay());
+        }
     }
 
     private void refreshFocusableNodes() {
@@ -309,10 +323,8 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
     /**
      * Updates the {@link DisplayNode} active flag and it's children and move it at the head of the display stack.
      *
-     * @param display
-     *         The {@link DisplayNode} instance
-     * @param activate
-     *         Set to {@code true} to activate the {@link DisplayNode} instance
+     * @param display  The {@link DisplayNode} instance
+     * @param activate Set to {@code true} to activate the {@link DisplayNode} instance
      */
     private void setDisplayActive(DisplayParent<T> display, boolean activate) {
         if (display == null)
@@ -365,6 +377,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
      */
     private void startUIThread() {
         shutdown.set(false);
+        log.debug("Starting UI Thread");
         uiService.execute(() -> {
             while (!shutdown.get()) {
                 displayRenderer.run();
@@ -379,6 +392,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
     private void renderDisplayUI() {
         //This method is only meant to be called from within the event/UI thread
         checkEventDispatchThread();
+
         //try to aquire the lock but do not block the event loop!
         if (readLock.tryLock()) {
             try {
@@ -509,7 +523,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
             tail = activeNode.buildEventTargetPath(tail);
         if (this.internalDispatcher != null)
             tail = tail.addFirst(this.internalDispatcher);
-        log.debug("CONTROLLER_EVENT_PATH => {}", tail.toString());
+        log.trace("CONTROLLER_EVENT_PATH => {}", tail.toString());
         return tail;
     }
 
