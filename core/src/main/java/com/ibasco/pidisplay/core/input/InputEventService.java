@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.services;
+package com.ibasco.pidisplay.core.input;
 
 import com.ibasco.pidisplay.core.EventHandlerManager;
 import com.ibasco.pidisplay.core.EventTarget;
