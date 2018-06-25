@@ -66,5 +66,9 @@
             <artifactId>powermock-api-mockito2</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.ibasco.pidisplay</groupId>
+            <artifactId>pi-display-native</artifactId>
+        </dependency>
     </dependencies>
 </project>

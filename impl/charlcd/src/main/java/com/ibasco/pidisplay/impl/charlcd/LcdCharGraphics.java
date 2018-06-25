@@ -84,7 +84,7 @@ public class LcdCharGraphics implements CharGraphics {
         if (StringUtils.isEmpty(text))
             return;
         synchronized (mutex) {
-            this.buffer.put(charManager.processText(text));
+            this.buffer.put(charManager().processText(text));
         }
     }
 

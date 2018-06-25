@@ -1,35 +1,45 @@
 package com.ibasco.pidisplay.core.events;
 
 import com.ibasco.pidisplay.core.Event;
-import com.ibasco.pidisplay.core.EventTarget;
 import com.ibasco.pidisplay.core.EventType;
-import com.ibasco.pidisplay.core.enums.InputEventCode;
+import com.ibasco.pidisplay.core.system.RawInputEvent;
 
-public class KeyEvent extends Event {
+public class KeyEvent extends InputEvent {
 
-    public static final EventType<KeyEvent> ANY = new EventType<>(Event.ANY, "KEY_ANY");
+    public static final EventType<KeyEvent> ANY = new EventType<>(InputEvent.ANY, "KEY_ANY");
 
-    public static final EventType<KeyEvent> KEY_PRESS = new EventType<>(ANY, "KEY_PRESS");
+    public static final EventType<KeyEvent> KEY_PRESSED = new EventType<>(ANY, "KEY_PRESSED");
 
-    private InputEventCode inputEventCode;
+    public static final EventType<KeyEvent> KEY_RELEASED = new EventType<>(ANY, "KEY_RELEASED");
 
-    private Character charCode;
+    public static final EventType<KeyEvent> KEY_REPEAT = new EventType<>(ANY, "KEY_REPEAT");
 
-    public KeyEvent(EventType<? extends Event> eventType, InputEventCode inputEventCode, Character charCode) {
-        this(null, null, eventType, inputEventCode, charCode);
+    private boolean shiftDown;
+
+    private boolean altDown;
+
+    private boolean ctrlDown;
+
+    public KeyEvent(EventType<? extends Event> eventType, RawInputEvent rawInputData) {
+        this(eventType, rawInputData, false, false, false);
     }
 
-    public KeyEvent(Object source, EventTarget target, EventType<? extends Event> eventType, InputEventCode inputEventCode, Character charCode) {
-        super(source, target, eventType);
-        this.inputEventCode = inputEventCode;
-        this.charCode = charCode;
+    public KeyEvent(EventType<? extends Event> eventType, RawInputEvent rawInputData, boolean shiftDown, boolean altDown, boolean ctrlDown) {
+        super(eventType, rawInputData);
+        this.shiftDown = shiftDown;
+        this.altDown = altDown;
+        this.ctrlDown = ctrlDown;
     }
 
-    public InputEventCode getInputEventCode() {
-        return inputEventCode;
+    public boolean isShiftDown() {
+        return shiftDown;
     }
 
-    public Character getCharCode() {
-        return charCode;
+    public boolean isAltDown() {
+        return altDown;
+    }
+
+    public boolean isCtrlDown() {
+        return ctrlDown;
     }
 }

@@ -32,6 +32,8 @@
         <rxjava.version>2.1.5</rxjava.version>
         <mockito.version>2.11.0</mockito.version>
         <powermock.version>1.7.3</powermock.version>
+        <sysoutslf4j.version>1.0.2</sysoutslf4j.version>
+        <native.lib.loader.version>2.2.0</native.lib.loader.version>
     </properties>
 
     <dependencyManagement>
@@ -54,6 +56,11 @@
             <dependency>
                 <groupId>com.ibasco.pidisplay</groupId>
                 <artifactId>pi-display-impl-charlcd</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ibasco.pidisplay</groupId>
+                <artifactId>pi-display-native</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -124,6 +131,17 @@
                 <artifactId>powermock-api-mockito2</artifactId>
                 <version>${powermock.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/uk.org.lidalia/sysout-over-slf4j -->
+            <dependency>
+                <groupId>uk.org.lidalia</groupId>
+                <artifactId>sysout-over-slf4j</artifactId>
+                <version>${sysoutslf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scijava</groupId>
+                <artifactId>native-lib-loader</artifactId>
+                <version>${native.lib.loader.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

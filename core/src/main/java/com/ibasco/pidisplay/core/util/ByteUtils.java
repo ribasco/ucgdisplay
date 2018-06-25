@@ -5,6 +5,8 @@ import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 
 /**
+ * Byte related utility methods
+ *
  * @author Rafael Ibasco
  */
 public class ByteUtils {
@@ -28,6 +30,12 @@ public class ByteUtils {
         return new String(hexChars);
     }
 
+    /**
+     * Converts short to primitive byte array
+     *
+     * @param num The number to convert
+     * @return A byte representation of the number (Two bytes for short)
+     */
     public static byte[] toByteArray(short num) {
         byte[] ret = new byte[2];
         ret[0] = (byte) (num & 0xff);
