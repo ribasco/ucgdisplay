@@ -9,6 +9,10 @@ public class DeviceStateEvent {
     private InputDevice device;
     private String action;
 
+    public static final String DEVICE_ACTION_ADDED = "added";
+
+    public static final String DEVICE_ACTION_REMOVED = "removed";
+
     public DeviceStateEvent(InputDevice device, String action) {
         this.device = device;
         this.action = action;
@@ -20,5 +24,14 @@ public class DeviceStateEvent {
 
     public String getAction() {
         return action;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("DeviceStateEvent{");
+        sb.append("device=").append(device);
+        sb.append(", action='").append(action).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

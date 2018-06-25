@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+usage() { echo "Usage: $0 [-s <45|90>] [-p <string>]" 1>&2; exit 1; }
+
+while getopts t:x:j: option
+do
+case "${option}"
+in
+t) RPI_TOOLS_PATH=${OPTARG};;
+x) CROSS_COMPILE=${OPTARG};;
+j) ARM_JDK_PATH=${OPTARG};;
+*)
+usage
+;;
+esac
+done
+
+# Reload cmake cache
+echo "Cross-compile $CROSS_COMPILE, RPI Tools Path = $RPI_TOOLS_PATH, Arm JDK Path =  $ARM_JDK_PATH"
+
+# Build

@@ -5,21 +5,21 @@
 #ifndef PIDISP_INPUTEVENTMANAGER_H
 #define PIDISP_INPUTEVENTMANAGER_H
 
-#include <event2/event.h>
 #include <string>
 #include <map>
 #include <memory>
-#include <event.h>
 #include <unistd.h>
 #include <linux/input.h>
 #include <thread>
-#include <shared_mutex>
-#include <mutex>
 #include <queue>
 #include <fcntl.h>
 #include <iostream>
-#include <event2/thread.h>
 #include <cstring>
+#include <shared_mutex>
+#include <mutex>
+#include <event.h>
+#include <event2/event.h>
+#include <event2/thread.h>
 #include "InputDevHelper.h"
 
 using namespace std;
@@ -91,8 +91,6 @@ public:
     };
 
     map<string, device_entry>& entries();
-
-    void list(event_base_foreach_event_cb callback);
 
     int size();
 

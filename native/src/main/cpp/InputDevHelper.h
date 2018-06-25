@@ -463,8 +463,10 @@ static const map<int, string> keys = {
         {KEY_NUMERIC_9,                NAME_ELEMENT(KEY_NUMERIC_9)},
         {KEY_NUMERIC_STAR,             NAME_ELEMENT(KEY_NUMERIC_STAR)},
         {KEY_NUMERIC_POUND,            NAME_ELEMENT(KEY_NUMERIC_POUND)},
+#ifdef KEY_NUMERIC_11
         {KEY_NUMERIC_11,               NAME_ELEMENT(KEY_NUMERIC_11)},
         {KEY_NUMERIC_12,               NAME_ELEMENT(KEY_NUMERIC_12)},
+#endif
         {KEY_BATTERY,                  NAME_ELEMENT(KEY_BATTERY)},
         {KEY_BLUETOOTH,                NAME_ELEMENT(KEY_BLUETOOTH)},
         {KEY_BRIGHTNESS_CYCLE,         NAME_ELEMENT(KEY_BRIGHTNESS_CYCLE)},
@@ -584,7 +586,9 @@ static const map<int, string> keys = {
         {KEY_APPSELECT,                NAME_ELEMENT(KEY_APPSELECT)},
         {KEY_SCREENSAVER,              NAME_ELEMENT(KEY_SCREENSAVER)},
         {KEY_VOICECOMMAND,             NAME_ELEMENT(KEY_VOICECOMMAND)},
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
         {KEY_ASSISTANT,                NAME_ELEMENT(KEY_ASSISTANT)},
+#endif
         {KEY_BRIGHTNESS_MIN,           NAME_ELEMENT(KEY_BRIGHTNESS_MIN)},
         {KEY_BRIGHTNESS_MAX,           NAME_ELEMENT(KEY_BRIGHTNESS_MAX)},
         {KEY_KBDINPUTASSIST_PREV,      NAME_ELEMENT(KEY_KBDINPUTASSIST_PREV)},
@@ -593,6 +597,7 @@ static const map<int, string> keys = {
         {KEY_KBDINPUTASSIST_NEXTGROUP, NAME_ELEMENT(KEY_KBDINPUTASSIST_NEXTGROUP)},
         {KEY_KBDINPUTASSIST_ACCEPT,    NAME_ELEMENT(KEY_KBDINPUTASSIST_ACCEPT)},
         {KEY_KBDINPUTASSIST_CANCEL,    NAME_ELEMENT(KEY_KBDINPUTASSIST_CANCEL)},
+#ifdef KEY_RIGHT_UP
         {KEY_RIGHT_UP,                 NAME_ELEMENT(KEY_RIGHT_UP)},
         {KEY_RIGHT_DOWN,               NAME_ELEMENT(KEY_RIGHT_DOWN)},
         {KEY_LEFT_UP,                  NAME_ELEMENT(KEY_LEFT_UP)},
@@ -609,7 +614,10 @@ static const map<int, string> keys = {
         {KEY_FASTREVERSE,              NAME_ELEMENT(KEY_FASTREVERSE)},
         {KEY_SLOWREVERSE,              NAME_ELEMENT(KEY_SLOWREVERSE)},
         {KEY_DATA,                     NAME_ELEMENT(KEY_DATA)},
+#endif
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
         {KEY_ONSCREEN_KEYBOARD,        NAME_ELEMENT(KEY_ONSCREEN_KEYBOARD)},
+#endif
         {BTN_TRIGGER_HAPPY1,           NAME_ELEMENT(BTN_TRIGGER_HAPPY1)},
         {BTN_TRIGGER_HAPPY2,           NAME_ELEMENT(BTN_TRIGGER_HAPPY2)},
         {BTN_TRIGGER_HAPPY3,           NAME_ELEMENT(BTN_TRIGGER_HAPPY3)},
@@ -789,7 +797,9 @@ static const map<int, string> switches = {
         {SW_ROTATE_LOCK,          NAME_ELEMENT(SW_ROTATE_LOCK)},
         {SW_LINEIN_INSERT,        NAME_ELEMENT(SW_LINEIN_INSERT)},
         {SW_MUTE_DEVICE,          NAME_ELEMENT(SW_MUTE_DEVICE)},
+#ifdef SW_PEN_INSERTED
         {SW_PEN_INSERTED,         NAME_ELEMENT(SW_PEN_INSERTED)}
+#endif
 };
 
 static const map<int, string> force = {
@@ -880,6 +890,8 @@ int is_valid_fd(int fd);
 bool file_exists(const string &name);
 
 string defaultVal(const char *value);
+
+bool is_readable(const string &path);
 
 jobject createInputDeviceInfo(JNIEnv *env, int fd, const string &devicePath);
 
