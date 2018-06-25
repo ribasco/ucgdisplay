@@ -2,7 +2,6 @@ package com.ibasco.pidisplay.core.system;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +10,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-@SuppressWarnings("unused")
+/**
+ * Monitors events generated from Input Devices
+ *
+ * @author Rafael Ibasco
+ */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class InputDeviceManager {
 
     public static final Logger log = LoggerFactory.getLogger(InputDeviceManager.class);
@@ -28,6 +32,10 @@ public class InputDeviceManager {
 
     private static Lock deviceStateEventReadLock = deviceStateEventRwLock.readLock();
 
+    private static final List<RawInputEventListener> inputEventListeners = new ArrayList<>();
+
+    private static final List<DeviceStateEventListener> deviceStateEventListeners = new ArrayList<>();
+
     @FunctionalInterface
     public interface RawInputEventListener {
         void onInputEvent(RawInputEvent data);
@@ -38,22 +46,23 @@ public class InputDeviceManager {
         void onDeviceStateChangeEvent(DeviceStateEvent event);
     }
 
-    private static final List<RawInputEventListener> inputEventListeners = new ArrayList<>();
-
-    private static final List<DeviceStateEventListener> deviceStateEventListeners = new ArrayList<>();
-
     static {
-        SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
+        //SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
         try {
-            System.loadLibrary("pidisp");
+            //NativeLoader.setJniExtractor();
+            log.debug("Initializing InputDeviceManager");
+            NativeLibraryLoader.loadLibrary("pidisp");
+            //System.loadLibrary("pidisp");
+            log.debug("InputDeviceManager initialized");
         } catch (Exception e) {
-            log.error("Could not load native library", e);
+            log.error("Unable to load required native library", e);
         }
     }
 
     public static void addInputEventListener(RawInputEventListener listener) {
         inputEventWriteLock.lock();
         if (!inputEventListeners.contains(listener)) {
+            log.debug("Adding input event listener");
             inputEventListeners.add(listener);
         }
         inputEventWriteLock.unlock();

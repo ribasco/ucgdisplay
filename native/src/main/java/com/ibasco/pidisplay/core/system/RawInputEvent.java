@@ -1,5 +1,9 @@
 package com.ibasco.pidisplay.core.system;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 /**
  * Represents a raw input device event
  *
@@ -14,10 +18,13 @@ public class RawInputEvent {
     private String codeName;
     private String typeName;
     private int repeatCount;
+    private LocalDateTime dateTime = null;
 
     public RawInputEvent(InputDevice device, long eventTime, int type, int code, int value, String codeName, String typeName, int repeatCount) {
         this.device = device;
         this.eventTime = eventTime;
+        if (eventTime > 0)
+            this.dateTime = Instant.ofEpochSecond(eventTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
         this.type = type;
         this.code = code;
         this.value = value;
@@ -28,6 +35,10 @@ public class RawInputEvent {
 
     public InputDevice getDevice() {
         return device;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
     public long getEventTime() {

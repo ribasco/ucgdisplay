@@ -13,7 +13,7 @@ public class InputDeviceTest {
     public void run() throws Exception {
         log.info("Running");
 
-        /*InputDevice[] devices = InputDeviceManager.getInputDevices();
+        InputDevice[] devices = InputDeviceManager.getInputDevices();
 
         if (devices == null) {
             log.error("No devices found");
@@ -34,7 +34,7 @@ public class InputDeviceTest {
                     }
                 }
             }
-        }*/
+        }
 
         InputDevice dev = InputDeviceManager.queryDevice("/dev/input/event7");
 
@@ -45,26 +45,22 @@ public class InputDeviceTest {
         InputDeviceManager.addDeviceStateEventListener(this::deviceStateHandler);
         InputDeviceManager.startInputEventMonitor();
 
-        Thread.sleep(5000);
-
-        InputDeviceManager.refreshDeviceCache();
-
         log.info("Device cache has been refreshed");
 
-        System.out.println("Waiting for 20 seconds before stopping");
+        System.out.println("Waiting for 120 seconds before stopping");
 
-        Thread.sleep(20000);
+        Thread.sleep(120000);
         log.info("Stopping...");
 
         InputDeviceManager.stopInputEventMonitor();
     }
 
     private void deviceStateHandler(DeviceStateEvent deviceStateEvent) {
-        log.info("Device State Event: (Device={}, Action={})", deviceStateEvent.getDevice().getName(), deviceStateEvent.getAction());
+        log.info("Device State Event: (Device={}, Action={}, Path={})", deviceStateEvent.getDevice().getName(), deviceStateEvent.getAction(), deviceStateEvent.getDevice().getDevicePath());
     }
 
     private void rawInputEventHandler(RawInputEvent rawInputEvent) {
-        if (rawInputEvent.getType() == 1)
+        if (rawInputEvent != null && rawInputEvent.getType() == 1)
             log.info("Key Event = ({})", rawInputEvent);
         /*else if (rawInputEvent.getType() == 2)
             log.info("Mouse Event = {}" , rawInputEvent);*/

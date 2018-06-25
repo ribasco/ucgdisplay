@@ -17,27 +17,33 @@
 #include <dirent.h>
 #include <cstring>
 #include <fcntl.h>
-#include <zconf.h>
+//#include <zconf.h>
 #include <sys/stat.h>
-#include "InputDevHelper.h"
-#include <sys/inotify.h>
 #include <queue>
 #include <fstream>
-#include <experimental/filesystem>
-#include <boost/smart_ptr/scoped_array.hpp>
+
+#ifdef _LIBUDEV_H_
 #include <libudev.h>
+#endif
+
 #include <set>
-#include <event2/event.h>
-#include <event2/thread.h>
+//#include <event2/event.h>
+//#include <event2/thread.h>
+#include <sys/inotify.h>
 
 using namespace std;
 
+#include "InputDevHelper.h"
 #include "InputEventManager.h"
 
 bool filterDevice(int fd, const string &path);
+
 void inputHandler(device_input_event evt);
+
 void inputMonitorFunction_Test(future<void> futureObj);
-void onDeviceAdded_Test(device_entry* entry);
+
+void onDeviceAdded_Test(device_entry *entry);
+
 void onDeviceRemoved_Test(int fd, const string &device);
 
 InputEventManager evMan(inputHandler, filterDevice);
@@ -68,25 +74,6 @@ bool filterDevice(int fd, const string &path) {
     //return (HasEventType(fd, EV_KEY) && HasSpecificKey(fd, KEY_B)) || HasEventType(fd, EV_ABS);
 }
 
-void initEventProcessor() {
-    // enable pthread
-    if (evthread_use_pthreads() == -1) {
-        printf("error while evthread_use_pthreads(): %s\n", strerror(errno));
-        return;
-    }
-
-    struct event_base *eb;
-    if((eb = event_base_new()) == nullptr) {
-        printf("error while event_base_new(): %s\n", strerror(errno));
-        return;
-    }
-}
-
-int listCb(const struct event_base* eb, const struct event* evt, void *args) {
-    cout << "Event List: " << evt->ev_fd << endl;
-    return 0;
-}
-
 void inputMonitorFunction_Test(future<void> futureObj) {
     if (evMan.size() <= 0) {
         cerr << "No devices available for processing, Make sure the cache has been initialized" << endl;
@@ -97,12 +84,12 @@ void inputMonitorFunction_Test(future<void> futureObj) {
 }
 
 void inputHandler(device_input_event evt) {
-
-    cout << hex << this_thread::get_id() << dec << " [" << evt.device << "] Type: " << evt.typeName << ", Code: " << evt.codeName << ", Value: " << evt.value << ", Repeat Count: "
-         << evt.repeatCount  << endl;
+    if (evt.type != EV_REL)
+        cout << hex << this_thread::get_id() << dec << " [" << evt.device << "] Type: " << evt.typeName << ", Code: " << evt.codeName << ", Value: " << evt.value << ", Repeat Count: "
+             << evt.repeatCount << endl;
 }
 
-void onDeviceAdded_Test(device_entry* entry) {
+void onDeviceAdded_Test(device_entry *entry) {
     cout << "DEVICE ADDED: " << entry->path << endl;
 }
 
@@ -110,10 +97,11 @@ void onDeviceRemoved_Test(int fd, const string &device) {
     cout << "DEVICE REMOVED: " << fd << ", Path: " << device << endl;
 }
 
-void onDeviceRejected_Test(const string& device) {
+void onDeviceRejected_Test(const string &device) {
     cerr << "DEVICE REJECTED: " << device << endl;
 }
 
+#ifdef _LIBUDEV_H_
 static void processDeviceStateChange(struct udev_device *dev) {
     const char *a = udev_device_get_action(dev);
     if (!a)
@@ -144,7 +132,78 @@ static void processDeviceStateChange(struct udev_device *dev) {
         evMan.remove(device_name);
     }
 }
+#endif
 
+#define EVENT_SIZE  ( sizeof (struct inotify_event) )
+#define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
+#define DEVINPUT_DIR_PATH "/dev/input"
+
+void dsm_inotify(future<void> futureObj) {
+    int fd, wd, length, i = 0;
+    char buffer[BUF_LEN];
+
+    fd = inotify_init();
+
+    if (fd < 0) {
+        perror("inotify_init");
+        exit(errno);
+    }
+
+    wd = inotify_add_watch(fd, DEVINPUT_DIR_PATH, IN_ATTRIB);
+    auto pfd = pollfd{fd, POLLIN, 0};
+
+    while (futureObj.wait_for(chrono::milliseconds(1)) == future_status::timeout) {
+        poll(&pfd, 1, 200);
+
+        if (pfd.revents & POLLIN) {
+            //Read input event
+            length = static_cast<int>(read(fd, buffer, BUF_LEN));
+
+            if (length < 0) {
+                cerr << "There was a problem reading file descriptor" << endl;
+                continue;
+            }
+
+            while (i < length) {
+                auto *event = (struct inotify_event *) &buffer;
+                string devicePath = string(DEVINPUT_DIR_PATH) + "/" + string(event->name);
+
+                if (event->len) {
+                    if (event->mask & IN_ISDIR)
+                        continue;
+                    if (event->mask & IN_ATTRIB) {
+                        if (file_exists(devicePath)) {
+                            if (!is_readable(devicePath)) {
+                                cerr << "File not readable: " << devicePath << endl;
+                                continue;
+                            }
+                            cout << "Adding: " << devicePath << flush << endl;
+                            if (!evMan.exists(devicePath)) {
+                                evMan.add(devicePath, true);
+                            } else {
+                                cerr << "Skipping add...Device is already in the cache: " << devicePath << flush << endl;
+                            }
+                        } else {
+                            //if (!evMan.isValid(devicePath)) {
+                            if (evMan.exists(devicePath)) {
+                                cout << "Removing: " << devicePath << endl;
+                                evMan.remove(devicePath);
+                            }
+                            //}
+                        }
+                    }
+                }
+                i += EVENT_SIZE + event->len;
+            }
+            i = 0;
+        }
+    } //while
+
+    (void) inotify_rm_watch(fd, wd);
+    (void) close(fd);
+}
+
+#ifdef _LIBUDEV_H_
 void deviceStateMonitorUdev(future<void> futureObj) {
     struct udev *udev = udev_new();
     if (!udev) {
@@ -178,6 +237,7 @@ void deviceStateMonitorUdev(future<void> futureObj) {
         }
     }
 }
+#endif
 
 int main() {
     promise<void> exSig;
@@ -201,13 +261,11 @@ int main() {
     future<void> futureObj = exSig.get_future();
     future<void> futDsm = exSig_dsm.get_future();
 
-    cout << "Starting monitor thread..." << endl;
-
-    // Starting Thread & move the future object in lambda function by reference
+    cout << "Starting input monitor thread..." << endl;
     thread devInputMonitorThread(inputMonitorFunction_Test, move(futureObj));
 
     cout << "Starting device state monitor" << endl;
-    thread devStateMonitorThread(deviceStateMonitorUdev, move(futDsm));
+    thread devStateMonitorThread(dsm_inotify, move(futDsm));
 
     devInputMonitorThread.join();
     devStateMonitorThread.join();

@@ -43,14 +43,17 @@ event *InputEventManager::add(const string &devicePath, bool replace) {
     }
     int fd = open(devicePath.c_str(), O_RDONLY);
     if (fd == -1) {
+        //cerr << "Could not open file: " << devicePath << " (" << string(strerror(errno)) << ")" << endl;
         return nullptr;
     }
+
     if (m_DeviceFilter != nullptr && !m_DeviceFilter(fd, devicePath)) {
         if (m_DeviceRejected)
             m_DeviceRejected(devicePath);
         close(fd);
         return nullptr;
     }
+
     lock_guard<std::shared_timed_mutex> writerLock(m_Mutex, adopt_lock);
     struct event *ev = event_new(_base, fd, EV_READ | EV_PERSIST, InputEventManager::processInput, this);
     if (event_add(ev, nullptr) == 0) {
@@ -111,10 +114,6 @@ device_entry *InputEventManager::get(int fd) {
 
 int InputEventManager::size() {
     return static_cast<int>(_cache.size());
-}
-
-void InputEventManager::list(event_base_foreach_event_cb callback) {
-    event_base_foreach_event(_base, callback, event_self_cbarg());
 }
 
 void InputEventManager::processInput(int fd, short kind, void *arg) {

@@ -91,20 +91,13 @@ void throwIOException(JNIEnv *env, string msg) {
  */
 jobject createInputDeviceInfo(JNIEnv *env, int fd, const string &devicePath) {
 
-    if (!is_valid_fd(fd)) {
+    if (fd < 0 || !is_valid_fd(fd)) {
         throwIOException(env, string("createInputDeviceInfo: Invalid file descriptor"));
         return nullptr;
     }
 
     if (devicePath.empty()) {
         throwIOException(env, string("createInputDeviceInfo: Device path must not be empty"));
-        return nullptr;
-    }
-
-    if (fd < 0) {
-        char msg[256];
-        sprintf(msg, "createInputDeviceInfo: Invalid file handle (Error %d)", fd);
-        throwIOException(env, string(msg));
         return nullptr;
     }
 
@@ -245,6 +238,12 @@ int listInputDevices(vector<string> &entries) {
         entries.push_back(devicePath);
     }
     return ndev;
+}
+
+bool is_readable(const string &path) {
+    if (path.empty())
+        return false;
+    return access (path.c_str(), R_OK) == 0;
 }
 
 string defaultVal(const char *value) {
