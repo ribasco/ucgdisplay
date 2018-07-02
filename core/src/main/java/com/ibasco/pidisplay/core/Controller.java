@@ -4,7 +4,7 @@ import com.google.common.collect.Iterables;
 import com.ibasco.pidisplay.core.beans.ObservableProperty;
 import com.ibasco.pidisplay.core.events.*;
 import com.ibasco.pidisplay.core.exceptions.NotOnUIThreadException;
-import com.ibasco.pidisplay.core.services.InputEventService;
+import com.ibasco.pidisplay.core.input.InputEventService;
 import com.ibasco.pidisplay.core.ui.Graphics;
 import com.ibasco.pidisplay.core.ui.components.Dialog;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
@@ -20,6 +20,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
+
+import static com.ibasco.pidisplay.core.input.InputEventCode.KEY_TAB;
 
 /**
  * Base {@link Controller} class providing the basic functionality needed for controlling the flow of display
@@ -70,7 +72,6 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
             uiThread.setDaemon(true);
             return uiThread;
         }
-        //throw new ControllerException("UI-Thread already exists", this);
         return new Thread(threadGroup, r);
     };
 
@@ -95,18 +96,14 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
             EventDispatchQueue dispatchQueue = getEventDispatchQueue();
             startRepeatInvoke(new EventQueueMonitor(dispatchQueue, 10));
         }
-        addEventHandler(MouseEvent.MOUSE_PRESS, this::onMousePress, CAPTURE);
-    }
-
-    private void onMousePress(InputEvent e) {
-        log.debug("INPUT EVENT => {}", e);
+        addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyEvent, CAPTURE);
     }
 
     private void onKeyEvent(KeyEvent keyEvent) {
-        /*if (keyEvent.getInputEventCode() == InputEventCode.KEY_TAB) {
+        if (keyEvent.getInputEventCode() == KEY_TAB) {
             log.debug("Focus next item");
             focusNext();
-        }*/
+        }
     }
 
     public <A> Optional<A> showAndWait(Dialog<T, A> dialog) {
@@ -128,6 +125,7 @@ abstract public class Controller<T extends Graphics> implements EventTarget {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public <A> CompletableFuture<Optional<A>> showAndWaitAsync(Dialog<T, A> dialog) {
         CompletableFuture<Optional<A>> future = new CompletableFuture<>();
         show(dialog);

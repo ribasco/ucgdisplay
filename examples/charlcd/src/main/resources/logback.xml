@@ -65,7 +65,7 @@
     <logger name="com.ibasco.pidisplay.core.beans" level="INFO"/>
     <logger name="com.ibasco.pidisplay.core.beans.ObservableProperty" level="INFO"/>
     <logger name="com.ibasco.pidisplay.core.ui.components" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.core.services.InputEventService" level="DEBUG"/>
+    <logger name="com.ibasco.pidisplay.core.input.InputEventService" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.core.EventDispatchQueue" level="INFO"/>
     <logger name="com.ibasco.pidisplay.core.Controller" level="DEBUG"/>
     <logger name="com.ibasco.pidisplay.core.DisplayParent" level="DEBUG"/>

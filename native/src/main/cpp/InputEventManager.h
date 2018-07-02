@@ -80,8 +80,6 @@ public:
 
     void clear();
 
-    int revalidate();
-
     bool exists(const string &devicePath);
 
     bool exists(int fd);

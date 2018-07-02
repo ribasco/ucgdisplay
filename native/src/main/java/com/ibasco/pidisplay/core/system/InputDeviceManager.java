@@ -50,7 +50,7 @@ public class InputDeviceManager {
         //SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
         try {
             //NativeLoader.setJniExtractor();
-            log.debug("Initializing InputDeviceManager");
+            log.info("Initializing InputDeviceManager");
             NativeLibraryLoader.loadLibrary("pidisp");
             //System.loadLibrary("pidisp");
             log.debug("InputDeviceManager initialized");
@@ -62,7 +62,6 @@ public class InputDeviceManager {
     public static void addInputEventListener(RawInputEventListener listener) {
         inputEventWriteLock.lock();
         if (!inputEventListeners.contains(listener)) {
-            log.debug("Adding input event listener");
             inputEventListeners.add(listener);
         }
         inputEventWriteLock.unlock();
@@ -106,6 +105,7 @@ public class InputDeviceManager {
     }
 
     private static void deviceStateEventCallback(DeviceStateEvent event) {
+        log.info("Device Event Callback");
         try {
             deviceStateEventReadLock.lock();
             for (DeviceStateEventListener listener : deviceStateEventListeners) {
