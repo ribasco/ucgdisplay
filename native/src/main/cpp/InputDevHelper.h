@@ -893,6 +893,4 @@ string defaultVal(const char *value);
 
 bool is_readable(const string &path);
 
-jobject createInputDeviceInfo(JNIEnv *env, int fd, const string &devicePath);
-
 #endif //PID_NATIVE_INPUTDEVHELPER_H

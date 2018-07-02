@@ -43,7 +43,7 @@ event *InputEventManager::add(const string &devicePath, bool replace) {
     }
     int fd = open(devicePath.c_str(), O_RDONLY);
     if (fd == -1) {
-        //cerr << "Could not open file: " << devicePath << " (" << string(strerror(errno)) << ")" << endl;
+        cerr << "Could not open file: " << devicePath << " (" << string(strerror(errno)) << ")" << endl;
         return nullptr;
     }
 
@@ -61,6 +61,8 @@ event *InputEventManager::add(const string &devicePath, bool replace) {
         if (m_DeviceAdded)
             m_DeviceAdded(_get_entry_from_fd(fd));
         return ev;
+    } else {
+        cerr << "Could not register event: " << devicePath << endl;
     }
     _cache.erase(devicePath);
     return nullptr;
@@ -76,10 +78,12 @@ void InputEventManager::remove(const string &devicePath) {
             _cache.erase(devicePath);
             if (m_DeviceRemoved)
                 m_DeviceRemoved(fd, devPath);
+        } else {
+            cerr << "Could not unregister event: " << ev->path << endl;
         }
-    } else {
+    } /*else {
         cerr << "Device has already been removed: " << devicePath << endl;
-    }
+    }*/
 }
 
 void InputEventManager::remove(int fd) {
@@ -138,15 +142,13 @@ void InputEventManager::processInput(int fd, short kind, void *arg) {
     if (event.type == EV_SYN && event.code == SYN_REPORT) {
         while (!event_queue->empty()) {
             input_event evt = event_queue->front();
+            //cout << "input event =\tType: " << typname(evt.type) << "\tCode: " << codename(evt.type, evt.code) << "\tValue: " << evt.value << endl;
             if (em->m_InputEventCallback)
                 em->m_InputEventCallback(device_input_event{entry->path, typname(evt.type), codename(evt.type, evt.code), evt.type, evt.code, evt.value, evt.time,
                                                             ((evt.value == 2) ? entry->repeat++ : entry->repeat = 1)
                 });
             event_queue->pop();
         }
-        // Discard all processed events.
-        //queue<input_event> empty;
-        //swap(*event_queue, empty);
     }
 }
 
@@ -164,27 +166,10 @@ void InputEventManager::setOnDeviceRejected(device_state_rejected_cb callback) {
 
 void InputEventManager::clear() {
     if (size() > 0) {
-        lock_guard<std::shared_timed_mutex> writerLock(m_Mutex, adopt_lock  );
+        lock_guard<std::shared_timed_mutex> writerLock(m_Mutex, adopt_lock);
         for (auto it = _cache.cbegin(); it != _cache.cend();) {
             remove(it->first);
             it++;
-        }
-    }
-}
-
-int InputEventManager::revalidate() {
-    if (size() == 0)
-        return 0;
-
-    //Loop through all entries in the cache
-    for (auto it : _cache) {
-        //Check if path exists
-        if (!file_exists(it.first)) {
-
-        }
-
-        if (!is_valid_fd(it.second.evt->ev_fd)) {
-
         }
     }
 }
@@ -196,6 +181,7 @@ map<string, device_entry> &InputEventManager::entries() {
 void InputEventManager::invalidate(device_entry *entry) {
     if (entry == nullptr)
         return;
+    event_del(entry->evt);
     entry->evt->ev_fd = -1;
 }
 
@@ -208,7 +194,7 @@ bool InputEventManager::isValid(device_entry *entry) {
 }
 
 bool InputEventManager::isValid(const string &device) {
-    device_entry* e = get(device);
+    device_entry *e = get(device);
     if (e != nullptr)
         return isValid(e);
     return false;

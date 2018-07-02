@@ -6,6 +6,5 @@ public interface EventTarget {
     EventDispatchPhase POST_DISPATCH = EventDispatchPhase.POST_DISPATCH;
 
     EventDispatchChain buildEventTargetPath(EventDispatchChain tail);
-
     EventDispatchQueue getEventDispatchQueue();
 }
