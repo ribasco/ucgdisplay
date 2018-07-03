@@ -25,24 +25,24 @@
 
 using namespace std;
 
-map<string, jobject> deviceInfoCache;
+static map<string, jobject> deviceInfoCache;
 JavaVM *cachedJVM;
 JavaVMAttachArgs jAttachArgs;
 
 volatile bool initialized = false;
 volatile bool stopping = false;
 
-unique_ptr<promise<void>> inputMonitorPromise;
-unique_ptr<promise<void>> deviceMonitorPromise;
-unique_ptr<InputEventManager> eventManager;
+static unique_ptr<promise<void>> inputMonitorPromise;
+static unique_ptr<promise<void>> deviceMonitorPromise;
+static unique_ptr<InputEventManager> eventManager;
 
 //Cached objects
-jobject jThreadGroup;
+static jobject jThreadGroup;
 
 //Cached classes
+static jclass clsThreadGroup;
 static jclass clsInputDevManager;
 static jclass clsRawInputEvent;
-static jclass clsThreadGroup;
 static jclass clsInputEventType;
 static jclass clsInputEventCode;
 static jclass clsArrayList;
@@ -89,10 +89,6 @@ void processDeviceStateChange(struct udev_device *dev);
 void invokeDeviceStateCallback(JNIEnv *env, const string &device, const string &action);
 
 jobject createInputDeviceInfo(JNIEnv *env, int fd, const string &devicePath);
-
-//#include <u8g2.h>
-
-//u8g2_t u8g2;
 
 jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     cachedJVM = jvm;
@@ -143,7 +139,7 @@ jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     midRawInputEventCtr = env->GetMethodID(clsRawInputEvent, "<init>", MIDSIG_RAWINPUTEVENT_CTR);
     midInputEventCallback = env->GetStaticMethodID(clsInputDevManager, "inputEventCallback", MIDSIG_INPUTDEVMGR_CALLBACK);
     midInputDevCtr = env->GetMethodID(clsInputDev, "<init>", MIDSIG_INPUTDEVICE_CTR);
-    jmethodID midThreadGroupCtr = env->GetMethodID(clsThreadGroup, "<init>", "(Ljava/lang/String;)V");
+
 
     midArrayListCtr = env->GetMethodID(clsArrayList, "<init>", "()V");
     midArrayListAdd = env->GetMethodID(clsArrayList, "add", "(Ljava/lang/Object;)Z");
@@ -155,11 +151,13 @@ jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     midIntegerCtr = env->GetMethodID(clsInteger, "<init>", "(I)V");
     midDevStateEventCtr = env->GetMethodID(clsDeviceStateEvent, "<init>", "(Lcom/ibasco/pidisplay/core/system/InputDevice;Ljava/lang/String;)V");
     midDevStateEventCb = env->GetStaticMethodID(clsInputDevManager, "deviceStateEventCallback", "(Lcom/ibasco/pidisplay/core/system/DeviceStateEvent;)V");
+    jmethodID midThreadGroupCtr = env->GetMethodID(clsThreadGroup, "<init>", "(Ljava/lang/String;)V");
 
     fidAbsData = env->GetFieldID(clsInputEventCode, "absData", FSIG_INPUTEVENTCODE_ABSDATA);
     //END: Initialize global references for classes and methods
 
-    jobject lThreadGroup = env->NewObject(clsThreadGroup, midThreadGroupCtr);
+    jstring threadGroupName = env->NewStringUTF("pi-disp-input");
+    jobject lThreadGroup = env->NewObject(clsThreadGroup, midThreadGroupCtr, threadGroupName);
     jThreadGroup = env->NewGlobalRef(lThreadGroup);
     env->DeleteLocalRef(lThreadGroup);
 
@@ -175,13 +173,13 @@ jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     eventManager->setOnDeviceAdded(onDeviceAdded);
     eventManager->setOnDeviceRemoved(onDeviceRemoved);
 
-    //Populate devices
     refreshDevices();
 
     return JNI_VERSION;
 }
 
 void JNI_OnUnload(JavaVM *vm, void *reserved) {
+    cout << "Unloading.." << endl;
     JNIEnv *env;
     vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
     eventManager->clear();
@@ -243,7 +241,7 @@ void Java_com_ibasco_pidisplay_core_system_InputDeviceManager_startInputEventMon
 }
 
 void Java_com_ibasco_pidisplay_core_system_InputDeviceManager_stopInputEventMonitor(JNIEnv *env, jclass cls) {
-    if (initialized && !stopping) {
+   if (initialized && !stopping) {
         stopping = true;
         eventManager->stopMonitor();
         inputMonitorPromise->set_value();
@@ -470,7 +468,7 @@ void onDeviceRemoved(int fd, const string &path) {
 }
 
 void refreshDevices() {
-    cout << "Refreshing Input Devices" << endl;
+    cout << "Refreshing Input Devices Yo" << endl;
     vector<string> inputDevices;
     listInputDevices(inputDevices);
 

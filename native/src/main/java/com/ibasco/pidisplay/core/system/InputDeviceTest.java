@@ -13,9 +13,9 @@ public class InputDeviceTest {
     public void run() throws Exception {
         log.info("Running");
 
-        //InputDevice[] devices = InputDeviceManager.getInputDevices();
+        InputDevice[] devices = InputDeviceManager.getInputDevices();
 
-        /*if (devices != null) {
+        if (devices != null) {
             int ctr = 1;
             for (InputDevice dev : devices) {
                 if (dev == null)
@@ -38,7 +38,7 @@ public class InputDeviceTest {
 
             if (dev != null)
                 log.info("Got Device: {}", dev);
-        }*/
+        }
 
         //log.info("Initializing Listeners");
         InputDeviceManager.addInputEventListener(this::rawInputEventHandler);
