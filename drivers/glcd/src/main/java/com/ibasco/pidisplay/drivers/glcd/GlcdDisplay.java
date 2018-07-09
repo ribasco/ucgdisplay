@@ -79,7 +79,6 @@ public class GlcdDisplay {
                 .map(GlcdPin.SPI_MOSI, 12)
                 .map(GlcdPin.CS, 10)
         );
-
         try {
             GlcdDriver driver = new GlcdDriver(config);
             driver.setFont(GlcdFont.FONT_7X13_MF);
