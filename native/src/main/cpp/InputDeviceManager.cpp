@@ -17,16 +17,32 @@
 #include "InputDeviceManager.h"
 #include "InputDevHelper.h"
 #include "InputEventManager.h"
+#include "Global.h"
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
 #define DEVINPUT_DIR_PATH "/dev/input"
-#define JNI_VERSION JNI_VERSION_1_8
+
+#define CLS_INPUT_DEVICE "com/ibasco/pidisplay/core/system/InputDevice"
+#define CLS_INPUT_EVENT_TYPE "com/ibasco/pidisplay/core/system/InputEventType"
+#define CLS_INPUT_EVENT_CODE "com/ibasco/pidisplay/core/system/InputEventCode"
+#define CLS_INPUT_DEVICE_MGR "com/ibasco/pidisplay/core/system/InputDeviceManager"
+#define CLS_RAW_INPUT_EVENT "com/ibasco/pidisplay/core/system/RawInputEvent"
+#define CLS_DEVICE_STATE_EVENT "com/ibasco/pidisplay/core/system/DeviceStateEvent"
+
+#define FSIG_INPUTEVENTCODE_ABSDATA "Ljava/util/Map;"
+#define MIDSIG_INPUTDEVICE_CTR "(Ljava/lang/String;Ljava/lang/String;[SLjava/lang/String;Ljava/util/List;)V"
+#define MIDSIG_INPUTEVENTTYPE_CTR1 "(Ljava/lang/String;ILjava/util/List;Z)V"
+#define MIDSIG_INPUTEVENTCODE_CTR1 "(Ljava/lang/String;I)V"
+#define MIDSIG_INPUTEVENTCODE_CTR2 "(Ljava/lang/String;II)V"
+#define MIDSIG_INPUTDEVMGR_CALLBACK "(Lcom/ibasco/pidisplay/core/system/RawInputEvent;)V"
+#define MIDSIG_RAWINPUTEVENT_CTR "(Lcom/ibasco/pidisplay/core/system/InputDevice;JIIILjava/lang/String;Ljava/lang/String;I)V"
+#define MIDSIG_HASHMAP_PUT "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+#define MIDSIG_HASHMAP_CTR "()V"
 
 using namespace std;
 
 static map<string, jobject> deviceInfoCache;
-JavaVM *cachedJVM;
 JavaVMAttachArgs jAttachArgs;
 
 volatile bool initialized = false;
@@ -90,11 +106,7 @@ void invokeDeviceStateCallback(JNIEnv *env, const string &device, const string &
 
 jobject createInputDeviceInfo(JNIEnv *env, int fd, const string &devicePath);
 
-jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
-    cachedJVM = jvm;
-    JNIEnv *env;
-    jvm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
-
+void InputDevManager_Load(JNIEnv *env) {
     //START: Initialize global references for classes and methods
     jclass tmpThreadGroup = env->FindClass(CLS_THREADGROUP);
     clsThreadGroup = (jclass) env->NewGlobalRef(tmpThreadGroup);
@@ -174,14 +186,9 @@ jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     eventManager->setOnDeviceRemoved(onDeviceRemoved);
 
     refreshDevices();
-
-    return JNI_VERSION;
 }
 
-void JNI_OnUnload(JavaVM *vm, void *reserved) {
-    cout << "Unloading.." << endl;
-    JNIEnv *env;
-    vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
+void InputDevManager_UnLoad(JNIEnv *env) {
     eventManager->clear();
     env->DeleteGlobalRef(jThreadGroup);
     env->DeleteGlobalRef(clsInputDevManager);
@@ -224,14 +231,9 @@ void Java_com_ibasco_pidisplay_core_system_InputDeviceManager_startInputEventMon
     future<void> futDim = inputMonitorPromise->get_future();
     future<void> futDsm = deviceMonitorPromise->get_future();
 
-    cout << "thread monitorThread(inputMonitorFunction, move(futDim));" << endl;
-
     // Starting Thread & move the future object in lambda function by reference
     thread monitorThread(inputMonitorFunction, move(futDim));
     monitorThread.detach();
-
-
-    cout << "thread devStateMonitorThread(deviceStateMonitor, move(futDsm));" << endl;
 
     //Initialize device state monitor service
     thread devStateMonitorThread(deviceStateMonitor, move(futDsm));
@@ -429,23 +431,23 @@ jobject createInputDeviceInfo(JNIEnv *env, int fd, const string &devicePath) {
 }
 
 void onDeviceAdded(device_entry *entry) {
-    cout << "Device added: " << entry->path << endl;
+    //cout << "Device added: " << entry->path << endl;
     if (deviceInfoCache.count(entry->path) == 0) {
         JNIEnv *env;
         cachedJVM->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
         jobject deviceInfo = createInputDeviceInfo(env, entry->evt->ev_fd, entry->path);
         if (deviceInfo != nullptr) {
             deviceInfoCache.insert(make_pair(entry->path, deviceInfo));
-            cout << "Device add success " << endl;
+            //cout << "Device add success " << endl;
         }
         invokeDeviceStateCallback(env, entry->path, "add");
         return;
     }
-    cerr << "onDeviceRemoved: Could not add device to cache" << endl;
+    //cerr << "onDeviceRemoved: Could not add device to cache" << endl;
 }
 
 void onDeviceRemoved(int fd, const string &path) {
-    cout << "Device removed: " << path << endl;
+    //cout << "Device removed: " << path << endl;
     auto res = deviceInfoCache.find(path);
     if (res != deviceInfoCache.end()) {
         JNIEnv *env;
@@ -461,14 +463,14 @@ void onDeviceRemoved(int fd, const string &path) {
         //Delete from cache
         deviceInfoCache.erase(res);
 
-        cout << "Device remove success " << endl;
+        //cout << "Device remove success " << endl;
         return;
     }
-    cerr << "onDeviceRemoved: Could not delete device from cache" << endl;
+    //cerr << "onDeviceRemoved: Could not delete device from cache" << endl;
 }
 
 void refreshDevices() {
-    cout << "Refreshing Input Devices Yo" << endl;
+    //cout << "Refreshing Input Devices Yo" << endl;
     vector<string> inputDevices;
     listInputDevices(inputDevices);
 

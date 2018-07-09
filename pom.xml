@@ -13,7 +13,9 @@
         <module>examples/charlcd</module>
         <module>drivers/hd44780</module>
         <module>drivers/proxy</module>
+        <module>drivers/glcd</module>
         <module>impl/charlcd</module>
+        <module>impl/glcd</module>
         <module>native</module>
     </modules>
 
@@ -50,12 +52,22 @@
             </dependency>
             <dependency>
                 <groupId>com.ibasco.pidisplay</groupId>
+                <artifactId>pi-display-drivers-glcd</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ibasco.pidisplay</groupId>
                 <artifactId>pi-display-examples</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ibasco.pidisplay</groupId>
                 <artifactId>pi-display-impl-charlcd</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ibasco.pidisplay</groupId>
+                <artifactId>pi-display-impl-glcd</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.system;
+package com.ibasco.pidisplay.core.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.scijava.nativelib.DefaultJniExtractor;

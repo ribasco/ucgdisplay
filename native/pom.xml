@@ -91,10 +91,16 @@
                         <configuration>
                             <javahVerbose>true</javahVerbose>
                             <javahPath>${env.JAVA_HOME}/bin/javah</javahPath>
-                            <javahOutputFileName>InputDeviceManager.h</javahOutputFileName>
-                            <javahClassNames>
-                                <javahClassName>com.ibasco.pidisplay.core.system.InputDeviceManager</javahClassName>
-                            </javahClassNames>
+                            <javahIncludes>
+                                <javahInclude>
+                                    <className>com.ibasco.pidisplay.core.system.InputDeviceManager</className>
+                                    <headerName>InputDeviceManager.h</headerName>
+                                </javahInclude>
+                                <javahInclude>
+                                    <className>com.ibasco.pidisplay.core.ui.U8g2Interface</className>
+                                    <headerName>U8g2Interface.h</headerName>
+                                </javahInclude>
+                            </javahIncludes>
                             <javahOutputDirectory>${project.basedir}/src/main/cpp</javahOutputDirectory>
                         </configuration>
                     </execution>

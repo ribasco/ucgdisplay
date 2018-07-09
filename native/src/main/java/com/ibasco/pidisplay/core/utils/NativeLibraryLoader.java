@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.system;
+package com.ibasco.pidisplay.core.utils;
 
 import org.scijava.nativelib.NativeLoader;
 import org.slf4j.Logger;

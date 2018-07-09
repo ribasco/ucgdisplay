@@ -47,31 +47,6 @@ using namespace std;
 #define LONG(x) ((x)/BITS_PER_LONG)
 #define test_bit(bit, array)    ((array[LONG(bit)] >> OFF(bit)) & 1)
 
-#define CLS_INPUT_DEVICE "com/ibasco/pidisplay/core/system/InputDevice"
-#define CLS_INPUT_EVENT_TYPE "com/ibasco/pidisplay/core/system/InputEventType"
-#define CLS_INPUT_EVENT_CODE "com/ibasco/pidisplay/core/system/InputEventCode"
-#define CLS_INPUT_DEVICE_MGR "com/ibasco/pidisplay/core/system/InputDeviceManager"
-#define CLS_RAW_INPUT_EVENT "com/ibasco/pidisplay/core/system/RawInputEvent"
-#define CLS_DEVICE_STATE_EVENT "com/ibasco/pidisplay/core/system/DeviceStateEvent"
-
-#define CLS_IOEXCEPTION "java/io/IOException"
-#define CLS_ARRAYLIST "java/util/ArrayList"
-#define CLS_HASHMAP  "java/util/HashMap"
-#define CLS_INTEGER "java/lang/Integer"
-#define CLS_THREADGROUP "java/lang/ThreadGroup"
-//#define CLS_STRING "java/lang/String"
-
-#define FSIG_INPUTEVENTCODE_ABSDATA "Ljava/util/Map;"
-#define MIDSIG_INPUTDEVICE_CTR "(Ljava/lang/String;Ljava/lang/String;[SLjava/lang/String;Ljava/util/List;)V"
-#define MIDSIG_INPUTEVENTTYPE_CTR1 "(Ljava/lang/String;ILjava/util/List;Z)V"
-#define MIDSIG_INPUTEVENTCODE_CTR1 "(Ljava/lang/String;I)V"
-#define MIDSIG_INPUTEVENTCODE_CTR2 "(Ljava/lang/String;II)V"
-#define MIDSIG_INPUTDEVMGR_CALLBACK "(Lcom/ibasco/pidisplay/core/system/RawInputEvent;)V"
-#define MIDSIG_RAWINPUTEVENT_CTR "(Lcom/ibasco/pidisplay/core/system/InputDevice;JIIILjava/lang/String;Ljava/lang/String;I)V"
-#define MIDSIG_HASHMAP_PUT "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
-#define MIDSIG_HASHMAP_CTR "()V"
-
-
 static const map<int, string> events = {
         {EV_SYN,       NAME_ELEMENT(EV_SYN)},
         {EV_KEY,       NAME_ELEMENT(EV_KEY)},

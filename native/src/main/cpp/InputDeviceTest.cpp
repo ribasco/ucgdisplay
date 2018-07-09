@@ -17,7 +17,6 @@
 #include <dirent.h>
 #include <cstring>
 #include <fcntl.h>
-//#include <zconf.h>
 #include <sys/stat.h>
 #include <queue>
 #include <fstream>
@@ -27,14 +26,13 @@
 #endif
 
 #include <set>
-//#include <event2/event.h>
-//#include <event2/thread.h>
 #include <sys/inotify.h>
-
-using namespace std;
 
 #include "InputDevHelper.h"
 #include "InputEventManager.h"
+#include "Global.h"
+
+using namespace std;
 
 bool filterDevice(int fd, const string &path);
 

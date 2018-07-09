@@ -1,5 +1,6 @@
 package com.ibasco.pidisplay.core.system;
 
+import com.ibasco.pidisplay.core.utils.NativeLibraryLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,12 +48,9 @@ public class InputDeviceManager {
     }
 
     static {
-        //SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
         try {
-            //NativeLoader.setJniExtractor();
             log.info("Initializing InputDeviceManager");
             NativeLibraryLoader.loadLibrary("pidisp");
-            //System.loadLibrary("pidisp");
             log.debug("InputDeviceManager initialized");
         } catch (Exception e) {
             log.error("Unable to load required native library", e);
@@ -105,7 +103,6 @@ public class InputDeviceManager {
     }
 
     private static void deviceStateEventCallback(DeviceStateEvent event) {
-        log.info("Device Event Callback");
         try {
             deviceStateEventReadLock.lock();
             for (DeviceStateEventListener listener : deviceStateEventListeners) {

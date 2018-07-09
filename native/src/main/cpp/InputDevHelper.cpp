@@ -13,7 +13,6 @@ int is_valid_fd(int fd) {
     return fcntl(fd, F_GETFD) != -1 || errno != EBADF;
 }
 
-
 uint8_t HasEventType(int fd, int type) {
     unsigned long evbit = 0;
     // Get the bit field of available event types.
@@ -76,12 +75,6 @@ string codename(int type, int code) {
             code) : string("?");
 }
 
-
-void throwIOException(JNIEnv *env, string msg) {
-    jclass clsEx = env->FindClass(CLS_IOEXCEPTION);
-    env->ThrowNew(clsEx, msg.c_str());
-}
-
 /**
  * Filter for the AutoDevProbe scandir on /dev/input.
  *
@@ -106,7 +99,7 @@ int listInputDevices(vector<string> &entries) {
     for (int i = 0; i < ndev; i++) {
         char devicePath[267];
         snprintf(devicePath, sizeof(devicePath), "%s/%s", DEV_INPUT_EVENT, namelist[i]->d_name);
-        entries.push_back(devicePath);
+        entries.emplace_back(devicePath);
     }
     return ndev;
 }
