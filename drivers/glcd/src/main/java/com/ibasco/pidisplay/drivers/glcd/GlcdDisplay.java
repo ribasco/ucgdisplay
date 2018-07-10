@@ -20,11 +20,11 @@ public class GlcdDisplay {
     public static final Logger log = getLogger(GlcdDisplay.class);
 
     private String name;
-    private GlcdController controller;
+    private GlcdControllerType controller;
     private GlcdSetupInfo[] setupDetails;
     private GlcdSize displaySize;
 
-    GlcdDisplay(GlcdController controller, String name, int tileWidth, int tileHeight, GlcdSetupInfo... setupInfo) {
+    GlcdDisplay(GlcdControllerType controller, String name, int tileWidth, int tileHeight, GlcdSetupInfo... setupInfo) {
         this.name = name;
         this.controller = controller;
         this.setupDetails = setupInfo;
@@ -56,7 +56,7 @@ public class GlcdDisplay {
         return displaySize;
     }
 
-    public GlcdController getController() {
+    public GlcdControllerType getController() {
         return controller;
     }
 
