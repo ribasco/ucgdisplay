@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.drivers.glcd;
 
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdProtocol;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommInterface;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdSize;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdConfigException;
@@ -22,26 +22,36 @@ public class GlcdConfig {
     public static final Logger log = getLogger(GlcdConfig.class);
 
     private GlcdDisplay display;
-    private GlcdProtocol protocol;
+    private GlcdCommInterface commInterface;
     private GlcdRotation rotation;
     private GlcdPinMapConfig pinMap;
+    private int deviceAddress = -1;
 
     public GlcdConfig() {
     }
 
-    public GlcdConfig(GlcdDisplay display, GlcdProtocol protocol, GlcdRotation rotation, GlcdPinMapConfig pinMapConfig) {
+    public GlcdConfig(GlcdDisplay display, GlcdCommInterface commInterface, GlcdRotation rotation, GlcdPinMapConfig pinMapConfig, int deviceAddress) {
         this.display = display;
         this.rotation = rotation;
-        this.protocol = protocol;
+        this.commInterface = commInterface;
         this.pinMap = pinMapConfig;
+        this.deviceAddress = deviceAddress;
+    }
+
+    public int getDeviceAddress() {
+        return deviceAddress;
+    }
+
+    public void setDeviceAddress(int deviceAddress) {
+        this.deviceAddress = deviceAddress;
     }
 
     public void setDisplay(GlcdDisplay display) {
         this.display = display;
     }
 
-    public void setProtocol(GlcdProtocol protocol) {
-        this.protocol = protocol;
+    public void setCommInterface(GlcdCommInterface commInterface) {
+        this.commInterface = commInterface;
     }
 
     public void setRotation(GlcdRotation rotation) {
@@ -56,8 +66,8 @@ public class GlcdConfig {
         return display.getDisplaySize();
     }
 
-    public GlcdProtocol getProtocol() {
-        return protocol;
+    public GlcdCommInterface getCommInterface() {
+        return commInterface;
     }
 
     public GlcdPinMapConfig getPinMap() {
@@ -78,21 +88,21 @@ public class GlcdConfig {
                     new GlcdConfigException("Display has not been set", this)
             );
         }
-        if (protocol == null) {
+        if (commInterface == null) {
             throw new RuntimeException("Unable to obtain setup procedure",
                     new GlcdConfigException("Protocol not set", this));
         }
 
         GlcdSetupInfo setupInfo = Arrays.stream(display.getSetupDetails())
-                .filter(setup -> setup.isSupported(protocol))
+                .filter(setup -> setup.isSupported(commInterface))
                 .findFirst()
                 .orElse(null);
 
         if (setupInfo == null)
             throw new RuntimeException("Unable to locate setup procedure",
-                    new GlcdException(String.format("Could not find a suitable setup procedure for protocol '%s'", protocol.name())));
+                    new GlcdException(String.format("Could not find a suitable setup procedure for commInterface '%s'", commInterface.name())));
 
-        log.debug("Found setup procedure for display (Display: {}, Protocol: {}, Setup Proc: {}))", display.getName(), protocol.name(), setupInfo.getFunction());
+        log.debug("Found setup procedure for display (Display: {}, Protocol: {}, Setup Proc: {}))", display.getName(), commInterface.name(), setupInfo.getFunction());
 
         return setupInfo.getFunction();
     }
@@ -101,7 +111,7 @@ public class GlcdConfig {
     public String toString() {
         final StringBuffer sb = new StringBuffer("GlcdConfig{");
         sb.append("display=").append(display);
-        sb.append(", protocol=").append(protocol);
+        sb.append(", commInterface=").append(commInterface);
         sb.append(", rotation=").append(rotation);
         sb.append(", pinMap=").append(pinMap);
         sb.append('}');

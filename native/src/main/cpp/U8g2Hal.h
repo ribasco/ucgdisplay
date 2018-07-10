@@ -12,34 +12,10 @@
 
 using namespace std;
 
-typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;
-
-typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
-
-typedef std::map<std::string, u8g2_setup_func_t> u8g2_setup_func_map_t;
-
-typedef std::map<std::string, const uint8_t *> u8g2_lookup_font_map_t;
-
-
-/*uint8_t clk;    //lcd ENABLE pin
-uint8_t mosi;   //lcd RW pin
-uint8_t cs;     //lcd RS pin
-uint8_t reset;  //optional (not yet supported)
-uint8_t dc;
-uint8_t sda;
-uint8_t scl;
-uint8_t d0;
-uint8_t d1;
-uint8_t d2;
-uint8_t d3;
-uint8_t d4;
-uint8_t d5;
-uint8_t d6;
-uint8_t d7;*/
-
 typedef struct {
-    uint8_t d0_spi_clock; //spi-clock
-    uint8_t d1_spi_data; //spi-data
+    //pin configuration
+    uint8_t d0; //spi-clock
+    uint8_t d1; //spi-data
     uint8_t d2;
     uint8_t d3;
     uint8_t d4;
@@ -56,14 +32,26 @@ typedef struct {
     uint8_t cs2;
 } u8g2_pin_map_t;
 
+
+typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;
+
+typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
+
+typedef std::map<std::string, u8g2_setup_func_t> u8g2_setup_func_map_t;
+
+typedef std::map<std::string, const uint8_t *> u8g2_lookup_font_map_t;
+
 typedef struct {
     u8g2_pin_map_t pin_map;
     shared_ptr<u8g2_t> u8g2;
+    string setup_proc_name;
     u8g2_setup_func_t setup_cb;
     u8g2_msg_func_t byte_cb;
     u8g2_msg_func_t gpio_cb;
     u8g2_cb_t *rotation;
 } u8g2_info_t;
+
+typedef std::function<uint8_t(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
 
 /**
  * Initialize the lookup t ables. This shuld be called prior to calling the other methods found in this file

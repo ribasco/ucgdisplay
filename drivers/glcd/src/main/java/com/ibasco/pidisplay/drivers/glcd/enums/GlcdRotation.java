@@ -1,6 +1,7 @@
 package com.ibasco.pidisplay.drivers.glcd.enums;
 
 import com.ibasco.pidisplay.core.drivers.GraphicsDisplayDriver;
+import com.ibasco.pidisplay.core.ui.Rotation;
 
 import static com.ibasco.pidisplay.core.drivers.GraphicsDisplayDriver.*;
 
@@ -10,7 +11,7 @@ import static com.ibasco.pidisplay.core.drivers.GraphicsDisplayDriver.*;
  * @author Rafael Ibasco
  */
 @SuppressWarnings("unused")
-public enum GlcdRotation {
+public enum GlcdRotation implements Rotation {
     /**
      * No rotation
      */
@@ -38,6 +39,7 @@ public enum GlcdRotation {
         this.value = value;
     }
 
+    @Override
     public int getValue() {
         return value;
     }

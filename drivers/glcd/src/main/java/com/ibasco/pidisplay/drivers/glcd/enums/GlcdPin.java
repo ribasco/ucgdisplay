@@ -82,11 +82,11 @@ public enum GlcdPin {
      */
     RESET(11),
     /**
-     * I2C Clock Pin
+     * I2C Clock Pin (SCL)
      */
     I2C_CLOCK(12),
     /**
-     * I2C Data Pin
+     * I2C Data Pin (SDA)
      */
     I2C_DATA(13),
     /**

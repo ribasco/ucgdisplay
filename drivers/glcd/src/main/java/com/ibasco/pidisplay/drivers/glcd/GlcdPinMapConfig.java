@@ -14,10 +14,10 @@ public class GlcdPinMapConfig {
         this.pinMap = new HashMap<>();
     }
 
-    public GlcdPinMapConfig map(GlcdPin glcdPin, int pinNumber) {
-        if (pinNumber > 255)
+    public GlcdPinMapConfig map(GlcdPin glcdPin, int value) {
+        if (value > 255)
             throw new RuntimeException("", new GlcdPinMappingException("Invalid pin number", this));
-        pinMap.put(glcdPin, (byte) pinNumber);
+        pinMap.put(glcdPin, (byte) value);
         return this;
     }
 
