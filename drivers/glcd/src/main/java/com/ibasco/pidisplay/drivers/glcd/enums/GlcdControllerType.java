@@ -1,11 +1,11 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul  9 2018 20:06:20)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 10 2018 23:08:28)
  */
 
 package com.ibasco.pidisplay.drivers.glcd.enums;
 
 @SuppressWarnings("unused")
-public enum GlcdController {
+public enum GlcdControllerType {
     A2PRINTER,
     HX1230,
     IL3820,

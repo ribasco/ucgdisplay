@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul  9 2018 20:06:20) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 10 2018 23:08:28) 
  */
 
 #include "U8g2Hal.h"
@@ -490,7 +490,6 @@ void u8g2hal_init_fonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8g2_font_inr42_mn"] = u8g2_font_inr42_mn;
 	font_map["u8g2_font_9x15_t_cyrillic"] = u8g2_font_9x15_t_cyrillic;
 	font_map["u8g2_font_helvB10_tn"] = u8g2_font_helvB10_tn;
-	//font_map["u8g2_font_siji_t"] = u8g2_font_siji_t;
 	font_map["u8g2_font_unifont_t_arabic"] = u8g2_font_unifont_t_arabic;
 	font_map["u8g2_font_ncenR10_tf"] = u8g2_font_ncenR10_tf;
 	font_map["u8g2_font_artossans8_8u"] = u8g2_font_artossans8_8u;

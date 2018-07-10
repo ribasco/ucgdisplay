@@ -177,11 +177,6 @@ shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt,
     info->setup_proc_name = setup_proc_name;
     info->setup_cb = setup_proc_callback;
 
-    if (commType == COMINT_I2C) {
-
-    }
-
-    //TODO: Dynamically select callback
     info->byte_cb = [info, commInt, commType](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
         u8g2_msg_func_info_t cb_byte = get_byte_cb(commInt, commType);
         if (cb_byte == nullptr)
@@ -195,6 +190,11 @@ shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt,
 
     //Obtain the raw pointer
     u8g2_t *pU8g2 = info->u8g2.get();
+
+    //Assign the i2c addres if applicable
+    if (commType == COMINT_I2C) {
+        u8g2_SetI2CAddress(pU8g2, address);
+    }
 
     //Insert device info in cache
     auto it = u8g2_device_cache.insert(make_pair((uintptr_t) pU8g2, info));
