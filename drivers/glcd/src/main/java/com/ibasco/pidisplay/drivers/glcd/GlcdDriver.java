@@ -2,14 +2,17 @@ package com.ibasco.pidisplay.drivers.glcd;
 
 import com.ibasco.pidisplay.core.drivers.GraphicsDisplayDriver;
 import com.ibasco.pidisplay.core.exceptions.NotYetImplementedException;
+import com.ibasco.pidisplay.core.exceptions.XBMDecodeException;
 import com.ibasco.pidisplay.core.ui.Font;
 import com.ibasco.pidisplay.core.ui.U8g2Interface;
+import com.ibasco.pidisplay.core.util.XBMUtils;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdConfigException;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("Duplicates")
@@ -166,6 +169,15 @@ public class GlcdDriver implements GraphicsDisplayDriver {
     @Override
     public void drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2) {
         U8g2Interface.drawTriangle(_id, x0, y0, x1, y1, x2, y2);
+    }
+
+    public void drawXBM(int x, int y, int width, int height, File data) {
+        try {
+            byte[] xbmData = XBMUtils.decodeXbmFile(data);
+            drawXBM(x, y, width, height, xbmData);
+        } catch (XBMDecodeException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

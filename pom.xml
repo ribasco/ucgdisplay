@@ -38,6 +38,7 @@
         <powermock.version>1.7.3</powermock.version>
         <sysoutslf4j.version>1.0.2</sysoutslf4j.version>
         <native.lib.loader.version>2.2.0</native.lib.loader.version>
+        <commons.codec.version>1.11</commons.codec.version>
     </properties>
 
     <dependencyManagement>
@@ -156,6 +157,11 @@
                 <groupId>org.scijava</groupId>
                 <artifactId>native-lib-loader</artifactId>
                 <version>${native.lib.loader.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons.codec.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

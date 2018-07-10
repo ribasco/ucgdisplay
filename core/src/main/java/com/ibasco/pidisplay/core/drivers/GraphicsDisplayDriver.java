@@ -406,8 +406,8 @@ public interface GraphicsDisplayDriver extends DisplayDriver {
      * 2.15.x of U8g2 introduces a solid and a transparent mode for bitmaps. By default, drawXBM will draw solid
      * bitmaps. This differs from the previous versions: Use setBitmapMode(1) to switch to the previous behavior. The
      * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
-     * can save a bitmap as XBM. A nice step by step instruction is here (external link). The result will look like
-     * this:</p>
+     * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
+     * (external link). The result will look like this:</p>
      *
      * @param x
      *         X-position.
