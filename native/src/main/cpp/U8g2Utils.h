@@ -34,7 +34,7 @@ u8g2_cb_t *toRotation(int rotation);
  * @param pin_config Contains pin mapping information that will be used by the byte and gpio callbacks
  * @return A shared_ptr of u8g2_info_t
  */
-shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config);
+shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config);
 
 /**
  * Retrieves the device details from the cache

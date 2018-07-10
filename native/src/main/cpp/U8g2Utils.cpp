@@ -157,7 +157,7 @@ u8g2_msg_func_info_t get_byte_cb(int commInt, int commType) {
     return nullptr;
 }
 
-shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config) {
+shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config) {
     shared_ptr<u8g2_info_t> info = make_shared<u8g2_info_t>();
 
     //Initialize device info details
@@ -176,6 +176,10 @@ shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt,
 
     info->setup_proc_name = setup_proc_name;
     info->setup_cb = setup_proc_callback;
+
+    if (commType == COMINT_I2C) {
+
+    }
 
     //TODO: Dynamically select callback
     info->byte_cb = [info, commInt, commType](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {

@@ -80,21 +80,10 @@ jlong Java_com_ibasco_pidisplay_core_ui_U8g2Interface_setup(JNIEnv *env, jclass 
         throwNativeDriverException(env, string("Invalid rotation (") + to_string(rotation) + ")");
 
     //Get actual rotation value
-    const u8g2_cb_t *_rotation = U8G2_R0;
-    if (rotation == 0) {
-        _rotation = const_cast<u8g2_cb_t *>(U8G2_R0);
-    } else if (rotation == 1) {
-        _rotation = const_cast<u8g2_cb_t *>(U8G2_R1);
-    } else if (rotation == 2) {
-        _rotation = const_cast<u8g2_cb_t *>(U8G2_R2);
-    } else if (rotation == 3) {
-        _rotation = const_cast<u8g2_cb_t *>(U8G2_R3);
-    } else if (rotation == 4) {
-        _rotation = const_cast<u8g2_cb_t *>(U8G2_MIRROR);
-    }
+    const u8g2_cb_t *_rotation = toRotation(rotation);
 
     //4. Setup and Initialize the Display
-    shared_ptr<u8g2_info_t> info = setupAndInitDisplay(setup_proc_name, commInt, commType, _rotation, *pinMap);
+    shared_ptr<u8g2_info_t> info = setupAndInitDisplay(setup_proc_name, commInt, commType, address, _rotation, *pinMap);
 
     //5. Verify if display has been initialized successfully
     if (info == nullptr) {
