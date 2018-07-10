@@ -28,10 +28,10 @@ extern "C" {
 /*
  * Class:     com_ibasco_pidisplay_core_ui_U8g2Interface
  * Method:    setup
- * Signature: (Ljava/lang/String;I[B)J
+ * Signature: (Ljava/lang/String;IIII[B)J
  */
 JNIEXPORT jlong JNICALL Java_com_ibasco_pidisplay_core_ui_U8g2Interface_setup
-  (JNIEnv *, jclass, jstring, jint, jbyteArray);
+  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jbyteArray);
 
 /*
  * Class:     com_ibasco_pidisplay_core_ui_U8g2Interface

@@ -25,11 +25,14 @@ public class GlcdDriver implements GraphicsDisplayDriver {
         checkConfig(config);
 
         //Get rotation setting
-        int rotation = config.getRotation().getValue();
         String setupProcedure = config.getSetupProcedure();
+        int rotation = config.getRotation().getValue();
+        int commInt = config.getCommInterface().getValue();
+        int commType = config.getCommInterface().getType().getValue();
+        int address = config.getDeviceAddress();
         byte[] pinConfig = config.getPinMap().build();
 
-        _id = U8g2Interface.setup(setupProcedure, rotation, pinConfig);
+        _id = U8g2Interface.setup(setupProcedure, commInt, commType, rotation, address, pinConfig);
 
         if (_id == -1)
             throw new GlcdDriverException("Could not initialize U8G2 Display Driver");
@@ -48,14 +51,15 @@ public class GlcdDriver implements GraphicsDisplayDriver {
      */
     private void checkConfig(GlcdConfig config) throws GlcdConfigException {
         //Check protocol if supported
-        if (!config.getDisplay().hasProtocol(config.getProtocol())) {
-            String protocols = config.getDisplay().getSupportedProtocols().stream().map(Object::toString).collect(Collectors.joining(", "));
+        if (!config.getDisplay().hasCommType(config.getCommInterface())) {
+            String protocols = config.getDisplay().getCommTypes().stream().map(Object::toString).collect(Collectors.joining(", "));
             throw new GlcdConfigException(
-                    String.format("The selected protocol '%s' is not supported by display '%s' (Supported Protocols: %s)", config.getProtocol().name(), config.getDisplay().getName(), protocols),
+                    String.format("The selected protocol '%s' is not supported by display '%s' (Supported Protocols: %s)", config.getCommInterface().name(), config.getDisplay().getName(), protocols),
                     config
             );
         }
 
+        //If I2C is selected, make sure device address is not empty
         //Check display
         if (config.getDisplay() == null)
             throw new GlcdConfigException("No display specified", config);
@@ -338,6 +342,10 @@ public class GlcdDriver implements GraphicsDisplayDriver {
     @Override
     public void setContrast(int value) {
         U8g2Interface.setContrast(_id, value);
+    }
+
+    public void setDisplayRotation(GlcdRotation rotation) {
+        setDisplayRotation(rotation.getValue());
     }
 
     @Override

@@ -7,10 +7,12 @@
     <groupId>com.ibasco.pidisplay</groupId>
     <artifactId>pi-display</artifactId>
     <version>0.1-SNAPSHOT</version>
+    <name>pi-display :: Parent Module</name>
 
     <modules>
         <module>core</module>
         <module>examples/charlcd</module>
+        <module>examples/glcd</module>
         <module>drivers/hd44780</module>
         <module>drivers/proxy</module>
         <module>drivers/glcd</module>

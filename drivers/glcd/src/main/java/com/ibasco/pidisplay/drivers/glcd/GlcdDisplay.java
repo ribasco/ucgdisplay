@@ -31,7 +31,7 @@ public class GlcdDisplay {
         this.displaySize = GlcdSize.get(tileWidth, tileHeight);
     }
 
-    public boolean hasProtocol(GlcdProtocol protocol) {
+    public boolean hasCommType(GlcdCommInterface protocol) {
         for (GlcdSetupInfo info : setupDetails) {
             if ((info.getProtocols() & protocol.getValue()) > 0)
                 return true;
@@ -39,12 +39,12 @@ public class GlcdDisplay {
         return false;
     }
 
-    public List<GlcdProtocol> getSupportedProtocols() {
+    public List<GlcdCommInterface> getCommTypes() {
         if (setupDetails == null || setupDetails.length <= 0)
             return null;
-        List<GlcdProtocol> protocols = new ArrayList<>();
+        List<GlcdCommInterface> protocols = new ArrayList<>();
         for (GlcdSetupInfo setup : setupDetails) {
-            for (GlcdProtocol protocol : GlcdProtocol.values()) {
+            for (GlcdCommInterface protocol : GlcdCommInterface.values()) {
                 if ((setup.getProtocols() & protocol.getValue()) > 0)
                     protocols.add(protocol);
             }
@@ -72,7 +72,7 @@ public class GlcdDisplay {
         GlcdDisplay display = Glcd.ST7920.D_128x64;
         GlcdConfig config = new GlcdConfig();
         config.setDisplay(Glcd.ST7920.D_128x64);
-        config.setProtocol(GlcdProtocol.SPI_ST7920);
+        config.setCommInterface(GlcdCommInterface.SPI_HW_4WIRE_ST7920);
         config.setRotation(GlcdRotation.ROTATION_90);
         config.setPinMapConfig(new GlcdPinMapConfig()
                 .map(GlcdPin.SPI_CLOCK, 14)

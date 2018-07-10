@@ -658,7 +658,7 @@ int main(int argc, char *argv[]) {
     if (!projectPath.empty()) {
         cout << "You have specified a project path: " << projectPath << endl;
     } else {
-        projectPath = "/home/raffy/projects/pi-display/native/src/main/cpp";
+        projectPath = "../../../../";
         cout << "Using default project path: " << projectPath << endl;
     }
 

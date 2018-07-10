@@ -1,12 +1,9 @@
-//
-// Created by raffy on 7/4/18.
-//
-
 #include "U8g2Hal.h"
 
 #include "Global.h"
 #include "CommSpi.h"
 #include <wiringPi.h>
+#include <wiringPiI2C.h>
 #include <iostream>
 #include <cstring>
 #include <algorithm>
@@ -25,7 +22,7 @@ static u8g2_setup_func_map_t u8g2_setup_functions; //NOLINT
 static u8g2_lookup_font_map_t u8g2_font_map; //NOLINT
 
 void u8g2hal_init() {
-    cout << "Initializing U8G2 HAL" << endl;
+    //Initialize lookup tables
     u8g2hal_init_setupfunctions(u8g2_setup_functions);
     u8g2hal_init_fonts(u8g2_font_map);
 }
@@ -53,7 +50,7 @@ uint8_t *u8g2hal_get_fontbyname(const std::string &font_name) {
 #if defined(__arm__)
 
 /**
- * SPI Hardware Callback Routine (ARM)
+ * 4-wire SPI Hardware Callback Routine (ARM)
  */
 uint8_t cb_rpi_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     switch (msg) {
@@ -63,8 +60,6 @@ uint8_t cb_rpi_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t
             break;
         }
         case U8X8_MSG_BYTE_INIT: {
-            cout << "[SPI]: Initialize" << endl;
-
             //disable chip-select
             u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
 
@@ -76,9 +71,9 @@ uint8_t cb_rpi_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t
             }
 
             //IMPORTANT: Make sure we reset the pin modes to activate the SPI hardware features!!!!
-            pinModeAlt(info->pin_map.d1_spi_data, 0b100);
-            pinModeAlt(info->pin_map.d0_spi_clock, 0b100);
-            pinModeAlt(info->pin_map.cs, 0b100);
+            pinModeAlt(info->pin_map.d0, 0b100); //spi-clock
+            pinModeAlt(info->pin_map.d1, 0b100); //spi-data
+            pinModeAlt(info->pin_map.cs, 0b100); //spi-chip select
             break;
         }
         case U8X8_MSG_BYTE_START_TRANSFER: {
@@ -90,6 +85,9 @@ uint8_t cb_rpi_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t
             u8x8->gpio_and_delay_cb(u8x8, U8X8_MSG_DELAY_NANO, u8x8->display_info->pre_chip_disable_wait_ns, nullptr);
             u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
             break;
+        }
+        case U8X8_MSG_BYTE_SET_DC: {
+            u8x8_gpio_SetDC(u8x8, arg_int);
         }
         default:
             return 0;
@@ -101,39 +99,38 @@ uint8_t cb_rpi_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t
  * I2C Hardware Callback Routine for Raspberry Pi
  */
 uint8_t cb_rpi_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
-    static uint8_t buffer[32];        /* u8g2/u8x8 will never send more than 32 bytes between START_TRANSFER and END_TRANSFER */
-    static uint8_t buf_idx;
+    static int fd = -1;
     uint8_t *data;
 
     switch (msg) {
         case U8X8_MSG_BYTE_SEND: {
+            if (fd < 0) {
+                cerr << "Could not send data over I2C. Invalid file descriptor" << endl;
+                return 0;
+            }
             data = (uint8_t *) arg_ptr;
             while (arg_int > 0) {
-                buffer[buf_idx++] = *data;
+                wiringPiI2CWrite(fd, *data);
                 data++;
                 arg_int--;
             }
             break;
         }
         case U8X8_MSG_BYTE_INIT: {
-            //disable chip-select
-            u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
-
-            //initialize i2c device here
-
-            //IMPORTANT: Make sure we reset the pin modes to activate the SPI hardware features!!!!
-            /*pinModeAlt(u8g2_rpi_hal.sda, 0b100);
-            pinModeAlt(u8g2_rpi_hal.scl, 0b100);*/
+            int addr = u8x8_GetI2CAddress(u8x8);
+            pinModeAlt(info->pin_map.sda, 0b100);
+            pinModeAlt(info->pin_map.scl, 0b100);
+            fd = wiringPiI2CSetup(addr);
+            if (fd < 0) {
+                cerr << "Could not initialzie I2C hardware for address: " << to_string(addr) << endl;
+                return 0;
+            }
             break;
         }
         case U8X8_MSG_BYTE_START_TRANSFER: {
-            u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_enable_level);
-            u8x8->gpio_and_delay_cb(u8x8, U8X8_MSG_DELAY_NANO, u8x8->display_info->post_chip_enable_wait_ns, nullptr);
             break;
         }
         case U8X8_MSG_BYTE_END_TRANSFER: {
-            u8x8->gpio_and_delay_cb(u8x8, U8X8_MSG_DELAY_NANO, u8x8->display_info->pre_chip_disable_wait_ns, nullptr);
-            u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
             break;
         }
         default:
@@ -160,11 +157,12 @@ uint8_t cb_rpi_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t 
 
             cout << "[GPIO]: Initialize" << endl;
             //Configure pin modes
-            pinMode(info->pin_map.d1_spi_data, OUTPUT);
-            pinMode(info->pin_map.d0_spi_clock, OUTPUT);
+            pinMode(info->pin_map.d1, OUTPUT);
+            pinMode(info->pin_map.d0, OUTPUT);
             pinMode(info->pin_map.cs, OUTPUT);
 
-            cout << "[GPIO] Init Success (MOSI: " << to_string(info->pin_map.d1_spi_data) << ", CLOCK: " << to_string(info->pin_map.d1_spi_data) << ", CS: " << to_string(info->pin_map.cs) << ")" << endl;
+            cout << "[GPIO] Init Success (MOSI: " << to_string(info->pin_map.d1) << ", CLOCK: " << to_string(info->pin_map.d1) << ", CS: " << to_string(info->pin_map.cs) << ")"
+                 << endl;
             break;
         }
         case U8X8_MSG_DELAY_NANO: { // delay arg_int * 1 nano second
@@ -189,11 +187,11 @@ uint8_t cb_rpi_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t 
             break;
         }
         case U8X8_MSG_GPIO_D0: {                // D0 or SPI clock pin: Output level in arg_int (U8X8_MSG_GPIO_SPI_CLOCK)
-            digitalWrite(info->pin_map.d0_spi_clock, arg_int);
+            digitalWrite(info->pin_map.d0, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_D1: {                // D1 or SPI data pin: Output level in arg_int (U8X8_MSG_GPIO_SPI_DATA)
-            digitalWrite(info->pin_map.d1_spi_data, arg_int);
+            digitalWrite(info->pin_map.d1, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_D2: {                // D2 pin: Output level in arg_int
@@ -332,33 +330,97 @@ uint8_t cb_rpi_byte_i2c_hw(u8g2_info_t* info, u8x8_t *u8x8, uint8_t msg, uint8_t
 uint8_t cb_rpi_gpio_delay(u8g2_info_t* info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
 
     switch (msg) {
-        case U8X8_MSG_GPIO_AND_DELAY_INIT: {
+        case U8X8_MSG_GPIO_AND_DELAY_INIT: { // called once during init phase of u8g2/u8x8, can be used to setup pins
             cout << "U8X8_MSG_GPIO_AND_DELAY_INIT" << endl;
             break;
         }
-        case U8X8_MSG_DELAY_MILLI: {
-            cout << "U8X8_MSG_DELAY_MILLI" << endl;
-            break;
-        }
-        case U8X8_MSG_DELAY_NANO: {
-            //this is important. Removing this will cause garbage data to be displayed.
+        case U8X8_MSG_DELAY_NANO: { // delay arg_int * 1 nano second
             cout << "U8X8_MSG_DELAY_NANO" << endl;
             break;
         }
-        case U8X8_MSG_GPIO_SPI_CLOCK: {
-            cout << "U8X8_MSG_GPIO_SPI_CLOCK" << endl;
+        case U8X8_MSG_DELAY_100NANO: {       // delay arg_int * 100 nano seconds
+            cout << "U8X8_MSG_DELAY_100NANO" << endl;
             break;
         }
-        case U8X8_MSG_GPIO_SPI_DATA: {
-            cout << "U8X8_MSG_GPIO_SPI_DATA" << endl;
+        case U8X8_MSG_DELAY_10MICRO: {       // delay arg_int * 10 micro seconds
+            cout << "U8X8_MSG_DELAY_10MICRO" << endl;
             break;
         }
-        case U8X8_MSG_GPIO_CS: {
+        case U8X8_MSG_DELAY_MILLI: {           // delay arg_int * 1 milli second
+            cout << "U8X8_MSG_DELAY_MILLI" << endl;
+            break;
+        }
+        case U8X8_MSG_DELAY_I2C: {                                  // arg_int is the I2C speed in 100KHz, e.g. 4 = 400 KHz
+            cout << "U8X8_MSG_DELAY_I2C" << endl;          // arg_int=1: delay by 5us, arg_int = 4: delay by 1.25us
+            break;
+        }
+        case U8X8_MSG_GPIO_D0: {                // D0 or SPI clock pin: Output level in arg_int (U8X8_MSG_GPIO_SPI_CLOCK)
+            cout << "U8X8_MSG_GPIO_D0" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_D1: {                // D1 or SPI data pin: Output level in arg_int (U8X8_MSG_GPIO_SPI_DATA)
+            cout << "U8X8_MSG_GPIO_D1" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_D2: {                // D2 pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_D2" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_D3: {                // D3 pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_D3" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_D4: {                // D4 pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_D4" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_D5: {                // D5 pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_D5" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_D6: {                // D6 pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_D6" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_D7: {                // D7 pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_D7" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_E: {               // E/WR pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_E" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_CS: {                // CS (chip select) pin: Output level in arg_int
             cout << "U8X8_MSG_GPIO_CS" << endl;
             break;
         }
+        case U8X8_MSG_GPIO_DC: {                // DC (data/cmd, A0, register select) pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_DC" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_RESET: {            // Reset pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_RESET" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_CS1: {                // CS1 (chip select) pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_CS1" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_CS2: {                // CS2 (chip select) pin: Output level in arg_int
+            cout << "U8X8_MSG_GPIO_CS2" << endl;
+            break;
+        }
+        case U8X8_MSG_GPIO_I2C_CLOCK: {        // arg_int=0: Output low at I2C clock pin
+            cout << "U8X8_MSG_GPIO_I2C_CLOCK" << endl;
+            break;                            // arg_int=1: Input dir with pullup high for I2C clock pin
+        }
+        case U8X8_MSG_GPIO_I2C_DATA: {           // arg_int=0: Output low at I2C data pin
+            cout << "U8X8_MSG_GPIO_I2C_DATA" << endl;
+            break;                            // arg_int=1: Input dir with pullup high for I2C data pin
+        }
         default: {
-            return 0;
+            u8x8_SetGPIOResult(u8x8, 1);            // default return value
+            break;
         }
     }
     return 1;

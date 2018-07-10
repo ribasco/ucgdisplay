@@ -39,17 +39,28 @@ public class U8g2Interface {
      *
      * @param setupProc
      *         The setup procedure that the native library will use to initialze the display
+     * @param commInt
+     *         The communications interface that will be used (e.g. {@link #COM_4WSPI})
+     * @param commType
+     *         The communication type (HARDWARE = 0, SOFTWARE = 1)
      * @param rotation
      *         The display rotation
+     * @param address
+     *         The device address. This is most commonly used by I2C. Set this to -1 if not applicable to the current
+     *         setup.
      * @param pinConfig
      *         Array of integers which represents the pin mapping configuration of the display
      *
      * @return The id of the u8g2 instance. -1 if the setup failed.
      */
-    public static native long setup(String setupProc, int rotation, byte[] pinConfig);
+    public static native long setup(String setupProc, int commInt, int commType, int rotation, int address, byte[] pinConfig);
 
     public static native void drawBox(long id, int x, int y, int width, int height);
 
+    /**
+     * @see #drawXBM(long, int, int, int, int, byte[])
+     */
+    @Deprecated
     public static native void drawBitmap(long id, int x, int y, int count, int height, byte[] bitmap);
 
     public static native void drawCircle(long id, int x, int y, int radius, int options);

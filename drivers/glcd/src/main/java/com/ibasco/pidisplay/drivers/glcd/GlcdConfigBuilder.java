@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.drivers.glcd;
 
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdProtocol;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommInterface;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
 
 /**
@@ -24,8 +24,8 @@ public class GlcdConfigBuilder {
         return this;
     }
 
-    public GlcdConfigBuilder protocol(GlcdProtocol protocol) {
-        config.setProtocol(protocol);
+    public GlcdConfigBuilder protocol(GlcdCommInterface protocol) {
+        config.setCommInterface(protocol);
         return this;
     }
 
