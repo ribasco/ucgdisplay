@@ -30,9 +30,10 @@ static map<string, string> paths;
 #define FILE_LOOKUP_FONTS "U8g2LookupFonts.cpp"
 #define FILE_JAVA_GLCDSIZE "GlcdSize.java"
 #define FILE_JAVA_GLCD "Glcd.java"
-#define FILE_JAVA_GLCDCONTROLLER "GlcdController.java"
+#define FILE_JAVA_GLCDCONTROLLERTYPE "GlcdControllerType.java"
 #define FILE_JAVA_GLCDFONT "GlcdFont.java"
 
+static vector<string> excludeFonts = {"u8g2_font_siji_t"};
 
 string sanitizeDisplayName(display_mode_info &display) {
     //"([0-9]{1,})X([0-9]{1,})|(NONAME?[0-9]*)|([_-]*)"
@@ -299,7 +300,7 @@ void buildCode_Glcd() {
     appendAutogenMsg(code);
 
     code << "package com.ibasco.pidisplay.drivers.glcd;\n\n";
-    code << "import com.ibasco.pidisplay.drivers.glcd.enums.GlcdController;\n";
+    code << "import com.ibasco.pidisplay.drivers.glcd.enums.GlcdControllerType;\n";
     code << "import static com.ibasco.pidisplay.core.ui.U8g2Interface.*;\n\n";
 
     code << "@SuppressWarnings(\"unused\")\n";
@@ -315,7 +316,7 @@ void buildCode_Glcd() {
 
             code << "\t\t" << "/** U8G2 Name: " << ctrl.first << " " << disp.name << " **/" << endl;
             code << "\t\t" << "GlcdDisplay " << dName << " = new GlcdDisplay(" << endl;
-            code << "\t\t\t" << "GlcdController." << controllerName << "," << endl;
+            code << "\t\t\t" << "GlcdControllerType." << controllerName << "," << endl;
             code << "\t\t\t" << "\"" << dName << "\"," << endl;
             code << "\t\t\t" << to_string(disp.tileWidth) << "," << endl;
             code << "\t\t\t" << to_string(disp.tileHeight) << "," << endl;
@@ -341,7 +342,7 @@ void buildCode_Glcd() {
 /**
  * Build GlcdController.java enum
  */
-void buildCode_GlcdController() {
+void buildCode_GlcdControllerType() {
     set<string> controllers = getControllers();
 
     if (controllers.empty())
@@ -352,7 +353,7 @@ void buildCode_GlcdController() {
     code << "package com.ibasco.pidisplay.drivers.glcd.enums;\n\n";
 
     code << "@SuppressWarnings(\"unused\")\n";
-    code << "public enum GlcdController {" << endl;
+    code << "public enum GlcdControllerType {" << endl;
     for (const auto &controller : controllers) {
         static int i = 1;
         code << "\t" << controller;
@@ -361,7 +362,7 @@ void buildCode_GlcdController() {
     }
     code << "\n}";
 
-    saveFileToOutputDir(FILE_JAVA_GLCDCONTROLLER, code.str());
+    saveFileToOutputDir(FILE_JAVA_GLCDCONTROLLERTYPE, code.str());
 }
 
 void buildCode_GlcdSize() {
@@ -443,6 +444,7 @@ void stripFontPrefixes(string &fontName) {
     }
 }
 
+//TODO: Automatically generate size + font name in the comment
 string buildCode_GlcdFont_Comment(const string &fontName) {
     vector<string> tokens = tokenizeString(fontName, '_');
     cout << fontName << endl;
@@ -464,13 +466,22 @@ void buildCode_GlcdFont() {
     code << AUTOGEN_MSG << endl;
     code << "package com.ibasco.pidisplay.drivers.glcd.enums;\n\n";
 
+    code << "import com.ibasco.pidisplay.core.ui.Font;\n\n";
+
     code << "@SuppressWarnings(\"unused\")\n";
-    code << "public enum GlcdFont {" << endl;
+    code << "public enum GlcdFont implements Font {" << endl;
+
     for (const auto &font : fonts) {
         static int i = 1;
+
+        if (std::find(excludeFonts.begin(), excludeFonts.end(), font) != excludeFonts.end()) {
+            cout << "Note: Excluding font name: " << font << endl;
+            i++;
+            continue;
+        }
+
         string fontUpper = font;
         stripFontPrefixes(fontUpper);
-
         //buildCode_GlcdFont_Comment(fontUpper);
 
         transform(fontUpper.begin(), fontUpper.end(), fontUpper.begin(), ::toupper);
@@ -487,7 +498,8 @@ void buildCode_GlcdFont() {
     code << "\t\tthis.fontKey = fontKey;\n";
     code << "\t}\n\n";
 
-    code << "\tpublic String getFontKey() {\n";
+    code << "\t@Override\n";
+    code << "\tpublic String getKey() {\n";
     code << "\t\treturn fontKey;\n";
     code << "\t}\n";
     code << "}";
@@ -538,6 +550,10 @@ void buildCode_updateCppLookupFonts() {
     code << "\tfont_map.clear();\n";
 
     for (const auto &fontName : fontFiles) {
+        if (std::find(excludeFonts.begin(), excludeFonts.end(), fontName) != excludeFonts.end()) {
+            cout << "Note: Excluding font name: " << fontName << endl;
+            continue;
+        }
         code << "\tfont_map[\"" << fontName << "\"] = " << fontName << ";" << endl;
     }
 
@@ -680,7 +696,7 @@ int main(int argc, char *argv[]) {
 
     //Start generating java code
     buildCode_GlcdSize();
-    buildCode_GlcdController();
+    buildCode_GlcdControllerType();
     buildCode_Glcd();
     buildCode_GlcdFont();
 
@@ -698,7 +714,7 @@ int main(int argc, char *argv[]) {
         exportFile(FILE_LOOKUP_SETUP, BASE_PROJECT_PATH_NATIVE_CPP + "/" + FILE_LOOKUP_SETUP);
         exportFile(FILE_LOOKUP_FONTS, BASE_PROJECT_PATH_NATIVE_CPP + "/" + FILE_LOOKUP_FONTS);
         exportFile(FILE_JAVA_GLCDSIZE, enumDirPath + "/" + FILE_JAVA_GLCDSIZE);
-        exportFile(FILE_JAVA_GLCDCONTROLLER, enumDirPath + "/" + FILE_JAVA_GLCDCONTROLLER);
+        exportFile(FILE_JAVA_GLCDCONTROLLERTYPE, enumDirPath + "/" + FILE_JAVA_GLCDCONTROLLERTYPE);
         exportFile(FILE_JAVA_GLCD, baseGlcdPackageDirPath + "/" + FILE_JAVA_GLCD);
         exportFile(FILE_JAVA_GLCDFONT, enumDirPath + "/" + FILE_JAVA_GLCDFONT);
     } else {
