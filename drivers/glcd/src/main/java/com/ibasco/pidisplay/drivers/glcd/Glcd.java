@@ -1,10 +1,10 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul  9 2018 20:06:20)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 10 2018 23:08:28)
  */
 
 package com.ibasco.pidisplay.drivers.glcd;
 
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdController;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdControllerType;
 
 import static com.ibasco.pidisplay.core.ui.U8g2Interface.*;
 
@@ -14,7 +14,7 @@ public interface Glcd {
     interface A2PRINTER {
         /** U8G2 Name: A2PRINTER 384X240 **/
         GlcdDisplay D_384x240 = new GlcdDisplay(
-                GlcdController.A2PRINTER,
+                GlcdControllerType.A2PRINTER,
                 "D_384x240",
                 48,
                 30,
@@ -26,7 +26,7 @@ public interface Glcd {
     interface HX1230 {
         /** U8G2 Name: HX1230 96X68 **/
         GlcdDisplay D_96x72 = new GlcdDisplay(
-                GlcdController.HX1230,
+                GlcdControllerType.HX1230,
                 "D_96x72",
                 12,
                 9,
@@ -38,7 +38,7 @@ public interface Glcd {
     interface IL3820 {
         /** U8G2 Name: IL3820 296X128 **/
         GlcdDisplay D_296x128 = new GlcdDisplay(
-                GlcdController.IL3820,
+                GlcdControllerType.IL3820,
                 "D_296x128",
                 37,
                 16,
@@ -46,7 +46,7 @@ public interface Glcd {
         );
         /** U8G2 Name: IL3820 V2_296X128 **/
         GlcdDisplay D_296x128_V2 = new GlcdDisplay(
-                GlcdController.IL3820,
+                GlcdControllerType.IL3820,
                 "D_296x128_V2",
                 37,
                 16,
@@ -58,7 +58,7 @@ public interface Glcd {
     interface IST3020 {
         /** U8G2 Name: IST3020 ERC19264 **/
         GlcdDisplay D_192x64_ERC19264 = new GlcdDisplay(
-                GlcdController.IST3020,
+                GlcdControllerType.IST3020,
                 "D_192x64_ERC19264",
                 24,
                 8,
@@ -70,7 +70,7 @@ public interface Glcd {
     interface KS0108 {
         /** U8G2 Name: KS0108 128X64 **/
         GlcdDisplay D_128x64 = new GlcdDisplay(
-                GlcdController.KS0108,
+                GlcdControllerType.KS0108,
                 "D_128x64",
                 16,
                 8,
@@ -78,7 +78,7 @@ public interface Glcd {
         );
         /** U8G2 Name: KS0108 ERM19264 **/
         GlcdDisplay D_192x64_ERM19264 = new GlcdDisplay(
-                GlcdController.KS0108,
+                GlcdControllerType.KS0108,
                 "D_192x64_ERM19264",
                 24,
                 8,
@@ -90,7 +90,7 @@ public interface Glcd {
     interface LC7981 {
         /** U8G2 Name: LC7981 160X80 **/
         GlcdDisplay D_160x80 = new GlcdDisplay(
-                GlcdController.LC7981,
+                GlcdControllerType.LC7981,
                 "D_160x80",
                 20,
                 10,
@@ -98,7 +98,7 @@ public interface Glcd {
         );
         /** U8G2 Name: LC7981 160X160 **/
         GlcdDisplay D_160x160 = new GlcdDisplay(
-                GlcdController.LC7981,
+                GlcdControllerType.LC7981,
                 "D_160x160",
                 20,
                 20,
@@ -106,7 +106,7 @@ public interface Glcd {
         );
         /** U8G2 Name: LC7981 240X128 **/
         GlcdDisplay D_240x128 = new GlcdDisplay(
-                GlcdController.LC7981,
+                GlcdControllerType.LC7981,
                 "D_240x128",
                 30,
                 16,
@@ -114,7 +114,7 @@ public interface Glcd {
         );
         /** U8G2 Name: LC7981 240X64 **/
         GlcdDisplay D_240x64 = new GlcdDisplay(
-                GlcdController.LC7981,
+                GlcdControllerType.LC7981,
                 "D_240x64",
                 30,
                 8,
@@ -126,7 +126,7 @@ public interface Glcd {
     interface LD7032 {
         /** U8G2 Name: LD7032 60X32 **/
         GlcdDisplay D_64x32 = new GlcdDisplay(
-                GlcdController.LD7032,
+                GlcdControllerType.LD7032,
                 "D_64x32",
                 8,
                 4,
@@ -139,7 +139,7 @@ public interface Glcd {
     interface LS013B7DH03 {
         /** U8G2 Name: LS013B7DH03 128X128 **/
         GlcdDisplay D_128x128 = new GlcdDisplay(
-                GlcdController.LS013B7DH03,
+                GlcdControllerType.LS013B7DH03,
                 "D_128x128",
                 16,
                 16,
@@ -151,7 +151,7 @@ public interface Glcd {
     interface MAX7219 {
         /** U8G2 Name: MAX7219 32X8 **/
         GlcdDisplay D_32x8 = new GlcdDisplay(
-                GlcdController.MAX7219,
+                GlcdControllerType.MAX7219,
                 "D_32x8",
                 4,
                 1,
@@ -159,7 +159,7 @@ public interface Glcd {
         );
         /** U8G2 Name: MAX7219 8X8 **/
         GlcdDisplay D_8x8 = new GlcdDisplay(
-                GlcdController.MAX7219,
+                GlcdControllerType.MAX7219,
                 "D_8x8",
                 1,
                 1,
@@ -171,7 +171,7 @@ public interface Glcd {
     interface NT7534 {
         /** U8G2 Name: NT7534 TG12864R **/
         GlcdDisplay D_128x64_TG12864R = new GlcdDisplay(
-                GlcdController.NT7534,
+                GlcdControllerType.NT7534,
                 "D_128x64_TG12864R",
                 16,
                 8,
@@ -183,7 +183,7 @@ public interface Glcd {
     interface PCD8544 {
         /** U8G2 Name: PCD8544 84X48 **/
         GlcdDisplay D_88x48 = new GlcdDisplay(
-                GlcdController.PCD8544,
+                GlcdControllerType.PCD8544,
                 "D_88x48",
                 11,
                 6,
@@ -195,7 +195,7 @@ public interface Glcd {
     interface PCF8812 {
         /** U8G2 Name: PCF8812 96X65 **/
         GlcdDisplay D_96x72 = new GlcdDisplay(
-                GlcdController.PCF8812,
+                GlcdControllerType.PCF8812,
                 "D_96x72",
                 12,
                 9,
@@ -207,7 +207,7 @@ public interface Glcd {
     interface RA8835 {
         /** U8G2 Name: RA8835 NHD_240X128 **/
         GlcdDisplay D_240x128_NHD = new GlcdDisplay(
-                GlcdController.RA8835,
+                GlcdControllerType.RA8835,
                 "D_240x128_NHD",
                 30,
                 16,
@@ -215,7 +215,7 @@ public interface Glcd {
         );
         /** U8G2 Name: RA8835 320X240 **/
         GlcdDisplay D_320x240 = new GlcdDisplay(
-                GlcdController.RA8835,
+                GlcdControllerType.RA8835,
                 "D_320x240",
                 40,
                 30,
@@ -227,7 +227,7 @@ public interface Glcd {
     interface SBN1661 {
         /** U8G2 Name: SBN1661 122X32 **/
         GlcdDisplay D_128x32 = new GlcdDisplay(
-                GlcdController.SBN1661,
+                GlcdControllerType.SBN1661,
                 "D_128x32",
                 16,
                 4,
@@ -239,7 +239,7 @@ public interface Glcd {
     interface SED1330 {
         /** U8G2 Name: SED1330 240X128 **/
         GlcdDisplay D_240x128 = new GlcdDisplay(
-                GlcdController.SED1330,
+                GlcdControllerType.SED1330,
                 "D_240x128",
                 30,
                 16,
@@ -251,7 +251,7 @@ public interface Glcd {
     interface SED1520 {
         /** U8G2 Name: SED1520 122X32 **/
         GlcdDisplay D_128x32 = new GlcdDisplay(
-                GlcdController.SED1520,
+                GlcdControllerType.SED1520,
                 "D_128x32",
                 16,
                 4,
@@ -263,7 +263,7 @@ public interface Glcd {
     interface SH1106 {
         /** U8G2 Name: SH1106 128X64_NONAME **/
         GlcdDisplay D_128x64_NONAME = new GlcdDisplay(
-                GlcdController.SH1106,
+                GlcdControllerType.SH1106,
                 "D_128x64_NONAME",
                 16,
                 8,
@@ -272,7 +272,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SH1106 128X64_VCOMH0 **/
         GlcdDisplay D_128x64_VCOMH0 = new GlcdDisplay(
-                GlcdController.SH1106,
+                GlcdControllerType.SH1106,
                 "D_128x64_VCOMH0",
                 16,
                 8,
@@ -281,7 +281,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SH1106 128X64_WINSTAR **/
         GlcdDisplay D_128x64_WINSTAR = new GlcdDisplay(
-                GlcdController.SH1106,
+                GlcdControllerType.SH1106,
                 "D_128x64_WINSTAR",
                 16,
                 8,
@@ -290,7 +290,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SH1106 72X40_WISE **/
         GlcdDisplay D_72x40_WISE = new GlcdDisplay(
-                GlcdController.SH1106,
+                GlcdControllerType.SH1106,
                 "D_72x40_WISE",
                 9,
                 5,
@@ -299,7 +299,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SH1106 64X32 **/
         GlcdDisplay D_64x32 = new GlcdDisplay(
-                GlcdController.SH1106,
+                GlcdControllerType.SH1106,
                 "D_64x32",
                 8,
                 4,
@@ -312,7 +312,7 @@ public interface Glcd {
     interface SH1107 {
         /** U8G2 Name: SH1107 64X128 **/
         GlcdDisplay D_64x128 = new GlcdDisplay(
-                GlcdController.SH1107,
+                GlcdControllerType.SH1107,
                 "D_64x128",
                 8,
                 16,
@@ -321,7 +321,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SH1107 SEEED_96X96 **/
         GlcdDisplay D_96x96_SEEED = new GlcdDisplay(
-                GlcdController.SH1107,
+                GlcdControllerType.SH1107,
                 "D_96x96_SEEED",
                 12,
                 12,
@@ -330,7 +330,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SH1107 128X128 **/
         GlcdDisplay D_128x128 = new GlcdDisplay(
-                GlcdController.SH1107,
+                GlcdControllerType.SH1107,
                 "D_128x128",
                 16,
                 16,
@@ -343,7 +343,7 @@ public interface Glcd {
     interface SH1108 {
         /** U8G2 Name: SH1108 160X160 **/
         GlcdDisplay D_160x160 = new GlcdDisplay(
-                GlcdController.SH1108,
+                GlcdControllerType.SH1108,
                 "D_160x160",
                 20,
                 20,
@@ -356,7 +356,7 @@ public interface Glcd {
     interface SH1122 {
         /** U8G2 Name: SH1122 256X64 **/
         GlcdDisplay D_256x64 = new GlcdDisplay(
-                GlcdController.SH1122,
+                GlcdControllerType.SH1122,
                 "D_256x64",
                 32,
                 8,
@@ -369,7 +369,7 @@ public interface Glcd {
     interface SSD1305 {
         /** U8G2 Name: SSD1305 128X32_NONAME **/
         GlcdDisplay D_128x32_NONAME = new GlcdDisplay(
-                GlcdController.SSD1305,
+                GlcdControllerType.SSD1305,
                 "D_128x32_NONAME",
                 16,
                 4,
@@ -378,7 +378,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1305 128X64_ADAFRUIT **/
         GlcdDisplay D_128x64_ADAFRUIT = new GlcdDisplay(
-                GlcdController.SSD1305,
+                GlcdControllerType.SSD1305,
                 "D_128x64_ADAFRUIT",
                 16,
                 8,
@@ -391,7 +391,7 @@ public interface Glcd {
     interface SSD1306 {
         /** U8G2 Name: SSD1306 128X64_NONAME **/
         GlcdDisplay D_128x64_NONAME = new GlcdDisplay(
-                GlcdController.SSD1306,
+                GlcdControllerType.SSD1306,
                 "D_128x64_NONAME",
                 16,
                 8,
@@ -400,7 +400,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1306 128X64_VCOMH0 **/
         GlcdDisplay D_128x64_VCOMH0 = new GlcdDisplay(
-                GlcdController.SSD1306,
+                GlcdControllerType.SSD1306,
                 "D_128x64_VCOMH0",
                 16,
                 8,
@@ -409,7 +409,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1306 128X64_ALT0 **/
         GlcdDisplay D_128x64_ALT0 = new GlcdDisplay(
-                GlcdController.SSD1306,
+                GlcdControllerType.SSD1306,
                 "D_128x64_ALT0",
                 16,
                 8,
@@ -418,7 +418,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1306 128X32_UNIVISION **/
         GlcdDisplay D_128x32_UNIVISION = new GlcdDisplay(
-                GlcdController.SSD1306,
+                GlcdControllerType.SSD1306,
                 "D_128x32_UNIVISION",
                 16,
                 4,
@@ -427,7 +427,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1306 64X48_ER **/
         GlcdDisplay D_64x48_ER = new GlcdDisplay(
-                GlcdController.SSD1306,
+                GlcdControllerType.SSD1306,
                 "D_64x48_ER",
                 8,
                 6,
@@ -436,7 +436,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1306 48X64_WINSTAR **/
         GlcdDisplay D_48x64_WINSTAR = new GlcdDisplay(
-                GlcdController.SSD1306,
+                GlcdControllerType.SSD1306,
                 "D_48x64_WINSTAR",
                 6,
                 8,
@@ -445,7 +445,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1306 64X32_NONAME **/
         GlcdDisplay D_64x32_NONAME = new GlcdDisplay(
-                GlcdController.SSD1306,
+                GlcdControllerType.SSD1306,
                 "D_64x32_NONAME",
                 8,
                 4,
@@ -454,7 +454,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1306 64X32_1F **/
         GlcdDisplay D_64x32_1F = new GlcdDisplay(
-                GlcdController.SSD1306,
+                GlcdControllerType.SSD1306,
                 "D_64x32_1F",
                 8,
                 4,
@@ -463,7 +463,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1306 96X16_ER **/
         GlcdDisplay D_96x16_ER = new GlcdDisplay(
-                GlcdController.SSD1306,
+                GlcdControllerType.SSD1306,
                 "D_96x16_ER",
                 12,
                 2,
@@ -476,7 +476,7 @@ public interface Glcd {
     interface SSD1309 {
         /** U8G2 Name: SSD1309 128X64_NONAME2 **/
         GlcdDisplay D_128x64_NONAME2 = new GlcdDisplay(
-                GlcdController.SSD1309,
+                GlcdControllerType.SSD1309,
                 "D_128x64_NONAME2",
                 16,
                 8,
@@ -485,7 +485,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1309 128X64_NONAME0 **/
         GlcdDisplay D_128x64_NONAME0 = new GlcdDisplay(
-                GlcdController.SSD1309,
+                GlcdControllerType.SSD1309,
                 "D_128x64_NONAME0",
                 16,
                 8,
@@ -498,7 +498,7 @@ public interface Glcd {
     interface SSD1322 {
         /** U8G2 Name: SSD1322 NHD_256X64 **/
         GlcdDisplay D_256x64_NHD = new GlcdDisplay(
-                GlcdController.SSD1322,
+                GlcdControllerType.SSD1322,
                 "D_256x64_NHD",
                 32,
                 8,
@@ -506,7 +506,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1322 NHD_128X64 **/
         GlcdDisplay D_128x64_NHD = new GlcdDisplay(
-                GlcdController.SSD1322,
+                GlcdControllerType.SSD1322,
                 "D_128x64_NHD",
                 16,
                 8,
@@ -518,7 +518,7 @@ public interface Glcd {
     interface SSD1325 {
         /** U8G2 Name: SSD1325 NHD_128X64 **/
         GlcdDisplay D_128x64_NHD = new GlcdDisplay(
-                GlcdController.SSD1325,
+                GlcdControllerType.SSD1325,
                 "D_128x64_NHD",
                 16,
                 8,
@@ -531,7 +531,7 @@ public interface Glcd {
     interface SSD1326 {
         /** U8G2 Name: SSD1326 ER_256X32 **/
         GlcdDisplay D_256x32_ER = new GlcdDisplay(
-                GlcdController.SSD1326,
+                GlcdControllerType.SSD1326,
                 "D_256x32_ER",
                 32,
                 4,
@@ -544,7 +544,7 @@ public interface Glcd {
     interface SSD1327 {
         /** U8G2 Name: SSD1327 SEEED_96X96 **/
         GlcdDisplay D_96x96_SEEED = new GlcdDisplay(
-                GlcdController.SSD1327,
+                GlcdControllerType.SSD1327,
                 "D_96x96_SEEED",
                 12,
                 12,
@@ -553,7 +553,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1327 EA_W128128 **/
         GlcdDisplay D_128x128_EAW128128 = new GlcdDisplay(
-                GlcdController.SSD1327,
+                GlcdControllerType.SSD1327,
                 "D_128x128_EAW128128",
                 16,
                 16,
@@ -562,7 +562,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1327 MIDAS_128X128 **/
         GlcdDisplay D_128x128_MIDAS = new GlcdDisplay(
-                GlcdController.SSD1327,
+                GlcdControllerType.SSD1327,
                 "D_128x128_MIDAS",
                 16,
                 16,
@@ -575,7 +575,7 @@ public interface Glcd {
     interface SSD1329 {
         /** U8G2 Name: SSD1329 128X96_NONAME **/
         GlcdDisplay D_128x96_NONAME = new GlcdDisplay(
-                GlcdController.SSD1329,
+                GlcdControllerType.SSD1329,
                 "D_128x96_NONAME",
                 16,
                 12,
@@ -587,7 +587,7 @@ public interface Glcd {
     interface SSD1606 {
         /** U8G2 Name: SSD1606 172X72 **/
         GlcdDisplay D_176x72 = new GlcdDisplay(
-                GlcdController.SSD1606,
+                GlcdControllerType.SSD1606,
                 "D_176x72",
                 22,
                 9,
@@ -599,7 +599,7 @@ public interface Glcd {
     interface SSD1607 {
         /** U8G2 Name: SSD1607 200X200 **/
         GlcdDisplay D_200x200 = new GlcdDisplay(
-                GlcdController.SSD1607,
+                GlcdControllerType.SSD1607,
                 "D_200x200",
                 25,
                 25,
@@ -607,7 +607,7 @@ public interface Glcd {
         );
         /** U8G2 Name: SSD1607 GD_200X200 **/
         GlcdDisplay D_200x200_GD = new GlcdDisplay(
-                GlcdController.SSD1607,
+                GlcdControllerType.SSD1607,
                 "D_200x200_GD",
                 25,
                 25,
@@ -619,7 +619,7 @@ public interface Glcd {
     interface ST75256 {
         /** U8G2 Name: ST75256 JLX256128 **/
         GlcdDisplay D_256x128_JLX256128 = new GlcdDisplay(
-                GlcdController.ST75256,
+                GlcdControllerType.ST75256,
                 "D_256x128_JLX256128",
                 32,
                 16,
@@ -628,7 +628,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST75256 JLX256160 **/
         GlcdDisplay D_256x160_JLX256160 = new GlcdDisplay(
-                GlcdController.ST75256,
+                GlcdControllerType.ST75256,
                 "D_256x160_JLX256160",
                 32,
                 20,
@@ -637,7 +637,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST75256 JLX240160 **/
         GlcdDisplay D_240x160_JLX240160 = new GlcdDisplay(
-                GlcdController.ST75256,
+                GlcdControllerType.ST75256,
                 "D_240x160_JLX240160",
                 30,
                 20,
@@ -646,7 +646,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST75256 JLX25664 **/
         GlcdDisplay D_256x64_JLX25664 = new GlcdDisplay(
-                GlcdController.ST75256,
+                GlcdControllerType.ST75256,
                 "D_256x64_JLX25664",
                 32,
                 8,
@@ -655,7 +655,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST75256 JLX172104 **/
         GlcdDisplay D_176x104_JLX172104 = new GlcdDisplay(
-                GlcdController.ST75256,
+                GlcdControllerType.ST75256,
                 "D_176x104_JLX172104",
                 22,
                 13,
@@ -668,7 +668,7 @@ public interface Glcd {
     interface ST7565 {
         /** U8G2 Name: ST7565 EA_DOGM128 **/
         GlcdDisplay D_128x64_EADOGM128 = new GlcdDisplay(
-                GlcdController.ST7565,
+                GlcdControllerType.ST7565,
                 "D_128x64_EADOGM128",
                 16,
                 8,
@@ -676,7 +676,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7565 64128N **/
         GlcdDisplay D_128x64_64128N = new GlcdDisplay(
-                GlcdController.ST7565,
+                GlcdControllerType.ST7565,
                 "D_128x64_64128N",
                 16,
                 8,
@@ -684,7 +684,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7565 ZOLEN_128X64 **/
         GlcdDisplay D_128x64_ZOLEN = new GlcdDisplay(
-                GlcdController.ST7565,
+                GlcdControllerType.ST7565,
                 "D_128x64_ZOLEN",
                 16,
                 8,
@@ -692,7 +692,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7565 LM6059 **/
         GlcdDisplay D_128x64_LM6059 = new GlcdDisplay(
-                GlcdController.ST7565,
+                GlcdControllerType.ST7565,
                 "D_128x64_LM6059",
                 16,
                 8,
@@ -700,7 +700,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7565 LX12864 **/
         GlcdDisplay D_128x64_LX12864 = new GlcdDisplay(
-                GlcdController.ST7565,
+                GlcdControllerType.ST7565,
                 "D_128x64_LX12864",
                 16,
                 8,
@@ -708,7 +708,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7565 ERC12864 **/
         GlcdDisplay D_128x64_ERC12864 = new GlcdDisplay(
-                GlcdController.ST7565,
+                GlcdControllerType.ST7565,
                 "D_128x64_ERC12864",
                 16,
                 8,
@@ -716,7 +716,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7565 NHD_C12864 **/
         GlcdDisplay D_128x64_NHDC12864 = new GlcdDisplay(
-                GlcdController.ST7565,
+                GlcdControllerType.ST7565,
                 "D_128x64_NHDC12864",
                 16,
                 8,
@@ -724,7 +724,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7565 JLX12864 **/
         GlcdDisplay D_128x64_JLX12864 = new GlcdDisplay(
-                GlcdController.ST7565,
+                GlcdControllerType.ST7565,
                 "D_128x64_JLX12864",
                 16,
                 8,
@@ -732,7 +732,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7565 NHD_C12832 **/
         GlcdDisplay D_128x32_NHDC12832 = new GlcdDisplay(
-                GlcdController.ST7565,
+                GlcdControllerType.ST7565,
                 "D_128x32_NHDC12832",
                 16,
                 4,
@@ -740,7 +740,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7565 EA_DOGM132 **/
         GlcdDisplay D_136x32_EADOGM132 = new GlcdDisplay(
-                GlcdController.ST7565,
+                GlcdControllerType.ST7565,
                 "D_136x32_EADOGM132",
                 17,
                 4,
@@ -752,7 +752,7 @@ public interface Glcd {
     interface ST7567 {
         /** U8G2 Name: ST7567 PI_132X64 **/
         GlcdDisplay D_136x64_PI = new GlcdDisplay(
-                GlcdController.ST7567,
+                GlcdControllerType.ST7567,
                 "D_136x64_PI",
                 17,
                 8,
@@ -760,7 +760,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7567 JLX12864 **/
         GlcdDisplay D_128x64_JLX12864 = new GlcdDisplay(
-                GlcdController.ST7567,
+                GlcdControllerType.ST7567,
                 "D_128x64_JLX12864",
                 16,
                 8,
@@ -768,7 +768,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7567 ENH_DG128064 **/
         GlcdDisplay D_128x64_ENHDG128064 = new GlcdDisplay(
-                GlcdController.ST7567,
+                GlcdControllerType.ST7567,
                 "D_128x64_ENHDG128064",
                 16,
                 8,
@@ -776,7 +776,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7567 ENH_DG128064I **/
         GlcdDisplay D_128x64_ENHDG128064I = new GlcdDisplay(
-                GlcdController.ST7567,
+                GlcdControllerType.ST7567,
                 "D_128x64_ENHDG128064I",
                 16,
                 8,
@@ -788,7 +788,7 @@ public interface Glcd {
     interface ST7588 {
         /** U8G2 Name: ST7588 JLX12864 **/
         GlcdDisplay D_128x64_JLX12864 = new GlcdDisplay(
-                GlcdController.ST7588,
+                GlcdControllerType.ST7588,
                 "D_128x64_JLX12864",
                 16,
                 8,
@@ -801,7 +801,7 @@ public interface Glcd {
     interface ST7920 {
         /** U8G2 Name: ST7920 192X32 **/
         GlcdDisplay D_192x32 = new GlcdDisplay(
-                GlcdController.ST7920,
+                GlcdControllerType.ST7920,
                 "D_192x32",
                 24,
                 4,
@@ -811,7 +811,7 @@ public interface Glcd {
         );
         /** U8G2 Name: ST7920 128X64 **/
         GlcdDisplay D_128x64 = new GlcdDisplay(
-                GlcdController.ST7920,
+                GlcdControllerType.ST7920,
                 "D_128x64",
                 16,
                 8,
@@ -825,7 +825,7 @@ public interface Glcd {
     interface T6963 {
         /** U8G2 Name: T6963 240X128 **/
         GlcdDisplay D_240x128 = new GlcdDisplay(
-                GlcdController.T6963,
+                GlcdControllerType.T6963,
                 "D_240x128",
                 30,
                 16,
@@ -833,7 +833,7 @@ public interface Glcd {
         );
         /** U8G2 Name: T6963 240X64 **/
         GlcdDisplay D_240x64 = new GlcdDisplay(
-                GlcdController.T6963,
+                GlcdControllerType.T6963,
                 "D_240x64",
                 30,
                 8,
@@ -841,7 +841,7 @@ public interface Glcd {
         );
         /** U8G2 Name: T6963 256X64 **/
         GlcdDisplay D_256x64 = new GlcdDisplay(
-                GlcdController.T6963,
+                GlcdControllerType.T6963,
                 "D_256x64",
                 32,
                 8,
@@ -849,7 +849,7 @@ public interface Glcd {
         );
         /** U8G2 Name: T6963 128X64 **/
         GlcdDisplay D_128x64 = new GlcdDisplay(
-                GlcdController.T6963,
+                GlcdControllerType.T6963,
                 "D_128x64",
                 16,
                 8,
@@ -857,7 +857,7 @@ public interface Glcd {
         );
         /** U8G2 Name: T6963 160X80 **/
         GlcdDisplay D_160x80 = new GlcdDisplay(
-                GlcdController.T6963,
+                GlcdControllerType.T6963,
                 "D_160x80",
                 20,
                 10,
@@ -869,7 +869,7 @@ public interface Glcd {
     interface UC1601 {
         /** U8G2 Name: UC1601 128X32 **/
         GlcdDisplay D_128x32 = new GlcdDisplay(
-                GlcdController.UC1601,
+                GlcdControllerType.UC1601,
                 "D_128x32",
                 16,
                 4,
@@ -882,7 +882,7 @@ public interface Glcd {
     interface UC1604 {
         /** U8G2 Name: UC1604 JLX19264 **/
         GlcdDisplay D_192x64_JLX19264 = new GlcdDisplay(
-                GlcdController.UC1604,
+                GlcdControllerType.UC1604,
                 "D_192x64_JLX19264",
                 24,
                 8,
@@ -895,7 +895,7 @@ public interface Glcd {
     interface UC1608 {
         /** U8G2 Name: UC1608 ERC24064 **/
         GlcdDisplay D_240x64_ERC24064 = new GlcdDisplay(
-                GlcdController.UC1608,
+                GlcdControllerType.UC1608,
                 "D_240x64_ERC24064",
                 30,
                 8,
@@ -904,7 +904,7 @@ public interface Glcd {
         );
         /** U8G2 Name: UC1608 ERC240120 **/
         GlcdDisplay D_240x120_ERC240120 = new GlcdDisplay(
-                GlcdController.UC1608,
+                GlcdControllerType.UC1608,
                 "D_240x120_ERC240120",
                 30,
                 15,
@@ -913,7 +913,7 @@ public interface Glcd {
         );
         /** U8G2 Name: UC1608 240X128 **/
         GlcdDisplay D_240x128 = new GlcdDisplay(
-                GlcdController.UC1608,
+                GlcdControllerType.UC1608,
                 "D_240x128",
                 30,
                 16,
@@ -926,7 +926,7 @@ public interface Glcd {
     interface UC1610 {
         /** U8G2 Name: UC1610 EA_DOGXL160 **/
         GlcdDisplay D_160x104_EADOGXL160 = new GlcdDisplay(
-                GlcdController.UC1610,
+                GlcdControllerType.UC1610,
                 "D_160x104_EADOGXL160",
                 20,
                 13,
@@ -939,7 +939,7 @@ public interface Glcd {
     interface UC1611 {
         /** U8G2 Name: UC1611 EA_DOGM240 **/
         GlcdDisplay D_240x64_EADOGM240 = new GlcdDisplay(
-                GlcdController.UC1611,
+                GlcdControllerType.UC1611,
                 "D_240x64_EADOGM240",
                 30,
                 8,
@@ -948,7 +948,7 @@ public interface Glcd {
         );
         /** U8G2 Name: UC1611 EA_DOGXL240 **/
         GlcdDisplay D_240x128_EADOGXL240 = new GlcdDisplay(
-                GlcdController.UC1611,
+                GlcdControllerType.UC1611,
                 "D_240x128_EADOGXL240",
                 30,
                 16,
@@ -957,7 +957,7 @@ public interface Glcd {
         );
         /** U8G2 Name: UC1611 EW50850 **/
         GlcdDisplay D_240x160_EW50850 = new GlcdDisplay(
-                GlcdController.UC1611,
+                GlcdControllerType.UC1611,
                 "D_240x160_EW50850",
                 30,
                 20,
@@ -970,7 +970,7 @@ public interface Glcd {
     interface UC1638 {
         /** U8G2 Name: UC1638 160X128 **/
         GlcdDisplay D_160x128 = new GlcdDisplay(
-                GlcdController.UC1638,
+                GlcdControllerType.UC1638,
                 "D_160x128",
                 20,
                 16,
@@ -982,7 +982,7 @@ public interface Glcd {
     interface UC1701 {
         /** U8G2 Name: UC1701 EA_DOGS102 **/
         GlcdDisplay D_104x64_EADOGS102 = new GlcdDisplay(
-                GlcdController.UC1701,
+                GlcdControllerType.UC1701,
                 "D_104x64_EADOGS102",
                 13,
                 8,
@@ -990,7 +990,7 @@ public interface Glcd {
         );
         /** U8G2 Name: UC1701 MINI12864 **/
         GlcdDisplay D_128x64_MINI12864 = new GlcdDisplay(
-                GlcdController.UC1701,
+                GlcdControllerType.UC1701,
                 "D_128x64_MINI12864",
                 16,
                 8,
