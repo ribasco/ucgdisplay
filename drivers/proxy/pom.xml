@@ -8,6 +8,7 @@
         <artifactId>pi-display</artifactId>
         <groupId>com.ibasco.pidisplay</groupId>
         <version>0.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <packaging>jar</packaging>
