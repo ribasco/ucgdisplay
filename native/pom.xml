@@ -108,7 +108,6 @@
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
                                               failonerror="true">
                                             <arg line="--target all"/>
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=./cmake/RpiToolchain.cmake"/>
                                             <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/arm"/>
