@@ -13,12 +13,8 @@ public class PidispJniExtractor extends DefaultJniExtractor {
 
     public static final Logger log = getLogger(PidispJniExtractor.class);
 
-    public PidispJniExtractor() throws IOException {
+    PidispJniExtractor() throws IOException {
         super();
-    }
-
-    public PidispJniExtractor(Class<?> libraryJarClass, String tmplib) throws IOException {
-        super(libraryJarClass, tmplib);
     }
 
     @Override
@@ -29,12 +25,21 @@ public class PidispJniExtractor extends DefaultJniExtractor {
         if (!StringUtils.isBlank(lPath)) {
             String mappedName = System.mapLibraryName(libname);
             String fullPath = lPath + File.separator + mappedName;
+            log.debug("[JNI-EXTRACT #1]: Searching in path: {}", fullPath);
             File libFile = new File(fullPath);
             if (libFile.exists() && libFile.canRead()) {
-                log.debug("JNI-EXTRACT: Found library: {}", fullPath);
                 return libFile;
             }
         }
-        return super.extractJni(libPath, libname);
+
+        //Search by OS/ARCH
+        String osName = System.getProperty("os.name");
+        String osArch = System.getProperty("os.arch");
+        String osPath = String.format("lib/%s%s%s/", osName, File.separator, osArch).toLowerCase();
+        log.info("[JNI-EXTRACT #2] Searching in path: {}", osPath);
+        File file = super.extractJni(osPath, libname);
+        if (file != null)
+            return file;
+        return super.extractJni("", libname);
     }
 }

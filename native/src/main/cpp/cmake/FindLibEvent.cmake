@@ -41,6 +41,8 @@ macro(GetLibFromRepo)
 
     set(LIBNAME "event")
 
+    # TODO: Check if we have already downloaded libevent
+
     ExternalProject_Add(
             libevent
             GIT_REPOSITORY "https://github.com/libevent/libevent.git"
