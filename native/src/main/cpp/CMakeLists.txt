@@ -34,6 +34,9 @@ set(LIB_DIR "${CMAKE_SOURCE_DIR}/lib")
 find_package(U8G2 REQUIRED)
 find_package(LibEvent REQUIRED)
 find_package(JNILib REQUIRED)
+find_package(Threads REQUIRED)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 # Obtain the required libraries, if none found in the system, cmake will try to download them for you
 if (CMAKE_CROSSCOMPILING)
@@ -89,5 +92,5 @@ endif ()
 #add_custom_command(TARGET pidisp POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:pidisp>" "${CMAKE_SOURCE_DIR}/../resources/")
 
 include_directories(${LIBEVENT_INCLUDE_DIRS} ${JNI_INCLUDE_DIRS} ${U8G2_INCLUDE_DIR} ${WIRINGPI_INCLUDE_DIR} ${U8G2_INCLUDE_DIR})
-target_link_libraries(pidisp ${LIBEVENT_LIBRARIES} ${JNI_LIBRARIES} ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES})
-target_link_libraries(pidisp-test ${LIBEVENT_LIBRARIES} ${U8G2_LIBRARIES})
+target_link_libraries(pidisp ${LIBEVENT_LIBRARIES} ${JNI_LIBRARIES} ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES} Threads::Threads)
+target_link_libraries(pidisp-test ${LIBEVENT_LIBRARIES} ${U8G2_LIBRARIES} Threads::Threads)
