@@ -58,7 +58,7 @@ public class GlcdDriver implements GraphicsDisplayDriver {
         if (!config.getDisplay().hasCommType(config.getCommInterface())) {
             String protocols = config.getDisplay().getCommTypes().stream().map(Object::toString).collect(Collectors.joining(", "));
             throw new GlcdConfigException(
-                    String.format("The selected protocol '%s' is not supported by display '%s' (Supported Protocols: %s)", config.getCommInterface().name(), config.getDisplay().getName(), protocols),
+                    String.format("The selected communication interface '%s' is not supported by your display controller '%s :: %s' (Supported Interfaces: %s)", config.getCommInterface().name(), config.getDisplay().getController().name(), config.getDisplay().getName(), protocols),
                     config
             );
         }
