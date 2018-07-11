@@ -15,10 +15,6 @@
     <dependencies>
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>
-            <artifactId>pi-display-drivers-hd44780</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ibasco.pidisplay</groupId>
             <artifactId>pi-display-impl-charlcd</artifactId>
         </dependency>
         <dependency>
@@ -54,11 +50,6 @@
             <groupId>eu.hansolo</groupId>
             <artifactId>Medusa</artifactId>
             <version>7.9</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ibasco.pidisplay</groupId>
-            <artifactId>pi-display-impl-charlcd</artifactId>
-            <version>0.1-SNAPSHOT</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.googlecode.soundlibs/mp3spi -->
         <dependency>
