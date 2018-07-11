@@ -177,29 +177,32 @@
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/arm"/>
                                         </exec>
+                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/x86"
+                                              failonerror="true">
+                                            <arg line="VERBOSE=1"/>
+                                        </exec>
+                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/arm"
+                                              failonerror="true">
+                                            <arg line="VERBOSE=1"/>
+                                        </exec>
                                     </then>
                                     <else>
                                         <echo>[CROSS_COMPILE=OFF] Performing standard build</echo>
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
                                               failonerror="true">
                                             <arg line="--target all"/>
-                                            <!--<arg line="-DCMAKE_TOOLCHAIN_FILE=./cmake/RpiToolchain.cmake"/>-->
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
                                             <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/arm"/>
                                         </exec>
+                                        <!-- Only build the ARM binaries -->
+                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/arm"
+                                              failonerror="true">
+                                            <arg line="VERBOSE=1"/>
+                                        </exec>
                                     </else>
                                 </if>
-
-                                <exec executable="make" dir="${project.basedir}/src/main/cpp/build/x86"
-                                      failonerror="true">
-                                    <arg line="VERBOSE=1"/>
-                                </exec>
-                                <exec executable="make" dir="${project.basedir}/src/main/cpp/build/arm"
-                                      failonerror="true">
-                                    <arg line="VERBOSE=1"/>
-                                </exec>
                             </target>
                         </configuration>
                     </execution>
