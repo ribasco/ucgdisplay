@@ -35,26 +35,9 @@ find_package(U8G2 REQUIRED)
 find_package(LibEvent REQUIRED)
 find_package(JNILib REQUIRED)
 find_package(Threads REQUIRED)
+find_package(WiringPi REQUIRED)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-
-# Obtain the required libraries, if none found in the system, cmake will try to download them for you
-if (CMAKE_CROSSCOMPILING)
-    include("./cmake/GetWiringPi.cmake")
-else ()
-    # we are not cross compiling, so we must be compiling on ARM system
-    #[[ message(STATUS "System Processor = ${CMAKE_SYSTEM_PROCESSOR}")
-     if (NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm")
-         message(FATAL_ERROR "You are only allowed to build on top of an ARM system (Raspberry Pi)")
-     endif ()]]
-
-    # Check Wiring Pi
-    find_package(WiringPi)
-    if (NOT WiringPi_FOUND)
-        message(STATUS "Wiring Pi library not found in system. Gonna try to download...")
-        include("./cmake/GetWiringPi.cmake")
-    endif ()
-endif ()
 
 message(STATUS "[WIRING-PI] WIRINGPI_LIBRARIES = ${WIRINGPI_LIBRARIES}")
 message(STATUS "[WIRING-PI] WIRINGPI_INCLUDE_DIR = ${WIRINGPI_INCLUDE_DIR}")
@@ -87,9 +70,6 @@ endif ()
 if (TARGET u8g2)
     add_dependencies(pidisp u8g2)
 endif ()
-
-#message(STATUS "COPY SOURCE DIR = ${CMAKE_SOURCE_DIR}")
-#add_custom_command(TARGET pidisp POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:pidisp>" "${CMAKE_SOURCE_DIR}/../resources/")
 
 include_directories(${LIBEVENT_INCLUDE_DIRS} ${JNI_INCLUDE_DIRS} ${U8G2_INCLUDE_DIR} ${WIRINGPI_INCLUDE_DIR} ${U8G2_INCLUDE_DIR})
 target_link_libraries(pidisp ${LIBEVENT_LIBRARIES} ${JNI_LIBRARIES} ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES} Threads::Threads)

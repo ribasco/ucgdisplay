@@ -52,17 +52,13 @@
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
         </dependency>
-        <dependency>
-            <groupId>ant-contrib</groupId>
-            <artifactId>ant-contrib</artifactId>
-        </dependency>
     </dependencies>
 
-    <!-- Build Profiles -->
+    <!-- Build Profiles for different platforms -->
     <profiles>
-        <!-- Activate if running on Raspberry Pi -->
+        <!-- Profile is activated if found to be running on an ARM machine -->
         <profile>
-            <id>local-compile</id>
+            <id>build-arm</id>
             <activation>
                 <os>
                     <name>linux</name>
@@ -71,13 +67,112 @@
                 </os>
             </activation>
             <properties>
-                <cross-compile-enabled>false</cross-compile-enabled>
+                <current-osarch>linux-arm</current-osarch>
             </properties>
+
+            <build>
+                <plugins>
+                    <!-- Ant-Run Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <!-- Prepare directories -->
+                            <execution>
+                                <id>generate-sources</id>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <target name="generate-sources">
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/linux/arm"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+
+                            <!-- Compile native library using CMake -->
+                            <execution>
+                                <id>make</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target name="build-pidisp">
+                                        <!-- Build both architectures when Cross-Compiling -->
+                                        <echo>[HOST=ARM] Building ARM binaries only</echo>
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
+                                              failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=./cmake/RpiToolchain.cmake"/>
+                                            <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/arm"/>
+                                        </exec>
+                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/arm"
+                                              failonerror="true">
+                                            <arg line="VERBOSE=1"/>
+                                        </exec>
+
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant</artifactId>
+                                <version>${ant.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+
+                    <!-- Copy native libraries to project's target directory -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <!-- Copy ARM binaries -->
+                            <execution>
+                                <id>copy-lib-arm</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/classes/lib/linux/arm</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/src/main/cpp/build/arm/bin</directory>
+                                            <filtering>true</filtering>
+                                            <includes>
+                                                <include>${lib-output-filename}</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                    <fileNameFiltering>
+                                        true
+                                    </fileNameFiltering>
+                                    <nonFilteredFileExtensions>
+                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
+                                    </nonFilteredFileExtensions>
+                                    <overwrite>true</overwrite>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
 
-        <!-- Activate if running on x86* (For cross-compiling) -->
+        <!-- Profile is activated is found to be running on x86_64/amd64 machine -->
         <profile>
-            <id>cross-compile</id>
+            <id>build-amd64</id>
             <activation>
                 <os>
                     <name>linux</name>
@@ -86,8 +181,148 @@
                 </os>
             </activation>
             <properties>
-                <cross-compile-enabled>true</cross-compile-enabled>
+                <current-osarch>linux-amd64</current-osarch>
             </properties>
+
+            <build>
+                <plugins>
+                    <!-- Ant-Run Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <!-- Prepare directories -->
+                            <execution>
+                                <id>generate-sources</id>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <target name="generate-sources">
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/linux/arm"/>
+                                        <mkdir dir="target/classes/lib/linux/amd64"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+
+                            <!-- Compile native library using CMake -->
+                            <execution>
+                                <id>make</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target name="build-pidisp">
+                                        <!-- Build both architectures when Cross-Compiling -->
+                                        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions</echo>
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
+                                              failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/x86"/>
+                                        </exec>
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
+                                              failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=./cmake/RpiToolchain.cmake"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/arm"/>
+                                        </exec>
+                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/x86"
+                                              failonerror="true">
+                                            <arg line="VERBOSE=1"/>
+                                        </exec>
+                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/arm"
+                                              failonerror="true">
+                                            <arg line="VERBOSE=1"/>
+                                        </exec>
+
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant</artifactId>
+                                <version>${ant.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+
+                    <!-- Copy native libraries to project's target directory -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <!-- Copy ARM binaries to META-INF/lib -->
+                            <execution>
+                                <id>copy-lib-arm</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/classes/lib/linux/arm</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/src/main/cpp/build/arm/bin</directory>
+                                            <filtering>true</filtering>
+                                            <includes>
+                                                <include>${lib-output-filename}</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                    <fileNameFiltering>
+                                        true
+                                    </fileNameFiltering>
+                                    <nonFilteredFileExtensions>
+                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
+                                    </nonFilteredFileExtensions>
+                                    <overwrite>true</overwrite>
+                                </configuration>
+                            </execution>
+                            <!-- Copy x86_64/amd64 binaries to META-INF/lib -->
+                            <execution>
+                                <id>copy-lib-x86</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/classes/lib/linux/amd64</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/src/main/cpp/build/x86/bin</directory>
+                                            <filtering>true</filtering>
+                                            <includes>
+                                                <include>${lib-output-filename}</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                    <nonFilteredFileExtensions>
+                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
+                                    </nonFilteredFileExtensions>
+                                    <fileNameFiltering>
+                                        true
+                                    </fileNameFiltering>
+                                    <overwrite>true</overwrite>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
@@ -121,121 +356,8 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Ant-Run Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <!-- Prepare directories -->
-                    <execution>
-                        <id>generate-sources</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <tasks>
-                                <mkdir dir="target"/>
-                                <mkdir dir="target/classes"/>
-                                <mkdir dir="target/natives"/>
-                                <mkdir dir="target/natives/linux_32/arm"/>
-                                <mkdir dir="target/natives/linux_32/x86"/>
-                                <!--<mkdir dir="target/natives/bin/arm"/>
-                                <mkdir dir="target/natives/bin/x86"/>-->
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <!-- Compile native library using CMake -->
-                    <execution>
-                        <id>make</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target name="build-pidisp">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath"/>
-                                <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                    <arg line="--target all"/>
-                                    <arg line="-DCMAKE_BUILD_TYPE=Release"/>
-                                    <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
-                                    <arg line="-H."/>
-                                    <arg line="-Bbuild/x86"/>
-                                </exec>
-                                <if>
-                                    <equals arg1="${cross-compile-enabled}" arg2="true"/>
-                                    <then>
-                                        <echo>[CROSS_COMPILE=ON] Invoking CMAKE Cross-compile build instructions</echo>
-                                        <!-- Cross-Compile -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
-                                              failonerror="true">
-                                            <arg line="--target all"/>
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=./cmake/RpiToolchain.cmake"/>
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
-                                            <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
-                                            <arg line="-H."/>
-                                            <arg line="-Bbuild/arm"/>
-                                        </exec>
-                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/x86"
-                                              failonerror="true">
-                                            <arg line="VERBOSE=1"/>
-                                        </exec>
-                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/arm"
-                                              failonerror="true">
-                                            <arg line="VERBOSE=1"/>
-                                        </exec>
-                                    </then>
-                                    <else>
-                                        <echo>[CROSS_COMPILE=OFF] Performing standard build</echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
-                                              failonerror="true">
-                                            <arg line="--target all"/>
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
-                                            <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
-                                            <arg line="-H."/>
-                                            <arg line="-Bbuild/arm"/>
-                                        </exec>
-                                        <!-- Only build the ARM binaries -->
-                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/arm"
-                                              failonerror="true">
-                                            <arg line="VERBOSE=1"/>
-                                        </exec>
-                                    </else>
-                                </if>
-                            </target>
-                        </configuration>
-                    </execution>
-                    <!-- Attach native library artifacts -->
-                    <!--<execution>
-                        <id>pidisp-attach-artifacts</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target name="pidisp-attach-libs">
-                                <attachartifact file="${project.basedir}/src/main/cpp/build/arm/bin/${lib-output-filename}" classifier="raspberrypi" type="so"/>
-                            </target>
-                        </configuration>
-                    </execution>-->
-                </executions>
 
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant</artifactId>
-                        <version>${anty.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>ant-contrib</groupId>
-                        <artifactId>ant-contrib</artifactId>
-                        <version>${ant-contrib.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-            <!-- Clean native build output -->
+            <!-- Also remove the native build directory during clean operation -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -248,76 +370,26 @@
                     </filesets>
                 </configuration>
             </plugin>
-            <!-- Copy native libraries to project's target directory -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <!-- Copy ARM binaries -->
-                    <execution>
-                        <id>copy-lib-arm</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target/natives/linux_32/arm</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/src/main/cpp/build/arm/bin</directory>
-                                    <filtering>true</filtering>
-                                    <includes>
-                                        <include>${lib-output-filename}</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                            <fileNameFiltering>
-                                true
-                            </fileNameFiltering>
-                            <overwrite>true</overwrite>
-                        </configuration>
-                    </execution>
-                    <!-- Copy x86 binaries -->
-                    <execution>
-                        <id>copy-lib-x86</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target/natives/linux_32/x86</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/src/main/cpp/build/x86/bin</directory>
-                                    <filtering>true</filtering>
-                                    <includes>
-                                        <include>${lib-output-filename}</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                            <fileNameFiltering>
-                                true
-                            </fileNameFiltering>
-                            <overwrite>true</overwrite>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
             <!-- JAR Plugin: Include the classes and natives folder in jar packaging -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <classesDirectory>${project.build.directory}</classesDirectory>
+                    <classesDirectory>${project.build.directory}/classes</classesDirectory>
                     <includes>
-                        <include>**/classes/**</include>
-                        <include>**/natives/**</include>
+                        <!--<include>**/classes/**</include>
+                        <include>**/META-INF/**</include>-->
                     </includes>
                     <archive>
                         <manifest>
+                            <!--<addClasspath>true</addClasspath>-->
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
+                        <manifestEntries>
+                            <!--<Built-By>Rafael Ibasco</Built-By>-->
+                        </manifestEntries>
                     </archive>
                 </configuration>
 
