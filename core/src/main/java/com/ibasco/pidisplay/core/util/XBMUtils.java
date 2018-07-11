@@ -13,7 +13,35 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 public class XBMUtils {
-    public static byte[] decodeXbmFile(File file) throws XBMDecodeException {
+
+    public static class XBMData {
+        private int width;
+
+        private int height;
+
+        private byte[] data;
+
+        XBMData(int width, int height, byte[] data) {
+            this.width = width;
+            this.height = height;
+            this.data = data;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public byte[] getData() {
+            return data;
+        }
+    }
+
+    public static XBMData decodeXbmFile(File file) throws XBMDecodeException {
+
         try {
             if (file == null)
                 throw new IllegalArgumentException("File cannot be null");
@@ -45,10 +73,13 @@ public class XBMUtils {
             }
 
             bb.rewind();
-            byte[] tmp = new byte[bb.remaining()];
-            bb.get(tmp);
 
-            return tmp;
+            if (bb.hasRemaining()) {
+                byte[] tmp = new byte[bb.remaining()];
+                bb.get(tmp);
+                return new XBMData(0, 0, tmp);
+            }
+            return null;
         } catch (IOException | DecoderException e) {
             throw new XBMDecodeException("Problem encountered while trying to decode file", e);
         }

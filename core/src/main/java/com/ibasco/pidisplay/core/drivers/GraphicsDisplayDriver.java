@@ -1,6 +1,7 @@
 package com.ibasco.pidisplay.core.drivers;
 
 import com.ibasco.pidisplay.core.ui.Font;
+import com.ibasco.pidisplay.core.ui.Rotation;
 
 /**
  * Graphics Display Driver methods based on the U8G2 Interface.
@@ -986,6 +987,45 @@ public interface GraphicsDisplayDriver extends DisplayDriver {
      */
     void setDisplayRotation(int rotation);
 
+    /**
+     * <p>Changes the display rotation. Usually the rotation is defined as part of the constructor. The argment
+     * can be one of the following values:</p>
+     *
+     * <table>
+     * <thead>
+     * <tr>
+     * <th><code>Constant</code></th>
+     * <th>Description</th>
+     * </tr>
+     * </thead>
+     * <tbody>
+     * <tr>
+     * <td><code>{@link #ROTATION_R0}</code></td>
+     * <td>No rotation, landscape</td>
+     * </tr>
+     * <tr>
+     * <td><code>{@link #ROTATION_R1}</code></td>
+     * <td>90 degree clockwise rotation</td>
+     * </tr>
+     * <tr>
+     * <td><code>{@link #ROTATION_R2}</code></td>
+     * <td>180 degree clockwise rotation</td>
+     * </tr>
+     * <tr>
+     * <td><code>{@link #ROTATION_R3}</code></td>
+     * <td>270 degree clockwise rotation</td>
+     * </tr>
+     * <tr>
+     * <td><code>{@link #ROTATION_MIRROR}</code></td>
+     * <td>No rotation, landscape, display content is mirrored (v2.6.x)</td>
+     * </tr>
+     * </tbody>
+     * </table>
+     *
+     * @param rotation
+     *         Display rotation argument.
+     */
+    void setDisplayRotation(Rotation rotation);
 
     /**
      * <p>Return the address of the start of the buffer. This is a also the address of the leftmost tile of the current

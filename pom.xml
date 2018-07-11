@@ -8,6 +8,48 @@
     <artifactId>pi-display</artifactId>
     <version>0.1-SNAPSHOT</version>
     <name>pi-display :: Parent Module</name>
+    <url>https://github.com/ribasco/pi-display</url>
+    <packaging>pom</packaging>
+
+    <!-- License Information -->
+    <licenses>
+        <license>
+            <name>BSD License (2-Clause)</name>
+            <url>https://opensource.org/licenses/bsd-license.php</url>
+        </license>
+    </licenses>
+
+    <!-- Project Organization -->
+    <organization>
+        <name>pi-display</name>
+        <url>https://github.com/ribasco</url>
+    </organization>
+
+    <!-- Developer Information -->
+    <developers>
+        <developer>
+            <name>Rafael Ibasco</name>
+            <url>https://github.com/ribasco</url>
+            <email>ribasco@gmail.com</email>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <!-- Source Control -->
+    <scm>
+        <developerConnection>scm:git:ssh://git@dev.ibasco.com:10022/raffy/pi-display.git</developerConnection>
+        <connection>scm:git:ssh://git@dev.ibasco.com:10022/raffy/pi-display.git</connection>
+        <url>http://dev.ibasco.com/raffy/pi-display.git</url>
+    </scm>
+
+    <!-- Issue management -->
+    <issueManagement>
+        <url>http://dev.ibasco.com/raffy/pi-display/issues</url>
+        <system>gogit</system>
+    </issueManagement>
 
     <modules>
         <module>core</module>
@@ -21,8 +63,7 @@
         <module>native</module>
     </modules>
 
-    <packaging>pom</packaging>
-
+    <!-- Project properties -->
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -39,6 +80,8 @@
         <sysoutslf4j.version>1.0.2</sysoutslf4j.version>
         <native.lib.loader.version>2.2.0</native.lib.loader.version>
         <commons.codec.version>1.11</commons.codec.version>
+        <anty.version>1.10.4</anty.version>
+        <ant-contrib.version>1.0b3</ant-contrib.version>
     </properties>
 
     <dependencyManagement>
@@ -163,6 +206,17 @@
                 <artifactId>commons-codec</artifactId>
                 <version>${commons.codec.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.ant/ant -->
+            <dependency>
+                <groupId>org.apache.ant</groupId>
+                <artifactId>ant</artifactId>
+                <version>${anty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ant-contrib</groupId>
+                <artifactId>ant-contrib</artifactId>
+                <version>${ant-contrib.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -179,10 +233,30 @@
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.8</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.0.0-M2</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
 
+    <!-- Global dependencies -->
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
