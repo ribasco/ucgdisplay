@@ -4,6 +4,7 @@ import com.ibasco.pidisplay.core.drivers.GraphicsDisplayDriver;
 import com.ibasco.pidisplay.core.exceptions.NotYetImplementedException;
 import com.ibasco.pidisplay.core.exceptions.XBMDecodeException;
 import com.ibasco.pidisplay.core.ui.Font;
+import com.ibasco.pidisplay.core.ui.Rotation;
 import com.ibasco.pidisplay.core.ui.U8g2Interface;
 import com.ibasco.pidisplay.core.util.XBMUtils;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
@@ -40,7 +41,7 @@ public class GlcdDriver implements GraphicsDisplayDriver {
         if (_id == -1)
             throw new GlcdDriverException("Could not initialize U8G2 Display Driver");
 
-        log.info("Got Address: {}", _id);
+        log.debug("GLCD driver initialized (Address: {})", _id);
     }
 
     /**
@@ -173,8 +174,9 @@ public class GlcdDriver implements GraphicsDisplayDriver {
 
     public void drawXBM(int x, int y, int width, int height, File data) {
         try {
-            byte[] xbmData = XBMUtils.decodeXbmFile(data);
-            drawXBM(x, y, width, height, xbmData);
+            XBMUtils.XBMData xbmData = XBMUtils.decodeXbmFile(data);
+            assert xbmData != null;
+            drawXBM(x, y, width, height, xbmData.getData());
         } catch (XBMDecodeException e) {
             e.printStackTrace();
         }
@@ -356,7 +358,8 @@ public class GlcdDriver implements GraphicsDisplayDriver {
         U8g2Interface.setContrast(_id, value);
     }
 
-    public void setDisplayRotation(GlcdRotation rotation) {
+    @Override
+    public void setDisplayRotation(Rotation rotation) {
         setDisplayRotation(rotation.getValue());
     }
 

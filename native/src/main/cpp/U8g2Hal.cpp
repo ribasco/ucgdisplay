@@ -155,14 +155,12 @@ uint8_t cb_rpi_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t 
                 initialized = true;
             }
 
-            cout << "[GPIO]: Initialize" << endl;
             //Configure pin modes
             pinMode(info->pin_map.d1, OUTPUT);
             pinMode(info->pin_map.d0, OUTPUT);
             pinMode(info->pin_map.cs, OUTPUT);
 
-            cout << "[GPIO] Init Success (MOSI: " << to_string(info->pin_map.d1) << ", CLOCK: " << to_string(info->pin_map.d1) << ", CS: " << to_string(info->pin_map.cs) << ")"
-                 << endl;
+            //cout << "[GPIO] Init Success (MOSI: " << to_string(info->pin_map.d1) << ", CLOCK: " << to_string(info->pin_map.d1) << ", CS: " << to_string(info->pin_map.cs) << ")" << endl;
             break;
         }
         case U8X8_MSG_DELAY_NANO: { // delay arg_int * 1 nano second

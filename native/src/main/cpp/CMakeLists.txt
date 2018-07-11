@@ -85,8 +85,8 @@ if (TARGET u8g2)
     add_dependencies(pidisp u8g2)
 endif ()
 
-message(STATUS "COPY SOURCE DIR = ${CMAKE_SOURCE_DIR}")
-add_custom_command(TARGET pidisp POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:pidisp>" "${CMAKE_SOURCE_DIR}/../resources/")
+#message(STATUS "COPY SOURCE DIR = ${CMAKE_SOURCE_DIR}")
+#add_custom_command(TARGET pidisp POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:pidisp>" "${CMAKE_SOURCE_DIR}/../resources/")
 
 include_directories(${LIBEVENT_INCLUDE_DIRS} ${JNI_INCLUDE_DIRS} ${U8G2_INCLUDE_DIR} ${WIRINGPI_INCLUDE_DIR} ${U8G2_INCLUDE_DIR})
 target_link_libraries(pidisp ${LIBEVENT_LIBRARIES} ${JNI_LIBRARIES} ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES})

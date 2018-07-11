@@ -94,7 +94,7 @@ jlong Java_com_ibasco_pidisplay_core_ui_U8g2Interface_setup(JNIEnv *env, jclass 
     //6. Retrieve the pointer address
     auto addr = (uintptr_t) info->u8g2.get();
 
-    cout << "Display successfully initialized (Address: " << to_string(addr) << ")" << endl;
+    //cout << "Display successfully initialized (Address: " << to_string(addr) << ")" << endl;
     return addr;
 }
 
