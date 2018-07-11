@@ -13,7 +13,6 @@ void throwIOException(JNIEnv *env, string msg) {
 }
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
-    cout << "JNI_Load" << endl;
     cachedJVM = jvm;
     JNIEnv *env;
     jvm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
