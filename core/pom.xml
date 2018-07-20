@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>pi-display-core</artifactId>
     <packaging>jar</packaging>
-    <name>pi-display :: Core Module</name>
+    <name>${project.prefix} Core Module</name>
     <dependencies>
         <dependency>
             <groupId>commons-codec</groupId>

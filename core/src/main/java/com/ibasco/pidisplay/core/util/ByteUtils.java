@@ -33,7 +33,9 @@ public class ByteUtils {
     /**
      * Converts short to primitive byte array
      *
-     * @param num The number to convert
+     * @param num
+     *         The number to convert
+     *
      * @return A byte representation of the number (Two bytes for short)
      */
     public static byte[] toByteArray(short num) {
@@ -59,13 +61,33 @@ public class ByteUtils {
         }
     }
 
-    public static String toHexString(byte[] data) {
+    public static void printHexBytes(StringBuilder sb, byte[] data, boolean includePrefix) {
+        if (includePrefix) {
+            sb.append("[Size: ");
+            sb.append(data.length);
+            sb.append("] = ");
+        }
+        for (byte b : data) {
+            sb.append(String.format("%02x", b));
+            sb.append(" ");
+        }
+    }
+
+    public static String toHexString(byte... data) {
+        return toHexString(true, data);
+    }
+
+    public static String toHexString(boolean includePrefix, byte... data) {
         StringBuilder sb = new StringBuilder(data.length * 2);
-        return toHexString(sb, data);
+        return toHexString(sb, data, includePrefix).trim().toUpperCase();
     }
 
     public static String toHexString(StringBuilder sb, byte[] data) {
-        printHexBytes(sb, data);
+        return toHexString(sb, data, true);
+    }
+
+    public static String toHexString(StringBuilder sb, byte[] data, boolean includePrefix) {
+        printHexBytes(sb, data, includePrefix);
         return sb.toString();
     }
 }
