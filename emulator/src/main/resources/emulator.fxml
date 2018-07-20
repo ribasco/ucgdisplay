@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox maxHeight="692.0" maxWidth="1024.0" minHeight="600.0" minWidth="688.0" prefHeight="600.0" prefWidth="688.0"
+      xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ibasco.pidisplay.emulator.ui.controllers.EmulatorController">
+    <children>
+        <AnchorPane prefHeight="337.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+            <children>
+                <TabPane prefHeight="600.0" prefWidth="1024.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE"
+                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                         AnchorPane.topAnchor="0.0">
+                    <tabs>
+                        <Tab text="Emulator">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="567.0" prefWidth="870.0">
+                                    <children>
+                                        <ToolBar layoutX="29.0" layoutY="14.0" prefHeight="40.0" prefWidth="200.0"
+                                                 AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                                 AnchorPane.topAnchor="0.0">
+                                            <items>
+                                                <Button mnemonicParsing="false" text="Button"/>
+                                            </items>
+                                        </ToolBar>
+                                        <Pane layoutX="31.0" layoutY="59.0" maxHeight="350.0" maxWidth="750.0"
+                                              minHeight="350.0" minWidth="667.0" prefHeight="350.0" prefWidth="667.0"
+                                              style="-fx-background-color: #00bfff; -fx-border-color: #009dff; -fx-border-width: 3;"
+                                              AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="50.0">
+                                            <children>
+                                                <Canvas fx:id="emulatorCanvas" height="319.0" layoutX="14.0"
+                                                        layoutY="14.0" width="634.0"/>
+                                            </children>
+                                        </Pane>
+                                        <TitledPane animated="false" layoutX="31.0" layoutY="439.0" prefHeight="149.0"
+                                                    prefWidth="786.0" text="Emulator Activity"
+                                                    AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
+                                                    AnchorPane.rightAnchor="10.0">
+                                            <content>
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="48.0"
+                                                            prefWidth="702.0">
+                                                    <children>
+                                                        <Button fx:id="submitButton" layoutX="14.0" layoutY="14.0"
+                                                                mnemonicParsing="false"
+                                                                onAction="#handleSubmitButtonAction"
+                                                                text="Clear Screen"/>
+                                                        <Button fx:id="drawPixels" layoutX="125.0" layoutY="14.0"
+                                                                mnemonicParsing="false" onAction="#drawPixelAction"
+                                                                text="Draw Test"/>
+                                                        <Button fx:id="btnDrawDemo" layoutX="219.0" layoutY="14.0"
+                                                                mnemonicParsing="false" onAction="#handleDrawDemoAction"
+                                                                text="Run Draw Demo #1"/>
+                                                        <Button fx:id="flushBuffer" layoutX="374.0" layoutY="14.0"
+                                                                mnemonicParsing="false" onAction="#flushBufferAction"
+                                                                text="Flush Buffer"/>
+                                                        <Button fx:id="writeTile" layoutX="479.0" layoutY="14.0"
+                                                                mnemonicParsing="false" onAction="#onWriteTileAction"
+                                                                text="Write Tile"/>
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </TitledPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Settings"/>
+                    </tabs>
+                </TabPane>
+            </children>
+        </AnchorPane>
+    </children>
+</VBox>

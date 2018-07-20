@@ -7,7 +7,7 @@
     <groupId>com.ibasco.pidisplay</groupId>
     <artifactId>pi-display</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <name>pi-display :: Parent Module</name>
+    <name>${project.prefix} 00 - Parent Module</name>
     <url>https://github.com/ribasco/pi-display</url>
     <packaging>pom</packaging>
 
@@ -61,6 +61,7 @@
         <module>impl/charlcd</module>
         <module>impl/glcd</module>
         <module>native</module>
+        <module>emulator</module>
     </modules>
 
     <!-- Project properties -->
@@ -83,6 +84,7 @@
         <commons.codec.version>1.11</commons.codec.version>
         <ant.version>1.10.4</ant.version>
         <ant-contrib.version>1.0b3</ant-contrib.version>
+        <project.prefix>PiDisplay ::</project.prefix>
     </properties>
 
     <dependencyManagement>

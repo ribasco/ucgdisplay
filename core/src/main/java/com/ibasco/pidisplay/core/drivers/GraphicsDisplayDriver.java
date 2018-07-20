@@ -12,6 +12,12 @@ import com.ibasco.pidisplay.core.ui.Rotation;
 @SuppressWarnings("unused")
 public interface GraphicsDisplayDriver extends DisplayDriver {
 
+    int U8G2_DRAW_UPPER_RIGHT = 0x01;
+    int U8G2_DRAW_UPPER_LEFT = 0x02;
+    int U8G2_DRAW_LOWER_LEFT = 0x04;
+    int U8G2_DRAW_LOWER_RIGHT = 0x08;
+    int U8G2_DRAW_ALL = (U8G2_DRAW_UPPER_RIGHT | U8G2_DRAW_UPPER_LEFT | U8G2_DRAW_LOWER_RIGHT | U8G2_DRAW_LOWER_LEFT);
+
     /**
      * No rotation
      *
