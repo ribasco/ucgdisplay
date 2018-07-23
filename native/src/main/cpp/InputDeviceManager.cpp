@@ -223,7 +223,7 @@ jobjectArray Java_com_ibasco_pidisplay_core_system_InputDeviceManager_getInputDe
 
 void Java_com_ibasco_pidisplay_core_system_InputDeviceManager_startInputEventMonitor(JNIEnv *env, jclass cls) {
     if (initialized) {
-        throwIOException(env, string("Monitor already started"));
+        JNI_throwIOException(env, string("Monitor already started"));
         return;
     }
 
@@ -326,12 +326,12 @@ void deviceInputEventHandler(device_input_event event) {
 jobject createInputDeviceInfo(JNIEnv *env, int fd, const string &devicePath) {
 
     if (fd < 0 || !is_valid_fd(fd)) {
-        throwIOException(env, string("createInputDeviceInfo: Invalid file descriptor"));
+        JNI_throwIOException(env, string("createInputDeviceInfo: Invalid file descriptor"));
         return nullptr;
     }
 
     if (devicePath.empty()) {
-        throwIOException(env, string("createInputDeviceInfo: Device path must not be empty"));
+        JNI_throwIOException(env, string("createInputDeviceInfo: Device path must not be empty"));
         return nullptr;
     }
 

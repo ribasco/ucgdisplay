@@ -38,7 +38,7 @@ public class U8g2Interface {
      * Setup U8G2. This method MUST be called FIRST before performing any other u8g2 related operations.
      *
      * @param setupProc
-     *         The setup procedure that the native library will use to initialze the display
+     *         The setup procedure name. This is equivalent to the u8g2 setup function in c/c++
      * @param commInt
      *         The communications interface that will be used (e.g. {@link #COM_4WSPI})
      * @param commType
@@ -76,6 +76,8 @@ public class U8g2Interface {
     public static native void drawGlyph(long id, int x, int y, short encoding);
 
     public static native void drawHLine(long id, int x, int y, int width);
+
+    public static native void drawVLine(long id, int x, int y, int length);
 
     public static native void drawLine(long id, int x, int y, int x1, int y1);
 

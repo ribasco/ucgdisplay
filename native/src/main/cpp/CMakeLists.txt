@@ -42,8 +42,8 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 message(STATUS "[WIRING-PI] WIRINGPI_LIBRARIES = ${WIRINGPI_LIBRARIES}")
 message(STATUS "[WIRING-PI] WIRINGPI_INCLUDE_DIR = ${WIRINGPI_INCLUDE_DIR}")
 
-list(APPEND PIDISP_HDR "Global.h" "InputDevHelper.h" "InputDeviceManager.h" "InputEventManager.h" "U8g2Utils.h" "U8g2Interface.h" "CommSpi.h" "U8g2Hal.h" ${U8G2_HEADER_FILES})
-list(APPEND PIDISP_SRC "Global.cpp" "InputDevHelper.cpp" "InputDeviceManager.cpp" "InputEventManager.cpp" "U8g2Utils.cpp" "U8g2Interface.cpp" "CommSpi.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp" ${U8G2_SRC_FILES})
+list(APPEND PIDISP_HDR "Global.h" "InputDevHelper.h" "InputDeviceManager.h" "InputEventManager.h" "U8g2Utils.h" "U8g2Interface.h" "CommSpi.h" "U8g2Hal.h" "GpioEventService.h" ${U8G2_HEADER_FILES})
+list(APPEND PIDISP_SRC "Global.cpp" "InputDevHelper.cpp" "InputDeviceManager.cpp" "InputEventManager.cpp" "U8g2Utils.cpp" "U8g2Interface.cpp" "CommSpi.cpp" "U8g2Hal.cpp" "GpioEventService.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp" ${U8G2_SRC_FILES})
 
 add_library(pidisp SHARED ${PIDISP_HDR} ${PIDISP_SRC})
 add_executable(pidisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")

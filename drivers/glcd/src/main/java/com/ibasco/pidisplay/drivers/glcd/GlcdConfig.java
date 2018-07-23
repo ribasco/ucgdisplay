@@ -16,7 +16,6 @@ import static org.slf4j.LoggerFactory.getLogger;
  *
  * @author Rafael Ibasco
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
 public class GlcdConfig {
 
     public static final Logger log = getLogger(GlcdConfig.class);
@@ -102,7 +101,7 @@ public class GlcdConfig {
             throw new RuntimeException("Unable to locate setup procedure",
                     new GlcdException(String.format("Could not find a suitable setup procedure for commInterface '%s'", commInterface.name())));
 
-        log.debug("Found setup procedure for display (Display: {}, Protocol: {}, Setup Proc: {}))", display.getName(), commInterface.name(), setupInfo.getFunction());
+        log.debug("Using display setup procedure (Display: {}, Protocol: {}, Setup Proc: {}))", display.getName(), commInterface.name(), setupInfo.getFunction());
 
         return setupInfo.getFunction();
     }

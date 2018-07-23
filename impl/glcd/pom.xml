@@ -12,7 +12,7 @@
 
     <artifactId>pi-display-impl-glcd</artifactId>
     <packaging>jar</packaging>
-    <name>pi-display :: Graphics LCD Implmentation</name>
+    <name>${project.prefix} Graphics LCD Implmentation</name>
     <dependencies>
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>

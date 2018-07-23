@@ -153,7 +153,6 @@ public class GraphicsLcdTest {
 
                     glcd.clearBuffer();
 
-
                     glcd.setBitmapMode(1);
                     glcd.drawXBM(x.get(), y.get(), 25, 24, mousecursor.getData());
                     glcd.drawXBM(-19, 0, 95, 74, raspberryPiLogo.getData());

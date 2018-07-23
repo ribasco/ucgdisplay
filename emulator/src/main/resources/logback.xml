@@ -62,5 +62,5 @@
     </root>
 
     <logger name="com.ibasco.pidisplay.core" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.core.utils.PidispJniExtractor" level="INFO"/>
+    <logger name="com.ibasco.pidisplay.core.utils.PidispJniExtractor" level="DEBUG"/>
 </configuration>

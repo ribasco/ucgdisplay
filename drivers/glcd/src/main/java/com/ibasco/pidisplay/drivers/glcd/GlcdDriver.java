@@ -23,10 +23,13 @@ public class GlcdDriver implements GraphicsDisplayDriver {
     private long _id;
     private int x = 0, y = 0;
     private static final GlcdRotation DEFAULT_ROTATION = GlcdRotation.ROTATION_90;
+    private GlcdConfig config;
 
     public GlcdDriver(GlcdConfig config) throws GlcdDriverException {
         //Make sure we have a valid configuration
         checkConfig(config);
+
+        this.config = config;
 
         //Get rotation setting
         String setupProcedure = config.getSetupProcedure();
@@ -41,7 +44,11 @@ public class GlcdDriver implements GraphicsDisplayDriver {
         if (_id == -1)
             throw new GlcdDriverException("Could not initialize U8G2 Display Driver");
 
-        log.debug("GLCD driver initialized (Address: {})", _id);
+        log.trace("GLCD driver initialized (Address: {})", _id);
+    }
+
+    public GlcdConfig getConfig() {
+        return config;
     }
 
     /**
@@ -143,6 +150,11 @@ public class GlcdDriver implements GraphicsDisplayDriver {
     }
 
     @Override
+    public void drawVLine(int x, int y, int length) {
+        U8g2Interface.drawVLine(_id, x, y, length);
+    }
+
+    @Override
     public void drawLine(int x, int y, int x1, int y1) {
         U8g2Interface.drawLine(_id, x, y, x1, y1);
     }
@@ -204,6 +216,7 @@ public class GlcdDriver implements GraphicsDisplayDriver {
 
     @Override
     public void setFont(Font font) {
+        //TODO: must throw an exception if this has not been called.
         U8g2Interface.setFont(_id, font.getKey());
     }
 

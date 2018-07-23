@@ -12,7 +12,7 @@
     <artifactId>pi-display-native</artifactId>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
-    <name>pi-display :: Native Library</name>
+    <name>${project.prefix} Native Library</name>
 
     <properties>
         <lib-output-filename>libpidisp.so</lib-output-filename>
@@ -110,9 +110,9 @@
                                             <arg line="--target all"/>
                                             <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
                                             <arg line="-H."/>
-                                            <arg line="-Bbuild/arm"/>
+                                            <arg line="-Bbuild/linux/arm"/>
                                         </exec>
-                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/arm"
+                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/arm"
                                               failonerror="true">
                                             <arg line="VERBOSE=1"/>
                                         </exec>
@@ -147,7 +147,7 @@
                                     <outputDirectory>${basedir}/target/classes/lib/linux/arm</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/arm/bin</directory>
+                                            <directory>${project.basedir}/src/main/cpp/build/linux/arm/bin</directory>
                                             <filtering>true</filtering>
                                             <includes>
                                                 <include>${lib-output-filename}</include>
@@ -225,7 +225,7 @@
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
                                             <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
                                             <arg line="-H."/>
-                                            <arg line="-Bbuild/x86"/>
+                                            <arg line="-Bbuild/linux/amd64"/>
                                         </exec>
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
                                               failonerror="true">
@@ -234,13 +234,13 @@
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
                                             <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
                                             <arg line="-H."/>
-                                            <arg line="-Bbuild/arm"/>
+                                            <arg line="-Bbuild/linux/arm"/>
                                         </exec>
-                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/x86"
+                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/amd64"
                                               failonerror="true">
                                             <arg line="VERBOSE=1"/>
                                         </exec>
-                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/arm"
+                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/arm"
                                               failonerror="true">
                                             <arg line="VERBOSE=1"/>
                                         </exec>
@@ -275,7 +275,7 @@
                                     <outputDirectory>${basedir}/target/classes/lib/linux/arm</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/arm/bin</directory>
+                                            <directory>${project.basedir}/src/main/cpp/build/linux/arm/bin</directory>
                                             <filtering>true</filtering>
                                             <includes>
                                                 <include>${lib-output-filename}</include>
@@ -293,7 +293,7 @@
                             </execution>
                             <!-- Copy x86_64/amd64 binaries to META-INF/lib -->
                             <execution>
-                                <id>copy-lib-x86</id>
+                                <id>copy-lib-amd64</id>
                                 <phase>compile</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
@@ -302,7 +302,7 @@
                                     <outputDirectory>${basedir}/target/classes/lib/linux/amd64</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/x86/bin</directory>
+                                            <directory>${project.basedir}/src/main/cpp/build/linux/amd64/bin</directory>
                                             <filtering>true</filtering>
                                             <includes>
                                                 <include>${lib-output-filename}</include>
@@ -349,6 +349,10 @@
                                     <className>com.ibasco.pidisplay.core.ui.U8g2Interface</className>
                                     <headerName>U8g2Interface.h</headerName>
                                 </javahInclude>
+                                <javahInclude>
+                                    <className>com.ibasco.pidisplay.core.gpio.GpioEventService</className>
+                                    <headerName>GpioEventService.h</headerName>
+                                </javahInclude>
                             </javahIncludes>
                             <javahOutputDirectory>${project.basedir}/src/main/cpp</javahOutputDirectory>
                         </configuration>
@@ -375,11 +379,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <classesDirectory>${project.build.directory}/classes</classesDirectory>
+                    <!--<classesDirectory>${project.build.directory}/classes</classesDirectory>
                     <includes>
-                        <!--<include>**/classes/**</include>
-                        <include>**/META-INF/**</include>-->
-                    </includes>
+                        <include>**/classes/**</include>
+                        <include>**/META-INF/**</include>
+                    </includes>-->
                     <archive>
                         <manifest>
                             <!--<addClasspath>true</addClasspath>-->

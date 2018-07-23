@@ -666,10 +666,13 @@ bool exportFile(const string &srcFile, const string &dstFile) {
 int main(int argc, char *argv[]) {
     string projectPath;
 
-    if (argc == 2) {
-        const char *basePathArg = argv[1];
-        projectPath = string(basePathArg);
+    if (argc != 2) {
+        cerr << "Please specify the project base path" << endl;
+        return -1;
     }
+
+    const char *basePathArg = argv[1];
+    projectPath = string(basePathArg);
 
     if (!projectPath.empty()) {
         cout << "You have specified a project path: " << projectPath << endl;

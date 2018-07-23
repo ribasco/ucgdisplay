@@ -20,74 +20,55 @@
 
 using namespace std;
 
-jclass clsGlcdNativeDriverException;
-
 void U8g2Interface_Load(JNIEnv *env) {
-    //Load Classes
-    jclass lGlcdNativeDriverException;
-    lGlcdNativeDriverException = env->FindClass(CLS_GlcdNativeDriverException);
-    clsGlcdNativeDriverException = (jclass) env->NewGlobalRef(lGlcdNativeDriverException);
-    env->DeleteLocalRef(lGlcdNativeDriverException);
     //Initialize HAL
-    u8g2hal_init();
+    u8g2hal_Init();
 }
 
 void U8g2Interface_UnLoad(JNIEnv *env) {
-    env->DeleteLocalRef(clsGlcdNativeDriverException);
+
 }
 
-//u8g2_SetI2CAddress(&u8g2, adr)
-/*u8g2_GetI2CAddress();
-u8x8_SetPin(u8x8, U8X8_PIN_D0, d0);
-u8x8_SetPin(u8x8, U8X8_PIN_D1, d1);
-u8x8_SetPin(u8x8, U8X8_PIN_D2, d2);
-u8x8_SetPin(u8x8, U8X8_PIN_D3, d3);
-u8x8_SetPin(u8x8, U8X8_PIN_D4, d4);
-u8x8_SetPin(u8x8, U8X8_PIN_D5, d5);
-u8x8_SetPin(u8x8, U8X8_PIN_D6, d6);
-u8x8_SetPin(u8x8, U8X8_PIN_D7, d7);
-u8x8_SetPin(u8x8, U8X8_PIN_E, enable);
-u8x8_SetPin(u8x8, U8X8_PIN_CS, cs);
-u8x8_SetPin(u8x8, U8X8_PIN_DC, dc);
-u8x8_SetPin(u8x8, U8X8_PIN_RESET, reset);*/
 jlong Java_com_ibasco_pidisplay_core_ui_U8g2Interface_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jbyteArray pin_config) {
+
     string setup_proc_name;
+
     if (setupProc != nullptr) {
         setup_proc_name = string(env->GetStringUTFChars(setupProc, nullptr));
     }
 
     //1. Setup procedure should not be empty
     if (setup_proc_name.empty()) {
-        throwNativeDriverException(env, "Setup procedure name cannot be empty");
+        JNI_throwNativeDriverException(env, "Setup procedure name cannot be empty");
         return -1;
     }
 
     //2. Verify pin mapping
     jsize len = env->GetArrayLength(pin_config);
     if (len != 16) {
-        throwNativeDriverException(env, string("Pin map array should be exactly 16 of length (Actual: ") + to_string(len) + string(")"));
+        JNI_throwNativeDriverException(env, string("Pin map array should be exactly 16 of length (Actual: ") + to_string(len) + string(")"));
         return -1;
     }
 
     uint8_t tmp[len];
-    copyjByteArray(env, pin_config, tmp, len);
+    JNI_copyjByteArray(env, pin_config, tmp, len);
 
     //convert to struct
     auto *pinMap = reinterpret_cast<u8g2_pin_map_t *>(tmp);
 
     //3. Verify that the rotation number is within the allowed range
     if (rotation > 4)
-        throwNativeDriverException(env, string("Invalid rotation (") + to_string(rotation) + ")");
+        JNI_throwNativeDriverException(env, string("Invalid rotation (") + to_string(rotation) + ")");
 
     //Get actual rotation value
-    const u8g2_cb_t *_rotation = toRotation(rotation);
+    const u8g2_cb_t *_rotation = u8g2util_ToRotation(rotation);
 
     //4. Setup and Initialize the Display
-    shared_ptr<u8g2_info_t> info = setupAndInitDisplay(setup_proc_name, commInt, commType, address, _rotation, *pinMap);
+    shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, _rotation, *pinMap);
 
     //5. Verify if display has been initialized successfully
     if (info == nullptr) {
-        throwNativeDriverException(env, string("Unable to initialize the display device. It's possible that you have specified the wrong setup procedure"));
+        JNI_throwNativeDriverException(env, string("Unable to initialize the display device. It's possible that you have specified the wrong setup procedure"));
         return -1;
     }
 
@@ -107,7 +88,7 @@ void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_drawBox(JNIEnv *env, jclass
 void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_drawBitmap(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint count, jint height, jbyteArray bitmap) {
     jsize len = env->GetArrayLength(bitmap);
     uint8_t tmp[len];
-    copyjByteArray(env, bitmap, tmp, len);
+    JNI_copyjByteArray(env, bitmap, tmp, len);
     u8g2_DrawBitmap(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(count), static_cast<u8g2_uint_t>(height), tmp);
 }
 
@@ -144,6 +125,10 @@ void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_drawGlyph(JNIEnv *env, jcla
 //long id, int x, int y, int width
 void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_drawHLine(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width) {
     u8g2_DrawHLine(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width));
+}
+
+void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_drawVLine (JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width) {
+    u8g2_DrawVLine(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width));
 }
 
 //long id, int x, int y, int x1, int y1
@@ -183,7 +168,7 @@ void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_drawXBM(JNIEnv *env, jclass
         return;
     jsize len = env->GetArrayLength(data);
     uint8_t tmp[len];
-    copyjByteArray(env, data, tmp, len);
+    JNI_copyjByteArray(env, data, tmp, len);
     u8g2_DrawXBM(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width), static_cast<u8g2_uint_t>(height), tmp);
 }
 
@@ -205,23 +190,23 @@ jint Java_com_ibasco_pidisplay_core_ui_U8g2Interface_getUTF8Width(JNIEnv *env, j
 void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_setFont__J_3B(JNIEnv *env, jclass cls, jlong id, jbyteArray data) {
     jsize len = env->GetArrayLength(data);
     if (len <= 0) {
-        throwNativeDriverException(env, "Invalid font data");
+        JNI_throwNativeDriverException(env, "Invalid font data");
         return;
     }
     uint8_t tmp[len];
-    copyjByteArray(env, data, tmp, len);
+    JNI_copyjByteArray(env, data, tmp, len);
     u8g2_SetFont(toU8g2(id), tmp);
 }
 
 void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_setFont__JLjava_lang_String_2(JNIEnv *env, jclass cls, jlong id, jstring fontName) {
     if (fontName == nullptr) {
-        throwNativeDriverException(env, "Font cannot be null");
+        JNI_throwNativeDriverException(env, "Font cannot be null");
         return;
     }
     string font = string(env->GetStringUTFChars(fontName, nullptr));
-    uint8_t *fontData = u8g2hal_get_fontbyname(font);
+    uint8_t *fontData = u8g2hal_GetFontByName(font);
     if (fontData == nullptr) {
-        throwNativeDriverException(env, string("Unable to retrieve font data for: ") + font);
+        JNI_throwNativeDriverException(env, string("Unable to retrieve font data for: ") + font);
         return;
     }
     u8g2_SetFont(toU8g2(id), fontData);
@@ -353,7 +338,7 @@ void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_setContrast(JNIEnv *env, jc
 }
 
 void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_setDisplayRotation(JNIEnv *env, jclass cls, jlong id, jint rotation) {
-    u8g2_cb_t* _rotation = toRotation(rotation);
+    u8g2_cb_t *_rotation = u8g2util_ToRotation(rotation);
     if (_rotation == nullptr)
         return;
     u8g2_SetDisplayRotation(toU8g2(id), _rotation);
