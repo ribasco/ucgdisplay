@@ -12,7 +12,7 @@
 
     <artifactId>pi-display-drivers-glcd</artifactId>
     <packaging>jar</packaging>
-    <name>pi-display :: Graphics LCD Driver</name>
+    <name>${project.prefix} Graphics LCD Driver</name>
     <dependencies>
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>

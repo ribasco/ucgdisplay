@@ -49,9 +49,7 @@ public class InputDeviceManager {
 
     static {
         try {
-            log.info("Initializing InputDeviceManager");
             NativeLibraryLoader.loadLibrary("pidisp");
-            log.debug("InputDeviceManager initialized");
         } catch (Exception e) {
             log.error("Unable to load required native library", e);
         }

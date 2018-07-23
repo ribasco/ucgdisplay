@@ -11,7 +11,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>pi-display-examples</artifactId>
-    <name>pi-display :: Character LCD examples</name>
+    <name>${project.prefix} Character LCD examples</name>
     <dependencies>
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>

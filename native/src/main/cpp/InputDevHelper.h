@@ -858,7 +858,7 @@ string codename(int type, int code);
 
 int listInputDevices(vector<string> &entries);
 
-void throwIOException(JNIEnv *env, string msg);
+void JNI_throwIOException(JNIEnv *env, string msg);
 
 int is_valid_fd(int fd);
 

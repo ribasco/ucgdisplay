@@ -11,6 +11,7 @@
 
     <artifactId>pi-display-emulator</artifactId>
     <packaging>jar</packaging>
+    <name>${project.prefix} Emulator</name>
 
     <dependencies>
         <dependency>

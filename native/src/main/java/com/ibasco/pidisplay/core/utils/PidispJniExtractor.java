@@ -31,8 +31,9 @@ public class PidispJniExtractor extends DefaultJniExtractor {
         //Try to extract from the java.library.path first
         String lPath = System.getProperty("java.library.path");
 
+        String mappedName = System.mapLibraryName(libName);
+
         if (!StringUtils.isBlank(lPath)) {
-            String mappedName = System.mapLibraryName(libName);
             String fullPath = lPath + File.separator + mappedName;
             log.debug("[JNI-EXTRACT #1]: Searching in path: {}", fullPath);
             File libFile = new File(fullPath);
@@ -45,10 +46,12 @@ public class PidispJniExtractor extends DefaultJniExtractor {
         String osName = System.getProperty("os.name");
         String osArch = System.getProperty("os.arch");
         String osPath = String.format("lib/%s%s%s/", osName, File.separator, osArch).toLowerCase();
-        log.info("[JNI-EXTRACT #2] Searching in path: {}", osPath);
+        log.debug("[JNI-EXTRACT #2] Searching in path: {}", osPath);
         File file = super.extractJni(osPath, libName);
         if (file != null)
             return file;
+        else
+            log.warn("Could not locate library '{}' from '{}'", mappedName, osPath);
         return super.extractJni("", libName);
     }
 }

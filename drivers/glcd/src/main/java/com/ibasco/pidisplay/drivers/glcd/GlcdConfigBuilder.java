@@ -24,7 +24,7 @@ public class GlcdConfigBuilder {
         return this;
     }
 
-    public GlcdConfigBuilder protocol(GlcdCommInterface protocol) {
+    public GlcdConfigBuilder commInterface(GlcdCommInterface protocol) {
         config.setCommInterface(protocol);
         return this;
     }

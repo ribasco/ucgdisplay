@@ -304,6 +304,21 @@ public interface GraphicsDisplayDriver extends DisplayDriver {
      */
     void drawHLine(int x, int y, int width);
 
+
+    /**
+     * <p>Draw a vertical line, starting at x/y position (upper end). The height (length) of the line is h pixel. Parts
+     * of the line can be outside of the display boundaries. This procedure uses the current color index to draw the
+     * line. Color index 0 will clear a pixel and the color index 1 will set a pixel.</p>
+     *
+     * @param x
+     *         X-position.
+     * @param y
+     *         Y-position.
+     * @param length
+     *         Length of the vertical line.
+     */
+    void drawVLine(int x, int y, int length);
+
     /**
      * Draw a line between two points. This procedure will use the current color (setDrawColor).
      *

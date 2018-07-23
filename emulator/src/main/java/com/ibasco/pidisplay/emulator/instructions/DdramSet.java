@@ -31,7 +31,7 @@ public class DdramSet extends GlcdInstruction {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer("SET ");
         sb.append((addressType == ADDRESS_X) ? "X" : "Y")
                 .append(" = ")
                 .append(getAddress())

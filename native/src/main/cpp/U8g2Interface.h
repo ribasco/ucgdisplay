@@ -107,6 +107,14 @@ JNIEXPORT void JNICALL Java_com_ibasco_pidisplay_core_ui_U8g2Interface_drawHLine
 
 /*
  * Class:     com_ibasco_pidisplay_core_ui_U8g2Interface
+ * Method:    drawVLine
+ * Signature: (JIII)V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_pidisplay_core_ui_U8g2Interface_drawVLine
+  (JNIEnv *, jclass, jlong, jint, jint, jint);
+
+/*
+ * Class:     com_ibasco_pidisplay_core_ui_U8g2Interface
  * Method:    drawLine
  * Signature: (JIIII)V
  */

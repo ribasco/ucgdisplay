@@ -6,18 +6,13 @@
 #include <memory>
 #include <functional>
 #include <u8g2.h>
-#include <jni.h>
+#include "Global.h"
 
 #include "U8g2Utils.h"
 #include "U8g2Hal.h"
 
 static map<uintptr_t, shared_ptr<u8g2_info_t>> u8g2_device_cache; // NOLINT
 static map<int, string> pinNameIndexMap; //NOLINT
-
-u8g2_t *toU8g2(jlong address) {
-    auto *u8g2 = reinterpret_cast<u8g2_t *>(address);
-    return u8g2;
-}
 
 #define COMINT_4WSPI 0x0001
 #define COMINT_3WSPI 0x0002
@@ -32,7 +27,9 @@ u8g2_t *toU8g2(jlong address) {
 #define COMTYPE_HW 0
 #define COMTYPE_SW 1
 
-u8g2_cb_t *toRotation(int rotation) {
+static bool _pins_initialized = false;
+
+u8g2_cb_t *u8g2util_ToRotation(int rotation) {
     switch (rotation) {
         case 0: {
             return const_cast<u8g2_cb_t *>(U8G2_R0);
@@ -55,15 +52,7 @@ u8g2_cb_t *toRotation(int rotation) {
     return nullptr;
 }
 
-/**
-u8x8_byte_4wire_sw_spi	Standard 8-bit SPI communication with "four pins" (SCK, MOSI, DC, CS)
-u8x8_byte_3wire_sw_spi	9-bit communication with "three pins" (SCK, MOSI, CS)
-u8x8_byte_8bit_6800mode	Parallel interface, 6800 format
-u8x8_byte_8bit_8080mode	Parallel interface, 8080 format
-u8x8_byte_sw_i2c	    Two wire, I2C communication
-u8x8_byte_ks0108	    Special interface for KS0108 controller
- */
-u8g2_msg_func_info_t get_byte_cb(int commInt, int commType) {
+u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
     u8g2_msg_func_t tmpcb;
 
     //Wrap lambda around existing functions for compatability
@@ -90,8 +79,8 @@ u8g2_msg_func_info_t get_byte_cb(int commInt, int commType) {
             if (commType == COMTYPE_HW) {
                 return cb_rpi_byte_spi_hw;
             }
-            //software impl?
-            return nullptr; //TODO: ?
+            tmpcb = u8x8_byte_4wire_sw_spi;
+            break;
         }
         case COMINT_I2C: {
             if (commType == COMTYPE_HW) {
@@ -149,6 +138,7 @@ u8g2_msg_func_info_t get_byte_cb(int commInt, int commType) {
         default:
             break;
     }
+
     if (tmpcb != nullptr) {
         return [&tmpcb](u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
             return tmpcb(u8x8, msg, arg_int, arg_ptr);
@@ -157,7 +147,7 @@ u8g2_msg_func_info_t get_byte_cb(int commInt, int commType) {
     return nullptr;
 }
 
-shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config) {
+shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config) {
     shared_ptr<u8g2_info_t> info = make_shared<u8g2_info_t>();
 
     //Initialize device info details
@@ -166,7 +156,7 @@ shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt,
     info->rotation = const_cast<u8g2_cb_t *>(rotation);
 
     //Get the setup procedure callback
-    u8g2_setup_func_t setup_proc_callback = u8g2hal_get_setupproc(setup_proc_name);
+    u8g2_setup_func_t setup_proc_callback = u8g2hal_GetSetupProc(setup_proc_name);
 
     //Verify that we have found a callback
     if (setup_proc_callback == nullptr) {
@@ -177,11 +167,23 @@ shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt,
     info->setup_proc_name = setup_proc_name;
     info->setup_cb = setup_proc_callback;
 
+
     info->byte_cb = [info, commInt, commType](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
-        u8g2_msg_func_info_t cb_byte = get_byte_cb(commInt, commType);
-        if (cb_byte == nullptr)
+        u8g2_msg_func_info_t cb_byte = u8g2util_GetByteCb(commInt, commType);
+        if (cb_byte == nullptr) {
+            //cerr << "Unable to obtain byte callback procedure for the current setup" << endl;
             return 0;
-        return cb_byte(info.get(), u8x8, msg, arg_int, arg_ptr);//cb_rpi_byte_spi_hw(info.get(), u8x8, msg, arg_int, arg_ptr);
+        }
+
+#ifdef USE_EMULATOR
+        JNIEnv *env;
+        GETENV(env);
+        jstring msgName = msgNames.count(msg) > 0 ? env->NewStringUTF(msgNames[msg].c_str()) : nullptr;
+        jobject gpioEvent = env->NewObject(clsGpioEvent, midGpioEventCtr, msg, EMULATOR_MSG_TYPE_BYTE, arg_int, msgName);
+        env->CallStaticVoidMethod(clsGpioEventService, midGpioEventService_onGpioEvent, gpioEvent);
+#endif
+
+        return cb_byte(info.get(), u8x8, msg, arg_int, arg_ptr);
     };
 
     info->gpio_cb = [info](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
@@ -200,7 +202,7 @@ shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt,
     auto it = u8g2_device_cache.insert(make_pair((uintptr_t) pU8g2, info));
 
     //Call the setup procedure
-    info->setup_cb(pU8g2, rotation, u8g2_setup_helper_byte, u8g2_setup_helper_gpio);
+    info->setup_cb(pU8g2, rotation, u8g2util_SetupHelperByte, u8g2util_SetupHelperGpio);
 
     //Initialize the display
     u8g2_InitDisplay(pU8g2);
@@ -210,16 +212,16 @@ shared_ptr<u8g2_info_t> setupAndInitDisplay(string setup_proc_name, int commInt,
     return info;
 }
 
-shared_ptr<u8g2_info_t> getDisplayDeviceInfo(uintptr_t addr) {
+shared_ptr<u8g2_info_t> u8g2util_GetDisplayDeviceInfo(uintptr_t addr) {
     auto it = u8g2_device_cache.find(addr);
     if (it != u8g2_device_cache.end())
         return it->second;
     return nullptr;
 }
 
-uint8_t u8g2_setup_helper_byte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    shared_ptr<u8g2_info_t> info = getDisplayDeviceInfo(addr);
+    shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(addr);
     if (info == nullptr) {
         cerr << "[u8g2_setup_helper_byte] Unable to obtain display device info for address: " << to_string(addr) << endl;
         exit(-1);
@@ -227,9 +229,9 @@ uint8_t u8g2_setup_helper_byte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void 
     return info->byte_cb(u8x8, msg, arg_int, arg_ptr);
 }
 
-uint8_t u8g2_setup_helper_gpio(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t u8g2util_SetupHelperGpio(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    shared_ptr<u8g2_info_t> info = getDisplayDeviceInfo(addr);
+    shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(addr);
     if (info == nullptr) {
         cerr << "[u8g2_setup_helper_gpio] Unable to obtain display device info for address: " << to_string(addr) << endl;
         exit(-1);
@@ -237,9 +239,7 @@ uint8_t u8g2_setup_helper_gpio(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void 
     return info->gpio_cb(u8x8, msg, arg_int, arg_ptr);
 }
 
-static bool _pins_initialized = false;
-
-string getPinIndexDesc(int index) {
+string u8g2util_GetPinIndexDesc(int index) {
     if (!_pins_initialized) {
         if (!pinNameIndexMap.empty())
             pinNameIndexMap.clear();
@@ -268,17 +268,18 @@ string getPinIndexDesc(int index) {
     return pinNameIndexMap.at(index);
 }
 
-void throwNativeDriverException(JNIEnv *env, string msg) {
-    env->ThrowNew(clsGlcdNativeDriverException, msg.c_str());
+u8g2_t *toU8g2(jlong address) {
+    auto *u8g2 = reinterpret_cast<u8g2_t *>(address);
+    return u8g2;
 }
 
-void copyjByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length) {
+void JNI_copyjByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length) {
     if (length <= 0) {
-        throwNativeDriverException(env, "Invalid array length");
+        JNI_throwNativeDriverException(env, "Invalid array length");
         return;
     }
     if (buffer == nullptr) {
-        throwNativeDriverException(env, "Buffer is null");
+        JNI_throwNativeDriverException(env, "Buffer is null");
         return;
     }
     jbyte *body = env->GetByteArrayElements(arr, nullptr);

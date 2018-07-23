@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-    <name>pi-display :: Graphics LCD examples</name>
+    <name>${project.prefix} Graphics LCD examples</name>
     <artifactId>pi-display-examples-glcd</artifactId>
     <dependencies>
         <dependency>

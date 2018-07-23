@@ -1,111 +1,28 @@
 package com.ibasco.pidisplay.emulator;
 
 import com.ibasco.pidisplay.core.gpio.GpioEvent;
-import com.ibasco.pidisplay.core.gpio.GpioEventService;
-import com.ibasco.pidisplay.drivers.glcd.Glcd;
-import com.ibasco.pidisplay.drivers.glcd.GlcdConfig;
-import com.ibasco.pidisplay.drivers.glcd.GlcdDriver;
-import com.ibasco.pidisplay.drivers.glcd.GlcdPinMapConfig;
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommInterface;
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdPin;
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
-import com.ibasco.pidisplay.emulator.processors.GlcdSpiProcessor;
+import com.ibasco.pidisplay.emulator.instructions.DdramSet;
+import com.ibasco.pidisplay.emulator.protocols.GlcdSpiCommProtocol;
 import org.slf4j.Logger;
-
-import java.nio.ByteBuffer;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@SuppressWarnings({"WeakerAccess", "unused", "Duplicates"})
+/**
+ * ST7920 GLCD Emulator
+ *
+ * @author Rafael Ibasco
+ */
+@SuppressWarnings("Duplicates")
 public class GlcdEmulator {
-    public static final Logger log = getLogger(GlcdEmulator.class);
+    private static final Logger log = getLogger(GlcdEmulator.class);
 
-    //Display Start Byte
-    private static final int CMD_INSTRUCTION = 0xF8;
-    private static final int CMD_DATA = 0xFA;
-
-    //Display Instruction Flags
-    public static final int F_DISPLAY_CLEAR = 0x1;
-    public static final int F_HOME = 0x2;
-    public static final int F_ENTRY_MODE_SET = 0x4;
-    public static final int F_DISPLAY_CONTROL = 0x8;
-    public static final int F_DISPLAY_CURSOR_CONTROL = 0x10;
-    public static final int F_FUNCTION_SET = 0x20;
-    public static final int F_CGRAM_SET = 0x40;
-    public static final int F_DDRAM_SET = 0x80;
-
-    private GlcdDriver glcd;
-    private Map<String, Integer> messageLog = new HashMap<>();
-    private BitSet bitBuffer;
-    private ByteBuffer dataBuffer;
-
-    private boolean processingInstruction = false;
-    private int[] instructionRegister = new int[2];
-    //private int registerCounter = 0;
-    private int dataRegister = 0;
-    private int bitIndex = 7;
-    private int commandIndex = 0;
-    private int totalBytes = 0;
-    private int byteSize = 0;
-    private int aCtr = 0;
-    private byte[] address = new byte[2];
-
-    private GlcdGpioEventProcessor protocol;
+    private GlcdCommProtocol gpioCommProtocol;
 
     private InstructionListener instructionListener;
 
+    private GpioActivityListener gpioActivityListener;
+
     private DataListener dataListener;
-
-    @FunctionalInterface
-    public interface InstructionListener {
-        void onInstructionEvent(GlcdInstruction instruction);
-    }
-
-    @FunctionalInterface
-    public interface DataListener {
-        void onDataEvent(byte data);
-    }
-
-    public GlcdEmulator(GlcdDriver driver) {
-        GpioEventService.addListener(this::gpioEventHandler);
-        this.glcd = driver;
-        this.protocol = new GlcdSpiProcessor();
-        this.protocol.setByteEventHandler(this::onByteAvailable);
-    }
-
-    public DataListener getDataListener() {
-        return dataListener;
-    }
-
-    public void setDataListener(DataListener dataListener) {
-        this.dataListener = dataListener;
-    }
-
-    public InstructionListener getInstructionListener() {
-        return instructionListener;
-    }
-
-    public void setInstructionListener(InstructionListener instructionListener) {
-        this.instructionListener = instructionListener;
-    }
-
-    private void gpioEventHandler(GpioEvent gpioEvent) {
-        messageLog.computeIfAbsent(gpioEvent.getDesc(), s -> gpioEvent.getMsg());
-        protocol.processGpioEvent(gpioEvent);
-    }
-
-    private void processInstruction(int value) {
-        //log.info("\t\t- Name: {} = {}", ByteUtils.toHexString(false, (byte) instruction), getInstructionName(instruction));
-        GlcdInstruction instruction = GlcdInstructionFactory.createInstruction(value);
-        if (instruction != null && instructionListener != null) {
-            instructionListener.onInstructionEvent(instruction);
-        } else {
-            log.warn("Unknown/Invalid instruction: {}", value);
-        }
-    }
 
     private int registerSelect = 0;
 
@@ -117,6 +34,79 @@ public class GlcdEmulator {
 
     private static final int RS_DATA = 0xFA;
 
+    private short[][] buffer = new short[32][16];
+
+    private int yAddress = 0;
+
+    private int xAddress = 0;
+
+    private int dataCtr = 0;
+
+    @FunctionalInterface
+    public interface GpioActivityListener {
+        void onGpioActivity(int pin, int value);
+    }
+
+    @FunctionalInterface
+    public interface InstructionListener {
+        void onInstructionEvent(GlcdInstruction instruction);
+    }
+
+    @FunctionalInterface
+    public interface DataListener {
+        void onDataEvent(short[][] buffer);
+    }
+
+    /**
+     * Pass the gpio event source
+     */
+    public GlcdEmulator(GpioEventDispatcher dispatcher) {
+        dispatcher.addListener(this::processGpioEvents);
+        dispatcher.initialize();
+        //TODO: Move this to a more generic interface.
+        //GpioEventService.addListener(this::processGpioEvents);
+        this.gpioCommProtocol = new GlcdSpiCommProtocol(this::processRawByte);
+    }
+
+    public void setDataListener(DataListener dataListener) {
+        this.dataListener = dataListener;
+    }
+
+    public void setInstructionListener(InstructionListener instructionListener) {
+        this.instructionListener = instructionListener;
+    }
+
+    public void setGpioActivityListener(GpioActivityListener gpioActivityListener) {
+        this.gpioActivityListener = gpioActivityListener;
+    }
+
+    /**
+     * @return The display buffer
+     */
+    public short[][] getBuffer() {
+        return buffer;
+    }
+
+    /**
+     * Clears the display buffer
+     */
+    public void clearBuffer() {
+        for (int y = 0; y < 32; y++) {
+            for (int x = 0; x < 16; x++) {
+                buffer[y][x] = 0x0;
+            }
+        }
+    }
+
+    /**
+     * Process and decode incoming GPIO events
+     *
+     * @param gpioEvent
+     *         Gpio Event
+     */
+    private void processGpioEvents(GpioEvent gpioEvent) {
+        gpioCommProtocol.decode(gpioEvent);
+    }
 
     /**
      * This method is called when a byte is ready for processing
@@ -124,7 +114,7 @@ public class GlcdEmulator {
      * @param b
      *         The byte to be processed
      */
-    private void onByteAvailable(int b) {
+    private void processRawByte(int b) {
         //Select register
         if (b == RS_INSTRUCTION || b == RS_DATA) {
             registerSelect = b;
@@ -138,47 +128,77 @@ public class GlcdEmulator {
                 if (registerSelect == RS_INSTRUCTION) {
                     processInstruction(val);
                 } else if (registerSelect == RS_DATA) {
-                    //log.info("+ DATA: {}", ByteUtils.toHexString(false, (byte) val));
                     processData(val);
                 } else {
-                    throw new RuntimeException("Unknown register select type");
+                    log.warn("Invalid register select value = {}", registerSelect);
                 }
             }
-
-            registerCounter++;
-            //constrain values between 0 and 1 only
-            registerCounter &= 0x1;
+            registerCounter = ++registerCounter & 0x1;
         }
     }
 
-    private void processData(int data) {
-        if (dataListener != null)
-            dataListener.onDataEvent((byte) data);
-    }
+    private void processInstruction(int value) {
+        GlcdInstruction instruction = GlcdInstructionFactory.createInstruction(value);
 
-    public static void main(String[] args) throws Exception {
-        //Configure GLCD
-        GlcdConfig config = new GlcdConfig();
-        config.setDisplay(Glcd.ST7920.D_128x64);
-        config.setCommInterface(GlcdCommInterface.SPI_SW_4WIRE_ST7920);
-        config.setRotation(GlcdRotation.ROTATION_180);
-        config.setDeviceAddress(0x10);
-        config.setPinMapConfig(new GlcdPinMapConfig()
-                .map(GlcdPin.SPI_CLOCK, 14)
-                .map(GlcdPin.SPI_MOSI, 12)
-                .map(GlcdPin.CS, 10)
-        );
-        new GlcdEmulator(new GlcdDriver(config)).run();
-    }
+        if (instruction != null) {
+            if (instructionListener != null)
+                instructionListener.onInstructionEvent(instruction);
 
-    private void run() {
-        for (int x = 0; x < 128; x++) {
-            for (int y = 0; y < 64; y++) {
-                glcd.drawPixel(x, y);
+            switch (instruction.getFlag()) {
+                case GlcdInstruction.F_CGRAM_SET:
+                    break;
+                case GlcdInstruction.F_DDRAM_SET:
+                    DdramSet ins = (DdramSet) instruction;
+                    if (ins.getAddressType() == DdramSet.ADDRESS_X) {
+                        xAddress = ins.getAddress() & DdramSet.ADDRESS_X;
+                    } else if (ins.getAddressType() == DdramSet.ADDRESS_Y) {
+                        yAddress = ins.getAddress() & DdramSet.ADDRESS_Y;
+                    }
+                    break;
+                case GlcdInstruction.F_DISPLAY_CLEAR:
+                    log.info("DISPLAY CLEAR");
+                    //not yet implemented
+                    break;
+                case GlcdInstruction.F_ENTRY_MODE_SET:
+                    //not yet implemented
+                    break;
+                case GlcdInstruction.F_HOME:
+                    //not yet implemented
+                    break;
+                case GlcdInstruction.F_DISPLAY_CURSOR_CONTROL:
+                    //not yet implemented
+                    break;
+                case GlcdInstruction.F_FUNCTION_SET:
+                    //not yet implemented
+                    break;
+                case GlcdInstruction.F_DISPLAY_CONTROL:
+                    //not yet implemented
+                    break;
+                default:
+                    break;
             }
         }
-        log.info("START_SENDBUFFER");
-        glcd.sendBuffer();
-        log.info("END_SENDBUFFER");
+    }
+
+    /**
+     * Process incoming data and write to display buffer. Per the ST7920 datasheet, the x-address will automatically be
+     * incremented after receiving the second byte. Once the x-address reaches it's max range (0xf) the value will reset
+     * back to 0x0.
+     *
+     * @param data
+     *         The data in bytes
+     */
+    private void processData(int data) {
+        if (dataCtr == 0) {
+            buffer[yAddress][xAddress] = (short) ((data & 0xff) << 8);
+        } else {
+            buffer[yAddress][xAddress] |= data & 0xff;
+            xAddress = ++xAddress & 0xf;
+
+            //Notify listeners that the display buffer has been updated
+            if (dataListener != null)
+                dataListener.onDataEvent(buffer);
+        }
+        dataCtr = ++dataCtr & 0x1;
     }
 }
