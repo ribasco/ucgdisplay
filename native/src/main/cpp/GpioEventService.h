@@ -27,14 +27,3 @@ JNIEXPORT void JNICALL Java_com_ibasco_pidisplay_core_gpio_GpioEventService_stop
 }
 #endif
 #endif
-/* Header for class com_ibasco_pidisplay_core_gpio_GpioEventService_GpioEventListener */
-
-#ifndef _Included_com_ibasco_pidisplay_core_gpio_GpioEventService_GpioEventListener
-#define _Included_com_ibasco_pidisplay_core_gpio_GpioEventService_GpioEventListener
-#ifdef __cplusplus
-extern "C" {
-#endif
-#ifdef __cplusplus
-}
-#endif
-#endif

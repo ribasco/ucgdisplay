@@ -29,7 +29,9 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     midGpioEventCtr = env->GetMethodID(clsGpioEvent, "<init>", "(IIILjava/lang/String;)V");
     //END
 
+#ifdef __linux__
     InputDevManager_Load(env);
+#endif
     U8g2Interface_Load(env);
 
     return JNI_VERSION;
@@ -39,7 +41,9 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     JNIEnv *env;
     vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
 
+#ifdef __linux__
     InputDevManager_UnLoad(env);
+#endif
     U8g2Interface_UnLoad(env);
 
     for (auto it : globalRefClasses) {

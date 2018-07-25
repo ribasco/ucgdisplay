@@ -16,6 +16,7 @@
 
     <properties>
         <lib-output-filename>libpidisp.so</lib-output-filename>
+        <lib-output-name>pidisp</lib-output-name>
     </properties>
 
     <dependencies>
@@ -52,13 +53,17 @@
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
     </dependencies>
 
     <!-- Build Profiles for different platforms -->
     <profiles>
-        <!-- Profile is activated if found to be running on an ARM machine -->
+        <!-- Build Profile: Linux - arm -->
         <profile>
-            <id>build-arm</id>
+            <id>build-linux-arm</id>
             <activation>
                 <os>
                     <name>linux</name>
@@ -105,18 +110,21 @@
                                     <target name="build-pidisp">
                                         <!-- Build both architectures when Cross-Compiling -->
                                         <echo>[HOST=ARM] Building ARM binaries only</echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
-                                              failonerror="true">
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
                                             <arg line="--target all"/>
                                             <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/linux/arm"/>
                                         </exec>
-                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/arm"
+                                        <!--<exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/arm"
                                               failonerror="true">
                                             <arg line="VERBOSE=1"/>
+                                        </exec>-->
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
+                                            <arg line="--target pidisp --" />
+                                            <arg line=" -j 4" />
                                         </exec>
-
                                     </target>
                                 </configuration>
                             </execution>
@@ -169,9 +177,9 @@
             </build>
         </profile>
 
-        <!-- Profile is activated is found to be running on x86_64/amd64 machine -->
+        <!-- Build Profile: Linux - x86_64/amd64 -->
         <profile>
-            <id>build-amd64</id>
+            <id>build-linux-amd64</id>
             <activation>
                 <os>
                     <name>linux</name>
@@ -219,16 +227,14 @@
                                     <target name="build-pidisp">
                                         <!-- Build both architectures when Cross-Compiling -->
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions</echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
-                                              failonerror="true">
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
                                             <arg line="--target all"/>
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
                                             <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/linux/amd64"/>
                                         </exec>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
-                                              failonerror="true">
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
                                             <arg line="--target all"/>
                                             <arg line="-DCMAKE_TOOLCHAIN_FILE=./cmake/RpiToolchain.cmake"/>
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
@@ -236,15 +242,26 @@
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/linux/arm"/>
                                         </exec>
-                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/amd64"
+                                        <!--<exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/amd64"
                                               failonerror="true">
                                             <arg line="VERBOSE=1"/>
-                                        </exec>
-                                        <exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/arm"
+                                        </exec>-->
+                                        <!--<exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/arm"
                                               failonerror="true">
                                             <arg line="VERBOSE=1"/>
+                                        </exec>-->
+                                        <!-- Build AMD64 -->
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/amd64" failonerror="true">
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/amd64"/>
+                                            <arg line="--target pidisp --" />
+                                            <arg line=" -j 4" />
                                         </exec>
-
+                                        <!-- Build ARM -->
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
+                                            <arg line="--target pidisp --" />
+                                            <arg line=" -j 4" />
+                                        </exec>
                                     </target>
                                 </configuration>
                             </execution>
@@ -322,6 +339,144 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <!-- Build Profile: Windows - x86_64/amd64 -->
+        <profile>
+            <id>build-windows-amd64</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <current-osarch>windows-amd64</current-osarch>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Ant-Run Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <!-- Prepare directories -->
+                            <execution>
+                                <id>generate-sources</id>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <target name="generate-sources">
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/linux/arm"/>
+                                        <mkdir dir="target/classes/lib/windows/amd64"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>make-win</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target name="build-pidisp">
+                                        <!-- Refresh CMake cache -->
+                                        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for windows</echo>
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
+                                            <arg line="--target all"/>
+                                            <!--<arg line="-DCMAKE_SH=CMAKE_SH-NOTFOUND" />-->
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                           <arg line="-G 'CodeBlocks - MinGW Makefiles'"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/windows/amd64"/>
+                                        </exec>
+                                        <!-- Build project -->
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/windows/amd64" failonerror="true">
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64"/>
+                                            <arg line="--target pidisp --" />
+                                            <arg line=" -j 4" />
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Copy native libraries to project's target directory -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <!-- Copy ARM binaries to META-INF/lib -->
+                            <!--<execution>
+                                <id>copy-lib-win</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/classes/lib/windows/amd64</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/src/main/cpp/build/windows/amd64/bin</directory>
+                                            <filtering>true</filtering>
+                                            <includes>
+                                                <include>${lib-output-filename}</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                    <fileNameFiltering>
+                                        true
+                                    </fileNameFiltering>
+                                    <nonFilteredFileExtensions>
+                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
+                                    </nonFilteredFileExtensions>
+                                    <overwrite>true</overwrite>
+                                </configuration>
+                            </execution>-->
+                            <!-- Copy x86_64/amd64 binaries to lib -->
+                            <execution>
+                                <id>copy-lib-amd64</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/classes/lib/windows/amd64</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/src/main/cpp/build/windows/amd64/bin</directory>
+                                            <filtering>true</filtering>
+                                            <includes>
+                                                <include>${lib-output-name}.dll</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                    <nonFilteredFileExtensions>
+                                        <nonFilteredFileExtension>dll</nonFilteredFileExtension>
+                                    </nonFilteredFileExtensions>
+                                    <fileNameFiltering>
+                                        true
+                                    </fileNameFiltering>
+                                    <overwrite>true</overwrite>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.ant</groupId>
+                    <artifactId>ant</artifactId>
+                    <version>${ant.version}</version>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 

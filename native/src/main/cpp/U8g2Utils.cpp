@@ -5,7 +5,6 @@
 #include <iostream>
 #include <memory>
 #include <functional>
-#include <u8g2.h>
 #include "Global.h"
 
 #include "U8g2Utils.h"

@@ -113,7 +113,11 @@ bool dirExists(const string &dir) {
 
 bool initOutputDir(const string &outputDir) {
     if (!dirExists(outputDir)) {
+#ifdef _WIN32
+        const int dir_err = mkdir(outputDir.c_str());
+#else
         const int dir_err = mkdir(outputDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
         if (-1 == dir_err)
             return false;
     }

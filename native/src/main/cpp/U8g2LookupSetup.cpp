@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 10 2018 23:08:28) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 25 2018 12:46:24) 
  */
 
 #include "U8g2Hal.h"
@@ -117,6 +117,8 @@ void u8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
 	setup_map["u8g2_Setup_st7567_enh_dg128064i_f"] = u8g2_Setup_st7567_enh_dg128064i_f;
 	setup_map["u8g2_Setup_st7567_jlx12864_f"] = u8g2_Setup_st7567_jlx12864_f;
 	setup_map["u8g2_Setup_st7567_pi_132x64_f"] = u8g2_Setup_st7567_pi_132x64_f;
+	setup_map["u8g2_Setup_st7586s_erc240160_f"] = u8g2_Setup_st7586s_erc240160_f;
+	setup_map["u8g2_Setup_st7586s_s028hn118a_f"] = u8g2_Setup_st7586s_s028hn118a_f;
 	setup_map["u8g2_Setup_st7588_i2c_jlx12864_f"] = u8g2_Setup_st7588_i2c_jlx12864_f;
 	setup_map["u8g2_Setup_st7588_jlx12864_f"] = u8g2_Setup_st7588_jlx12864_f;
 	setup_map["u8g2_Setup_st7920_128x64_f"] = u8g2_Setup_st7920_128x64_f;

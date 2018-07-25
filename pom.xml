@@ -70,18 +70,19 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <pi4j.version>1.2-SNAPSHOT</pi4j.version>
+        <commons.io.version>2.6</commons.io.version>
         <commons.lang3.version>3.6</commons.lang3.version>
+        <commons.text.version>1.1</commons.text.version>
+        <commons.codec.version>1.11</commons.codec.version>
         <guava.version>23.0</guava.version>
         <sl4j.version>1.7.25</sl4j.version>
         <logback.version>1.2.3</logback.version>
-        <commons.text.version>1.1</commons.text.version>
         <junit.version>RELEASE</junit.version>
         <rxjava.version>2.1.5</rxjava.version>
         <mockito.version>2.11.0</mockito.version>
         <powermock.version>1.7.3</powermock.version>
         <sysoutslf4j.version>1.0.2</sysoutslf4j.version>
         <native.lib.loader.version>2.2.0</native.lib.loader.version>
-        <commons.codec.version>1.11</commons.codec.version>
         <ant.version>1.10.4</ant.version>
         <ant-contrib.version>1.0b3</ant-contrib.version>
         <project.prefix>PiDisplay ::</project.prefix>
@@ -208,6 +209,12 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons.codec.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.ant/ant -->
             <dependency>

@@ -7,6 +7,8 @@ elseif (UNIX)
     message(STATUS "[MAIN] You are running on unix/linux with processor = ${CMAKE_SYSTEM_PROCESSOR}")
 elseif (MSVC)
     message(STATUS "[MAIN] You are running on MSVC with processor = ${CMAKE_SYSTEM_PROCESSOR}")
+elseif (APPLE)
+    message(STATUS "[MAIN] You are running on MAC OS with processor = ${CMAKE_SYSTEM_PROCESSOR}")
 endif ()
 
 option(USE_DEV "Use UDev for Device Status monitoring instead of INotify" OFF)
@@ -32,36 +34,49 @@ set(LIB_DIR "${CMAKE_SOURCE_DIR}/lib")
 
 #find_package(LibUdev REQUIRED)
 find_package(U8G2 REQUIRED)
-find_package(LibEvent REQUIRED)
 find_package(JNILib REQUIRED)
 find_package(Threads REQUIRED)
-find_package(WiringPi REQUIRED)
-
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-message(STATUS "[WIRING-PI] WIRINGPI_LIBRARIES = ${WIRINGPI_LIBRARIES}")
-message(STATUS "[WIRING-PI] WIRINGPI_INCLUDE_DIR = ${WIRINGPI_INCLUDE_DIR}")
+if (UNIX)
+    find_package(LibEvent REQUIRED)
+    find_package(WiringPi REQUIRED)
+    message(STATUS "[WIRING-PI] WIRINGPI_LIBRARIES = ${WIRINGPI_LIBRARIES}")
+    message(STATUS "[WIRING-PI] WIRINGPI_INCLUDE_DIR = ${WIRINGPI_INCLUDE_DIR}")
 
-list(APPEND PIDISP_HDR "Global.h" "InputDevHelper.h" "InputDeviceManager.h" "InputEventManager.h" "U8g2Utils.h" "U8g2Interface.h" "CommSpi.h" "U8g2Hal.h" "GpioEventService.h" ${U8G2_HEADER_FILES})
-list(APPEND PIDISP_SRC "Global.cpp" "InputDevHelper.cpp" "InputDeviceManager.cpp" "InputEventManager.cpp" "U8g2Utils.cpp" "U8g2Interface.cpp" "CommSpi.cpp" "U8g2Hal.cpp" "GpioEventService.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp" ${U8G2_SRC_FILES})
+    list(APPEND PIDISP_HDR "InputDevHelper.h" "InputDeviceManager.h" "InputEventManager.h" "CommSpi.h")
+    list(APPEND PIDISP_SRC "InputDevHelper.cpp" "InputDeviceManager.cpp" "InputEventManager.cpp" "CommSpi.cpp")
+endif ()
+
+list(APPEND PIDISP_HDR "Global.h" "U8g2Utils.h" "U8g2Interface.h" "U8g2Hal.h" "GpioEventService.h")
+list(APPEND PIDISP_SRC "Global.cpp" "U8g2Utils.cpp" "U8g2Interface.cpp" "U8g2Hal.cpp" "GpioEventService.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
+message(STATUS "PIDISP SOURCE = ${U8G2_SRC_FILES}")
 
 add_library(pidisp SHARED ${PIDISP_HDR} ${PIDISP_SRC})
-add_executable(pidisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
 add_executable(pidisp-gen "utils/codegen.h" "utils/codegen.cpp")
+#add_executable(pidisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
+
+if (WIN32)
+    set(CMAKE_SHARED_LIBRARY_PREFIX "")
+endif ()
 
 target_compile_options(pidisp PRIVATE -Wno-write-strings)
 target_compile_options(pidisp-gen PRIVATE -Wno-write-strings)
-#message("Supported features = ${CMAKE_CXX_COMPILE_FEATURES}")
 
 # Add Wiring Pi dependency
-if (TARGET wiringPi)
+if (UNIX AND (TARGET wiringPi))
     message(STATUS "[WIRING-PI] Adding wiringPi Target")
     add_dependencies(pidisp wiringPi)
 endif ()
 
+list(APPEND INC_DIRS ${JNI_INCLUDE_DIRS} ${U8G2_INCLUDE_DIR} ${WIRINGPI_INCLUDE_DIR} ${U8G2_INCLUDE_DIR})
+list(APPEND LINK_LIBS ${JNI_LIBRARIES} ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES} Threads::Threads)
+
 # Add libevent dependency (called usually if the library was built from the repository)
-if (LibEvent_FOUND AND TARGET libevent)
+if (UNIX AND (LibEvent_FOUND AND TARGET libevent))
     message(STATUS "[LIBEVENT] Found 'libevent' target. Adding as dependency")
+    list(APPEND INC_DIRS ${LIBEVENT_INCLUDE_DIRS})
+    list(APPEND LINK_LIBS ${LIBEVENT_LIBRARIES})
     add_dependencies(pidisp libevent)
     add_dependencies(pidisp-test libevent)
 endif ()
@@ -71,6 +86,9 @@ if (TARGET u8g2)
     add_dependencies(pidisp u8g2)
 endif ()
 
-include_directories(${LIBEVENT_INCLUDE_DIRS} ${JNI_INCLUDE_DIRS} ${U8G2_INCLUDE_DIR} ${WIRINGPI_INCLUDE_DIR} ${U8G2_INCLUDE_DIR})
-target_link_libraries(pidisp ${LIBEVENT_LIBRARIES} ${JNI_LIBRARIES} ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES} Threads::Threads)
-target_link_libraries(pidisp-test ${LIBEVENT_LIBRARIES} ${U8G2_LIBRARIES} Threads::Threads)
+include_directories(${INC_DIRS})
+target_link_libraries(pidisp ${LINK_LIBS})
+
+#set_target_properties(pidisp )
+
+#target_link_libraries(pidisp-test ${LINK_LIBS})

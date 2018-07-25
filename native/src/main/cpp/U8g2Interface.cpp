@@ -5,12 +5,16 @@
 #include <functional>
 #include <utility>
 
+#define __unix__xxxxxx_THIS_IS_DISABLED
+
 #include "U8g2Interface.h"
 #include "Global.h"
 #include "U8g2Hal.h"
 #include "U8g2Utils.h"
-#include <u8g2.h>
+
+#ifdef __linux__
 #include <wiringPi.h>
+#endif
 #include <cstring>
 #include <iomanip>
 
@@ -348,6 +352,7 @@ void Java_com_ibasco_pidisplay_core_ui_U8g2Interface_setDisplayRotation(JNIEnv *
 jint Java_com_ibasco_pidisplay_core_ui_U8g2Interface_getBuffer(JNIEnv *env, jclass cls, jlong id) {
     //return u8g2_GetBuf;
     uint8_t *buffer = u8g2_GetBufferPtr(toU8g2(id));
+    return -1;
 }
 
 jint Java_com_ibasco_pidisplay_core_ui_U8g2Interface_getBufferTileWidth(JNIEnv *env, jclass cls, jlong id) {

@@ -42,7 +42,6 @@ macro(GetLibFromRepo)
     set(LIBNAME "event")
 
     # TODO: Check if we have already downloaded libevent
-
     ExternalProject_Add(
             libevent
             GIT_REPOSITORY "https://github.com/libevent/libevent.git"
@@ -61,6 +60,10 @@ macro(GetLibFromRepo)
     set(LIBEVENT_LIBRARIES "${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBNAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
     list(APPEND LIBEVENT_LIBRARIES "pthread")
+
+    #[[if (NOT EXISTS ${LIBEVENT_INCLUDE_DIRS})
+        message(FATAL_ERROR "Lib event not found")
+    endif ()]]
 
     if (LIBEVENT_INCLUDE_DIRS AND LIBEVENT_LIBRARIES)
         message(STATUS "[LIBEVENT] GetLibFromRepo() = FOUND")

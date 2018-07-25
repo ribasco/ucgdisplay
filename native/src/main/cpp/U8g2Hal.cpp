@@ -1,8 +1,11 @@
 #include "U8g2Hal.h"
 
+#ifdef __linux__
 #include "CommSpi.h"
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
+#endif
+
 #include <iostream>
 #include <cstring>
 #include <algorithm>
@@ -306,7 +309,7 @@ uint8_t cb_rpi_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t 
     return 1;
 }
 
-#elif defined(__linux__) && (defined(__x86_64__) || defined(i386))
+#else
 
 string getBinaryString(unsigned int u) {
     stringstream str;

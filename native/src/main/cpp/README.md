@@ -11,6 +11,15 @@
 - sudo apt-get install libcap-dev ninja-build gperf meson libmount-dev
 
 
+# Windows requirements
+- MinGW
+- CMake 3.11+
+
+
+# Steps for windows compilation
+- Install MinGW 
+- Add 'bin' of ming and msys to USER path environment variables 
+
 PiDisplay Configuration Requirements for GLCD
 --------------------------------------------------------------------------------------------------------------------------------
 1. Rotation

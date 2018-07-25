@@ -6,12 +6,14 @@
 
 #define USE_UDEV false
 
+#if defined(__linux__)
+
+#endif
+
 #if USE_UDEV
 #include <libudev.h>
 #else
-
 #include <sys/inotify.h>
-
 #endif
 
 #include "InputDeviceManager.h"
@@ -151,7 +153,6 @@ void InputDevManager_Load(JNIEnv *env) {
     midRawInputEventCtr = env->GetMethodID(clsRawInputEvent, "<init>", MIDSIG_RAWINPUTEVENT_CTR);
     midInputEventCallback = env->GetStaticMethodID(clsInputDevManager, "inputEventCallback", MIDSIG_INPUTDEVMGR_CALLBACK);
     midInputDevCtr = env->GetMethodID(clsInputDev, "<init>", MIDSIG_INPUTDEVICE_CTR);
-
 
     midArrayListCtr = env->GetMethodID(clsArrayList, "<init>", "()V");
     midArrayListAdd = env->GetMethodID(clsArrayList, "add", "(Ljava/lang/Object;)Z");

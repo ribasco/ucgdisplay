@@ -37,10 +37,10 @@ typedef struct {
     uint8_t cs2;
 } u8g2_pin_map_t;
 
-
 typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;
 
-typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
+typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb,
+                           u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
 
 typedef std::map<std::string, u8g2_setup_func_t> u8g2_setup_func_map_t;
 
@@ -56,7 +56,8 @@ typedef struct {
     u8g2_cb_t *rotation;
 } u8g2_info_t;
 
-typedef std::function<uint8_t(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
+typedef std::function<uint8_t(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int,
+                              void *arg_ptr)> u8g2_msg_func_info_t;
 
 extern map<int, string> msgNames;
 
@@ -104,7 +105,9 @@ void u8g2hal_CreateMsgEvent(JNIEnv *env, jobject &obj, uint8_t msg, uint8_t type
 
 void u8g2hal_EmitMsgEvent(JNIEnv *env, jobject &gpioEvent);
 
-#ifdef USE_EMULATOR
+//USE_EMULATOR
+
+#if !(defined(__arm__) && defined(__linux__))
 
 static void i2c_delay(u8x8_t *u8x8) U8X8_NOINLINE;
 
