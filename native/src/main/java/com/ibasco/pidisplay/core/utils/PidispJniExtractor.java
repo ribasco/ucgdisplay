@@ -1,6 +1,8 @@
 package com.ibasco.pidisplay.core.utils;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.scijava.nativelib.DefaultJniExtractor;
 import org.slf4j.Logger;
 
@@ -27,6 +29,18 @@ public class PidispJniExtractor extends DefaultJniExtractor {
         return cachedFile;
     }
 
+    private String getOSFamily() {
+        if (SystemUtils.IS_OS_WINDOWS) {
+            return "windows";
+        } else if (SystemUtils.IS_OS_LINUX) {
+            return "linux";
+        } else if (SystemUtils.IS_OS_MAC) {
+            return "mac";
+        }
+        log.warn("Unhandled OS name = {}", SystemUtils.OS_NAME);
+        return SystemUtils.OS_NAME;
+    }
+
     private File findLibrary(String libPath, String libName) throws IOException {
         //Try to extract from the java.library.path first
         String lPath = System.getProperty("java.library.path");
@@ -43,11 +57,16 @@ public class PidispJniExtractor extends DefaultJniExtractor {
         }
 
         //Search by OS/ARCH
-        String osName = System.getProperty("os.name");
+        String osName = getOSFamily();
         String osArch = System.getProperty("os.arch");
+        String osVer = System.getProperty("os.version");
+
+        log.debug("[JNI-EXTRACT] Os Name = {}, Os Arch = {}, Os version = {}", osName, osArch, osVer);
         String osPath = String.format("lib/%s%s%s/", osName, File.separator, osArch).toLowerCase();
+        osPath = FilenameUtils.separatorsToSystem(osPath);
+
         log.debug("[JNI-EXTRACT #2] Searching in path: {}", osPath);
-        File file = super.extractJni(osPath, libName);
+        File file = super.extractJni(osPath, libName.trim());
         if (file != null)
             return file;
         else

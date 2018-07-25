@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 10 2018 23:08:28)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 25 2018 12:46:24) 
  */
 
 package com.ibasco.pidisplay.drivers.glcd.enums;
@@ -1243,25 +1243,17 @@ public enum GlcdFont implements Font {
 	FONT_WQY16_T_GB2312("u8g2_font_wqy16_t_gb2312"),
 	FONT_WQY16_T_GB2312A("u8g2_font_wqy16_t_gb2312a"),
 	FONT_WQY16_T_GB2312B("u8g2_font_wqy16_t_gb2312b"),
-	FONT_5X7_F("u8x8_font_5x7_f"),
-	FONT_5X7_N("u8x8_font_5x7_n"),
-	FONT_5X7_R("u8x8_font_5x7_r"),
 	FONT_5X8_F("u8x8_font_5x8_f"),
-	FONT_5X8_N("u8x8_font_5x8_n"),
 	FONT_5X8_R("u8x8_font_5x8_r"),
 	FONT_AMSTRAD_CPC_EXTENDED_F("u8x8_font_amstrad_cpc_extended_f"),
 	FONT_AMSTRAD_CPC_EXTENDED_N("u8x8_font_amstrad_cpc_extended_n"),
 	FONT_AMSTRAD_CPC_EXTENDED_R("u8x8_font_amstrad_cpc_extended_r"),
 	FONT_AMSTRAD_CPC_EXTENDED_U("u8x8_font_amstrad_cpc_extended_u"),
-	FONT_ARTOSSANS8_N("u8x8_font_artossans8_n"),
 	FONT_ARTOSSANS8_R("u8x8_font_artossans8_r"),
 	FONT_ARTOSSANS8_U("u8x8_font_artossans8_u"),
-	FONT_ARTOSSERIF8_N("u8x8_font_artosserif8_n"),
 	FONT_ARTOSSERIF8_R("u8x8_font_artosserif8_r"),
 	FONT_ARTOSSERIF8_U("u8x8_font_artosserif8_u"),
-	FONT_CHROMA48MEDIUM8_N("u8x8_font_chroma48medium8_n"),
 	FONT_CHROMA48MEDIUM8_R("u8x8_font_chroma48medium8_r"),
-	FONT_CHROMA48MEDIUM8_U("u8x8_font_chroma48medium8_u"),
 	FONT_PCSENIOR_F("u8x8_font_pcsenior_f"),
 	FONT_PCSENIOR_N("u8x8_font_pcsenior_n"),
 	FONT_PCSENIOR_R("u8x8_font_pcsenior_r"),
@@ -1282,15 +1274,11 @@ public enum GlcdFont implements Font {
 	FONT_PXPLUSTANDYNEWTV_N("u8x8_font_pxplustandynewtv_n"),
 	FONT_PXPLUSTANDYNEWTV_R("u8x8_font_pxplustandynewtv_r"),
 	FONT_PXPLUSTANDYNEWTV_U("u8x8_font_pxplustandynewtv_u"),
-	FONT_SAIKYOSANSBOLD8_N("u8x8_font_saikyosansbold8_n"),
 	FONT_SAIKYOSANSBOLD8_U("u8x8_font_saikyosansbold8_u"),
-	FONT_TORUSSANSBOLD8_N("u8x8_font_torussansbold8_n"),
 	FONT_TORUSSANSBOLD8_R("u8x8_font_torussansbold8_r"),
 	FONT_TORUSSANSBOLD8_U("u8x8_font_torussansbold8_u"),
-	FONT_VICTORIABOLD8_N("u8x8_font_victoriabold8_n"),
 	FONT_VICTORIABOLD8_R("u8x8_font_victoriabold8_r"),
 	FONT_VICTORIABOLD8_U("u8x8_font_victoriabold8_u"),
-	FONT_VICTORIAMEDIUM8_N("u8x8_font_victoriamedium8_n"),
 	FONT_VICTORIAMEDIUM8_R("u8x8_font_victoriamedium8_r"),
 	FONT_VICTORIAMEDIUM8_U("u8x8_font_victoriamedium8_u");
 
