@@ -34,6 +34,55 @@ static map<string, string> paths;
 #define FILE_JAVA_GLCDFONT "GlcdFont.java"
 
 static vector<string> excludeFonts = {"u8g2_font_siji_t"};
+static vector<string> win32_excluded_fonts = {"u8g2_font_unifont_t_chinese3",
+                                              "u8g2_font_unifont_t_japanese1",
+                                              "u8g2_font_unifont_t_japanese2",
+                                              "u8g2_font_unifont_t_japanese3",
+                                              "u8g2_font_unifont_t_korean2",
+                                              "u8g2_font_wqy12_t_gb2312",
+                                              "u8g2_font_wqy12_t_gb2312a",
+                                              "u8g2_font_wqy12_t_gb2312b",
+                                              "u8g2_font_wqy15_t_gb2312",
+                                              "u8g2_font_wqy15_t_gb2312a",
+                                              "u8g2_font_wqy15_t_gb2312b",
+                                              "u8g2_font_wqy16_t_gb2312",
+                                              "u8g2_font_wqy16_t_gb2312a",
+                                              "u8g2_font_wqy16_t_gb2312b",
+                                              "u8g2_font_wqy14_t_gb2312",
+                                              "u8g2_font_wqy14_t_gb2312a",
+                                              "u8g2_font_wqy14_t_gb2312b",
+                                              "u8g2_font_wqy13_t_gb2312",
+                                              "u8g2_font_wqy13_t_gb2312a",
+                                              "u8g2_font_wqy13_t_gb2312b",
+                                              "u8g2_font_t0_11_t_all",
+                                              "u8g2_font_f10_b_t_japanese1",
+                                              "u8g2_font_f10_b_t_japanese2",
+                                              "u8g2_font_f10_t_japanese1",
+                                              "u8g2_font_f10_t_japanese2",
+                                              "u8g2_font_f12_b_t_japanese1",
+                                              "u8g2_font_f12_b_t_japanese2",
+                                              "u8g2_font_f12_t_japanese1",
+                                              "u8g2_font_f12_t_japanese2",
+                                              "u8g2_font_f16_b_t_japanese1",
+                                              "u8g2_font_f16_b_t_japanese2",
+                                              "u8g2_font_f16_t_japanese1",
+                                              "u8g2_font_f16_t_japanese2",
+                                              "u8g2_font_b10_b_t_japanese1",
+                                              "u8g2_font_b10_b_t_japanese2",
+                                              "u8g2_font_b10_t_japanese1",
+                                              "u8g2_font_b10_t_japanese2",
+                                              "u8g2_font_b12_b_t_japanese1",
+                                              "u8g2_font_b12_b_t_japanese2",
+                                              "u8g2_font_b12_b_t_japanese3",
+                                              "u8g2_font_b12_t_japanese1",
+                                              "u8g2_font_b12_t_japanese2",
+                                              "u8g2_font_b12_t_japanese3",
+                                              "u8g2_font_b16_b_t_japanese1",
+                                              "u8g2_font_b16_b_t_japanese2",
+                                              "u8g2_font_b16_b_t_japanese3",
+                                              "u8g2_font_b16_t_japanese1",
+                                              "u8g2_font_b16_t_japanese2",
+                                              "u8g2_font_b16_t_japanese3"};
 
 string sanitizeDisplayName(display_mode_info &display) {
     //"([0-9]{1,})X([0-9]{1,})|(NONAME?[0-9]*)|([_-]*)"
@@ -140,7 +189,8 @@ void getSetupFunctions(set<string> &functions, const string &bufferCode) {
 }
 
 void printAvailableDisplays() {
-    cout << "Controller\t" << "Display Name\t" << "Cad Name\t" << "Cad Short\t" << "Supported Modes\t" << "Display Size\t" << "Total Size\t" << "Setup Procedure" << endl;
+    cout << "Controller\t" << "Display Name\t" << "Cad Name\t" << "Cad Short\t" << "Supported Modes\t"
+         << "Display Size\t" << "Total Size\t" << "Setup Procedure" << endl;
     for (int i = 0; i < sizeof(controller_list) / sizeof(*controller_list); i++) {
         controller &controller = controller_list[i];
         int id = 0;
@@ -184,9 +234,10 @@ void populateDisplayModes(int controller_id, int display_id, map<string, string>
     for (auto mode : modes) {
         string setupFunction = getSetupFunctionName(controller_id, display_id, BUFFER_CODE_FULL);
 
-        auto result = find_if(displayModes.begin(), displayModes.end(), [&](std::pair<string, string> a) -> bool {
-            return (a.first == mode) && (a.second == setupFunction);
-        });
+        auto result = find_if(displayModes.begin(), displayModes.end(),
+                              [&](std::pair<string, string> a) -> bool {
+                                  return (a.first == mode) && (a.second == setupFunction);
+                              });
 
         //Insert to map if not yet existing (setupFunction)
         if (result == displayModes.end())
@@ -214,7 +265,8 @@ void buildDisplayTree(glcd_info_tree_t &controllers) {
 
             if (controller_it == controllers.end()) { //If controller not yet in the map
                 //Create display_info and pre-populate
-                display_mode_info info = {controllerName, displayName, "", controller.tile_width, controller.tile_height};
+                display_mode_info info = {controllerName, displayName, "", controller.tile_width,
+                                          controller.tile_height};
                 info.name_proper = sanitizeDisplayName(info);
                 populateDisplayModes(i, id, info.modes);
                 vector<display_mode_info> displayList;
@@ -222,11 +274,15 @@ void buildDisplayTree(glcd_info_tree_t &controllers) {
                 controllers.insert(make_pair(controllerName, move(displayList)));
             } else { //controller exists in map
                 vector<display_mode_info> &displayList = controller_it->second;
-                auto it = std::find_if(displayList.begin(), displayList.end(), [&displayName](const display_mode_info &i) -> bool { return i.name == displayName; });
+                auto it = std::find_if(displayList.begin(), displayList.end(),
+                                       [&displayName](const display_mode_info &i) -> bool {
+                                           return i.name == displayName;
+                                       });
 
                 //Check if display name exists in the lsit
                 if (it == displayList.end()) {
-                    display_mode_info newInfo = {controllerName, displayName, "", controller.tile_width, controller.tile_height};
+                    display_mode_info newInfo = {controllerName, displayName, "", controller.tile_width,
+                                                 controller.tile_height};
                     newInfo.name_proper = sanitizeDisplayName(newInfo);
                     populateDisplayModes(i, id, newInfo.modes);
                     controller_it->second.emplace_back(newInfo);
@@ -382,7 +438,8 @@ void buildCode_GlcdSize() {
 
     for (auto size : sizes) {
         static int i = 1;
-        code << "\tSIZE_" << size.desc << "(" << to_string(size.tile_width) << ", " << to_string(size.tile_height) << ")";
+        code << "\tSIZE_" << size.desc << "(" << to_string(size.tile_width) << ", "
+             << to_string(size.tile_height) << ")";
         code << (i < sizes.size() ? ",\n" : "");
         i++;
     }
@@ -551,11 +608,26 @@ void buildCode_updateCppLookupFonts() {
 
     for (const auto &fontName : fontFiles) {
         if (std::find(excludeFonts.begin(), excludeFonts.end(), fontName) != excludeFonts.end()) {
-            cout << "Note: Excluding font name: " << fontName << endl;
+            cout << "> Skipped: " << fontName << endl;
             continue;
         }
+#ifdef _WIN32
+        if (std::find(win32_excluded_fonts.begin(), win32_excluded_fonts.end(), fontName) != win32_excluded_fonts.end()) {
+            cout << "> Skipped: " << fontName << endl;
+            continue;
+        }
+#endif
         code << "\tfont_map[\"" << fontName << "\"] = " << fontName << ";" << endl;
     }
+
+
+#ifdef _WIN32
+    code << "#if !defined(_WIN32)\n";
+    for (const auto &fontName : win32_excluded_fonts) {
+        code << "\tfont_map[\"" << fontName << "\"] = " << fontName << ";" << endl;
+    }
+    code << "#endif\n";
+#endif
 
     code << "}";
 
@@ -710,7 +782,8 @@ int main(int argc, char *argv[]) {
 
     if (letters == "y") {
 
-        string baseGlcdPackageDirPath = BASE_PROJECT_PATH_DRIVERS + "/glcd/src/main/java/com/ibasco/pidisplay/drivers/glcd";
+        string baseGlcdPackageDirPath =
+                BASE_PROJECT_PATH_DRIVERS + "/glcd/src/main/java/com/ibasco/pidisplay/drivers/glcd";
         string enumDirPath = baseGlcdPackageDirPath + "/enums";
 
         exportFile(FILE_CONTROLLERS, BASE_PROJECT_PATH_NATIVE_CPP + "/utils/" + FILE_CONTROLLERS);

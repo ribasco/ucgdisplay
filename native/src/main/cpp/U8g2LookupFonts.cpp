@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 25 2018 12:46:24) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 25 2018 21:00:12) 
  */
 
 #include "U8g2Hal.h"
@@ -180,24 +180,6 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8g2_font_astragal_nbp_tf"] = u8g2_font_astragal_nbp_tf;
 	font_map["u8g2_font_astragal_nbp_tn"] = u8g2_font_astragal_nbp_tn;
 	font_map["u8g2_font_astragal_nbp_tr"] = u8g2_font_astragal_nbp_tr;
-#ifdef __linux__
-	font_map["u8g2_font_b10_b_t_japanese1"] = u8g2_font_b10_b_t_japanese1;
-	font_map["u8g2_font_b10_b_t_japanese2"] = u8g2_font_b10_b_t_japanese2;
-	font_map["u8g2_font_b10_t_japanese1"] = u8g2_font_b10_t_japanese1;
-	font_map["u8g2_font_b10_t_japanese2"] = u8g2_font_b10_t_japanese2;
-	font_map["u8g2_font_b12_b_t_japanese1"] = u8g2_font_b12_b_t_japanese1;
-	font_map["u8g2_font_b12_b_t_japanese2"] = u8g2_font_b12_b_t_japanese2;
-	font_map["u8g2_font_b12_b_t_japanese3"] = u8g2_font_b12_b_t_japanese3;
-	font_map["u8g2_font_b12_t_japanese1"] = u8g2_font_b12_t_japanese1;
-	font_map["u8g2_font_b12_t_japanese2"] = u8g2_font_b12_t_japanese2;
-	font_map["u8g2_font_b12_t_japanese3"] = u8g2_font_b12_t_japanese3;
-	font_map["u8g2_font_b16_b_t_japanese1"] = u8g2_font_b16_b_t_japanese1;
-	font_map["u8g2_font_b16_b_t_japanese2"] = u8g2_font_b16_b_t_japanese2;
-	font_map["u8g2_font_b16_b_t_japanese3"] = u8g2_font_b16_b_t_japanese3;
-	font_map["u8g2_font_b16_t_japanese1"] = u8g2_font_b16_t_japanese1;
-	font_map["u8g2_font_b16_t_japanese2"] = u8g2_font_b16_t_japanese2;
-	font_map["u8g2_font_b16_t_japanese3"] = u8g2_font_b16_t_japanese3;
-#endif
 	font_map["u8g2_font_baby_tf"] = u8g2_font_baby_tf;
 	font_map["u8g2_font_baby_tn"] = u8g2_font_baby_tn;
 	font_map["u8g2_font_baby_tr"] = u8g2_font_baby_tr;
@@ -375,20 +357,6 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8g2_font_etl14thai_t"] = u8g2_font_etl14thai_t;
 	font_map["u8g2_font_etl16thai_t"] = u8g2_font_etl16thai_t;
 	font_map["u8g2_font_etl24thai_t"] = u8g2_font_etl24thai_t;
-#ifdef __linux__
-	font_map["u8g2_font_f10_b_t_japanese1"] = u8g2_font_f10_b_t_japanese1;
-	font_map["u8g2_font_f10_b_t_japanese2"] = u8g2_font_f10_b_t_japanese2;
-	font_map["u8g2_font_f10_t_japanese1"] = u8g2_font_f10_t_japanese1;
-	font_map["u8g2_font_f10_t_japanese2"] = u8g2_font_f10_t_japanese2;
-	font_map["u8g2_font_f12_b_t_japanese1"] = u8g2_font_f12_b_t_japanese1;
-	font_map["u8g2_font_f12_b_t_japanese2"] = u8g2_font_f12_b_t_japanese2;
-	font_map["u8g2_font_f12_t_japanese1"] = u8g2_font_f12_t_japanese1;
-	font_map["u8g2_font_f12_t_japanese2"] = u8g2_font_f12_t_japanese2;
-	font_map["u8g2_font_f16_b_t_japanese1"] = u8g2_font_f16_b_t_japanese1;
-	font_map["u8g2_font_f16_b_t_japanese2"] = u8g2_font_f16_b_t_japanese2;
-	font_map["u8g2_font_f16_t_japanese1"] = u8g2_font_f16_t_japanese1;
-	font_map["u8g2_font_f16_t_japanese2"] = u8g2_font_f16_t_japanese2;
-#endif
 	font_map["u8g2_font_freedoomr10_mu"] = u8g2_font_freedoomr10_mu;
 	font_map["u8g2_font_freedoomr10_tu"] = u8g2_font_freedoomr10_tu;
 	font_map["u8g2_font_freedoomr25_mn"] = u8g2_font_freedoomr25_mn;
@@ -1003,9 +971,6 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8g2_font_t0_11_tf"] = u8g2_font_t0_11_tf;
 	font_map["u8g2_font_t0_11_tn"] = u8g2_font_t0_11_tn;
 	font_map["u8g2_font_t0_11_tr"] = u8g2_font_t0_11_tr;
-#ifdef __linux__
-	font_map["u8g2_font_t0_11_t_all"] = u8g2_font_t0_11_t_all;
-#endif
 	font_map["u8g2_font_t0_12b_me"] = u8g2_font_t0_12b_me;
 	font_map["u8g2_font_t0_12b_mf"] = u8g2_font_t0_12b_mf;
 	font_map["u8g2_font_t0_12b_mn"] = u8g2_font_t0_12b_mn;
@@ -1194,23 +1159,12 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8g2_font_unifont_t_bengali"] = u8g2_font_unifont_t_bengali;
 	font_map["u8g2_font_unifont_t_chinese1"] = u8g2_font_unifont_t_chinese1;
 	font_map["u8g2_font_unifont_t_chinese2"] = u8g2_font_unifont_t_chinese2;
-#ifdef __linux__
-	font_map["u8g2_font_unifont_t_chinese3"] = u8g2_font_unifont_t_chinese3;
-#endif
 	font_map["u8g2_font_unifont_t_cyrillic"] = u8g2_font_unifont_t_cyrillic;
 	font_map["u8g2_font_unifont_t_devanagari"] = u8g2_font_unifont_t_devanagari;
 	font_map["u8g2_font_unifont_t_extended"] = u8g2_font_unifont_t_extended;
 	font_map["u8g2_font_unifont_t_greek"] = u8g2_font_unifont_t_greek;
 	font_map["u8g2_font_unifont_t_hebrew"] = u8g2_font_unifont_t_hebrew;
-#ifdef __linux___
-	font_map["u8g2_font_unifont_t_japanese1"] = u8g2_font_unifont_t_japanese1;
-	font_map["u8g2_font_unifont_t_japanese2"] = u8g2_font_unifont_t_japanese2;
-	font_map["u8g2_font_unifont_t_japanese3"] = u8g2_font_unifont_t_japanese3;
-#endif
 	font_map["u8g2_font_unifont_t_korean1"] = u8g2_font_unifont_t_korean1;
-#ifdef __linux__
-	font_map["u8g2_font_unifont_t_korean2"] = u8g2_font_unifont_t_korean2;
-#endif
 	font_map["u8g2_font_unifont_t_latin"] = u8g2_font_unifont_t_latin;
 	font_map["u8g2_font_unifont_t_polish"] = u8g2_font_unifont_t_polish;
 	font_map["u8g2_font_unifont_t_symbols"] = u8g2_font_unifont_t_symbols;
@@ -1227,43 +1181,18 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8g2_font_wqy12_t_chinese1"] = u8g2_font_wqy12_t_chinese1;
 	font_map["u8g2_font_wqy12_t_chinese2"] = u8g2_font_wqy12_t_chinese2;
 	font_map["u8g2_font_wqy12_t_chinese3"] = u8g2_font_wqy12_t_chinese3;
-#ifdef __linux__
-	font_map["u8g2_font_wqy12_t_gb2312"] = u8g2_font_wqy12_t_gb2312;
-	font_map["u8g2_font_wqy12_t_gb2312a"] = u8g2_font_wqy12_t_gb2312a;
-	font_map["u8g2_font_wqy12_t_gb2312b"] = u8g2_font_wqy12_t_gb2312b;
-#endif
 	font_map["u8g2_font_wqy13_t_chinese1"] = u8g2_font_wqy13_t_chinese1;
 	font_map["u8g2_font_wqy13_t_chinese2"] = u8g2_font_wqy13_t_chinese2;
 	font_map["u8g2_font_wqy13_t_chinese3"] = u8g2_font_wqy13_t_chinese3;
-#ifdef __linux__
-	font_map["u8g2_font_wqy13_t_gb2312"] = u8g2_font_wqy13_t_gb2312;
-	font_map["u8g2_font_wqy13_t_gb2312a"] = u8g2_font_wqy13_t_gb2312a;
-	font_map["u8g2_font_wqy13_t_gb2312b"] = u8g2_font_wqy13_t_gb2312b;
-#endif
 	font_map["u8g2_font_wqy14_t_chinese1"] = u8g2_font_wqy14_t_chinese1;
 	font_map["u8g2_font_wqy14_t_chinese2"] = u8g2_font_wqy14_t_chinese2;
 	font_map["u8g2_font_wqy14_t_chinese3"] = u8g2_font_wqy14_t_chinese3;
-#ifdef __linux__
-	font_map["u8g2_font_wqy14_t_gb2312"] = u8g2_font_wqy14_t_gb2312;
-	font_map["u8g2_font_wqy14_t_gb2312a"] = u8g2_font_wqy14_t_gb2312a;
-	font_map["u8g2_font_wqy14_t_gb2312b"] = u8g2_font_wqy14_t_gb2312b;
-#endif
 	font_map["u8g2_font_wqy15_t_chinese1"] = u8g2_font_wqy15_t_chinese1;
 	font_map["u8g2_font_wqy15_t_chinese2"] = u8g2_font_wqy15_t_chinese2;
 	font_map["u8g2_font_wqy15_t_chinese3"] = u8g2_font_wqy15_t_chinese3;
-#ifdef __linux__
-	font_map["u8g2_font_wqy15_t_gb2312"] = u8g2_font_wqy15_t_gb2312;
-	font_map["u8g2_font_wqy15_t_gb2312a"] = u8g2_font_wqy15_t_gb2312a;
-	font_map["u8g2_font_wqy15_t_gb2312b"] = u8g2_font_wqy15_t_gb2312b;
-#endif
 	font_map["u8g2_font_wqy16_t_chinese1"] = u8g2_font_wqy16_t_chinese1;
 	font_map["u8g2_font_wqy16_t_chinese2"] = u8g2_font_wqy16_t_chinese2;
 	font_map["u8g2_font_wqy16_t_chinese3"] = u8g2_font_wqy16_t_chinese3;
-#ifdef __linux__
-	font_map["u8g2_font_wqy16_t_gb2312"] = u8g2_font_wqy16_t_gb2312;
-	font_map["u8g2_font_wqy16_t_gb2312a"] = u8g2_font_wqy16_t_gb2312a;
-	font_map["u8g2_font_wqy16_t_gb2312b"] = u8g2_font_wqy16_t_gb2312b;
-#endif
 	font_map["u8x8_font_5x8_f"] = u8x8_font_5x8_f;
 	font_map["u8x8_font_5x8_r"] = u8x8_font_5x8_r;
 	font_map["u8x8_font_amstrad_cpc_extended_f"] = u8x8_font_amstrad_cpc_extended_f;
@@ -1302,4 +1231,55 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8x8_font_victoriabold8_u"] = u8x8_font_victoriabold8_u;
 	font_map["u8x8_font_victoriamedium8_r"] = u8x8_font_victoriamedium8_r;
 	font_map["u8x8_font_victoriamedium8_u"] = u8x8_font_victoriamedium8_u;
+#if !defined(_WIN32)
+	font_map["u8g2_font_unifont_t_chinese3"] = u8g2_font_unifont_t_chinese3;
+	font_map["u8g2_font_unifont_t_japanese1"] = u8g2_font_unifont_t_japanese1;
+	font_map["u8g2_font_unifont_t_japanese2"] = u8g2_font_unifont_t_japanese2;
+	font_map["u8g2_font_unifont_t_japanese3"] = u8g2_font_unifont_t_japanese3;
+	font_map["u8g2_font_unifont_t_korean2"] = u8g2_font_unifont_t_korean2;
+	font_map["u8g2_font_wqy12_t_gb2312"] = u8g2_font_wqy12_t_gb2312;
+	font_map["u8g2_font_wqy12_t_gb2312a"] = u8g2_font_wqy12_t_gb2312a;
+	font_map["u8g2_font_wqy12_t_gb2312b"] = u8g2_font_wqy12_t_gb2312b;
+	font_map["u8g2_font_wqy15_t_gb2312"] = u8g2_font_wqy15_t_gb2312;
+	font_map["u8g2_font_wqy15_t_gb2312a"] = u8g2_font_wqy15_t_gb2312a;
+	font_map["u8g2_font_wqy15_t_gb2312b"] = u8g2_font_wqy15_t_gb2312b;
+	font_map["u8g2_font_wqy16_t_gb2312"] = u8g2_font_wqy16_t_gb2312;
+	font_map["u8g2_font_wqy16_t_gb2312a"] = u8g2_font_wqy16_t_gb2312a;
+	font_map["u8g2_font_wqy16_t_gb2312b"] = u8g2_font_wqy16_t_gb2312b;
+	font_map["u8g2_font_wqy14_t_gb2312"] = u8g2_font_wqy14_t_gb2312;
+	font_map["u8g2_font_wqy14_t_gb2312a"] = u8g2_font_wqy14_t_gb2312a;
+	font_map["u8g2_font_wqy14_t_gb2312b"] = u8g2_font_wqy14_t_gb2312b;
+	font_map["u8g2_font_wqy13_t_gb2312"] = u8g2_font_wqy13_t_gb2312;
+	font_map["u8g2_font_wqy13_t_gb2312a"] = u8g2_font_wqy13_t_gb2312a;
+	font_map["u8g2_font_wqy13_t_gb2312b"] = u8g2_font_wqy13_t_gb2312b;
+	font_map["u8g2_font_t0_11_t_all"] = u8g2_font_t0_11_t_all;
+	font_map["u8g2_font_f10_b_t_japanese1"] = u8g2_font_f10_b_t_japanese1;
+	font_map["u8g2_font_f10_b_t_japanese2"] = u8g2_font_f10_b_t_japanese2;
+	font_map["u8g2_font_f10_t_japanese1"] = u8g2_font_f10_t_japanese1;
+	font_map["u8g2_font_f10_t_japanese2"] = u8g2_font_f10_t_japanese2;
+	font_map["u8g2_font_f12_b_t_japanese1"] = u8g2_font_f12_b_t_japanese1;
+	font_map["u8g2_font_f12_b_t_japanese2"] = u8g2_font_f12_b_t_japanese2;
+	font_map["u8g2_font_f12_t_japanese1"] = u8g2_font_f12_t_japanese1;
+	font_map["u8g2_font_f12_t_japanese2"] = u8g2_font_f12_t_japanese2;
+	font_map["u8g2_font_f16_b_t_japanese1"] = u8g2_font_f16_b_t_japanese1;
+	font_map["u8g2_font_f16_b_t_japanese2"] = u8g2_font_f16_b_t_japanese2;
+	font_map["u8g2_font_f16_t_japanese1"] = u8g2_font_f16_t_japanese1;
+	font_map["u8g2_font_f16_t_japanese2"] = u8g2_font_f16_t_japanese2;
+	font_map["u8g2_font_b10_b_t_japanese1"] = u8g2_font_b10_b_t_japanese1;
+	font_map["u8g2_font_b10_b_t_japanese2"] = u8g2_font_b10_b_t_japanese2;
+	font_map["u8g2_font_b10_t_japanese1"] = u8g2_font_b10_t_japanese1;
+	font_map["u8g2_font_b10_t_japanese2"] = u8g2_font_b10_t_japanese2;
+	font_map["u8g2_font_b12_b_t_japanese1"] = u8g2_font_b12_b_t_japanese1;
+	font_map["u8g2_font_b12_b_t_japanese2"] = u8g2_font_b12_b_t_japanese2;
+	font_map["u8g2_font_b12_b_t_japanese3"] = u8g2_font_b12_b_t_japanese3;
+	font_map["u8g2_font_b12_t_japanese1"] = u8g2_font_b12_t_japanese1;
+	font_map["u8g2_font_b12_t_japanese2"] = u8g2_font_b12_t_japanese2;
+	font_map["u8g2_font_b12_t_japanese3"] = u8g2_font_b12_t_japanese3;
+	font_map["u8g2_font_b16_b_t_japanese1"] = u8g2_font_b16_b_t_japanese1;
+	font_map["u8g2_font_b16_b_t_japanese2"] = u8g2_font_b16_b_t_japanese2;
+	font_map["u8g2_font_b16_b_t_japanese3"] = u8g2_font_b16_b_t_japanese3;
+	font_map["u8g2_font_b16_t_japanese1"] = u8g2_font_b16_t_japanese1;
+	font_map["u8g2_font_b16_t_japanese2"] = u8g2_font_b16_t_japanese2;
+	font_map["u8g2_font_b16_t_japanese3"] = u8g2_font_b16_t_japanese3;
+#endif
 }

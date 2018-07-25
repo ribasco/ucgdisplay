@@ -160,6 +160,7 @@ bool saveFileToOutputDir(const string &fileName, const string &data) {
         exit(1);
     }
     saveFileToPath(outputDir + "/" + fileName, data);
+    return true;
 }
 
 char *strlowercase(const char *s) {
