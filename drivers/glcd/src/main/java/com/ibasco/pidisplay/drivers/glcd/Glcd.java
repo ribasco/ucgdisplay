@@ -1,10 +1,11 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 25 2018 12:46:24) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 25 2018 21:00:12)
  */
 
 package com.ibasco.pidisplay.drivers.glcd;
 
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdControllerType;
+
 import static com.ibasco.pidisplay.core.ui.U8g2Interface.*;
 
 @SuppressWarnings("unused")

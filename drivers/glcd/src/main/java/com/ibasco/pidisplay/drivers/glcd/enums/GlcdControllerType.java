@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 25 2018 12:46:24) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 25 2018 21:00:12)
  */
 
 package com.ibasco.pidisplay.drivers.glcd.enums;
