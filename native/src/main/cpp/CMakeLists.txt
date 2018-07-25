@@ -54,7 +54,9 @@ message(STATUS "PIDISP SOURCE = ${U8G2_SRC_FILES}")
 
 add_library(pidisp SHARED ${PIDISP_HDR} ${PIDISP_SRC})
 add_executable(pidisp-gen "utils/codegen.h" "utils/codegen.cpp")
-#add_executable(pidisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
+if (UNIX)
+    add_executable(pidisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
+endif()
 
 if (WIN32)
     set(CMAKE_SHARED_LIBRARY_PREFIX "")
@@ -79,6 +81,7 @@ if (UNIX AND (LibEvent_FOUND AND TARGET libevent))
     list(APPEND LINK_LIBS ${LIBEVENT_LIBRARIES})
     add_dependencies(pidisp libevent)
     add_dependencies(pidisp-test libevent)
+    target_link_libraries(pidisp-test ${LINK_LIBS})
 endif ()
 
 # Add u8g2 dependency
@@ -88,7 +91,3 @@ endif ()
 
 include_directories(${INC_DIRS})
 target_link_libraries(pidisp ${LINK_LIBS})
-
-#set_target_properties(pidisp )
-
-#target_link_libraries(pidisp-test ${LINK_LIBS})
