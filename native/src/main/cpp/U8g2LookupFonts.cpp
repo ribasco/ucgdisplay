@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 25 2018 21:00:12) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Aug 25 2018 21:45:53) 
  */
 
 #include "U8g2Hal.h"
@@ -80,6 +80,7 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8g2_font_6x13_tr"] = u8g2_font_6x13_tr;
 	font_map["u8g2_font_6x13_t_cyrillic"] = u8g2_font_6x13_t_cyrillic;
 	font_map["u8g2_font_6x13_t_hebrew"] = u8g2_font_6x13_t_hebrew;
+	font_map["u8g2_font_7Segments_26x42_mn"] = u8g2_font_7Segments_26x42_mn;
 	font_map["u8g2_font_7x13B_mf"] = u8g2_font_7x13B_mf;
 	font_map["u8g2_font_7x13B_mn"] = u8g2_font_7x13B_mn;
 	font_map["u8g2_font_7x13B_mr"] = u8g2_font_7x13B_mr;
@@ -191,10 +192,15 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8g2_font_balthasar_titling_nbp_tr"] = u8g2_font_balthasar_titling_nbp_tr;
 	font_map["u8g2_font_blipfest_07_tn"] = u8g2_font_blipfest_07_tn;
 	font_map["u8g2_font_blipfest_07_tr"] = u8g2_font_blipfest_07_tr;
+	font_map["u8g2_font_bubble_tn"] = u8g2_font_bubble_tn;
+	font_map["u8g2_font_bubble_tr"] = u8g2_font_bubble_tr;
 	font_map["u8g2_font_calibration_gothic_nbp_tf"] = u8g2_font_calibration_gothic_nbp_tf;
 	font_map["u8g2_font_calibration_gothic_nbp_tn"] = u8g2_font_calibration_gothic_nbp_tn;
 	font_map["u8g2_font_calibration_gothic_nbp_tr"] = u8g2_font_calibration_gothic_nbp_tr;
 	font_map["u8g2_font_calibration_gothic_nbp_t_all"] = u8g2_font_calibration_gothic_nbp_t_all;
+	font_map["u8g2_font_cardimon_pixel_tf"] = u8g2_font_cardimon_pixel_tf;
+	font_map["u8g2_font_cardimon_pixel_tn"] = u8g2_font_cardimon_pixel_tn;
+	font_map["u8g2_font_cardimon_pixel_tr"] = u8g2_font_cardimon_pixel_tr;
 	font_map["u8g2_font_chikita_tf"] = u8g2_font_chikita_tf;
 	font_map["u8g2_font_chikita_tn"] = u8g2_font_chikita_tn;
 	font_map["u8g2_font_chikita_tr"] = u8g2_font_chikita_tr;
@@ -630,12 +636,22 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8g2_font_logisoso62_tn"] = u8g2_font_logisoso62_tn;
 	font_map["u8g2_font_logisoso78_tn"] = u8g2_font_logisoso78_tn;
 	font_map["u8g2_font_logisoso92_tn"] = u8g2_font_logisoso92_tn;
+	font_map["u8g2_font_lucasarts_scumm_subtitle_o_tf"] = u8g2_font_lucasarts_scumm_subtitle_o_tf;
+	font_map["u8g2_font_lucasarts_scumm_subtitle_o_tn"] = u8g2_font_lucasarts_scumm_subtitle_o_tn;
+	font_map["u8g2_font_lucasarts_scumm_subtitle_o_tr"] = u8g2_font_lucasarts_scumm_subtitle_o_tr;
+	font_map["u8g2_font_lucasarts_scumm_subtitle_r_tf"] = u8g2_font_lucasarts_scumm_subtitle_r_tf;
+	font_map["u8g2_font_lucasarts_scumm_subtitle_r_tn"] = u8g2_font_lucasarts_scumm_subtitle_r_tn;
+	font_map["u8g2_font_lucasarts_scumm_subtitle_r_tr"] = u8g2_font_lucasarts_scumm_subtitle_r_tr;
 	font_map["u8g2_font_lucasfont_alternate_tf"] = u8g2_font_lucasfont_alternate_tf;
 	font_map["u8g2_font_lucasfont_alternate_tn"] = u8g2_font_lucasfont_alternate_tn;
 	font_map["u8g2_font_lucasfont_alternate_tr"] = u8g2_font_lucasfont_alternate_tr;
 	font_map["u8g2_font_m2icon_5_tf"] = u8g2_font_m2icon_5_tf;
 	font_map["u8g2_font_m2icon_7_tf"] = u8g2_font_m2icon_7_tf;
 	font_map["u8g2_font_m2icon_9_tf"] = u8g2_font_m2icon_9_tf;
+	font_map["u8g2_font_maniac_te"] = u8g2_font_maniac_te;
+	font_map["u8g2_font_maniac_tf"] = u8g2_font_maniac_tf;
+	font_map["u8g2_font_maniac_tn"] = u8g2_font_maniac_tn;
+	font_map["u8g2_font_maniac_tr"] = u8g2_font_maniac_tr;
 	font_map["u8g2_font_mercutio_basic_nbp_tf"] = u8g2_font_mercutio_basic_nbp_tf;
 	font_map["u8g2_font_mercutio_basic_nbp_tn"] = u8g2_font_mercutio_basic_nbp_tn;
 	font_map["u8g2_font_mercutio_basic_nbp_tr"] = u8g2_font_mercutio_basic_nbp_tr;
@@ -1193,17 +1209,25 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8g2_font_wqy16_t_chinese1"] = u8g2_font_wqy16_t_chinese1;
 	font_map["u8g2_font_wqy16_t_chinese2"] = u8g2_font_wqy16_t_chinese2;
 	font_map["u8g2_font_wqy16_t_chinese3"] = u8g2_font_wqy16_t_chinese3;
+	font_map["u8x8_font_5x7_f"] = u8x8_font_5x7_f;
+	font_map["u8x8_font_5x7_n"] = u8x8_font_5x7_n;
+	font_map["u8x8_font_5x7_r"] = u8x8_font_5x7_r;
 	font_map["u8x8_font_5x8_f"] = u8x8_font_5x8_f;
+	font_map["u8x8_font_5x8_n"] = u8x8_font_5x8_n;
 	font_map["u8x8_font_5x8_r"] = u8x8_font_5x8_r;
 	font_map["u8x8_font_amstrad_cpc_extended_f"] = u8x8_font_amstrad_cpc_extended_f;
 	font_map["u8x8_font_amstrad_cpc_extended_n"] = u8x8_font_amstrad_cpc_extended_n;
 	font_map["u8x8_font_amstrad_cpc_extended_r"] = u8x8_font_amstrad_cpc_extended_r;
 	font_map["u8x8_font_amstrad_cpc_extended_u"] = u8x8_font_amstrad_cpc_extended_u;
+	font_map["u8x8_font_artossans8_n"] = u8x8_font_artossans8_n;
 	font_map["u8x8_font_artossans8_r"] = u8x8_font_artossans8_r;
 	font_map["u8x8_font_artossans8_u"] = u8x8_font_artossans8_u;
+	font_map["u8x8_font_artosserif8_n"] = u8x8_font_artosserif8_n;
 	font_map["u8x8_font_artosserif8_r"] = u8x8_font_artosserif8_r;
 	font_map["u8x8_font_artosserif8_u"] = u8x8_font_artosserif8_u;
+	font_map["u8x8_font_chroma48medium8_n"] = u8x8_font_chroma48medium8_n;
 	font_map["u8x8_font_chroma48medium8_r"] = u8x8_font_chroma48medium8_r;
+	font_map["u8x8_font_chroma48medium8_u"] = u8x8_font_chroma48medium8_u;
 	font_map["u8x8_font_pcsenior_f"] = u8x8_font_pcsenior_f;
 	font_map["u8x8_font_pcsenior_n"] = u8x8_font_pcsenior_n;
 	font_map["u8x8_font_pcsenior_r"] = u8x8_font_pcsenior_r;
@@ -1224,11 +1248,15 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map["u8x8_font_pxplustandynewtv_n"] = u8x8_font_pxplustandynewtv_n;
 	font_map["u8x8_font_pxplustandynewtv_r"] = u8x8_font_pxplustandynewtv_r;
 	font_map["u8x8_font_pxplustandynewtv_u"] = u8x8_font_pxplustandynewtv_u;
+	font_map["u8x8_font_saikyosansbold8_n"] = u8x8_font_saikyosansbold8_n;
 	font_map["u8x8_font_saikyosansbold8_u"] = u8x8_font_saikyosansbold8_u;
+	font_map["u8x8_font_torussansbold8_n"] = u8x8_font_torussansbold8_n;
 	font_map["u8x8_font_torussansbold8_r"] = u8x8_font_torussansbold8_r;
 	font_map["u8x8_font_torussansbold8_u"] = u8x8_font_torussansbold8_u;
+	font_map["u8x8_font_victoriabold8_n"] = u8x8_font_victoriabold8_n;
 	font_map["u8x8_font_victoriabold8_r"] = u8x8_font_victoriabold8_r;
 	font_map["u8x8_font_victoriabold8_u"] = u8x8_font_victoriabold8_u;
+	font_map["u8x8_font_victoriamedium8_n"] = u8x8_font_victoriamedium8_n;
 	font_map["u8x8_font_victoriamedium8_r"] = u8x8_font_victoriamedium8_r;
 	font_map["u8x8_font_victoriamedium8_u"] = u8x8_font_victoriamedium8_u;
 #if !defined(_WIN32)

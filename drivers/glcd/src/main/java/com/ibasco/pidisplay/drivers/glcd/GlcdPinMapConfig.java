@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GlcdPinMapConfig {
-    private HashMap<GlcdPin, Byte> pinMap;
+    private Map<GlcdPin, Byte> pinMap;
 
     public GlcdPinMapConfig() {
         this.pinMap = new HashMap<>();
@@ -29,16 +29,16 @@ public class GlcdPinMapConfig {
         return pinMap.isEmpty();
     }
 
-    byte[] build() {
-        if (pinMap.isEmpty())
-            return null;
+    public byte[] toByteArray() {
         int size = GlcdPin.values().length - 2; //exclude last two aliases
         byte[] data = new byte[size];
-        Arrays.fill(data, (byte) 0);
-        for (Map.Entry<GlcdPin, Byte> entry : pinMap.entrySet()) {
-            GlcdPin pin = entry.getKey();
-            Byte pNum = entry.getValue();
-            data[pin.getIndex()] = pNum;
+        if (!pinMap.isEmpty()) {
+            Arrays.fill(data, (byte) 0);
+            for (Map.Entry<GlcdPin, Byte> entry : pinMap.entrySet()) {
+                GlcdPin pin = entry.getKey();
+                Byte pNum = entry.getValue();
+                data[pin.getIndex()] = pNum;
+            }
         }
         return data;
     }

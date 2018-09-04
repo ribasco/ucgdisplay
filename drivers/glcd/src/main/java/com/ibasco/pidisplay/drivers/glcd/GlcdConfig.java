@@ -5,6 +5,9 @@ import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdSize;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdConfigException;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdException;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 
 import java.util.Arrays;
@@ -25,6 +28,8 @@ public class GlcdConfig {
     private GlcdRotation rotation;
     private GlcdPinMapConfig pinMap;
     private int deviceAddress = -1;
+    private boolean emulated;
+    private String setupProcedure;
 
     public GlcdConfig() {
     }
@@ -35,6 +40,14 @@ public class GlcdConfig {
         this.commInterface = commInterface;
         this.pinMap = pinMapConfig;
         this.deviceAddress = deviceAddress;
+    }
+
+    public boolean isEmulated() {
+        return emulated;
+    }
+
+    public void setEmulated(boolean emulated) {
+        this.emulated = emulated;
     }
 
     public int getDeviceAddress() {
@@ -81,7 +94,14 @@ public class GlcdConfig {
         return rotation;
     }
 
-    String getSetupProcedure() {
+    public String getSetupProcedure() {
+        if (StringUtils.isBlank(setupProcedure)) {
+            setupProcedure = lookupSetupInfo().getFunction();
+        }
+        return setupProcedure;
+    }
+
+    private GlcdSetupInfo lookupSetupInfo() {
         if (display == null) {
             throw new RuntimeException("Unable to obtain setup procedure",
                     new GlcdConfigException("Display has not been set", this)
@@ -98,22 +118,16 @@ public class GlcdConfig {
                 .orElse(null);
 
         if (setupInfo == null)
-            throw new RuntimeException("Unable to locate setup procedure",
+            throw new RuntimeException("Unable to obtain setup procedure",
                     new GlcdException(String.format("Could not find a suitable setup procedure for commInterface '%s'", commInterface.name())));
 
         log.debug("Using display setup procedure (Display: {}, Protocol: {}, Setup Proc: {}))", display.getName(), commInterface.name(), setupInfo.getFunction());
 
-        return setupInfo.getFunction();
+        return setupInfo;
     }
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("GlcdConfig{");
-        sb.append("display=").append(display);
-        sb.append(", commInterface=").append(commInterface);
-        sb.append(", rotation=").append(rotation);
-        sb.append(", pinMap=").append(pinMap);
-        sb.append('}');
-        return sb.toString();
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SIMPLE_STYLE);
     }
 }

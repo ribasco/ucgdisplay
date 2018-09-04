@@ -357,7 +357,7 @@ void buildCode_Glcd() {
 
     code << "package com.ibasco.pidisplay.drivers.glcd;\n\n";
     code << "import com.ibasco.pidisplay.drivers.glcd.enums.GlcdControllerType;\n";
-    code << "import static com.ibasco.pidisplay.core.ui.U8g2Interface.*;\n\n";
+    code << "import static com.ibasco.pidisplay.core.u8g2.U8g2Graphics.*;\n\n";
 
     code << "@SuppressWarnings(\"unused\")\n";
     code << "public interface Glcd {\n";

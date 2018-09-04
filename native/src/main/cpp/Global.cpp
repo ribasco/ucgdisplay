@@ -3,19 +3,23 @@
 //
 
 #include "Global.h"
+#include "U8g2Hal.h"
 #include <iostream>
 #include <vector>
 
 JavaVM *cachedJVM;
 
 jclass clsGlcdNativeDriverException;
-jclass clsGpioEventService;
-jclass clsGpioEvent;
-jmethodID midGpioEventService_onGpioEvent;
-jmethodID midGpioEventCtr;
+jclass clsU8g2EventDispatcher;
+jclass clsU8g2GpioEvent;
+jmethodID midU8g2EventDispatcher_onGpioEvent;
+jmethodID midU8g2EventDispatcher_onByteEvent;
+jmethodID midU8g2GpioEventCtr;
 
 static vector<jclass> globalRefClasses;
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     cachedJVM = jvm;
     JNIEnv *env;
@@ -23,19 +27,21 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
 
     //START: Cache Class/methods
     JNI_MakeGlobal(env, CLS_GlcdNativeDriverException, clsGlcdNativeDriverException);
-    JNI_MakeGlobal(env, CLS_GPIOEVENT, clsGpioEvent);
-    JNI_MakeGlobal(env, CLS_GPIOEVENTSERVICE, clsGpioEventService);
-    midGpioEventService_onGpioEvent = env->GetStaticMethodID(clsGpioEventService, "onGpioEvent", "(Lcom/ibasco/pidisplay/core/gpio/GpioEvent;)V");
-    midGpioEventCtr = env->GetMethodID(clsGpioEvent, "<init>", "(IIILjava/lang/String;)V");
+    JNI_MakeGlobal(env, CLS_U8g2GpioEvent, clsU8g2GpioEvent);
+    JNI_MakeGlobal(env, CLS_U8g2EventDispatcher, clsU8g2EventDispatcher);
+    midU8g2EventDispatcher_onGpioEvent = env->GetStaticMethodID(clsU8g2EventDispatcher, "onGpioEvent", "(JII)V");
+    midU8g2EventDispatcher_onByteEvent = env->GetStaticMethodID(clsU8g2EventDispatcher, "onByteEvent", "(JII)V");
+    midU8g2GpioEventCtr = env->GetMethodID(clsU8g2GpioEvent, "<init>", "(II)V");
     //END
 
 #ifdef __linux__
     InputDevManager_Load(env);
 #endif
-    U8g2Interface_Load(env);
+    U8g2Graphics_Load(env);
 
     return JNI_VERSION;
 }
+#pragma clang diagnostic pop
 
 JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     JNIEnv *env;
@@ -44,7 +50,7 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
 #ifdef __linux__
     InputDevManager_UnLoad(env);
 #endif
-    U8g2Interface_UnLoad(env);
+    U8g2Graphics_UnLoad(env);
 
     for (auto it : globalRefClasses) {
         env->DeleteGlobalRef(it);
@@ -53,15 +59,12 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     globalRefClasses.clear();
 }
 
-
-
 void JNI_GetEnv(JNIEnv *env) {
     if (cachedJVM == nullptr) {
         cerr << "VM not yet cached" << endl;
         return;
     }
     cachedJVM->GetEnv((void **) &env, JNI_VERSION);
-    //cachedJVM->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
 }
 
 void JNI_MakeGlobal(JNIEnv *env, const char *name, jclass &cls) {
@@ -72,11 +75,37 @@ void JNI_MakeGlobal(JNIEnv *env, const char *name, jclass &cls) {
     env->DeleteLocalRef(tmp);
 }
 
-void JNI_throwIOException(JNIEnv *env, string msg) {
+void JNI_ThrowIOException(JNIEnv *env, string msg) {
     jclass clsEx = env->FindClass(CLS_IOEXCEPTION);
     env->ThrowNew(clsEx, msg.c_str());
 }
 
-void JNI_throwNativeDriverException(JNIEnv *env, string msg) {
+void JNI_ThrowNativeDriverException(JNIEnv *env, string msg) {
     env->ThrowNew(clsGlcdNativeDriverException, msg.c_str());
+}
+
+void JNI_CopyJByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length) {
+    if (length <= 0) {
+        JNI_ThrowNativeDriverException(env, "Invalid array length");
+        return;
+    }
+    if (buffer == nullptr) {
+        JNI_ThrowNativeDriverException(env, "Buffer is null");
+        return;
+    }
+    jbyte *body = env->GetByteArrayElements(arr, nullptr);
+    for (int i = 0; i < length; i++) {
+        buffer[i] = static_cast<uint8_t>(body[i]);
+    }
+    env->ReleaseByteArrayElements(arr, body, 0);
+}
+
+void JNI_FireGpioEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value) {
+    //jobject event = env->NewObject(clsU8g2GpioEvent, midU8g2GpioEventCtr, msg, value);
+    env->CallStaticVoidMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_onGpioEvent, (jlong) id,  msg, value);
+    //env->DeleteLocalRef(event);
+}
+
+void JNI_FireByteEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value) {
+    env->CallStaticVoidMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_onByteEvent, (jlong) id, msg, value);
 }

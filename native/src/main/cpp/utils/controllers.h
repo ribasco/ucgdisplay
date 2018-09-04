@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Jul 25 2018 21:00:12) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Aug 25 2018 21:45:53) 
  */
 
 #ifndef PIDISP_CONTROLLERS_H
@@ -326,6 +326,23 @@ struct controller controller_list[] =
       { NULL }
     }
   },
+
+  {
+    "ssd1317", 	12, 	12, 	"u8g2_ll_hvline_vertical_top_lsb", "u8x8_cad_001", "", COM_4WSPI|COM_6800|COM_8080,
+    "", /* is_generate_u8g2_class= */ 1,
+    {
+      { "96x96" },
+      { NULL }
+    }
+  },
+  {
+    "ssd1317", 	12, 	12, 	"u8g2_ll_hvline_vertical_top_lsb", "u8x8_cad_ssd13xx_i2c", "i2c", COM_I2C,
+    "", /* is_generate_u8g2_class= */ 1,
+    {
+      { "96x96" },
+      { NULL }
+    }
+  },
   
   {
     "ssd1325", 	16, 	8, 	"u8g2_ll_hvline_vertical_top_lsb", "u8x8_cad_001", "", COM_4WSPI|COM_3WSPI|COM_6800|COM_8080,
@@ -477,6 +494,14 @@ struct controller controller_list[] =
     "", /* is_generate_u8g2_class= */ 1,
     {
       { "128x128" },
+      { NULL }
+    }
+  },
+  {
+    "ls027b7dh01", 	50, 	30, 	"u8g2_ll_hvline_horizontal_right_lsb", "u8x8_cad_001", "", COM_4WSPI,		/* cad procedure is not required (no DC for this display) so it could be a dummy procedure here */
+    "", /* is_generate_u8g2_class= */ 1,
+    {
+      { "400x240" },
       { NULL }
     }
   },
@@ -755,6 +780,25 @@ struct controller controller_list[] =
       { NULL }
     }
   },
+  
+  {
+    "st7567", 		8, 	4, 	"u8g2_ll_hvline_vertical_top_lsb", "u8x8_cad_001", "", COM_4WSPI|COM_6800|COM_8080,
+    "", /* is_generate_u8g2_class= */ 1,
+    {
+      { "64x32" },
+      { NULL }
+    }
+  },
+  {
+    "st7567", 		8, 	4, 	"u8g2_ll_hvline_vertical_top_lsb", "u8x8_cad_ssd13xx_i2c", "i2c", COM_I2C,
+    "", /* is_generate_u8g2_class= */ 1,
+    {
+      { "64x32" },
+      { NULL }
+    }
+  },
+  
+  
   
   {
     "st7586s", 		48, 	17, 	"u8g2_ll_hvline_horizontal_right_lsb", "u8x8_cad_011", "", COM_4WSPI,

@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.core.ui;
 
-import com.ibasco.pidisplay.core.drivers.DisplayDriver;
+import com.ibasco.pidisplay.core.system.DisplayDriver;
 
 /**
  * Generic Graphics Interface

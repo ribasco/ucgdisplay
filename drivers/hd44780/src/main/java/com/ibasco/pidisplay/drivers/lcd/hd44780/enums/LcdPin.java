@@ -60,25 +60,7 @@ public enum LcdPin {
     /**
      * LCD Backlight Pin
      */
-    BACKLIGHT("LCD - Backlight", false);/*,
-    //TODO: Remove the button pins as these are not part of the LCD
-    *//**
-     * Button 1 Pin (Optional)
-     *//*
-    BUTTON_1("LCD - Button 1", false),
-    *//**
-     * Button 2 Pin (Optional)
-     *//*
-    BUTTON_2("LCD - Button 2", false),
-    *//**
-     * Button 3 Pin (Optional)
-     *//*
-    BUTTON_3("LCD - Button 3", false),
-    */
-    /**
-     * Button 4 Pin (Optional)
-     *//*
-    BUTTON_4("LCD - Button 4", false);*/
+    BACKLIGHT("LCD - Backlight", false);
 
     private String name;
     private boolean required;

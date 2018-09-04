@@ -1,7 +1,8 @@
 package com.ibasco.pidisplay.drivers.glcd;
 
-import com.ibasco.pidisplay.drivers.glcd.enums.*;
-import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdDriverException;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommInterface;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdControllerType;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdSize;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -66,24 +67,5 @@ public class GlcdDisplay {
 
     public GlcdSetupInfo[] getSetupDetails() {
         return setupDetails;
-    }
-
-    public static void main(String[] args) {
-        GlcdDisplay display = Glcd.ST7920.D_128x64;
-        GlcdConfig config = new GlcdConfig();
-        config.setDisplay(Glcd.ST7920.D_128x64);
-        config.setCommInterface(GlcdCommInterface.SPI_HW_4WIRE_ST7920);
-        config.setRotation(GlcdRotation.ROTATION_90);
-        config.setPinMapConfig(new GlcdPinMapConfig()
-                .map(GlcdPin.SPI_CLOCK, 14)
-                .map(GlcdPin.SPI_MOSI, 12)
-                .map(GlcdPin.CS, 10)
-        );
-        try {
-            GlcdDriver driver = new GlcdDriver(config);
-            driver.setFont(GlcdFont.FONT_7X13_MF);
-        } catch (GlcdDriverException e) {
-            e.printStackTrace();
-        }
     }
 }

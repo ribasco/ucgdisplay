@@ -98,11 +98,11 @@ public enum GlcdPin {
      */
     CS2(15),
     /**
-     * Alias for D0. Added for readability
+     * Alias for D0. Added for convenience
      */
     SPI_CLOCK(0),
     /**
-     * Alias for D1. Added for readability
+     * Alias for D1. Added for convenience
      */
     SPI_MOSI(1);
 

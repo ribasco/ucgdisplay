@@ -1,6 +1,6 @@
 #include "U8g2Hal.h"
 
-#ifdef __linux__
+#if defined(__linux__) && defined(__arm__)
 #include "CommSpi.h"
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
@@ -20,9 +20,7 @@ using namespace std;
 #define U8G2_HAL_SPI_CHANNEL 0
 
 static bool initialized = false;
-
 static u8g2_setup_func_map_t u8g2_setup_functions; //NOLINT
-
 static u8g2_lookup_font_map_t u8g2_font_map; //NOLINT
 
 #define U8G2NAME(n) #n
@@ -57,21 +55,22 @@ map<int, string> msgNames = {
         {U8X8_MSG_BYTE_END_TRANSFER,   U8G2NAME(U8X8_MSG_BYTE_END_TRANSFER)}
 };
 
-void u8g2hal_CreateMsgEvent(JNIEnv *env, jobject &obj, uint8_t msg, uint8_t type, uint8_t arg_int) {
-    jstring msgName;
-    if (msgNames.count(msg) > 0) {
-        msgName = env->NewStringUTF(msgNames[msg].c_str());
-    } else {
-        msgName = nullptr;
+string getBinaryString(unsigned int u) {
+    stringstream str;
+    int t;
+    for (t = 128; t > 0; t = t / 2) {
+        if (u & t) str << "1 ";
+        else str << "0 ";
     }
-    jobject tmp;
-    tmp = env->NewObject(clsGpioEvent, midGpioEventCtr, msg, type, arg_int, msgName);
-    obj = env->NewGlobalRef(tmp);
-    env->DeleteLocalRef(tmp);
+    return str.str();
 }
 
-void u8g2hal_EmitMsgEvent(JNIEnv *env, jobject &gpioEvent) {
-    env->CallStaticVoidMethod(clsGpioEventService, midGpioEventService_onGpioEvent, gpioEvent);
+std::string hexStr(unsigned char *data, int len) {
+    std::stringstream ss;
+    ss << std::hex;
+    for (int i = 0; i < len; ++i)
+        ss << std::setw(2) << std::setfill('0') << (int) data[i];
+    return ss.str();
 }
 
 void u8g2hal_Init() {
@@ -105,7 +104,7 @@ uint8_t *u8g2hal_GetFontByName(const std::string &font_name) {
 /**
  * 4-wire SPI Hardware Callback Routine (ARM)
  */
-uint8_t cb_rpi_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     switch (msg) {
         case U8X8_MSG_BYTE_SEND: {
             if (spi_write(U8G2_HAL_SPI_CHANNEL, (uint8_t *) arg_ptr, arg_int) < 1)
@@ -149,9 +148,9 @@ uint8_t cb_rpi_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t
 }
 
 /**
- * I2C Hardware Callback Routine for Raspberry Pi
+ * I2C Hardware Callback Routine (ARM)
  */
-uint8_t cb_rpi_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     static int fd = -1;
     uint8_t *data;
 
@@ -193,9 +192,9 @@ uint8_t cb_rpi_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t
 }
 
 /**
- * GPIO and Delay Procedure Routine for Raspberry Pi
+ * GPIO and Delay Procedure Routine (ARM)
 */
-uint8_t cb_rpi_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
+uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
     switch (msg) {
         case U8X8_MSG_GPIO_AND_DELAY_INIT: { // called once during init phase of u8g2/u8x8, can be used to setup pins
             if (!initialized) {
@@ -311,130 +310,32 @@ uint8_t cb_rpi_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t 
 
 #else
 
-string getBinaryString(unsigned int u) {
-    stringstream str;
-    int t;
-    for (t = 128; t > 0; t = t / 2) {
-        if (u & t) str << "1 ";
-        else str << "0 ";
-    }
-    return str.str();
-}
-
-std::string hexStr(unsigned char *data, int len) {
-    std::stringstream ss;
-    ss << std::hex;
-    for (int i = 0; i < len; ++i)
-        ss << std::setw(2) << std::setfill('0') << (int) data[i];
-    return ss.str();
-}
+/*
+ * ============================================================================================================
+ *
+ * Below are the wrapper functions for the built-in U8G2 bit-bang implementations (Hardware and Software)
+ *
+ * ============================================================================================================
+ */
 
 /**
  * SPI Callback Routine (emulation)
  */
-uint8_t cb_rpi_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
-    uint8_t i, b;
-    uint8_t *data;
-    uint8_t takeover_edge = u8x8_GetSPIClockPhase(u8x8);
-    uint8_t not_takeover_edge = 1 - takeover_edge;
-
-    switch (msg) {
-        case U8X8_MSG_BYTE_SEND:
-            data = (uint8_t *) arg_ptr;
-            while (arg_int > 0) {
-                b = *data;
-                data++;
-                arg_int--;
-                for (i = 0; i < 8; i++) {
-                    if (b & 128)
-                        u8x8_gpio_SetSPIData(u8x8, 1);
-                    else
-                        u8x8_gpio_SetSPIData(u8x8, 0);
-                    b <<= 1;
-
-                    u8x8_gpio_SetSPIClock(u8x8, not_takeover_edge);
-                    u8x8_gpio_Delay(u8x8, U8X8_MSG_DELAY_NANO, u8x8->display_info->sda_setup_time_ns);
-                    u8x8_gpio_SetSPIClock(u8x8, takeover_edge);
-                    u8x8_gpio_Delay(u8x8, U8X8_MSG_DELAY_NANO, u8x8->display_info->sck_pulse_width_ns);
-                }
-            }
-            break;
-
-        case U8X8_MSG_BYTE_INIT:
-            /* disable chipselect */
-            u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
-            /* no wait required here */
-
-            /* for SPI: setup correct level of the clock signal */
-            u8x8_gpio_SetSPIClock(u8x8, u8x8_GetSPIClockPhase(u8x8));
-            break;
-        case U8X8_MSG_BYTE_SET_DC:
-            u8x8_gpio_SetDC(u8x8, arg_int);
-            break;
-        case U8X8_MSG_BYTE_START_TRANSFER:
-            u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_enable_level);
-            u8x8->gpio_and_delay_cb(u8x8, U8X8_MSG_DELAY_NANO, u8x8->display_info->post_chip_enable_wait_ns, NULL);
-            break;
-        case U8X8_MSG_BYTE_END_TRANSFER:
-            u8x8->gpio_and_delay_cb(u8x8, U8X8_MSG_DELAY_NANO, u8x8->display_info->pre_chip_disable_wait_ns, NULL);
-            u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
-            break;
-        default:
-            return 0;
-    }
-    return 1;
+uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+    return cb_byte_4wire_sw_spi(info, u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
- * I2C Callback Routine (emulation)
+ * HW I2C Wrapper (Uses software bit-bang implementation)
  */
-uint8_t cb_rpi_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
-    uint8_t *data;
-    switch (msg) {
-        case U8X8_MSG_BYTE_SEND:
-            data = (uint8_t *) arg_ptr;
-            while (arg_int > 0) {
-                i2c_write_byte(u8x8, *data);
-                data++;
-                arg_int--;
-            }
-            break;
-
-        case U8X8_MSG_BYTE_INIT:
-            i2c_init(u8x8);
-            break;
-        case U8X8_MSG_BYTE_SET_DC:
-            break;
-        case U8X8_MSG_BYTE_START_TRANSFER:
-            i2c_start(u8x8);
-            i2c_write_byte(u8x8, u8x8_GetI2CAddress(u8x8));
-            //i2c_write_byte(u8x8, 0x078);
-            break;
-        case U8X8_MSG_BYTE_END_TRANSFER:
-            i2c_stop(u8x8);
-            break;
-        default:
-            return 0;
-    }
-    return 1;
-
-    //return u8x8_byte_sw_i2c(u8x8, msg, arg_int, arg_ptr);
+uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+    return cb_byte_sw_i2c(info, u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * GPIO and Delay Routine (emulation)
  */
-uint8_t cb_rpi_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
-    JNIEnv *env;
-    GETENV(env);
-    jstring msgName = msgNames.count(msg) > 0 ? env->NewStringUTF(msgNames[msg].c_str()) : nullptr;
-    jobject gpioEvent = env->NewObject(clsGpioEvent, midGpioEventCtr, msg, EMULATOR_MSG_TYPE_BYTE, arg_int, msgName);
-    env->CallStaticVoidMethod(clsGpioEventService, midGpioEventService_onGpioEvent, gpioEvent);
-    env->DeleteLocalRef(msgName);
-    env->DeleteLocalRef(gpioEvent);
-
-    //U8X8_MSG_GPIO_D1
-
+uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
     switch (msg) {
         case U8X8_MSG_GPIO_AND_DELAY_INIT: { // called once during init phase of u8g2/u8x8, can be used to setup pins
             //cout << "U8X8_MSG_GPIO_AND_DELAY_INIT" << endl;
@@ -531,6 +432,55 @@ uint8_t cb_rpi_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t 
     }
 
     return 1;
+}
+
+/**
+ * Wrapper for 'u8x8_byte_sw_i2c'
+ */
+uint8_t cb_byte_sw_i2c(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+    return u8x8_byte_sw_i2c(u8x8, msg, arg_int, arg_ptr);
+}
+
+/**
+ * Wrapper for 'u8x8_byte_4wire_sw_spi'
+ */
+uint8_t cb_byte_4wire_sw_spi(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+    return u8x8_byte_4wire_sw_spi(u8x8, msg, arg_int, arg_ptr);
+}
+
+/**
+ * Wrapper for 'u8x8_byte_3wire_sw_spi'
+ */
+uint8_t cb_byte_3wire_sw_spi(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+    return u8x8_byte_3wire_sw_spi(u8x8, msg, arg_int, arg_ptr);
+}
+
+/**
+ * Wrapper for 'u8x8_byte_8bit_6800mode'
+ */
+uint8_t cb_byte_8bit_6800mode(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+    return u8x8_byte_8bit_6800mode(u8x8, msg, arg_int, arg_ptr);
+}
+
+/**
+ * Wrapper for 'u8x8_byte_8bit_8080mode'
+ */
+uint8_t cb_byte_8bit_8080mode(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+    return u8x8_byte_8bit_8080mode(u8x8, msg, arg_int, arg_ptr);
+}
+
+/**
+ * Wrapper for 'u8x8_byte_ks0108'
+ */
+uint8_t cb_byte_ks0108(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+    return u8x8_byte_ks0108(u8x8, msg, arg_int, arg_ptr);
+}
+
+/**
+ * Wrapper for 'u8x8_byte_sed1520'
+ */
+uint8_t cb_byte_sed1520(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+    return u8x8_byte_sed1520(u8x8, msg, arg_int, arg_ptr);
 }
 
 #endif

@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.drivers.lcd.hd44780.adapters;
 
-import com.ibasco.pidisplay.core.exceptions.NotYetImplementedException;
+import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.BaseLcdGpioAdapter;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.LcdPinMapConfig;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.LcdPin;
@@ -128,7 +128,7 @@ public class ShiftRegisterLcdAdapter extends BaseLcdGpioAdapter {
 
     @Override
     public void write8Bits(byte value) {
-        throw new NotYetImplementedException("8-bit support not yet implemented for this adapter");
+        throw new NotImplementedException("8-bit support not yet implemented for this adapter");
     }
 
     @Override

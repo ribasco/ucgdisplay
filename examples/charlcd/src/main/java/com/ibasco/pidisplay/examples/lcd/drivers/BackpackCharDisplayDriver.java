@@ -178,6 +178,14 @@ public class BackpackCharDisplayDriver implements CharDisplayDriver {
         sendCommand(MSG_LCD_WRITE, data);
     }
 
+    /**
+     * Not applicable for this driver
+     */
+    @Override
+    public long getId() {
+        return -1;
+    }
+
     private void sendCommand(int requestHeader, boolean value) {
         sendCommand(requestHeader, (byte) ((value) ? 1 : 0));
     }

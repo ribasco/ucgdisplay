@@ -63,7 +63,7 @@ public class PidispJniExtractor extends DefaultJniExtractor {
 
         log.debug("[JNI-EXTRACT] Os Name = {}, Os Arch = {}, Os version = {}", osName, osArch, osVer);
         String osPath = String.format("lib/%s%s%s/", osName, File.separator, osArch).toLowerCase();
-        osPath = FilenameUtils.separatorsToSystem(osPath);
+        osPath = FilenameUtils.separatorsToUnix(osPath);
 
         log.debug("[JNI-EXTRACT #2] Searching in path: {}", osPath);
         File file = super.extractJni(osPath, libName.trim());

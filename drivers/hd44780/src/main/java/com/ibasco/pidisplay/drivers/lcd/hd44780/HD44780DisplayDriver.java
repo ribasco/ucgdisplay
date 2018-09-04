@@ -20,7 +20,7 @@ import static com.pi4j.wiringpi.Gpio.delay;
 import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 
 /**
- * Character Display Driver for HD44780. Compatible with the Pi4J {@link LCD} interface.
+ * Native implementation for HD44780 Character Display Driver. Compatible with the Pi4J {@link LCD} interface.
  *
  * Note: This class is NOT thread-safe
  *
