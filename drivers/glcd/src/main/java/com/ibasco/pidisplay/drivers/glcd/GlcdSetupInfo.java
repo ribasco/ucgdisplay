@@ -6,20 +6,20 @@ public class GlcdSetupInfo {
     private int protocols;
     private String function;
 
-    public GlcdSetupInfo(String setupFunction, int supportedProtocols) {
+    GlcdSetupInfo(String setupFunction, int supportedProtocols) {
         this.protocols = supportedProtocols;
         this.function = setupFunction;
     }
 
-    public int getProtocols() {
+    int getProtocols() {
         return protocols;
     }
 
-    public String getFunction() {
+    String getFunction() {
         return function;
     }
 
-    public boolean isSupported(GlcdCommInterface protocol) {
+    boolean isSupported(GlcdCommInterface protocol) {
         return (protocols & protocol.getValue()) > 0;
     }
 

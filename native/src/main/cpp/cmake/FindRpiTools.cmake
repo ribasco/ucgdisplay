@@ -5,6 +5,12 @@ message(STATUS "[FIND-TOOLCHAIN] Search Path = ${RPI_TOOLCHAIN_PATH}")
 
 #-DRPI_TOOLCHAIN_PATH=/home/raffy/projects/rpi-tools
 
+if (NOT UNIX)
+    message(FATAL_ERROR "Unsupported platform for this RPI Toolchain")
+endif ()
+
+# TODO: Use the built-in file manipulation provided by CMAKE
+
 # Check if the path exists, if it doesn't, download a copy to the source directory
 if (NOT EXISTS ${RPI_TOOLCHAIN_PATH})
     message(STATUS "[FIND-TOOLCHAIN] Downloading toolchain to ${TOOLS_DIR_PATH}/toolchain.zip")

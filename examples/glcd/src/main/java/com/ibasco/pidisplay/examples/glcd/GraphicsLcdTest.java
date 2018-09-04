@@ -13,7 +13,6 @@ import com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommInterface;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdPin;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
-import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdConfigException;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,13 +124,9 @@ public class GraphicsLcdTest {
                 .map(GlcdPin.CS, 10)
         );
 
-        try {
-            glcd = new GlcdDriver(config);
-            InputDeviceManager.addInputEventListener(this::onInputEvent);
-            InputDeviceManager.startInputEventMonitor();
-        } catch (GlcdConfigException e) {
-            log.error("There was a problem with your configuration setup", e);
-        }
+        glcd = new GlcdDriver(config);
+        InputDeviceManager.addInputEventListener(this::onInputEvent);
+        InputDeviceManager.startInputEventMonitor();
     }
 
     public void run() throws Exception {

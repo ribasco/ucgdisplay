@@ -49,8 +49,8 @@ if (UNIX)
     list(APPEND PIDISP_SRC "InputDevHelper.cpp" "InputDeviceManager.cpp" "InputEventManager.cpp" "CommSpi.cpp")
 endif ()
 
-list(APPEND PIDISP_HDR "Global.h" "U8g2Utils.h" "U8g2Interface.h" "U8g2Hal.h" "GpioEventService.h")
-list(APPEND PIDISP_SRC "Global.cpp" "U8g2Utils.cpp" "U8g2Interface.cpp" "U8g2Hal.cpp" "GpioEventService.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
+list(APPEND PIDISP_HDR "Global.h" "U8g2Utils.h" "U8g2Graphics.h" "U8g2Hal.h" "U8g2EventDispatcher.h")
+list(APPEND PIDISP_SRC "Global.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2EventDispatcher.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
 message(STATUS "PIDISP SOURCE = ${U8G2_SRC_FILES}")
 
 add_library(pidisp SHARED ${PIDISP_HDR} ${PIDISP_SRC})

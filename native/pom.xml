@@ -61,7 +61,7 @@
 
     <!-- Build Profiles for different platforms -->
     <profiles>
-        <!-- Build Profile: Linux - arm -->
+        <!-- BUILD PROFILE: Linux - arm -->
         <profile>
             <id>build-linux-arm</id>
             <activation>
@@ -82,7 +82,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
-                            <!-- Prepare directories -->
+                            <!-- Prepare target directories -->
                             <execution>
                                 <id>generate-sources</id>
                                 <phase>generate-sources</phase>
@@ -116,10 +116,6 @@
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/linux/arm"/>
                                         </exec>
-                                        <!--<exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/arm"
-                                              failonerror="true">
-                                            <arg line="VERBOSE=1"/>
-                                        </exec>-->
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
                                             <arg line="--target pidisp --" />
@@ -177,7 +173,7 @@
             </build>
         </profile>
 
-        <!-- Build Profile: Linux - x86_64/amd64 -->
+        <!-- BUILD PROFILE: Linux - x86_64/amd64 -->
         <profile>
             <id>build-linux-amd64</id>
             <activation>
@@ -341,7 +337,7 @@
             </build>
         </profile>
 
-        <!-- Build Profile: Windows - x86_64/amd64 -->
+        <!-- BUILD PROFILE: Windows - x86_64/amd64 -->
         <profile>
             <id>build-windows-amd64</id>
             <activation>
@@ -501,12 +497,12 @@
                                     <headerName>InputDeviceManager.h</headerName>
                                 </javahInclude>
                                 <javahInclude>
-                                    <className>com.ibasco.pidisplay.core.ui.U8g2Interface</className>
-                                    <headerName>U8g2Interface.h</headerName>
+                                    <className>com.ibasco.pidisplay.core.u8g2.U8g2Graphics</className>
+                                    <headerName>U8g2Graphics.h</headerName>
                                 </javahInclude>
                                 <javahInclude>
-                                    <className>com.ibasco.pidisplay.core.gpio.GpioEventService</className>
-                                    <headerName>GpioEventService.h</headerName>
+                                    <className>com.ibasco.pidisplay.core.u8g2.U8g2EventDispatcher</className>
+                                    <headerName>U8g2EventDispatcher.h</headerName>
                                 </javahInclude>
                             </javahIncludes>
                             <javahOutputDirectory>${project.basedir}/src/main/cpp</javahOutputDirectory>
@@ -515,7 +511,7 @@
                 </executions>
             </plugin>
 
-            <!-- Also remove the native build directory during clean operation -->
+            <!-- Clean Plugin: Remove the native build directory during clean operation -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>

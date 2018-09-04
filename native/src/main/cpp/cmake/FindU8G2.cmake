@@ -26,18 +26,10 @@ if (NOT EXISTS ${U8G2_DIR})
     endif ()
 
     message(STATUS "[U8G2] Moving '${LIB_DIR}/u8g2-master/' to '${U8G2_DIR}'")
-    execute_process(COMMAND mv ${LIB_DIR}/u8g2-master/ ${U8G2_DIR} ERROR_VARIABLE tc_move)
-
-    if (tc_move)
-        message(FATAL_ERROR "[U8G2] Could not perform move operation (${tc_move})")
-    endif ()
+    file(RENAME "${LIB_DIR}/u8g2-master/" "${U8G2_DIR}")
 
     message(STATUS "[U8G2] Removing u8g2.zip from ${LIB_DIR}")
-    execute_process(COMMAND rm ${U8G2_ARCHIVE_FILE_PATH} ERROR_VARIABLE tc_remove ERROR_VARIABLE tc_remove)
-
-    if (tc_remove)
-        message(FATAL_ERROR "[U8G2] Could not perform remove operation (${tc_remove})")
-    endif ()
+    file(REMOVE ${U8G2_ARCHIVE_FILE_PATH})
 endif ()
 
 if (NOT EXISTS ${U8G2_DIR}/csrc)

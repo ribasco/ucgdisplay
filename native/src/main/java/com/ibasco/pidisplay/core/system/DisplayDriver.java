@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.drivers;
+package com.ibasco.pidisplay.core.system;
 
 /**
  * Base interface for all Display Devices
@@ -46,4 +46,11 @@ public interface DisplayDriver {
      *         The byte(s) to send to the display
      */
     void write(byte... data);
+
+    /**
+     * Returns a unique identifier for this driver instance
+     *
+     * @return An unsigned long reperesenting the driver id
+     */
+    long getId();
 }

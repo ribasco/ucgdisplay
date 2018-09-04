@@ -5,8 +5,9 @@
 #include <iostream>
 #include <memory>
 #include <functional>
-#include "Global.h"
+#include <iomanip>
 
+#include "Global.h"
 #include "U8g2Utils.h"
 #include "U8g2Hal.h"
 
@@ -52,68 +53,48 @@ u8g2_cb_t *u8g2util_ToRotation(int rotation) {
 }
 
 u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
-    u8g2_msg_func_t tmpcb;
-
-    //Wrap lambda around existing functions for compatability
     switch (commInt) {
         case COMINT_3WSPI: {
             if (commType == COMTYPE_HW) {
                 //no HW support for 3-wire interface?
                 return nullptr;
-            } else {
-                tmpcb = u8x8_byte_3wire_sw_spi;
             }
-            break;
+            return cb_byte_3wire_sw_spi;
         }
         case COMINT_4WSPI: {
             if (commType == COMTYPE_HW) {
-                tmpcb = u8x8_byte_3wire_sw_spi;
-            } else {
-                return cb_rpi_byte_spi_hw;
+                return cb_byte_spi_hw;
             }
-            break;
+            return cb_byte_4wire_sw_spi;
         }
             //Similar to 4W_SPI
         case COMINT_ST7920SPI: {
             if (commType == COMTYPE_HW) {
-                return cb_rpi_byte_spi_hw;
+                return cb_byte_spi_hw;
             }
-            tmpcb = u8x8_byte_4wire_sw_spi;
-            break;
+            return cb_byte_4wire_sw_spi;
         }
         case COMINT_I2C: {
             if (commType == COMTYPE_HW) {
-                return cb_rpi_byte_i2c_hw;
-            } else {
-                tmpcb = u8x8_byte_sw_i2c;
+                return cb_byte_i2c_hw;
             }
-            break;
+            return cb_byte_sw_i2c;
         }
         case COMINT_6800: {
             if (commType == COMTYPE_HW) {
-                //TODO: Maybe in future, we could allow I2C/SPI/Shift register expansions to use the 6800 and 8080 modes
+                //TODO: Maybe in future, we could allow I2C/SPI/Shift register expansions for 6800 and 8080 modes
                 return nullptr;
-            } else {
-                tmpcb = u8x8_byte_8bit_6800mode;
             }
-            break;
+            return cb_byte_8bit_6800mode;
         }
         case COMINT_8080: {
             if (commType == COMTYPE_HW) {
-                //TODO: Maybe in future, we could allow I2C/SPI/Shift register expansions to use the 6800 and 8080 modes
                 return nullptr;
-            } else {
-                tmpcb = u8x8_byte_8bit_8080mode;
             }
-            break;
+            return cb_byte_8bit_8080mode;
         }
         case COMINT_UART: {
             //TODO: Not yet sure how to implement this
-            /*if (commType == COMTYPE_HW) {
-
-            } else {
-                //TODO: ?
-            }*/
             //SEE: u8g2_Setup_a2printer_384x240_f()
             return nullptr;
         }
@@ -121,38 +102,39 @@ u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
         case COMINT_KS0108: {
             if (commType == COMTYPE_HW) {
                 return nullptr;
-            } else {
-                tmpcb = u8x8_byte_ks0108;
             }
-            break;
+            return cb_byte_ks0108;
         }
         case COMINT_SED1520: {
             if (commType == COMTYPE_HW) {
                 return nullptr;
-            } else {
-                tmpcb = u8x8_byte_sed1520;
             }
-            break;
+            return cb_byte_sed1520;
         }
         default:
             break;
     }
-
-    if (tmpcb != nullptr) {
-        return [&tmpcb](u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
-            return tmpcb(u8x8, msg, arg_int, arg_ptr);
-        };
-    }
     return nullptr;
 }
 
-shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config) {
+std::string hexs(unsigned char *data, int len) {
+    std::stringstream ss;
+    ss << std::hex;
+    for (int i = 0; i < len; ++i)
+        ss << std::setw(2) << std::setfill('0') << (int) data[i];
+    return ss.str();
+}
+
+shared_ptr<u8g2_info_t>
+u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation,
+                             u8g2_pin_map_t pin_config, bool emulation) {
     shared_ptr<u8g2_info_t> info = make_shared<u8g2_info_t>();
 
     //Initialize device info details
     info->u8g2 = make_shared<u8g2_t>();
     info->pin_map = pin_config;
     info->rotation = const_cast<u8g2_cb_t *>(rotation);
+    info->flag_emulation = emulation;
 
     //Get the setup procedure callback
     u8g2_setup_func_t setup_proc_callback = u8g2hal_GetSetupProc(setup_proc_name);
@@ -166,27 +148,51 @@ shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(string setup_proc_name, int
     info->setup_proc_name = setup_proc_name;
     info->setup_cb = setup_proc_callback;
 
-
-    info->byte_cb = [info, commInt, commType](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
-        u8g2_msg_func_info_t cb_byte = u8g2util_GetByteCb(commInt, commType);
-        if (cb_byte == nullptr) {
-            //cerr << "Unable to obtain byte callback procedure for the current setup" << endl;
-            return 0;
-        }
-
-#ifdef USE_EMULATOR
+    //Retrieve the byte callback function based on the commInt and commType arguments
+    u8g2_msg_func_info_t cb_byte = u8g2util_GetByteCb(commInt, commType);
+    if (cb_byte == nullptr) {
         JNIEnv *env;
         GETENV(env);
-        jstring msgName = msgNames.count(msg) > 0 ? env->NewStringUTF(msgNames[msg].c_str()) : nullptr;
-        jobject gpioEvent = env->NewObject(clsGpioEvent, midGpioEventCtr, msg, EMULATOR_MSG_TYPE_BYTE, arg_int, msgName);
-        env->CallStaticVoidMethod(clsGpioEventService, midGpioEventService_onGpioEvent, gpioEvent);
-#endif
+        JNI_ThrowNativeDriverException(env, string("No available byte callback procedures for CommInt = ") +
+                                            to_string(commInt) + string(", CommType = ") + to_string(commType));
+        return nullptr;
+    }
 
+    //Byte callback
+    info->byte_cb = [cb_byte, info, emulation, commInt, commType](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+        if (emulation) {
+            JNIEnv *env;
+            GETENV(env);
+
+            //Only process byte send events
+            if (msg == U8X8_MSG_BYTE_SEND) {
+                uint8_t value;
+                uint8_t size = arg_int;
+                auto *data = (uint8_t *)arg_ptr;
+                while( size > 0 ) {
+                    value = *data;
+                    data++;
+                    size--;
+                    //cout << ">> Data: " << hexs(&value, 1) << endl;
+                    JNI_FireByteEvent(env, info->address(), msg, value); //*((uint8_t *) arg_ptr)
+                }
+            } else {
+                JNI_FireByteEvent(env, info->address(), msg, arg_int); //*((uint8_t *) arg_ptr)
+            }
+            return 1;
+        }
         return cb_byte(info.get(), u8x8, msg, arg_int, arg_ptr);
     };
 
-    info->gpio_cb = [info](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
-        return cb_rpi_gpio_delay(info.get(), u8x8, msg, arg_int, arg_ptr);
+    //Gpio callback
+    info->gpio_cb = [emulation, info](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+        if (emulation) {
+            JNIEnv *env;
+            GETENV(env);
+            JNI_FireGpioEvent(env, info->address(), msg, arg_int);
+            return 1;
+        }
+        return cb_gpio_delay(info.get(), u8x8, msg, arg_int, arg_ptr);
     };
 
     //Obtain the raw pointer
@@ -222,7 +228,8 @@ uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, voi
     auto addr = (uintptr_t) u8x8;
     shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(addr);
     if (info == nullptr) {
-        cerr << "[u8g2_setup_helper_byte] Unable to obtain display device info for address: " << to_string(addr) << endl;
+        cerr << "[u8g2_setup_helper_byte] Unable to obtain display device info for address: " << to_string(addr)
+             << endl;
         exit(-1);
     }
     return info->byte_cb(u8x8, msg, arg_int, arg_ptr);
@@ -232,7 +239,8 @@ uint8_t u8g2util_SetupHelperGpio(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, voi
     auto addr = (uintptr_t) u8x8;
     shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(addr);
     if (info == nullptr) {
-        cerr << "[u8g2_setup_helper_gpio] Unable to obtain display device info for address: " << to_string(addr) << endl;
+        cerr << "[u8g2_setup_helper_gpio] Unable to obtain display device info for address: " << to_string(addr)
+             << endl;
         exit(-1);
     }
     return info->gpio_cb(u8x8, msg, arg_int, arg_ptr);
@@ -270,20 +278,4 @@ string u8g2util_GetPinIndexDesc(int index) {
 u8g2_t *toU8g2(jlong address) {
     auto *u8g2 = reinterpret_cast<u8g2_t *>(address);
     return u8g2;
-}
-
-void JNI_copyjByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length) {
-    if (length <= 0) {
-        JNI_throwNativeDriverException(env, "Invalid array length");
-        return;
-    }
-    if (buffer == nullptr) {
-        JNI_throwNativeDriverException(env, "Buffer is null");
-        return;
-    }
-    jbyte *body = env->GetByteArrayElements(arr, nullptr);
-    for (int i = 0; i < length; i++) {
-        buffer[i] = static_cast<uint8_t>(body[i]);
-    }
-    env->ReleaseByteArrayElements(arr, body, 0);
 }
