@@ -527,5 +527,12 @@ jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getBufferCurrTileRow(JNIEn
     return u8g2_GetBufferCurrTileRow(toU8g2(id));
 }
 
+jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getStrWidth(JNIEnv *env, jclass cls, jlong id, jstring text) {
+    if (!check_validity(env, id))
+        return -1;
+    const char *c = env->GetStringUTFChars(text, nullptr);
+    return u8g2_GetStrWidth(toU8g2(id), c);
+}
+
 #pragma clang diagnostic pop
 #pragma clang diagnostic pop

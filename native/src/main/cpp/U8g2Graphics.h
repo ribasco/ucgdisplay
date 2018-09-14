@@ -501,6 +501,14 @@ JNIEXPORT jint JNICALL Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getBuffe
 JNIEXPORT void JNICALL Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setBufferCurrTileRow
   (JNIEnv *, jclass, jlong, jint);
 
+/*
+ * Class:     com_ibasco_pidisplay_core_u8g2_U8g2Graphics
+ * Method:    getStrWidth
+ * Signature: (JLjava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getStrWidth
+  (JNIEnv *, jclass, jlong, jstring);
+
 #ifdef __cplusplus
 }
 #endif
