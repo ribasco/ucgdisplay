@@ -1188,4 +1188,21 @@ public class U8g2Graphics {
      * @see #sendBuffer
      */
     public static native void setBufferCurrTileRow(long id, int row);
+
+
+    /**
+     * <p>Return the pixel width of string.</p>
+     *
+     * @param id
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     * @param text
+     *         Text string to be measured
+     *
+     * @return Width of the string if drawn with the current font (setFont).
+     *
+     * @see #setFont(long, String)
+     * @see #setFont(long, byte[])
+     * @see #drawString(long, int, int, String)
+     */
+    public static native int getStrWidth(long id, String text);
 }

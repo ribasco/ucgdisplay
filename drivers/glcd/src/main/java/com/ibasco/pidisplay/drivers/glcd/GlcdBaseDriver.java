@@ -70,12 +70,6 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
      *         If a driver related exception occurs (e.g. invalid configuration setup)
      */
     protected final void initialize() throws GlcdDriverException {
-        //check if emulation flag is set
-        if (config.isEmulated()) {
-            U8g2EventDispatcher.addByteListener(this, byteEventListener);
-            U8g2EventDispatcher.addGpioListener(this, gpioEventListener);
-        }
-
         //Get rotation setting
         String setupProcedure = config.getSetupProcedure();
         int rotation = config.getRotation().getValue();
@@ -88,23 +82,13 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
         if (_id == -1)
             throw new GlcdDriverException("Could not initialize U8G2 Display Driver");
 
+        //check if emulation flag is set
+        if (config.isEmulated()) {
+            U8g2EventDispatcher.addByteListener(this, byteEventListener);
+            U8g2EventDispatcher.addGpioListener(this, gpioEventListener);
+        }
+
         initialized = true;
-    }
-
-    public void addListener(U8g2GpioEventListener listener) {
-        U8g2EventDispatcher.addGpioListener(this, listener);
-    }
-
-    public void addListener(U8g2ByteEventListener listener) {
-        U8g2EventDispatcher.addByteListener(this, listener);
-    }
-
-    public void removeListener(U8g2ByteEventListener listener) {
-        U8g2EventDispatcher.removeByteListener(this);
-    }
-
-    public void removeListener(U8g2GpioEventListener listener) {
-        U8g2EventDispatcher.removeGpioListener(this);
     }
 
     @Override
@@ -570,6 +554,12 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
     public void setBufferCurrTileRow(int row) {
         checkRequirements();
         U8g2Graphics.setBufferCurrTileRow(_id, row);
+    }
+
+    @Override
+    public int getStrWidth(String text) {
+        checkRequirements();
+        return U8g2Graphics.getStrWidth(_id, text);
     }
 
     @Override

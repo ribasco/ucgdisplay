@@ -1109,4 +1109,18 @@ public interface GraphicsDisplayDriver extends DisplayDriver {
      * @see #sendBuffer
      */
     void setBufferCurrTileRow(int row);
+
+    /**
+     * <p>Return the pixel width of string.</p>
+     *
+     * @param text
+     *         Text string to be measured
+     *
+     * @return Width of the string if drawn with the current font (setFont).
+     *
+     * @see #setFont(Font)
+     * @see #setFont(byte[])
+     * @see #drawString(int, int, String)
+     */
+    int getStrWidth(String text);
 }
