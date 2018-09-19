@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Base Driver implementation
+ * Base graphics display driver implementation
  *
  * @author Rafael Ibasco
  */
