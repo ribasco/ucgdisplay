@@ -138,8 +138,13 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
         if (config == null)
             throw new GlcdConfigException("Config cannot be null", null);
 
-        //Check protocol if supported
-        if (!config.getDisplay().hasCommType(config.getCommInterface())) {
+        GlcdCommInterface comm = config.getCommInterface();
+
+        if (!config.isEmulated() && comm == null)
+            throw new GlcdConfigException("Missing required communications interface argument", config);
+
+        //Check protocol if supported (optional validation if in emulation mode)
+        if (comm != null && !config.getDisplay().hasCommType(comm)) {
             String protocols = config.getDisplay().getCommTypes().stream().map(Object::toString).collect(Collectors.joining(", "));
             throw new GlcdConfigException(
                     String.format("The selected communication interface '%s' is not supported by your display controller '%s :: %s' (Supported Interfaces: %s)", config.getCommInterface().name(), config.getDisplay().getController().name(), config.getDisplay().getName(), protocols),
