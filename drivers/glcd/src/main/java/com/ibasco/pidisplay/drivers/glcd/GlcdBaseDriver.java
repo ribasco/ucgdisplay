@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Base Driver implementation
+ * Base graphics display driver implementation
  *
  * @author Rafael Ibasco
  */
@@ -138,11 +138,16 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
         if (config == null)
             throw new GlcdConfigException("Config cannot be null", null);
 
+        GlcdBusInterface bus = config.getBusInterface();
+
+        if (!config.isEmulated() && bus == null)
+            throw new GlcdConfigException("Bus interface not specified", config);
+
         //Check protocol if supported
-        if (!config.getDisplay().hasCommType(config.getBusInterface())) {
+        if (bus != null && !config.getDisplay().hasCommType(config.getBusInterface())) {
             String protocols = config.getDisplay().getCommTypes().stream().map(Object::toString).collect(Collectors.joining(", "));
             throw new GlcdConfigException(
-                    String.format("The selected communication interface '%s' is not supported by your display controller '%s :: %s' (Supported Interfaces: %s)", config.getBusInterface().name(), config.getDisplay().getController().name(), config.getDisplay().getName(), protocols),
+                    String.format("The selected bus interface '%s' is not supported by your display controller '%s :: %s' (Supported Interfaces: %s)", config.getBusInterface().name(), config.getDisplay().getController().name(), config.getDisplay().getName(), protocols),
                     config
             );
         }
