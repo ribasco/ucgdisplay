@@ -1,15 +1,15 @@
 package com.ibasco.pidisplay.drivers.glcd.enums;
 
 import static com.ibasco.pidisplay.core.u8g2.U8g2Graphics.*;
-import static com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommType.HARDWARE;
-import static com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommType.SOFTWARE;
+import static com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusType.HARDWARE;
+import static com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusType.SOFTWARE;
 
 /**
- * List of supported Communication Methods
+ * Enumeration of supported bus interfaces of a controller
  *
  * @author Rafael Ibasco
  */
-public enum GlcdCommInterface {
+public enum GlcdBusInterface {
     /**
      * 4-Wire SPI (Hardware Implementation)
      */
@@ -85,27 +85,27 @@ public enum GlcdCommInterface {
      */
     SED1520(COM_SED1520, SOFTWARE);
 
-    private GlcdCommType type;
+    private GlcdBusType type;
 
     private int value;
 
-    private GlcdCommInterface parent;
+    private GlcdBusInterface parent;
 
-    GlcdCommInterface(int value, GlcdCommType type) {
+    GlcdBusInterface(int value, GlcdBusType type) {
         this(value, type, null);
     }
 
-    GlcdCommInterface(int value, GlcdCommType type, GlcdCommInterface parent) {
+    GlcdBusInterface(int value, GlcdBusType type, GlcdBusInterface parent) {
         this.value = value;
         this.type = type;
         this.parent = parent;
     }
 
-    public GlcdCommInterface getParent() {
+    public GlcdBusInterface getParent() {
         return parent;
     }
 
-    public GlcdCommType getType() {
+    public GlcdBusType getBusType() {
         return type;
     }
 

@@ -7,7 +7,7 @@ import com.ibasco.pidisplay.core.u8g2.*;
 import com.ibasco.pidisplay.core.ui.Font;
 import com.ibasco.pidisplay.core.ui.Rotation;
 import com.ibasco.pidisplay.core.util.XBMUtils;
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommInterface;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdConfigException;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdDriverException;
@@ -73,8 +73,8 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
         //Get rotation setting
         String setupProcedure = config.getSetupProcedure();
         int rotation = config.getRotation().getValue();
-        int commInt = config.getCommInterface().getValue();
-        int commType = config.getCommInterface().getType().getValue();
+        int commInt = config.getBusInterface().getValue();
+        int commType = config.getBusInterface().getBusType().getValue();
         int address = config.getDeviceAddress();
         byte[] pinConfig = ObjectUtils.defaultIfNull(config.getPinMap(), new GlcdPinMapConfig()).toByteArray();
         _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, pinConfig, config.isEmulated());
@@ -139,16 +139,16 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
             throw new GlcdConfigException("Config cannot be null", null);
 
         //Check protocol if supported
-        if (!config.getDisplay().hasCommType(config.getCommInterface())) {
+        if (!config.getDisplay().hasCommType(config.getBusInterface())) {
             String protocols = config.getDisplay().getCommTypes().stream().map(Object::toString).collect(Collectors.joining(", "));
             throw new GlcdConfigException(
-                    String.format("The selected communication interface '%s' is not supported by your display controller '%s :: %s' (Supported Interfaces: %s)", config.getCommInterface().name(), config.getDisplay().getController().name(), config.getDisplay().getName(), protocols),
+                    String.format("The selected communication interface '%s' is not supported by your display controller '%s :: %s' (Supported Interfaces: %s)", config.getBusInterface().name(), config.getDisplay().getController().name(), config.getDisplay().getName(), protocols),
                     config
             );
         }
 
         //If I2C is selected, make sure device address is not empty
-        if (((config.getCommInterface() == GlcdCommInterface.I2C_HW) || (config.getCommInterface() == GlcdCommInterface.I2C_SW)) && config.getDeviceAddress() == -1) {
+        if (((config.getBusInterface() == GlcdBusInterface.I2C_HW) || (config.getBusInterface() == GlcdBusInterface.I2C_SW)) && config.getDeviceAddress() == -1) {
             throw new GlcdConfigException("You must specify a device address for I2C comm interface", config);
         }
 

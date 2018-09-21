@@ -9,11 +9,10 @@ import com.ibasco.pidisplay.drivers.glcd.Glcd;
 import com.ibasco.pidisplay.drivers.glcd.GlcdConfig;
 import com.ibasco.pidisplay.drivers.glcd.GlcdDriver;
 import com.ibasco.pidisplay.drivers.glcd.GlcdPinMapConfig;
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommInterface;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdPin;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
-import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,11 +110,11 @@ public class GraphicsLcdTest {
 
     private XBMUtils.XBMData mousecursor;
 
-    private GraphicsLcdTest() throws GlcdException {
+    private GraphicsLcdTest() {
         //Configure GLCD
         GlcdConfig config = new GlcdConfig();
         config.setDisplay(Glcd.ST7920.D_128x64);
-        config.setCommInterface(GlcdCommInterface.SPI_HW_4WIRE_ST7920);
+        config.setBusInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920);
         config.setRotation(GlcdRotation.ROTATION_180);
         config.setDeviceAddress(0x10);
         config.setPinMapConfig(new GlcdPinMapConfig()

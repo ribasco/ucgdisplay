@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.drivers.glcd;
 
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommInterface;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdControllerType;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdSize;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class GlcdDisplay {
         this.displaySize = GlcdSize.get(tileWidth, tileHeight);
     }
 
-    public boolean hasCommType(GlcdCommInterface protocol) {
+    public boolean hasCommType(GlcdBusInterface protocol) {
         for (GlcdSetupInfo info : setupDetails) {
             if ((info.getProtocols() & protocol.getValue()) > 0)
                 return true;
@@ -40,12 +40,12 @@ public class GlcdDisplay {
         return false;
     }
 
-    public List<GlcdCommInterface> getCommTypes() {
+    public List<GlcdBusInterface> getCommTypes() {
         if (setupDetails == null || setupDetails.length <= 0)
             return null;
-        List<GlcdCommInterface> protocols = new ArrayList<>();
+        List<GlcdBusInterface> protocols = new ArrayList<>();
         for (GlcdSetupInfo setup : setupDetails) {
-            for (GlcdCommInterface protocol : GlcdCommInterface.values()) {
+            for (GlcdBusInterface protocol : GlcdBusInterface.values()) {
                 if ((setup.getProtocols() & protocol.getValue()) > 0)
                     protocols.add(protocol);
             }

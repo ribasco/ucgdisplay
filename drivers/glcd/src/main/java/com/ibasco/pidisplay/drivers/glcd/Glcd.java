@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Aug 25 2018 21:45:53)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep  4 2018 19:01:31)
  */
 
 package com.ibasco.pidisplay.drivers.glcd;
@@ -144,6 +144,18 @@ public interface Glcd {
 			16,
 			16,
 			new GlcdSetupInfo("u8g2_Setup_ls013b7dh03_128x128_f", COM_4WSPI)
+		);
+	}
+
+	/** Controller Name: LS027B7DH01 **/
+	interface LS027B7DH01 {
+		/** U8G2 Name: LS027B7DH01 400X240 **/
+		GlcdDisplay D_400x240 = new GlcdDisplay(
+				GlcdControllerType.LS027B7DH01,
+				"D_400x240",
+				50,
+				30,
+				new GlcdSetupInfo("u8g2_Setup_ls027b7dh01_400x240_f", COM_4WSPI)
 		);
 	}
 
@@ -494,6 +506,19 @@ public interface Glcd {
 		);
 	}
 
+	/** Controller Name: SSD1317 **/
+	interface SSD1317 {
+		/** U8G2 Name: SSD1317 96X96 **/
+		GlcdDisplay D_96x96 = new GlcdDisplay(
+				GlcdControllerType.SSD1317,
+				"D_96x96",
+				12,
+				12,
+				new GlcdSetupInfo("u8g2_Setup_ssd1317_96x96_f", COM_4WSPI | COM_6800 | COM_8080),
+				new GlcdSetupInfo("u8g2_Setup_ssd1317_i2c_96x96_f", COM_I2C)
+		);
+	}
+
 	/** Controller Name: SSD1322 **/
 	interface SSD1322 {
 		/** U8G2 Name: SSD1322 NHD_256X64 **/
@@ -781,6 +806,15 @@ public interface Glcd {
 			16,
 			8,
 			new GlcdSetupInfo("u8g2_Setup_st7567_enh_dg128064i_f", COM_4WSPI | COM_6800 | COM_8080)
+		);
+		/** U8G2 Name: ST7567 64X32 **/
+		GlcdDisplay D_64x32 = new GlcdDisplay(
+				GlcdControllerType.ST7567,
+				"D_64x32",
+				8,
+				4,
+				new GlcdSetupInfo("u8g2_Setup_st7567_64x32_f", COM_4WSPI | COM_6800 | COM_8080),
+				new GlcdSetupInfo("u8g2_Setup_st7567_i2c_64x32_f", COM_I2C)
 		);
 	}
 

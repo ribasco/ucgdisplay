@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.drivers.glcd;
 
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommInterface;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusInterface;
 
 public class GlcdSetupInfo {
     private int protocols;
@@ -19,7 +19,7 @@ public class GlcdSetupInfo {
         return function;
     }
 
-    boolean isSupported(GlcdCommInterface protocol) {
+    boolean isSupported(GlcdBusInterface protocol) {
         return (protocols & protocol.getValue()) > 0;
     }
 

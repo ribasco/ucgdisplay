@@ -1,12 +1,12 @@
 package com.ibasco.pidisplay.drivers.glcd.enums;
 
-public enum GlcdCommType {
+public enum GlcdBusType {
     HARDWARE(0),
     SOFTWARE(1);
 
     private int value;
 
-    GlcdCommType(int value) {
+    GlcdBusType(int value) {
         this.value = value;
     }
 
