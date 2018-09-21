@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Aug 25 2018 21:45:53)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep  4 2018 19:01:31)
  */
 
 package com.ibasco.pidisplay.drivers.glcd.enums;
@@ -14,6 +14,7 @@ public enum GlcdControllerType {
 	LC7981,
 	LD7032,
 	LS013B7DH03,
+    LS027B7DH01,
 	MAX7219,
 	NT7534,
 	PCD8544,
@@ -29,6 +30,7 @@ public enum GlcdControllerType {
 	SSD1305,
 	SSD1306,
 	SSD1309,
+    SSD1317,
 	SSD1322,
 	SSD1325,
 	SSD1326,

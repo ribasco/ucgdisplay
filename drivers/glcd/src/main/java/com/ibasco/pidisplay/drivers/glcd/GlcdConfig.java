@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.drivers.glcd;
 
-import com.ibasco.pidisplay.drivers.glcd.enums.GlcdCommInterface;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdSize;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdConfigException;
@@ -24,7 +24,7 @@ public class GlcdConfig {
     public static final Logger log = getLogger(GlcdConfig.class);
 
     private GlcdDisplay display;
-    private GlcdCommInterface commInterface;
+    private GlcdBusInterface busInterface;
     private GlcdRotation rotation;
     private GlcdPinMapConfig pinMap;
     private int deviceAddress = -1;
@@ -34,10 +34,10 @@ public class GlcdConfig {
     public GlcdConfig() {
     }
 
-    public GlcdConfig(GlcdDisplay display, GlcdCommInterface commInterface, GlcdRotation rotation, GlcdPinMapConfig pinMapConfig, int deviceAddress) {
+    public GlcdConfig(GlcdDisplay display, GlcdBusInterface busInterface, GlcdRotation rotation, GlcdPinMapConfig pinMapConfig, int deviceAddress) {
         this.display = display;
         this.rotation = rotation;
-        this.commInterface = commInterface;
+        this.busInterface = busInterface;
         this.pinMap = pinMapConfig;
         this.deviceAddress = deviceAddress;
     }
@@ -62,8 +62,8 @@ public class GlcdConfig {
         this.display = display;
     }
 
-    public void setCommInterface(GlcdCommInterface commInterface) {
-        this.commInterface = commInterface;
+    public void setBusInterface(GlcdBusInterface busInterface) {
+        this.busInterface = busInterface;
     }
 
     public void setRotation(GlcdRotation rotation) {
@@ -78,8 +78,8 @@ public class GlcdConfig {
         return display.getDisplaySize();
     }
 
-    public GlcdCommInterface getCommInterface() {
-        return commInterface;
+    public GlcdBusInterface getBusInterface() {
+        return busInterface;
     }
 
     public GlcdPinMapConfig getPinMap() {
@@ -107,21 +107,21 @@ public class GlcdConfig {
                     new GlcdConfigException("Display has not been set", this)
             );
         }
-        if (commInterface == null) {
+        if (busInterface == null) {
             throw new RuntimeException("Unable to obtain setup procedure",
                     new GlcdConfigException("Protocol not set", this));
         }
 
         GlcdSetupInfo setupInfo = Arrays.stream(display.getSetupDetails())
-                .filter(setup -> setup.isSupported(commInterface))
+                .filter(setup -> setup.isSupported(busInterface))
                 .findFirst()
                 .orElse(null);
 
         if (setupInfo == null)
             throw new RuntimeException("Unable to obtain setup procedure",
-                    new GlcdException(String.format("Could not find a suitable setup procedure for commInterface '%s'", commInterface.name())));
+                    new GlcdException(String.format("Could not find a suitable setup procedure for bus interface '%s'", busInterface.name())));
 
-        log.debug("Using display setup procedure (Display: {}, Protocol: {}, Setup Proc: {}))", display.getName(), commInterface.name(), setupInfo.getFunction());
+        log.debug("Using display setup procedure (Display: {}, Protocol: {}, Setup Proc: {}))", display.getName(), busInterface.name(), setupInfo.getFunction());
 
         return setupInfo;
     }

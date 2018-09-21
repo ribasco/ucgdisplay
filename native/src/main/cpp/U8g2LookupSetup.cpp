@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Aug 25 2018 21:45:53) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep  4 2018 19:01:31) 
  */
 
 #include "U8g2Hal.h"
@@ -21,6 +21,7 @@ void u8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
 	setup_map["u8g2_Setup_ld7032_60x32_f"] = u8g2_Setup_ld7032_60x32_f;
 	setup_map["u8g2_Setup_ld7032_i2c_60x32_f"] = u8g2_Setup_ld7032_i2c_60x32_f;
 	setup_map["u8g2_Setup_ls013b7dh03_128x128_f"] = u8g2_Setup_ls013b7dh03_128x128_f;
+	setup_map["u8g2_Setup_ls027b7dh01_400x240_f"] = u8g2_Setup_ls027b7dh01_400x240_f;
 	setup_map["u8g2_Setup_max7219_32x8_f"] = u8g2_Setup_max7219_32x8_f;
 	setup_map["u8g2_Setup_max7219_8x8_f"] = u8g2_Setup_max7219_8x8_f;
 	setup_map["u8g2_Setup_nt7534_tg12864r_f"] = u8g2_Setup_nt7534_tg12864r_f;
@@ -77,6 +78,8 @@ void u8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
 	setup_map["u8g2_Setup_ssd1309_128x64_noname2_f"] = u8g2_Setup_ssd1309_128x64_noname2_f;
 	setup_map["u8g2_Setup_ssd1309_i2c_128x64_noname0_f"] = u8g2_Setup_ssd1309_i2c_128x64_noname0_f;
 	setup_map["u8g2_Setup_ssd1309_i2c_128x64_noname2_f"] = u8g2_Setup_ssd1309_i2c_128x64_noname2_f;
+	setup_map["u8g2_Setup_ssd1317_96x96_f"] = u8g2_Setup_ssd1317_96x96_f;
+	setup_map["u8g2_Setup_ssd1317_i2c_96x96_f"] = u8g2_Setup_ssd1317_i2c_96x96_f;
 	setup_map["u8g2_Setup_ssd1322_nhd_128x64_f"] = u8g2_Setup_ssd1322_nhd_128x64_f;
 	setup_map["u8g2_Setup_ssd1322_nhd_256x64_f"] = u8g2_Setup_ssd1322_nhd_256x64_f;
 	setup_map["u8g2_Setup_ssd1325_i2c_nhd_128x64_f"] = u8g2_Setup_ssd1325_i2c_nhd_128x64_f;
@@ -113,8 +116,10 @@ void u8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
 	setup_map["u8g2_Setup_st7565_nhd_c12832_f"] = u8g2_Setup_st7565_nhd_c12832_f;
 	setup_map["u8g2_Setup_st7565_nhd_c12864_f"] = u8g2_Setup_st7565_nhd_c12864_f;
 	setup_map["u8g2_Setup_st7565_zolen_128x64_f"] = u8g2_Setup_st7565_zolen_128x64_f;
+	setup_map["u8g2_Setup_st7567_64x32_f"] = u8g2_Setup_st7567_64x32_f;
 	setup_map["u8g2_Setup_st7567_enh_dg128064_f"] = u8g2_Setup_st7567_enh_dg128064_f;
 	setup_map["u8g2_Setup_st7567_enh_dg128064i_f"] = u8g2_Setup_st7567_enh_dg128064i_f;
+	setup_map["u8g2_Setup_st7567_i2c_64x32_f"] = u8g2_Setup_st7567_i2c_64x32_f;
 	setup_map["u8g2_Setup_st7567_jlx12864_f"] = u8g2_Setup_st7567_jlx12864_f;
 	setup_map["u8g2_Setup_st7567_pi_132x64_f"] = u8g2_Setup_st7567_pi_132x64_f;
 	setup_map["u8g2_Setup_st7586s_erc240160_f"] = u8g2_Setup_st7586s_erc240160_f;
