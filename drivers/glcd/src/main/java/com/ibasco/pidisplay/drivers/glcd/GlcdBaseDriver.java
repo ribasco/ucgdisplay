@@ -57,8 +57,8 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
     }
 
     /**
-     * <p>Create new instance based on the config provided. If a {@link GlcdDataProcessor} is specified then all data
-     * and instruction events are re-routed to it for further processing.</p>
+     * <p>Create new instance based on the config provided. If a {@link GlcdDataProcessor} is provided, emulation mode
+     * will be activated and all data/instruction events will be re-routed to it.</p>
      *
      * @param config
      *         The {@link GlcdConfig} associated with this instance
@@ -74,7 +74,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
     }
 
     /**
-     * <p>Driver initialization procedures. Sub-classes MUST call this method during/after initialization.
+     * <p>Driver initialization procedures. Sub-classes MUST call this method after call to base constructor.
      * Calling the drawing operations while not initialized will trigger {@link GlcdDriverException}.</p>
      *
      * @throws GlcdDriverException
@@ -88,30 +88,21 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
         int commType = config.getBusInterface().getBusType().getValue();
         int address = config.getDeviceAddress();
         byte[] pinConfig = ObjectUtils.defaultIfNull(config.getPinMap(), new GlcdPinMapConfig()).toByteArray();
-        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, pinConfig, config.isEmulated());
+        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, pinConfig, dataProcessor != null);
 
         if (_id == -1)
             throw new GlcdDriverException("Could not initialize U8G2 Display Driver");
 
-        //check if emulation flag is set
-        if (config.isEmulated()) {
-            if (dataProcessor == null) {
-                dataProcessor = new GlcdDataProcessor() {
-                    @Override
-                    public void onByteEvent(U8g2ByteEvent event) {
-                        GlcdBaseDriver.this.onByteEvent(event);
-                    }
-
-                    @Override
-                    public void onGpioEvent(U8g2GpioEvent event) {
-                        GlcdBaseDriver.this.onGpioEvent(event);
-                    }
-                };
-            }
+        //check if data processor is present
+        if (dataProcessor != null) {
             U8g2EventDispatcher.addByteListener(this, dataProcessor);
             U8g2EventDispatcher.addGpioListener(this, dataProcessor);
         }
         initialized = true;
+    }
+
+    public final GlcdDataProcessor getDataProcessor() {
+        return dataProcessor;
     }
 
     @Override
@@ -165,7 +156,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
 
         GlcdBusInterface bus = config.getBusInterface();
 
-        if (!config.isEmulated() && bus == null)
+        if (dataProcessor == null && bus == null)
             throw new GlcdConfigException("Bus interface not specified", config);
 
         //Check protocol if supported
@@ -187,7 +178,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
             throw new GlcdConfigException("No display specified", config);
 
         //Check pin mapping
-        if (!config.isEmulated() && (config.getPinMap() == null || config.getPinMap().isEmpty())) {
+        if (dataProcessor == null && (config.getPinMap() == null || config.getPinMap().isEmpty())) {
             throw new GlcdConfigException("Missing pin map configuration", config);
         }
 

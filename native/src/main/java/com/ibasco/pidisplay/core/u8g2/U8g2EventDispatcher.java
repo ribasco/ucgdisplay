@@ -65,16 +65,16 @@ public class U8g2EventDispatcher {
         gpioEventListeners.put(driver, listener);
     }
 
-    public static void removeGpioListener(DisplayDriver driverId) {
-        gpioEventListeners.remove(driverId);
+    public static void removeGpioListener(DisplayDriver driver) {
+        gpioEventListeners.remove(driver);
     }
 
-    public static void addByteListener(DisplayDriver driverId, U8g2ByteEventListener listener) {
-        byteEventListeners.put(driverId, listener);
+    public static void addByteListener(DisplayDriver driver, U8g2ByteEventListener listener) {
+        byteEventListeners.put(driver, listener);
     }
 
-    public static void removeByteListener(DisplayDriver driverId) {
-        byteEventListeners.remove(driverId);
+    public static void removeByteListener(DisplayDriver driver) {
+        byteEventListeners.remove(driver);
     }
 
     private static U8g2GpioEventListener findGpioListenerById(long id) {

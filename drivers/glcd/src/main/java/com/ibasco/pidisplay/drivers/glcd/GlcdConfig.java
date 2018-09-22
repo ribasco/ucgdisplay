@@ -28,7 +28,6 @@ public class GlcdConfig {
     private GlcdRotation rotation;
     private GlcdPinMapConfig pinMap;
     private int deviceAddress = -1;
-    private boolean emulated;
     private String setupProcedure;
 
     public GlcdConfig() {
@@ -40,14 +39,6 @@ public class GlcdConfig {
         this.busInterface = busInterface;
         this.pinMap = pinMapConfig;
         this.deviceAddress = deviceAddress;
-    }
-
-    public boolean isEmulated() {
-        return emulated;
-    }
-
-    public void setEmulated(boolean emulated) {
-        this.emulated = emulated;
     }
 
     public int getDeviceAddress() {
