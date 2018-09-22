@@ -75,10 +75,10 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
 
     /**
      * <p>Driver initialization procedures. Sub-classes MUST call this method after call to base constructor.
-     * Calling the drawing operations while not initialized will trigger {@link GlcdDriverException}.</p>
+     * Calling the drawing operations while not initialized will trigger a {@link GlcdDriverException}.</p>
      *
      * @throws GlcdDriverException
-     *         If a driver related exception occurs (e.g. invalid configuration setup)
+     *         When a driver related exception occurs (e.g. invalid configuration setup)
      */
     protected final void initialize() throws GlcdDriverException {
         //Get rotation setting
@@ -160,8 +160,8 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
             throw new GlcdConfigException("Bus interface not specified", config);
 
         //Check protocol if supported
-        if (bus != null && !config.getDisplay().hasCommType(config.getBusInterface())) {
-            String protocols = config.getDisplay().getCommTypes().stream().map(Object::toString).collect(Collectors.joining(", "));
+        if (bus != null && !config.getDisplay().hasBusInterface(config.getBusInterface())) {
+            String protocols = config.getDisplay().getBusInterfaces().stream().map(Object::toString).collect(Collectors.joining(", "));
             throw new GlcdConfigException(
                     String.format("The selected bus interface '%s' is not supported by your display controller '%s :: %s' (Supported Interfaces: %s)", config.getBusInterface().name(), config.getDisplay().getController().name(), config.getDisplay().getName(), protocols),
                     config
