@@ -123,14 +123,23 @@ public enum GlcdPin {
         this.parent = parent;
     }
 
+    /**
+     * @return The index representing a device pin
+     */
     public int getIndex() {
         return index;
     }
 
+    /**
+     * @return <code>True</code> if the enum is an alias of another {@link GlcdPin}
+     */
     public boolean hasParent() {
         return this.parent != null;
     }
 
+    /**
+     * @return The parent {@link GlcdPin} instance
+     */
     public GlcdPin getParent() {
         return this.parent;
     }
