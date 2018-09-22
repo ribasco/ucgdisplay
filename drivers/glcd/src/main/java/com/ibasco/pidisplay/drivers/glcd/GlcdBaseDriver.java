@@ -66,10 +66,10 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
      *         The {@link GlcdDataProcessor} instance that will handle the data and instruction events
      */
     public GlcdBaseDriver(GlcdConfig config, GlcdDataProcessor processor) throws GlcdDriverException {
-        //Make sure we have a valid configuration
-        checkConfig(config);
         this.config = config;
         this.dataProcessor = processor;
+        //Make sure we have a valid configuration
+        checkConfig(config);
         log.debug("GLCD driver initialized (Address: {})", _id);
     }
 
