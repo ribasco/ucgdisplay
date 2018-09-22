@@ -3,7 +3,8 @@ package com.ibasco.pidisplay.core.u8g2;
 import com.ibasco.pidisplay.core.utils.NativeLibraryLoader;
 
 /**
- * <p>This is a wrapper class for the U8G2 native graphics interface. It is not advisable to uses this class directly.</p>
+ * <p>This is a wrapper class for the U8G2 native graphics interface. It is not advisable to uses this class
+ * directly.</p>
  *
  * @author Rafael Ibasco
  */
@@ -83,10 +84,13 @@ public class U8g2Graphics {
      *         setup.
      * @param pinConfig
      *         Array of integers which represents the pin mapping configuration of the display
+     * @param virtual
+     *         Set to <code>true</code> to enable virtual-mode. All display instructions will be re-routed to the {@link
+     *         U8g2EventDispatcher}
      *
      * @return The id of the u8g2 instance. -1 if the setup failed.
      */
-    public static native long setup(String setupProc, int commInt, int commType, int rotation, int address, byte[] pinConfig, boolean emulated);
+    public static native long setup(String setupProc, int commInt, int commType, int rotation, int address, byte[] pinConfig, boolean virtual);
 
     /**
      * <p>Draw a box (filled frame), starting at x/y position (upper left edge). The box has width w and height h.
@@ -178,7 +182,8 @@ public class U8g2Graphics {
      * </ul>
      * <p>
      * <p>
-     * These values can be combined with the | operator. This procedure will use the current color ({@link #setDrawColor(long, int)}) for drawing.</p>
+     * These values can be combined with the | operator. This procedure will use the current color ({@link
+     * #setDrawColor(long, int)}) for drawing.</p>
      *
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
@@ -666,8 +671,8 @@ public class U8g2Graphics {
 
     /**
      * <p>A call to this procedure will define the calculation method for the ascent and descent of the current
-     * font. This method will be used for the current and all other fonts, which will be set with {@link
-     * #setFont(long, byte[])}. Changing this calculation method has an effect on {@link #getAscent(long)} and {@link
+     * font. This method will be used for the current and all other fonts, which will be set with {@link #setFont(long,
+     * byte[])}. Changing this calculation method has an effect on {@link #getAscent(long)} and {@link
      * #getDescent(long)}. Default is {@link #setFontRefHeightText(long)}. </p>
      * <p>
      * Ascent will be the highest ascent of all glyphs of the current font. Descent will be the highest descent of all
@@ -684,8 +689,8 @@ public class U8g2Graphics {
 
     /**
      * <p>A call to this procedure will define the calculation method for the ascent and descent of the current
-     * font. This method will be used for the current and all other fonts, which will be set with {@link
-     * #setFont(long, byte[])}. Changing this calculation method has an effect on {@link #getAscent(long)} and {@link
+     * font. This method will be used for the current and all other fonts, which will be set with {@link #setFont(long,
+     * byte[])}. Changing this calculation method has an effect on {@link #getAscent(long)} and {@link
      * #getDescent(long)}.
      *
      * <p>Ascent will be the largest ascent of "A", "1" or "(" of the current font. Descent will be the descent of "g"
@@ -701,8 +706,8 @@ public class U8g2Graphics {
 
     /**
      * <p>A call to this procedure will define the calculation method for the ascent and descent of the current
-     * font. This method will be used for the current and all other fonts, which will be set with {@link
-     * #setFont(long, byte[])}. Changing this calculation method has an effect on {@link #getAscent(long)} and {@link
+     * font. This method will be used for the current and all other fonts, which will be set with {@link #setFont(long,
+     * byte[])}. Changing this calculation method has an effect on {@link #getAscent(long)} and {@link
      * #getDescent(long)}.
      *
      * <p>Ascent will be the ascent of "A" or "1" of the current font. Descent will be the descent  "g" of the current
@@ -745,9 +750,9 @@ public class U8g2Graphics {
 
     /**
      * <p>Defines the bit value (color index) for all drawing functions. All drawing function will change the display
-     * memory to this bit value. Default value is 1. For example the {@link #drawBox(long, int, int, int, int)} procedure will
-     * set all pixels for the defined area to the bit value, provided here. In v2.11 the new color value 2 will activate
-     * the XOR mode. Exceptions:</p>
+     * memory to this bit value. Default value is 1. For example the {@link #drawBox(long, int, int, int, int)}
+     * procedure will set all pixels for the defined area to the bit value, provided here. In v2.11 the new color value
+     * 2 will activate the XOR mode. Exceptions:</p>
      *
      * <p>Both functions will always set the buffer to the pixel value 0. The color argument of setDrawColor is
      * ignored.</p>
@@ -759,7 +764,8 @@ public class U8g2Graphics {
      * <strong>Exceptions:</strong>
      *
      * <ul>
-     * <li>{@link #clear(long)}, {@link #clearBuffer(long)}: Both functions will always set the buffer to the pixel value 0.
+     * <li>{@link #clear(long)}, {@link #clearBuffer(long)}: Both functions will always set the buffer to the pixel
+     * value 0.
      * The color argument of setDrawColor is ignored.</li>
      * <li>drawGlyph: All font drawing procedures will use this color argument as foreground color. In none-transparent
      * (solid) mode (setFontMode) the complement of the color value will be the background color and is set to 0 for
@@ -923,7 +929,8 @@ public class U8g2Graphics {
     public static native int getMaxCharHeight(long id);
 
     /**
-     * <p>Send the content of the memory frame buffer to the display. Use {@link #clearBuffer(long)} to clear the buffer
+     * <p>Send the content of the memory frame buffer to the display. Use {@link #clearBuffer(long)} to clear the
+     * buffer
      * and the draw functions to draw something into the frame buffer. This procedure is useful only with a full frame
      * buffer in the RAM of the microcontroller (Constructor with buffer option "f", see here). This procedure will also
      * send a refresh message (refreshDisplay) to an e-Paper/e-Ink device.</p>
@@ -956,8 +963,8 @@ public class U8g2Graphics {
 
     /**
      * <p> Clears all pixel on the connected display. This procedure is also called from begin. Usually there is no
-     * need to call this function except for the init procedure. Other procedures like {@link #sendBuffer(long)} and {@link
-     * #nextPage(long)} will also overwrite (and clear) the display.</p>
+     * need to call this function except for the init procedure. Other procedures like {@link #sendBuffer(long)} and
+     * {@link #nextPage(long)} will also overwrite (and clear) the display.</p>
      *
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
@@ -1030,11 +1037,12 @@ public class U8g2Graphics {
     public static native void clear(long id);
 
     /**
-     * <p>Enables (mode=1) or disables (mode=0) automatic clearing of the pixel buffer by the {@link #firstPage(long)} and
-     * {@link #nextPage(long)} procedures. By default this is enabled and in most situation it is not required to disable
-     * this. If disabled, the user is responsible to set ALL pixel of the current pixel buffer to some suitable state.
-     * The buffer can be erased manually with the clearBuffer procedure. One application for using this function are
-     * situation where the background is rendered manually through a direct manipulation of the pixel buffer (see
+     * <p>Enables (mode=1) or disables (mode=0) automatic clearing of the pixel buffer by the {@link #firstPage(long)}
+     * and
+     * {@link #nextPage(long)} procedures. By default this is enabled and in most situation it is not required to
+     * disable this. If disabled, the user is responsible to set ALL pixel of the current pixel buffer to some suitable
+     * state. The buffer can be erased manually with the clearBuffer procedure. One application for using this function
+     * are situation where the background is rendered manually through a direct manipulation of the pixel buffer (see
      * DirectAccess.ino example).</p>
      *
      * @param id
@@ -1161,8 +1169,8 @@ public class U8g2Graphics {
     /**
      * <p>Return the intended position for the content of the pixel buffer (page) on the target display. If it is
      * assumed, that the buffer will be placed at the top of the display, then this value is zero. This value is
-     * modified by {@link #firstPage(long)}/{@link #nextPage(long)} and used by {@link #sendBuffer(long)} to place the content of
-     * the pixel buffer at the target position.</p>
+     * modified by {@link #firstPage(long)}/{@link #nextPage(long)} and used by {@link #sendBuffer(long)} to place the
+     * content of the pixel buffer at the target position.</p>
      *
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
@@ -1182,8 +1190,8 @@ public class U8g2Graphics {
      *         Location for the pixel buffer on the display. row is the "tile" position and must be multiplied with 8 to
      *         get the pixel position.
      *
-     * @apiNote Never use this command inside of the {@link #firstPage(long)}/{@link #nextPage(long)} loop. It may cause an
-     * infinite loop if the current position is modified.
+     * @apiNote Never use this command inside of the {@link #firstPage(long)}/{@link #nextPage(long)} loop. It may cause
+     * an infinite loop if the current position is modified.
      * @see #getBuffer
      * @see #sendBuffer
      */
