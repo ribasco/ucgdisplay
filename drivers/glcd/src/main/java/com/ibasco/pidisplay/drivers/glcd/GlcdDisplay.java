@@ -15,7 +15,6 @@ import static org.slf4j.LoggerFactory.getLogger;
  *
  * @author Rafael Ibasco
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
 public class GlcdDisplay {
 
     public static final Logger log = getLogger(GlcdDisplay.class);
