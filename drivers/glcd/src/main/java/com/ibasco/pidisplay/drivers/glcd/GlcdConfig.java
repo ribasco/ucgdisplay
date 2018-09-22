@@ -30,21 +30,19 @@ public class GlcdConfig {
     private int deviceAddress = -1;
     private String setupProcedure;
 
-    public GlcdConfig() {
-    }
-
-    public GlcdConfig(GlcdDisplay display, GlcdBusInterface busInterface, GlcdRotation rotation, GlcdPinMapConfig pinMapConfig, int deviceAddress) {
-        this.display = display;
-        this.rotation = rotation;
-        this.busInterface = busInterface;
-        this.pinMap = pinMapConfig;
-        this.deviceAddress = deviceAddress;
-    }
-
+    /**
+     * @return The device address if available
+     */
     public int getDeviceAddress() {
         return deviceAddress;
     }
 
+    /**
+     * Sets the device address of the display. This is typically used for I2C communication.
+     *
+     * @param deviceAddress
+     *         The device address of the display
+     */
     public void setDeviceAddress(int deviceAddress) {
         this.deviceAddress = deviceAddress;
     }

@@ -11,7 +11,7 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Holds important meta data information on a Graphics Display
+ * Holds important meta data information of a Graphics display device
  *
  * @author Rafael Ibasco
  */
@@ -31,15 +31,26 @@ public class GlcdDisplay {
         this.displaySize = GlcdSize.get(tileWidth, tileHeight);
     }
 
-    public boolean hasCommType(GlcdBusInterface protocol) {
+    /**
+     * Check if this display supports the provided bus interface
+     *
+     * @param busInterface
+     *         The {@link GlcdBusInterface} to check
+     *
+     * @return <code>True</code> if this display supports the provided bus interface
+     */
+    public boolean hasBusInterface(GlcdBusInterface busInterface) {
         for (GlcdSetupInfo info : setupDetails) {
-            if ((info.getProtocols() & protocol.getValue()) > 0)
+            if ((info.getProtocols() & busInterface.getValue()) > 0)
                 return true;
         }
         return false;
     }
 
-    public List<GlcdBusInterface> getCommTypes() {
+    /**
+     * @return A list of supported bus interfaces of this display
+     */
+    public List<GlcdBusInterface> getBusInterfaces() {
         if (setupDetails == null || setupDetails.length <= 0)
             return null;
         List<GlcdBusInterface> protocols = new ArrayList<>();
@@ -52,10 +63,16 @@ public class GlcdDisplay {
         return protocols;
     }
 
+    /**
+     * @return A {@link GlcdSize} containing information about the display's dimensions
+     */
     public GlcdSize getDisplaySize() {
         return displaySize;
     }
 
+    /**
+     * @return A {@link GlcdControllerType} describing the controller of this display
+     */
     public GlcdControllerType getController() {
         return controller;
     }
