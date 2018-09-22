@@ -3,7 +3,10 @@ package com.ibasco.pidisplay.drivers.glcd;
 import com.ibasco.pidisplay.core.drivers.GraphicsDisplayDriver;
 import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
 import com.ibasco.pidisplay.core.exceptions.XBMDecodeException;
-import com.ibasco.pidisplay.core.u8g2.*;
+import com.ibasco.pidisplay.core.u8g2.U8g2ByteEvent;
+import com.ibasco.pidisplay.core.u8g2.U8g2EventDispatcher;
+import com.ibasco.pidisplay.core.u8g2.U8g2GpioEvent;
+import com.ibasco.pidisplay.core.u8g2.U8g2Graphics;
 import com.ibasco.pidisplay.core.ui.Font;
 import com.ibasco.pidisplay.core.ui.Rotation;
 import com.ibasco.pidisplay.core.util.XBMUtils;
@@ -36,9 +39,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
 
     private GlcdConfig config;
 
-    private final U8g2GpioEventListener gpioEventListener = this::onGpioEvent;
-
-    private final U8g2ByteEventListener byteEventListener = this::onByteEvent;
+    private GlcdDataProcessor dataProcessor;
 
     private boolean initialized = false;
 
@@ -51,15 +52,25 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
      * @throws GlcdDriverException
      *         Thrown when setup fails
      */
-    public GlcdBaseDriver(GlcdConfig config) {
-        try {
-            //Make sure we have a valid configuration
-            checkConfig(config);
-            this.config = config;
-            log.debug("GLCD driver initialized (Address: {})", _id);
-        } catch (GlcdDriverException e) {
-            throw new RuntimeException("Error occured during glcd driver initialization", e);
-        }
+    public GlcdBaseDriver(GlcdConfig config) throws GlcdDriverException {
+        this(config, null);
+    }
+
+    /**
+     * <p>Create new instance based on the config provided. If a {@link GlcdDataProcessor} is specified then all data
+     * and instruction events are re-routed to it for further processing.</p>
+     *
+     * @param config
+     *         The {@link GlcdConfig} associated with this instance
+     * @param processor
+     *         The {@link GlcdDataProcessor} instance that will handle the data and instruction events
+     */
+    public GlcdBaseDriver(GlcdConfig config, GlcdDataProcessor processor) throws GlcdDriverException {
+        //Make sure we have a valid configuration
+        checkConfig(config);
+        this.config = config;
+        this.dataProcessor = processor;
+        log.debug("GLCD driver initialized (Address: {})", _id);
     }
 
     /**
@@ -84,10 +95,22 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
 
         //check if emulation flag is set
         if (config.isEmulated()) {
-            U8g2EventDispatcher.addByteListener(this, byteEventListener);
-            U8g2EventDispatcher.addGpioListener(this, gpioEventListener);
-        }
+            if (dataProcessor == null) {
+                dataProcessor = new GlcdDataProcessor() {
+                    @Override
+                    public void onByteEvent(U8g2ByteEvent event) {
+                        GlcdBaseDriver.this.onByteEvent(event);
+                    }
 
+                    @Override
+                    public void onGpioEvent(U8g2GpioEvent event) {
+                        GlcdBaseDriver.this.onGpioEvent(event);
+                    }
+                };
+            }
+            U8g2EventDispatcher.addByteListener(this, dataProcessor);
+            U8g2EventDispatcher.addGpioListener(this, dataProcessor);
+        }
         initialized = true;
     }
 
@@ -111,6 +134,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
      * @param event
      *         The event details
      */
+    @Deprecated
     protected void onByteEvent(U8g2ByteEvent event) {
         //no-op
     }
@@ -121,6 +145,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
      * @param event
      *         The event details
      */
+    @Deprecated
     protected void onGpioEvent(U8g2GpioEvent event) {
         //no-op
     }
