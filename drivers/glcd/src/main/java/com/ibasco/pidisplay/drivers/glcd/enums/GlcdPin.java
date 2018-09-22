@@ -1,34 +1,34 @@
 package com.ibasco.pidisplay.drivers.glcd.enums;
 
-/*
-#define U8X8_PIN_D0 0
-#define U8X8_PIN_SPI_CLOCK 0
-#define U8X8_PIN_D1 1
-#define U8X8_PIN_SPI_DATA 1
-#define U8X8_PIN_D2 2
-#define U8X8_PIN_D3 3
-#define U8X8_PIN_D4 4
-#define U8X8_PIN_D5 5
-#define U8X8_PIN_D6 6
-#define U8X8_PIN_D7 7
-
-#define U8X8_PIN_E 8
-#define U8X8_PIN_CS 9			//parallel, SPI
-#define U8X8_PIN_DC 10            // parallel, SPI
-#define U8X8_PIN_RESET 11        // parallel, SPI, I2C
-
-#define U8X8_PIN_I2C_CLOCK 12    // 1 = Input/high impedance, 0 = drive low
-#define U8X8_PIN_I2C_DATA 13    // 1 = Input/high impedance, 0 = drive low
-
-#define U8X8_PIN_CS1 14            // KS0108 extra chip select
-#define U8X8_PIN_CS2 15            //KS0108 extra chip select
-*/
-
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * All possible PIN configurations that can be found on your Graphics LCD device
+ * <p>All possible PIN configurations that can be found on your Graphics LCD device</p>
+ * <blockquote>
+ * Note: Most of these pins are equivalent to the U8G2 constants found in it's header file:
+ * </blockquote>
+ *
+ * <pre>
+ *      U8X8_PIN_D0 0
+ *      U8X8_PIN_SPI_CLOCK 0
+ *      U8X8_PIN_D1 1
+ *      U8X8_PIN_SPI_DATA 1
+ *      U8X8_PIN_D2 2
+ *      U8X8_PIN_D3 3
+ *      U8X8_PIN_D4 4
+ *      U8X8_PIN_D5 5
+ *      U8X8_PIN_D6 6
+ *      U8X8_PIN_D7 7
+ *      U8X8_PIN_E 8
+ *      U8X8_PIN_CS 9			//parallel, SPI
+ *      U8X8_PIN_DC 10            // parallel, SPI
+ *      U8X8_PIN_RESET 11        // parallel, SPI, I2C
+ *      U8X8_PIN_I2C_CLOCK 12    // 1 = Input/high impedance, 0 = drive low
+ *      U8X8_PIN_I2C_DATA 13    // 1 = Input/high impedance, 0 = drive low
+ *      U8X8_PIN_CS1 14            // KS0108 extra chip select
+ *      U8X8_PIN_CS2 15            //KS0108 extra chip select
+ * </pre>
  *
  * @author Rafael Ibasco
  */
@@ -100,20 +100,39 @@ public enum GlcdPin {
     /**
      * Alias for D0. Added for convenience
      */
-    SPI_CLOCK(0),
+    SPI_CLOCK(D0),
     /**
      * Alias for D1. Added for convenience
      */
-    SPI_MOSI(1);
+    SPI_MOSI(D1),
+    /**
+     * Switch between Parallel or Serial bus interface
+     */
+    PSB(20);
 
     private int index;
+
+    private GlcdPin parent;
 
     GlcdPin(int index) {
         this.index = index;
     }
 
+    GlcdPin(GlcdPin parent) {
+        this.index = parent.index;
+        this.parent = parent;
+    }
+
     public int getIndex() {
         return index;
+    }
+
+    public boolean hasParent() {
+        return this.parent != null;
+    }
+
+    public GlcdPin getParent() {
+        return this.parent;
     }
 
     public static List<GlcdPin> getPins() {
