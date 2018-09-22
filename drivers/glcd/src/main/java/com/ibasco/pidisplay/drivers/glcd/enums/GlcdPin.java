@@ -119,7 +119,7 @@ public enum GlcdPin {
     }
 
     GlcdPin(GlcdPin parent) {
-        this.index = parent.index;
+        this(parent.index);
         this.parent = parent;
     }
 
