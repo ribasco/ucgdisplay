@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.drivers.glcd.exceptions;
 
-public class GlcdDriverException extends GlcdException {
+public class GlcdDriverException extends RuntimeException {
     public GlcdDriverException() {
     }
 
