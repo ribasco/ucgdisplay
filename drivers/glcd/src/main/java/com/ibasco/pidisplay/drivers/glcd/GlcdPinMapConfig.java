@@ -3,7 +3,6 @@ package com.ibasco.pidisplay.drivers.glcd;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdPin;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdPinMappingException;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,10 +28,9 @@ public class GlcdPinMapConfig {
         return pinMap.isEmpty();
     }
 
-    public byte[] toByteArray() {
+    byte[] toByteArray() {
         byte[] data = new byte[16];
         if (!pinMap.isEmpty()) {
-            Arrays.fill(data, (byte) 0);
             for (Map.Entry<GlcdPin, Byte> entry : pinMap.entrySet()) {
                 GlcdPin pin = entry.getKey();
                 Byte pNum = entry.getValue();
