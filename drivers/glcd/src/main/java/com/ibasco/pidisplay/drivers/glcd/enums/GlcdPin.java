@@ -124,7 +124,7 @@ public enum GlcdPin {
     }
 
     /**
-     * @return The index representing a device pin
+     * @return The device pin index
      */
     public int getIndex() {
         return index;
