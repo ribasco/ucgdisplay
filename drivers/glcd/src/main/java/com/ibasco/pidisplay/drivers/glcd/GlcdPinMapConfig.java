@@ -30,8 +30,7 @@ public class GlcdPinMapConfig {
     }
 
     public byte[] toByteArray() {
-        int size = GlcdPin.values().length - 2; //exclude last two aliases
-        byte[] data = new byte[size];
+        byte[] data = new byte[16];
         if (!pinMap.isEmpty()) {
             Arrays.fill(data, (byte) 0);
             for (Map.Entry<GlcdPin, Byte> entry : pinMap.entrySet()) {
