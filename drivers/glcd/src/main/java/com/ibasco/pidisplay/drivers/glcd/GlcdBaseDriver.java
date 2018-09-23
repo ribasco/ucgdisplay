@@ -14,6 +14,7 @@ import com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdConfigException;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdDriverException;
+import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdNotInitializedException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,32 +44,50 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
 
     private boolean initialized = false;
 
+    private boolean virtual;
+
     /**
-     * Create new instance based on the config provided
+     * Create new instance based on the config provided.
      *
      * @param config
      *         The {@link GlcdConfig} associated with this instance
+     */
+    public GlcdBaseDriver(GlcdConfig config) {
+        this(config, false);
+    }
+
+    /**
+     * Create new instance based on the config provided.
+     *
+     * @param config
+     *         The {@link GlcdConfig} associated with this instance
+     * @param virtual
+     *         Set to <code>true</code> to enable virtual mode.
      *
      * @throws GlcdDriverException
      *         Thrown when setup fails
      */
-    public GlcdBaseDriver(GlcdConfig config) throws GlcdDriverException {
-        this(config, null);
+    public GlcdBaseDriver(GlcdConfig config, boolean virtual) throws GlcdDriverException {
+        this(config, virtual, null);
     }
 
     /**
-     * <p>Create new instance based on the config provided. If a {@link GlcdDriverEventHandler} is provided, emulation mode
-     * will be activated and all data/instruction events will be re-routed to it.</p>
+     * <p>Creates a new instance based on the config provided. If virtual mode is enabled. Optionally you could also
+     * provided a {@link GlcdDriverEventHandler} for handling display events </p>
      *
      * @param config
      *         The {@link GlcdConfig} associated with this instance
+     * @param virtual
+     *         Set to <code>true</code> to enable virtual mode.
      * @param handler
-     *         The {@link GlcdDriverEventHandler} instance that will handle the data and instruction events
+     *         The {@link GlcdDriverEventHandler} instance that will handle the data and instruction events thrown by
+     *         the native display driver. If a null value is provided, the internal event handler of this driver
+     *         instance will be used instead.
      */
-    public GlcdBaseDriver(GlcdConfig config, GlcdDriverEventHandler handler) throws GlcdDriverException {
+    public GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) throws GlcdDriverException {
         this.config = config;
-        this.driverEventHandler = handler;
-        log.debug("GLCD driver initialized (Address: {})", _id);
+        this.virtual = virtual;
+        this.driverEventHandler = handler == null ? createDefaultEventHandler() : handler;
     }
 
     /**
@@ -89,17 +108,18 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
         int commType = config.getBusInterface().getBusType().getValue();
         int address = config.getDeviceAddress();
         byte[] pinConfig = ObjectUtils.defaultIfNull(config.getPinMap(), new GlcdPinMapConfig()).toByteArray();
-        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, pinConfig, driverEventHandler != null);
+        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, pinConfig, virtual);
 
         if (_id == -1)
             throw new GlcdDriverException("Could not initialize U8G2 Display Driver");
 
-        //check if data processor is present
-        if (driverEventHandler != null) {
+        if (virtual && driverEventHandler != null) {
+            //check if a virtual event handler is present
             U8g2EventDispatcher.addByteListener(this, driverEventHandler);
             U8g2EventDispatcher.addGpioListener(this, driverEventHandler);
         }
         initialized = true;
+        log.debug("GLCD driver initialized (Address: {})", _id);
     }
 
     public final <T extends GlcdDriverEventHandler> T getDriverEventHandler() {
@@ -146,6 +166,20 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
         //no-op
     }
 
+    protected GlcdDriverEventHandler createDefaultEventHandler() {
+        return new GlcdDriverEventHandler() {
+            @Override
+            public void onByteEvent(U8g2ByteEvent event) {
+                GlcdBaseDriver.this.onByteEvent(event);
+            }
+
+            @Override
+            public void onGpioEvent(U8g2GpioEvent event) {
+                GlcdBaseDriver.this.onGpioEvent(event);
+            }
+        };
+    }
+
     /**
      * Validates the configuration file specified
      *
@@ -161,7 +195,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
 
         GlcdBusInterface bus = config.getBusInterface();
 
-        if (driverEventHandler == null && bus == null)
+        if (!virtual && bus == null)
             throw new GlcdConfigException("Bus interface not specified", config);
 
         //Check protocol if supported
@@ -183,7 +217,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
             throw new GlcdConfigException("No display specified", config);
 
         //Check pin mapping
-        if (driverEventHandler == null && (config.getPinMap() == null || config.getPinMap().isEmpty())) {
+        if (!virtual && (config.getPinMap() == null || config.getPinMap().isEmpty())) {
             throw new GlcdConfigException("Missing pin map configuration", config);
         }
 
@@ -195,10 +229,10 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
     }
 
     private void checkRequirements() {
-        if (_id == -1)
-            throw new RuntimeException(new GlcdDriverException("Invalid driver instance ID. Please verify that the driver initialization succeeded"));
+        if (_id < 0)
+            throw new GlcdDriverException("Invalid driver instance ID. Please verify that the driver initialization succeeded");
         if (!initialized)
-            throw new RuntimeException(new GlcdDriverException("Driver has not yet been initialized. Please remember to call initialize() in your implementing class"));
+            throw new GlcdNotInitializedException("Driver has not yet been initialized. Please remember to call initialize() in your implementing class");
     }
 
     @Override

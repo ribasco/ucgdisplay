@@ -6,7 +6,7 @@ import com.ibasco.pidisplay.core.u8g2.U8g2GpioEvent;
 import com.ibasco.pidisplay.core.u8g2.U8g2GpioEventListener;
 
 /**
- * Interface for processing byte and gpio events.
+ * Interface for handling U8g2 display events.
  *
  * @author Rafael Ibasco
  */
