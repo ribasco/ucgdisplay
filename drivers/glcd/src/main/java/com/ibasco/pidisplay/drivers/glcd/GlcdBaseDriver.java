@@ -68,8 +68,6 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
     public GlcdBaseDriver(GlcdConfig config, GlcdDataProcessor processor) throws GlcdDriverException {
         this.config = config;
         this.dataProcessor = processor;
-        //Make sure we have a valid configuration
-        checkConfig(config);
         log.debug("GLCD driver initialized (Address: {})", _id);
     }
 
@@ -81,6 +79,9 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
      *         When a driver related exception occurs (e.g. invalid configuration setup)
      */
     protected final void initialize() throws GlcdDriverException {
+        //Make sure we have a valid configuration
+        checkConfig(config);
+
         //Get rotation setting
         String setupProcedure = config.getSetupProcedure();
         int rotation = config.getRotation().getValue();
@@ -101,8 +102,12 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
         initialized = true;
     }
 
-    public final GlcdDataProcessor getDataProcessor() {
-        return dataProcessor;
+    public final <T extends GlcdDataProcessor> T getDataProcessor() {
+        return (T) dataProcessor;
+    }
+
+    protected final void setDataProcessor(GlcdDataProcessor dataProcessor) {
+        this.dataProcessor = dataProcessor;
     }
 
     @Override
