@@ -2,14 +2,34 @@ package com.ibasco.pidisplay.drivers.glcd;
 
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdDriverException;
 
-@SuppressWarnings("Duplicates")
+/**
+ * A basic implementation of a graphics display driver
+ *
+ * @author Rafael Ibasco
+ */
 public class GlcdDriver extends GlcdBaseDriver {
+    /**
+     * @throws GlcdDriverException
+     *         When driver initialization fails
+     */
     public GlcdDriver(GlcdConfig config) throws GlcdDriverException {
-        this(config, null);
+        this(config, false);
     }
 
-    public GlcdDriver(GlcdConfig config, GlcdDriverEventHandler processor) throws GlcdDriverException {
-        super(config, processor);
+    /**
+     * @throws GlcdDriverException
+     *         When driver initialization fails
+     */
+    public GlcdDriver(GlcdConfig config, boolean virtual) throws GlcdDriverException {
+        this(config, virtual, null);
+    }
+
+    /**
+     * @throws GlcdDriverException
+     *         When driver initialization fails
+     */
+    public GlcdDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) throws GlcdDriverException {
+        super(config, virtual, handler);
         initialize();
     }
 }

@@ -63,11 +63,8 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
      *         The {@link GlcdConfig} associated with this instance
      * @param virtual
      *         Set to <code>true</code> to enable virtual mode.
-     *
-     * @throws GlcdDriverException
-     *         Thrown when setup fails
      */
-    public GlcdBaseDriver(GlcdConfig config, boolean virtual) throws GlcdDriverException {
+    public GlcdBaseDriver(GlcdConfig config, boolean virtual) {
         this(config, virtual, null);
     }
 
@@ -84,7 +81,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
      *         the native display driver. If a null value is provided, the internal event handler of this driver
      *         instance will be used instead.
      */
-    public GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) throws GlcdDriverException {
+    public GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) {
         this.config = config;
         this.virtual = virtual;
         this.driverEventHandler = handler == null ? createDefaultEventHandler() : handler;
