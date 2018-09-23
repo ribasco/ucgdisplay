@@ -10,7 +10,7 @@ import com.ibasco.pidisplay.core.u8g2.U8g2GpioEventListener;
  *
  * @author Rafael Ibasco
  */
-public interface GlcdDataProcessor extends U8g2ByteEventListener, U8g2GpioEventListener {
+public interface GlcdDriverEventHandler extends U8g2ByteEventListener, U8g2GpioEventListener {
     @Override
     void onByteEvent(U8g2ByteEvent event);
 

@@ -8,7 +8,7 @@ public class GlcdDriver extends GlcdBaseDriver {
         this(config, null);
     }
 
-    public GlcdDriver(GlcdConfig config, GlcdDataProcessor processor) throws GlcdDriverException {
+    public GlcdDriver(GlcdConfig config, GlcdDriverEventHandler processor) throws GlcdDriverException {
         super(config, processor);
         initialize();
     }
