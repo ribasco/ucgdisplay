@@ -36,91 +36,101 @@ public enum GlcdPin {
     /**
      * Data pin 0 (also known as SPI CLOCK)
      */
-    D0(0),
+    D0(0, "Data Pin 0"),
     /**
      * Data pin 1 (also known as SPI DATA)
      */
-    D1(1),
+    D1(1, "Data Pin 1"),
     /**
      * Data Pin 2
      */
-    D2(2),
+    D2(2, "Data Pin 2"),
     /**
      * Data Pin 3
      */
-    D3(3),
+    D3(3, "Data Pin 3"),
     /**
      * Data Pin 4
      */
-    D4(4),
+    D4(4, "Data Pin 4"),
     /**
      * Data Pin 5
      */
-    D5(5),
+    D5(5, "Data Pin 5"),
     /**
      * Data Pin 6
      */
-    D6(6),
+    D6(6, "Data Pin 6"),
     /**
      * Data Pin 7
      */
-    D7(7),
+    D7(7, "Data Pin 7"),
     /**
      * Enable Pin
      */
-    EN(8),
+    EN(8, "Enable/Clock Pin"),
     /**
      * Chip Select Pin
      */
-    CS(9),
+    CS(9, "Chip Select Pin"),
     /**
      * Data/Command Pin
      */
-    DC(10),
+    DC(10, "Data/Command Pin"),
     /**
      * Reset Pin
      */
-    RESET(11),
+    RESET(11, "Reset Pin"),
     /**
      * I2C Clock Pin (SCL)
      */
-    I2C_CLOCK(12),
+    I2C_CLOCK(12, "I2C Clock"),
     /**
      * I2C Data Pin (SDA)
      */
-    I2C_DATA(13),
+    I2C_DATA(13, "I2C Data"),
     /**
      * Chip Select 1 (KS0108 extra chip select)
      */
-    CS1(14),
+    CS1(14, "Chip Select 1 (KS0108)"),
     /**
      * Chip Select 2 (KS0108 extra chip select)
      */
-    CS2(15),
+    CS2(15, "Chip Select 2 (KS0108)"),
     /**
      * Alias for D0. Added for convenience
      */
-    SPI_CLOCK(D0),
+    SPI_CLOCK(D0, "SPI Clock (Alias for D0)"),
     /**
      * Alias for D1. Added for convenience
      */
-    SPI_MOSI(D1),
+    SPI_MOSI(D1, "SPI MOSI (Alias for D1)"),
     /**
      * Switch between Parallel or Serial bus interface
      */
-    PSB(20);
+    PSB(20, "Parallel/Serial Select Pin");
 
     private int index;
 
     private GlcdPin parent;
 
-    GlcdPin(int index) {
+    private String description;
+
+    GlcdPin(int index, String description) {
         this.index = index;
+        this.description = description;
     }
 
-    GlcdPin(GlcdPin parent) {
-        this(parent.index);
+    GlcdPin(GlcdPin parent, String description) {
+        this(parent.index, description);
         this.parent = parent;
+    }
+
+    /**
+     * @return The pin description
+     */
+    public String getDescription() {
+        return description;
     }
 
     /**
@@ -133,7 +143,7 @@ public enum GlcdPin {
     /**
      * @return <code>True</code> if the enum is an alias of another {@link GlcdPin}
      */
-    public boolean hasParent() {
+    public boolean isAlias() {
         return this.parent != null;
     }
 
