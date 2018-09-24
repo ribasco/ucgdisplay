@@ -13,12 +13,12 @@ public enum GlcdBusInterface {
     /**
      * 4-Wire SPI (Hardware Implementation)
      */
-    SPI_HW_4WIRE(COM_4WSPI, HARDWARE),
+    SPI_HW_4WIRE(COM_4WSPI, HARDWARE, "4-Wire HW SPI"),
 
     /**
      * 4-Wire SPI (Software Implementation)
      */
-    SPI_SW_4WIRE(COM_4WSPI, SOFTWARE),
+    SPI_SW_4WIRE(COM_4WSPI, SOFTWARE, "4-Wire SW SPI"),
 
     /**
      * 4-Wire SPI (Hardware Implementation)
@@ -26,7 +26,7 @@ public enum GlcdBusInterface {
      * Note: mostly identical to {@link #SPI_HW_4WIRE}, but does not use DC
      * </p>
      */
-    SPI_HW_4WIRE_ST7920(COM_ST7920SPI, HARDWARE, SPI_HW_4WIRE),
+    SPI_HW_4WIRE_ST7920(COM_ST7920SPI, HARDWARE, "4-Wire HW SPI (ST7920)", SPI_HW_4WIRE),
 
     /**
      * 4-Wire SPI (Software Implementation)
@@ -34,42 +34,42 @@ public enum GlcdBusInterface {
      * Note: mostly identical to {@link #SPI_SW_4WIRE}, but does not use DC
      * </p>
      */
-    SPI_SW_4WIRE_ST7920(COM_ST7920SPI, SOFTWARE, SPI_SW_4WIRE),
+    SPI_SW_4WIRE_ST7920(COM_ST7920SPI, SOFTWARE, "4-Wire SW SPI (ST7920)", SPI_SW_4WIRE),
 
     /**
      * 3-Wire SPI (Software Implementation)
      */
-    SPI_SW_3WIRE(COM_3WSPI, SOFTWARE),
+    SPI_SW_3WIRE(COM_3WSPI, SOFTWARE, "3-Wire SW SPI"),
 
     /**
      * I2C Protocol (Software Implementation)
      */
-    I2C_SW(COM_I2C, SOFTWARE),
+    I2C_SW(COM_I2C, SOFTWARE, "I2C SW"),
 
     /**
      * I2C Hardware (Hardware Implementation)
      */
-    I2C_HW(COM_I2C, HARDWARE),
+    I2C_HW(COM_I2C, HARDWARE, "I2C HW"),
 
     /**
      * Serial communication (Hardware Implementation)
      */
-    SERIAL_HW(COM_UART, HARDWARE),
+    SERIAL_HW(COM_UART, HARDWARE, "Serial HW"),
 
     /**
      * Serial communication (Software Implementation)
      */
-    SERIAL_SW(COM_UART, SOFTWARE),
+    SERIAL_SW(COM_UART, SOFTWARE, "Serial SW"),
 
     /**
      * Parallel Communication: 8080 protocol
      */
-    PARALLEL_8080(COM_8080, SOFTWARE),
+    PARALLEL_8080(COM_8080, SOFTWARE, "Parallel 8080 (Intel)"),
 
     /**
      * Parallel Communication: 6800 protocol
      */
-    PARALLEL_6800(COM_6800, SOFTWARE),
+    PARALLEL_6800(COM_6800, SOFTWARE, "Parallel 6800 (Motorola)"),
 
     /**
      * Special KS0108 protocol
@@ -78,12 +78,12 @@ public enum GlcdBusInterface {
      * Note: Mostly identical to {@link #PARALLEL_6800}, but has more chip select lines
      * </p>
      */
-    PARALLEL_6800_KS0108(COM_KS0108, SOFTWARE, PARALLEL_6800),
+    PARALLEL_6800_KS0108(COM_KS0108, SOFTWARE, "Parallel 6800 (KS0108)", PARALLEL_6800),
 
     /**
      * Special SED1520 protocol
      */
-    SED1520(COM_SED1520, SOFTWARE);
+    SED1520(COM_SED1520, SOFTWARE, "SED1520");
 
     private GlcdBusType type;
 
@@ -91,14 +91,21 @@ public enum GlcdBusInterface {
 
     private GlcdBusInterface parent;
 
-    GlcdBusInterface(int value, GlcdBusType type) {
-        this(value, type, null);
+    private String description;
+
+    GlcdBusInterface(int value, GlcdBusType type, String description) {
+        this(value, type, description, null);
     }
 
-    GlcdBusInterface(int value, GlcdBusType type, GlcdBusInterface parent) {
+    GlcdBusInterface(int value, GlcdBusType type, String description, GlcdBusInterface parent) {
         this.value = value;
         this.type = type;
         this.parent = parent;
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public GlcdBusInterface getParent() {
