@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep  4 2018 19:01:31)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep 26 2018 13:36:40)
  */
 
 package com.ibasco.pidisplay.drivers.glcd;
@@ -151,11 +151,11 @@ public interface Glcd {
 	interface LS027B7DH01 {
 		/** U8G2 Name: LS027B7DH01 400X240 **/
 		GlcdDisplay D_400x240 = new GlcdDisplay(
-				GlcdControllerType.LS027B7DH01,
-				"D_400x240",
-				50,
-				30,
-				new GlcdSetupInfo("u8g2_Setup_ls027b7dh01_400x240_f", COM_4WSPI)
+                GlcdControllerType.LS027B7DH01,
+                "D_400x240",
+                50,
+                30,
+                new GlcdSetupInfo("u8g2_Setup_ls027b7dh01_400x240_f", COM_4WSPI)
 		);
 	}
 
@@ -510,12 +510,12 @@ public interface Glcd {
 	interface SSD1317 {
 		/** U8G2 Name: SSD1317 96X96 **/
 		GlcdDisplay D_96x96 = new GlcdDisplay(
-				GlcdControllerType.SSD1317,
-				"D_96x96",
-				12,
-				12,
-				new GlcdSetupInfo("u8g2_Setup_ssd1317_96x96_f", COM_4WSPI | COM_6800 | COM_8080),
-				new GlcdSetupInfo("u8g2_Setup_ssd1317_i2c_96x96_f", COM_I2C)
+                GlcdControllerType.SSD1317,
+                "D_96x96",
+                12,
+                12,
+                new GlcdSetupInfo("u8g2_Setup_ssd1317_96x96_f", COM_4WSPI | COM_6800 | COM_8080),
+                new GlcdSetupInfo("u8g2_Setup_ssd1317_i2c_96x96_f", COM_I2C)
 		);
 	}
 
@@ -809,12 +809,12 @@ public interface Glcd {
 		);
 		/** U8G2 Name: ST7567 64X32 **/
 		GlcdDisplay D_64x32 = new GlcdDisplay(
-				GlcdControllerType.ST7567,
-				"D_64x32",
-				8,
-				4,
-				new GlcdSetupInfo("u8g2_Setup_st7567_64x32_f", COM_4WSPI | COM_6800 | COM_8080),
-				new GlcdSetupInfo("u8g2_Setup_st7567_i2c_64x32_f", COM_I2C)
+                GlcdControllerType.ST7567,
+                "D_64x32",
+                8,
+                4,
+                new GlcdSetupInfo("u8g2_Setup_st7567_64x32_f", COM_4WSPI | COM_6800 | COM_8080),
+                new GlcdSetupInfo("u8g2_Setup_st7567_i2c_64x32_f", COM_I2C)
 		);
 	}
 

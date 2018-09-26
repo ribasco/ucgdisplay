@@ -54,24 +54,18 @@ struct display_size_t {
     int tile_width;
     int tile_height;
     string desc;
-
-    bool operator==(const display_size_t &rhs) const;
-
-    bool operator!=(const display_size_t &rhs) const;
-
-    bool operator<(const display_size_t &rhs) const;
 };
 
-inline bool display_size_t::operator==(const display_size_t &rhs) const {
-    return ((tile_width * tile_height) == (rhs.tile_width * rhs.tile_height)) && (desc == rhs.desc);
+bool operator==(const display_size_t& lhs, const display_size_t &rhs) {
+    return (lhs.tile_width == rhs.tile_width) && (lhs.tile_height == rhs.tile_height);
 }
 
-inline bool display_size_t::operator<(const display_size_t &rhs) const {
-    return ((tile_width * tile_height) < (rhs.tile_width * rhs.tile_height));
+bool operator<(const display_size_t& lhs, const display_size_t& rhs) {
+    return lhs.desc < rhs.desc;//(lhs.tile_width < rhs.tile_width) || (lhs.tile_height < rhs.tile_height);
 }
 
-inline bool display_size_t::operator!=(const display_size_t &rhs) const {
-    return !(rhs == *this);
+bool operator!=(const display_size_t& lhs, const display_size_t &rhs) {
+    return !(rhs == lhs);
 }
 
 struct display_mode_info {
