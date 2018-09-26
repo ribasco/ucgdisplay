@@ -436,7 +436,9 @@ void buildCode_GlcdSize() {
     code << "@SuppressWarnings(\"unused\")\n";
     code << "public enum GlcdSize {" << endl;
 
+    cout << "There are a total of " << to_string(sizes.size()) << "display sizes" << endl;
     for (auto size : sizes) {
+        //cout << "SIZE: " << string(size.desc) << " - " << to_string(size.tile_width) << " x " << to_string(size.tile_height) << endl;
         static int i = 1;
         code << "\tSIZE_" << size.desc << "(" << to_string(size.tile_width) << ", "
              << to_string(size.tile_height) << ")";
