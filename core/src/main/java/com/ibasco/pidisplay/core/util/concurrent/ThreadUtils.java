@@ -11,7 +11,7 @@ public class ThreadUtils {
         try {
             Thread.sleep(delay);
         } catch (InterruptedException ignored) {
-            log.warn(ignored.getMessage(), ignored);
+            log.debug(ignored.getMessage(), ignored);
         }
     }
 
