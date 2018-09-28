@@ -15,11 +15,11 @@ public class GlcdSetupInfo {
         return protocols;
     }
 
-    String getFunction() {
+    public String getFunction() {
         return function;
     }
 
-    boolean isSupported(GlcdBusInterface protocol) {
+    public boolean isSupported(GlcdBusInterface protocol) {
         return (protocols & protocol.getValue()) > 0;
     }
 
