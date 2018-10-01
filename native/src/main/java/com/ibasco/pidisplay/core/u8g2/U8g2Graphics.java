@@ -765,8 +765,7 @@ public class U8g2Graphics {
      *
      * <ul>
      * <li>{@link #clear(long)}, {@link #clearBuffer(long)}: Both functions will always set the buffer to the pixel
-     * value 0.
-     * The color argument of setDrawColor is ignored.</li>
+     * value 0. The color argument of setDrawColor is ignored.</li>
      * <li>drawGlyph: All font drawing procedures will use this color argument as foreground color. In none-transparent
      * (solid) mode (setFontMode) the complement of the color value will be the background color and is set to 0 for
      * color value 2 (However, suggestion is not to use solid and XOR mode together):</li>
@@ -930,10 +929,9 @@ public class U8g2Graphics {
 
     /**
      * <p>Send the content of the memory frame buffer to the display. Use {@link #clearBuffer(long)} to clear the
-     * buffer
-     * and the draw functions to draw something into the frame buffer. This procedure is useful only with a full frame
-     * buffer in the RAM of the microcontroller (Constructor with buffer option "f", see here). This procedure will also
-     * send a refresh message (refreshDisplay) to an e-Paper/e-Ink device.</p>
+     * buffer and the draw functions to draw something into the frame buffer. This procedure is useful only with a full
+     * frame buffer in the RAM of the microcontroller (Constructor with buffer option "f", see here). This procedure
+     * will also send a refresh message (refreshDisplay) to an e-Paper/e-Ink device.</p>
      *
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
@@ -962,12 +960,14 @@ public class U8g2Graphics {
     public static native void clearBuffer(long id);
 
     /**
-     * <p> Clears all pixel on the connected display. This procedure is also called from begin. Usually there is no
-     * need to call this function except for the init procedure. Other procedures like {@link #sendBuffer(long)} and
-     * {@link #nextPage(long)} will also overwrite (and clear) the display.</p>
+     * <p> Clears all pixel in the internal buffer AND on the connected display. This procedure is also called from
+     * begin. Usually there is no need to call this function except for the init procedure. Other procedures like {@link
+     * #sendBuffer(long)} and {@link #nextPage(long)} will also overwrite (and clear) the display..</p>
      *
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *
+     * @see #begin
      */
     public static native void clearDisplay(long id);
 
@@ -1038,8 +1038,7 @@ public class U8g2Graphics {
 
     /**
      * <p>Enables (mode=1) or disables (mode=0) automatic clearing of the pixel buffer by the {@link #firstPage(long)}
-     * and
-     * {@link #nextPage(long)} procedures. By default this is enabled and in most situation it is not required to
+     * and {@link #nextPage(long)} procedures. By default this is enabled and in most situation it is not required to
      * disable this. If disabled, the user is responsible to set ALL pixel of the current pixel buffer to some suitable
      * state. The buffer can be erased manually with the clearBuffer procedure. One application for using this function
      * are situation where the background is rendered manually through a direct manipulation of the pixel buffer (see
