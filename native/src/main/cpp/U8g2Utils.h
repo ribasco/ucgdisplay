@@ -7,6 +7,8 @@
 
 #include "U8g2Hal.h"
 
+#define U8G2_BYTE_SEND_INIT 28
+
 /**
  * Retrieves the name/description of the Pin Number
  *
@@ -33,10 +35,10 @@ u8g2_cb_t *u8g2util_ToRotation(int rotation);
  * @param address Device address
  * @param rotation Display rotation
  * @param pin_config Pin mapping configuration
- * @param emulation Set to true to activate emulator mode
+ * @param virtualMode Set to true to activate emulator mode
  * @return
  */
-shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool emulation = false);
+shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode = false);
 
 /**
  * Retrieves the device details from the cache

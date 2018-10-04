@@ -127,14 +127,14 @@ std::string hexs(unsigned char *data, int len) {
 
 shared_ptr<u8g2_info_t>
 u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation,
-                             u8g2_pin_map_t pin_config, bool emulation) {
+                             u8g2_pin_map_t pin_config, bool virtualMode) {
     shared_ptr<u8g2_info_t> info = make_shared<u8g2_info_t>();
 
     //Initialize device info details
     info->u8g2 = make_shared<u8g2_t>();
     info->pin_map = pin_config;
     info->rotation = const_cast<u8g2_cb_t *>(rotation);
-    info->flag_emulation = emulation;
+    info->flag_emulation = virtualMode;
 
     //Get the setup procedure callback
     u8g2_setup_func_t setup_proc_callback = u8g2hal_GetSetupProc(setup_proc_name);
@@ -159,8 +159,8 @@ u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, 
     }
 
     //Byte callback
-    info->byte_cb = [cb_byte, info, emulation, commInt, commType](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
-        if (emulation) {
+    info->byte_cb = [cb_byte, info, virtualMode, commInt, commType](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+        if (virtualMode) {
             JNIEnv *env;
             GETENV(env);
 
@@ -169,15 +169,18 @@ u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, 
                 uint8_t value;
                 uint8_t size = arg_int;
                 auto *data = (uint8_t *)arg_ptr;
+
+                JNI_FireByteEvent(env, info->address(), U8G2_BYTE_SEND_INIT, size);
+
                 while( size > 0 ) {
                     value = *data;
                     data++;
                     size--;
                     //cout << ">> Data: " << hexs(&value, 1) << endl;
-                    JNI_FireByteEvent(env, info->address(), msg, value); //*((uint8_t *) arg_ptr)
+                    JNI_FireByteEvent(env, info->address(), msg, value);
                 }
             } else {
-                JNI_FireByteEvent(env, info->address(), msg, arg_int); //*((uint8_t *) arg_ptr)
+                JNI_FireByteEvent(env, info->address(), msg, arg_int);
             }
             return 1;
         }
@@ -185,8 +188,8 @@ u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, 
     };
 
     //Gpio callback
-    info->gpio_cb = [emulation, info](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
-        if (emulation) {
+    info->gpio_cb = [virtualMode, info](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+        if (virtualMode) {
             JNIEnv *env;
             GETENV(env);
             JNI_FireGpioEvent(env, info->address(), msg, arg_int);
