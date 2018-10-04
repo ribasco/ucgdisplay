@@ -30,6 +30,7 @@ public enum U8g2Message {
     U8X8_MSG_GPIO_I2C_DATA(0x4d, 1, "I2C Data"),
     U8X8_MSG_GPIO_I2C_CLOCK(0x4c, 1, "I2C Clock"),
     U8X8_MSG_DELAY_I2C(0x2d, 1, "I2C delay"),
+    U8G2_BYTE_SEND_INIT(0x1C, 1, "Start of Byte Send"), //custom event, not official u8g2 message
     U8X8_MSG_START(0xFE, 2, "Start of Message"), //this is a non-u8g2 message and should only be used internally
     U8X8_MSG_END(0xFF, 2, "End of Message"); //this is a non-u8g2 message and should only be used internally
 
