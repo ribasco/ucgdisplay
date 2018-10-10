@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep 26 2018 13:36:40)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 10 2018 01:02:14)
  */
 
 package com.ibasco.pidisplay.drivers.glcd;
@@ -161,6 +161,14 @@ public interface Glcd {
 
 	/** Controller Name: MAX7219 **/
 	interface MAX7219 {
+        /** U8G2 Name: MAX7219 64X8 **/
+        GlcdDisplay D_64x8 = new GlcdDisplay(
+                GlcdControllerType.MAX7219,
+                "D_64x8",
+                8,
+                1,
+                new GlcdSetupInfo("u8g2_Setup_max7219_64x8_f", COM_4WSPI)
+        );
 		/** U8G2 Name: MAX7219 32X8 **/
 		GlcdDisplay D_32x8 = new GlcdDisplay(
 			GlcdControllerType.MAX7219,
@@ -376,6 +384,19 @@ public interface Glcd {
 			new GlcdSetupInfo("u8g2_Setup_sh1122_i2c_256x64_f", COM_I2C)
 		);
 	}
+
+    /** Controller Name: SSD0323 **/
+    interface SSD0323 {
+        /** U8G2 Name: SSD0323 OS128064 **/
+        GlcdDisplay D_128x64_OS128064 = new GlcdDisplay(
+                GlcdControllerType.SSD0323,
+                "D_128x64_OS128064",
+                16,
+                8,
+                new GlcdSetupInfo("u8g2_Setup_ssd0323_i2c_os128064_f", COM_I2C),
+                new GlcdSetupInfo("u8g2_Setup_ssd0323_os128064_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
+        );
+    }
 
 	/** Controller Name: SSD1305 **/
 	interface SSD1305 {

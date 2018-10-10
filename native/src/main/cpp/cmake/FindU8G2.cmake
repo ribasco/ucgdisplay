@@ -36,6 +36,7 @@ if (NOT EXISTS ${U8G2_DIR}/csrc)
     message(FATAL_ERROR "[U8G2] Could not locate csrc directory")
 endif ()
 
+#"${U8G2_DIR}/tools/font/build/single_font_files/*.c"
 file(GLOB U8G2_SRC_FILES "${U8G2_DIR}/csrc/*.c")
 file(GLOB U8G2_HEADER_FILES "${U8G2_DIR}/csrc/*.h")
 set(U8G2_INCLUDE_DIR ${U8G2_DIR}/csrc)

@@ -16,7 +16,9 @@
 
     <properties>
         <lib-output-filename>libpidisp.so</lib-output-filename>
+        <lib-output-filename-win>pidisp.dll</lib-output-filename-win>
         <lib-output-name>pidisp</lib-output-name>
+        <cmake-generator-arg>-G 'CodeBlocks - Unix Makefiles'</cmake-generator-arg>
     </properties>
 
     <dependencies>
@@ -205,6 +207,7 @@
                                         <mkdir dir="target/classes/lib"/>
                                         <mkdir dir="target/classes/lib/linux/arm"/>
                                         <mkdir dir="target/classes/lib/linux/amd64"/>
+                                        <mkdir dir="target/classes/lib/windows/amd64"/>
                                     </target>
                                 </configuration>
                                 <goals>
@@ -226,7 +229,7 @@
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
                                             <arg line="--target all"/>
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
-                                            <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
+                                            <arg line="${cmake-generator-arg}"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/linux/amd64"/>
                                         </exec>
@@ -234,18 +237,19 @@
                                             <arg line="--target all"/>
                                             <arg line="-DCMAKE_TOOLCHAIN_FILE=./cmake/RpiToolchain.cmake"/>
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
-                                            <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
+                                            <arg line="${cmake-generator-arg}"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/linux/arm"/>
                                         </exec>
-                                        <!--<exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/amd64"
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
                                               failonerror="true">
-                                            <arg line="VERBOSE=1"/>
-                                        </exec>-->
-                                        <!--<exec executable="make" dir="${project.basedir}/src/main/cpp/build/linux/arm"
-                                              failonerror="true">
-                                            <arg line="VERBOSE=1"/>
-                                        </exec>-->
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=./cmake/MingWToolchain.cmake"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="${cmake-generator-arg}"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/windows/amd64"/>
+                                        </exec>
                                         <!-- Build AMD64 -->
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/amd64" failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/linux/amd64"/>
@@ -257,6 +261,14 @@
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
                                             <arg line="--target pidisp --" />
                                             <arg line=" -j 4" />
+                                        </exec>
+                                        <!-- Build Windows -->
+                                        <exec executable="cmake"
+                                              dir="${project.basedir}/src/main/cpp/build/windows/amd64"
+                                              failonerror="true">
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64"/>
+                                            <arg line="--target pidisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -324,6 +336,34 @@
                                     </resources>
                                     <nonFilteredFileExtensions>
                                         <nonFilteredFileExtension>so</nonFilteredFileExtension>
+                                    </nonFilteredFileExtensions>
+                                    <fileNameFiltering>
+                                        true
+                                    </fileNameFiltering>
+                                    <overwrite>true</overwrite>
+                                </configuration>
+                            </execution>
+                            <!-- Copy x86_64/amd64 windows binaries to META-INF/lib -->
+                            <execution>
+                                <id>copy-lib-amd64-win32</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/classes/lib/windows/amd64</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/src/main/cpp/build/windows/amd64/bin
+                                            </directory>
+                                            <filtering>true</filtering>
+                                            <includes>
+                                                <include>${lib-output-filename-win}</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                    <nonFilteredFileExtensions>
+                                        <nonFilteredFileExtension>dll</nonFilteredFileExtension>
                                     </nonFilteredFileExtensions>
                                     <fileNameFiltering>
                                         true

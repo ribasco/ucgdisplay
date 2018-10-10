@@ -1,9 +1,9 @@
 # Define our host system
 set(CMAKE_SYSTEM_NAME Linux)
+SET(CMAKE_SYSTEM_PROCESSOR arm)
 set(CMAKE_SYSTEM_VERSION 1)
-#set(CMAKE_SYSTEM_PROCESSOR arm)
 
-message(STATUS "[TOOLCHAIN] Toolchain loaded")
+message(STATUS "[TOOLCHAIN] Raspberry Pi Toolchain loaded")
 
 # Set module path
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
