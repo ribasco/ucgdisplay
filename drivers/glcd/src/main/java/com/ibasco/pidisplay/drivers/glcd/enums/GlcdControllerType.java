@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep 26 2018 13:36:40)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 10 2018 01:02:14)
  */
 
 package com.ibasco.pidisplay.drivers.glcd.enums;
@@ -27,6 +27,7 @@ public enum GlcdControllerType {
 	SH1107,
 	SH1108,
 	SH1122,
+    SSD0323,
 	SSD1305,
 	SSD1306,
 	SSD1309,

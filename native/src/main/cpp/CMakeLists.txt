@@ -13,11 +13,6 @@ endif ()
 
 option(USE_DEV "Use UDev for Device Status monitoring instead of INotify" OFF)
 
-message(STATUS "[MAIN] CROSS COMPILE  = ${CMAKE_CROSSCOMPILING}")
-message(STATUS "[MAIN] SYSTEM_NAME    = ${CMAKE_SYSTEM_NAME}")
-message(STATUS "[MAIN] PROCESSOR      = ${CMAKE_SYSTEM_PROCESSOR}")
-message(STATUS "[MAIN] JAVA_HOME      = $ENV{JAVA_HOME}")
-
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,11 +22,44 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin CACHE PATH "Single 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin CACHE PATH "Single Directory for all Executables")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin CACHE PATH "Single Directory for all static libraries")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(TOOLS_DIR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tools)
+
+message(STATUS "[MAIN] TOOLS DIR = ${TOOLS_DIR_PATH}")
+message(STATUS "[MAIN] CURRENT LIST DIR = ${CMAKE_CURRENT_LIST_DIR}")
+message(STATUS "[MAIN] CROSS COMPILE  = ${CMAKE_CROSSCOMPILING}")
+message(STATUS "[MAIN] HOST OS        = ${CMAKE_HOST_SYSTEM_NAME}")
+message(STATUS "[MAIN] TARGET OS      = ${CMAKE_SYSTEM_NAME}")
+message(STATUS "[MAIN] TARGET ARCH    = ${CMAKE_SYSTEM_PROCESSOR}")
+#message(STATUS "[MAIN] JAVA_HOME      = $ENV{JAVA_HOME}")
 
 # Adhere to GNU filesystem layout conventions
 include(GNUInstallDirs)
 
 set(LIB_DIR "${CMAKE_SOURCE_DIR}/lib")
+
+# Find JAVA_HOME
+if (CMAKE_CROSSCOMPILING)
+    if (WIN32)
+        set(JDK_SEARCH_PATH "${TOOLS_DIR_PATH}/jdk/windows/${CMAKE_SYSTEM_PROCESSOR}")
+    elseif (UNIX)
+        set(JDK_SEARCH_PATH "${TOOLS_DIR_PATH}/jdk/linux/${CMAKE_SYSTEM_PROCESSOR}")
+    else ()
+        message(FATAL_ERROR "[FIND-JNI] Target OS/ARCH is not currently supported")
+    endif ()
+
+    if (NOT EXISTS ${JDK_SEARCH_PATH})
+        message(FATAL_ERROR "JDK search path undefined = ${JDK_SEARCH_PATH}")
+    endif ()
+
+    # Find JDK
+    file(GLOB files "${JDK_SEARCH_PATH}/jdk*")
+    foreach (file ${files})
+        set(JAVA_HOME ${file})
+        break()
+    endforeach ()
+endif ()
+
+message(STATUS "[MAIN] JAVA_HOME: '${JAVA_HOME}'")
 
 #find_package(LibUdev REQUIRED)
 find_package(U8G2 REQUIRED)
@@ -57,7 +85,7 @@ add_library(pidisp SHARED ${PIDISP_HDR} ${PIDISP_SRC})
 add_executable(pidisp-gen "utils/codegen.h" "utils/codegen.cpp")
 if (UNIX)
     add_executable(pidisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
-endif()
+endif ()
 
 if (WIN32)
     set(CMAKE_SHARED_LIBRARY_PREFIX "")
@@ -73,7 +101,9 @@ if (UNIX AND (TARGET wiringPi))
 endif ()
 
 list(APPEND INC_DIRS ${JNI_INCLUDE_DIRS} ${U8G2_INCLUDE_DIR} ${WIRINGPI_INCLUDE_DIR} ${U8G2_INCLUDE_DIR})
-list(APPEND LINK_LIBS ${JNI_LIBRARIES} ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES} Threads::Threads)
+list(APPEND LINK_LIBS ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES} Threads::Threads)
+
+#${JNI_LIBRARIES}
 
 # Add libevent dependency (called usually if the library was built from the repository)
 if (UNIX AND (LibEvent_FOUND AND TARGET libevent))

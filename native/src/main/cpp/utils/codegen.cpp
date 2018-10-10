@@ -613,12 +613,12 @@ void buildCode_updateCppLookupFonts() {
             cout << "> Skipped: " << fontName << endl;
             continue;
         }
-#ifdef _WIN32
+//#if defined(_WIN32)
         if (std::find(win32_excluded_fonts.begin(), win32_excluded_fonts.end(), fontName) != win32_excluded_fonts.end()) {
             cout << "> Skipped: " << fontName << endl;
             continue;
         }
-#endif
+//#endif
         code << "\tfont_map[\"" << fontName << "\"] = " << fontName << ";" << endl;
     }
 

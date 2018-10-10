@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep 26 2018 13:36:40) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 10 2018 01:02:14) 
  */
 
 #ifndef PIDISP_CONTROLLERS_H
@@ -360,6 +360,24 @@ struct controller controller_list[] =
       { NULL }
     }
   },  
+
+  {
+    "ssd0323", 	16, 	8, 	"u8g2_ll_hvline_vertical_top_lsb", "u8x8_cad_001", "", COM_4WSPI|COM_3WSPI|COM_6800|COM_8080,
+    "", /* is_generate_u8g2_class= */ 1,
+    {
+      { "os128064" },
+      { NULL }
+    }
+  },
+  {
+    "ssd0323", 	16, 	8, 	"u8g2_ll_hvline_vertical_top_lsb", "u8x8_cad_ssd13xx_i2c", "i2c", COM_I2C,
+    "", /* is_generate_u8g2_class= */ 1,
+    {
+      { "os128064" },
+      { NULL }
+    }
+  },  
+
 
   {
     "ssd1326", 	32, 	4, 	"u8g2_ll_hvline_vertical_top_lsb", "u8x8_cad_001", "", COM_4WSPI|COM_3WSPI|COM_6800|COM_8080,
@@ -1115,6 +1133,14 @@ struct controller controller_list[] =
     "not tested", /* is_generate_u8g2_class= */ 1,
     {
       { "320x240" },
+      { NULL }
+    }
+  },
+  {
+    "max7219", 	8, 	1, 	"u8g2_ll_hvline_horizontal_right_lsb", "u8x8_cad_empty", "", COM_4WSPI,
+    "", /* is_generate_u8g2_class= */ 1,
+    {
+      { "64x8" },
       { NULL }
     }
   },
