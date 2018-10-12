@@ -1,20 +1,19 @@
 package com.ibasco.pidisplay.drivers.glcd;
 
-import com.ibasco.pidisplay.core.drivers.GraphicsDisplayDriver;
-import com.ibasco.pidisplay.core.exceptions.NotImplementedException;
-import com.ibasco.pidisplay.core.exceptions.XBMDecodeException;
 import com.ibasco.pidisplay.core.u8g2.U8g2ByteEvent;
 import com.ibasco.pidisplay.core.u8g2.U8g2EventDispatcher;
 import com.ibasco.pidisplay.core.u8g2.U8g2GpioEvent;
 import com.ibasco.pidisplay.core.u8g2.U8g2Graphics;
-import com.ibasco.pidisplay.core.ui.Font;
-import com.ibasco.pidisplay.core.ui.Rotation;
-import com.ibasco.pidisplay.core.util.XBMUtils;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusInterface;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdConfigException;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdDriverException;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdNotInitializedException;
+import com.ibasco.pidisplay.drivers.glcd.exceptions.XBMDecodeException;
+import com.ibasco.pidisplay.drivers.glcd.utils.XBMData;
+import com.ibasco.pidisplay.drivers.glcd.utils.XBMUtils;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
  *
  * @author Rafael Ibasco
  */
-abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
+abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
 
     private static final Logger log = LoggerFactory.getLogger(GlcdBaseDriver.class);
 
@@ -351,7 +350,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
     public void drawXBM(int x, int y, int width, int height, File data) {
         checkRequirements();
         try {
-            XBMUtils.XBMData xbmData = XBMUtils.decodeXbmFile(data);
+            XBMData xbmData = XBMUtils.decodeXbmFile(data);
             assert xbmData != null;
             drawXBM(x, y, width, height, xbmData.getData());
         } catch (XBMDecodeException e) {
@@ -384,7 +383,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
     }
 
     @Override
-    public void setFont(Font font) {
+    public void setFont(GlcdFont font) {
         checkRequirements();
         U8g2Graphics.setFont(_id, font.getKey());
     }
@@ -572,7 +571,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
     }
 
     @Override
-    public void setDisplayRotation(Rotation rotation) {
+    public void setDisplayRotation(GlcdRotation rotation) {
         checkRequirements();
         setDisplayRotation(rotation.getValue());
     }
@@ -621,7 +620,7 @@ abstract public class GlcdBaseDriver implements GraphicsDisplayDriver {
 
     @Override
     public void write(byte... data) {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Write not implemented for this driver");
     }
 
     @Override

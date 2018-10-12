@@ -4,7 +4,6 @@ import com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdSize;
 import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdConfigException;
-import com.ibasco.pidisplay.drivers.glcd.exceptions.GlcdException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -107,8 +106,7 @@ public class GlcdConfig {
                 .orElse(null);
 
         if (setupInfo == null)
-            throw new RuntimeException("Unable to obtain setup procedure",
-                    new GlcdException(String.format("Could not find a suitable setup procedure for bus interface '%s'", busInterface.name())));
+            throw new GlcdConfigException(String.format("Could not find a suitable setup procedure for bus interface '%s'", busInterface.name()), this);
 
         log.debug("Using display setup procedure (Display: {}, Protocol: {}, Setup Proc: {}))", display.getName(), busInterface.name(), setupInfo.getFunction());
 

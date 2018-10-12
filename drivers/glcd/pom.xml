@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>
-            <artifactId>pi-display-core</artifactId>
+            <artifactId>pi-display-native</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
