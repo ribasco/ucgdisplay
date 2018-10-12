@@ -1,13 +1,11 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 10 2018 01:02:14)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 12 2018 13:44:00)
  */
 
 package com.ibasco.pidisplay.drivers.glcd.enums;
 
-import com.ibasco.pidisplay.core.ui.Font;
-
 @SuppressWarnings("unused")
-public enum GlcdFont implements Font {
+public enum GlcdFont {
 	FONT_10X20_ME("u8g2_font_10x20_me"),
 	FONT_10X20_MF("u8g2_font_10x20_mf"),
 	FONT_10X20_MN("u8g2_font_10x20_mn"),
@@ -1316,7 +1314,6 @@ public enum GlcdFont implements Font {
 		this.fontKey = fontKey;
 	}
 
-	@Override
 	public String getKey() {
 		return fontKey;
 	}

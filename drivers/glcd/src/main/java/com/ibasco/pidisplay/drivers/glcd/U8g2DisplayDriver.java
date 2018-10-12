@@ -1,8 +1,8 @@
-package com.ibasco.pidisplay.core.drivers;
+package com.ibasco.pidisplay.drivers.glcd;
 
 import com.ibasco.pidisplay.core.system.DisplayDriver;
-import com.ibasco.pidisplay.core.ui.Font;
-import com.ibasco.pidisplay.core.ui.Rotation;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdFont;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
 
 /**
  * Graphics Display Driver methods based on the U8G2 Interface.
@@ -11,9 +11,8 @@ import com.ibasco.pidisplay.core.ui.Rotation;
  * @see <a href="https://github.com/olikraus/u8g2/wiki/u8g2reference#drawbox">U8G2 Reference</a>
  */
 @SuppressWarnings("unused")
-public interface GraphicsDisplayDriver extends DisplayDriver {
+public interface U8g2DisplayDriver extends DisplayDriver {
 
-    //TODO: These are u8g2 specific, define a separate and more generic standard set of properties for this interface
     int U8G2_DRAW_UPPER_RIGHT = 0x01;
     int U8G2_DRAW_UPPER_LEFT = 0x02;
     int U8G2_DRAW_LOWER_LEFT = 0x04;
@@ -504,11 +503,11 @@ public interface GraphicsDisplayDriver extends DisplayDriver {
      * </p>
      *
      * @param font
-     *         A {@link Font} instance
+     *         A {@link GlcdFont} instance
      *
      * @see <a href="https://github.com/olikraus/u8g2/wiki/fntlistall">List of available fonts</a>
      */
-    void setFont(Font font);
+    void setFont(GlcdFont font);
 
     /**
      * <p>Defines, whether the glyph and string drawing functions will write the background color (mode 0/solid,
@@ -1048,7 +1047,7 @@ public interface GraphicsDisplayDriver extends DisplayDriver {
      * @param rotation
      *         Display rotation argument.
      */
-    void setDisplayRotation(Rotation rotation);
+    void setDisplayRotation(GlcdRotation rotation);
 
     /**
      * <p>Return the address of the start of the buffer. This is a also the address of the leftmost tile of the current
@@ -1118,7 +1117,7 @@ public interface GraphicsDisplayDriver extends DisplayDriver {
      *
      * @return Width of the string if drawn with the current font (setFont).
      *
-     * @see #setFont(Font)
+     * @see #setFont(GlcdFont)
      * @see #setFont(byte[])
      * @see #drawString(int, int, String)
      */

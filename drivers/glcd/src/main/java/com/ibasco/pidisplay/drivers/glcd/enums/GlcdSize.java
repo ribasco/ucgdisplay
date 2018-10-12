@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 10 2018 01:02:14)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 12 2018 13:44:00)
  */
 
 package com.ibasco.pidisplay.drivers.glcd.enums;
@@ -42,7 +42,6 @@ public enum GlcdSize {
     SIZE_64x128(8, 16),
     SIZE_64x32(8, 4),
     SIZE_64x48(8, 6),
-    SIZE_64x8(8, 1),
     SIZE_72x40(9, 5),
     SIZE_88x48(11, 6),
     SIZE_8x8(1, 1),

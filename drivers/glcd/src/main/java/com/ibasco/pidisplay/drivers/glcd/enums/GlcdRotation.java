@@ -1,9 +1,8 @@
 package com.ibasco.pidisplay.drivers.glcd.enums;
 
-import com.ibasco.pidisplay.core.drivers.GraphicsDisplayDriver;
-import com.ibasco.pidisplay.core.ui.Rotation;
+import com.ibasco.pidisplay.drivers.glcd.U8g2DisplayDriver;
 
-import static com.ibasco.pidisplay.core.drivers.GraphicsDisplayDriver.*;
+import static com.ibasco.pidisplay.drivers.glcd.U8g2DisplayDriver.*;
 
 /**
  * Indicates the rotation type of the display
@@ -11,7 +10,7 @@ import static com.ibasco.pidisplay.core.drivers.GraphicsDisplayDriver.*;
  * @author Rafael Ibasco
  */
 @SuppressWarnings("unused")
-public enum GlcdRotation implements Rotation {
+public enum GlcdRotation {
     /**
      * No rotation
      */
@@ -31,7 +30,7 @@ public enum GlcdRotation implements Rotation {
     /**
      * No rotation. Landscape, display content is mirrored
      */
-    ROTATION_MIRROR(GraphicsDisplayDriver.ROTATION_MIRROR);
+    ROTATION_MIRROR(U8g2DisplayDriver.ROTATION_MIRROR);
 
     private int value;
 
@@ -39,7 +38,6 @@ public enum GlcdRotation implements Rotation {
         this.value = value;
     }
 
-    @Override
     public int getValue() {
         return value;
     }
