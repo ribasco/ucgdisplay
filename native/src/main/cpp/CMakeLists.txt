@@ -30,7 +30,6 @@ message(STATUS "[MAIN] CROSS COMPILE  = ${CMAKE_CROSSCOMPILING}")
 message(STATUS "[MAIN] HOST OS        = ${CMAKE_HOST_SYSTEM_NAME}")
 message(STATUS "[MAIN] TARGET OS      = ${CMAKE_SYSTEM_NAME}")
 message(STATUS "[MAIN] TARGET ARCH    = ${CMAKE_SYSTEM_PROCESSOR}")
-#message(STATUS "[MAIN] JAVA_HOME      = $ENV{JAVA_HOME}")
 
 # Adhere to GNU filesystem layout conventions
 include(GNUInstallDirs)
@@ -83,6 +82,7 @@ message(STATUS "PIDISP SOURCE = ${U8G2_SRC_FILES}")
 
 add_library(pidisp SHARED ${PIDISP_HDR} ${PIDISP_SRC})
 add_executable(pidisp-gen "utils/codegen.h" "utils/codegen.cpp")
+
 if (UNIX)
     add_executable(pidisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
 endif ()
@@ -102,8 +102,6 @@ endif ()
 
 list(APPEND INC_DIRS ${JNI_INCLUDE_DIRS} ${U8G2_INCLUDE_DIR} ${WIRINGPI_INCLUDE_DIR} ${U8G2_INCLUDE_DIR})
 list(APPEND LINK_LIBS ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES} Threads::Threads)
-
-#${JNI_LIBRARIES}
 
 # Add libevent dependency (called usually if the library was built from the repository)
 if (UNIX AND (LibEvent_FOUND AND TARGET libevent))

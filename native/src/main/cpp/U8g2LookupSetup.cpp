@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 10 2018 01:02:14) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 12 2018 13:44:00) 
  */
 
 #include "U8g2Hal.h"
@@ -23,7 +23,6 @@ void u8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
 	setup_map["u8g2_Setup_ls013b7dh03_128x128_f"] = u8g2_Setup_ls013b7dh03_128x128_f;
 	setup_map["u8g2_Setup_ls027b7dh01_400x240_f"] = u8g2_Setup_ls027b7dh01_400x240_f;
 	setup_map["u8g2_Setup_max7219_32x8_f"] = u8g2_Setup_max7219_32x8_f;
-	setup_map["u8g2_Setup_max7219_64x8_f"] = u8g2_Setup_max7219_64x8_f;
 	setup_map["u8g2_Setup_max7219_8x8_f"] = u8g2_Setup_max7219_8x8_f;
 	setup_map["u8g2_Setup_nt7534_tg12864r_f"] = u8g2_Setup_nt7534_tg12864r_f;
 	setup_map["u8g2_Setup_pcd8544_84x48_f"] = u8g2_Setup_pcd8544_84x48_f;
@@ -53,8 +52,6 @@ void u8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
 	setup_map["u8g2_Setup_sh1108_i2c_160x160_f"] = u8g2_Setup_sh1108_i2c_160x160_f;
 	setup_map["u8g2_Setup_sh1122_256x64_f"] = u8g2_Setup_sh1122_256x64_f;
 	setup_map["u8g2_Setup_sh1122_i2c_256x64_f"] = u8g2_Setup_sh1122_i2c_256x64_f;
-	setup_map["u8g2_Setup_ssd0323_i2c_os128064_f"] = u8g2_Setup_ssd0323_i2c_os128064_f;
-	setup_map["u8g2_Setup_ssd0323_os128064_f"] = u8g2_Setup_ssd0323_os128064_f;
 	setup_map["u8g2_Setup_ssd1305_128x32_noname_f"] = u8g2_Setup_ssd1305_128x32_noname_f;
 	setup_map["u8g2_Setup_ssd1305_128x64_adafruit_f"] = u8g2_Setup_ssd1305_128x64_adafruit_f;
 	setup_map["u8g2_Setup_ssd1305_i2c_128x32_noname_f"] = u8g2_Setup_ssd1305_i2c_128x32_noname_f;
