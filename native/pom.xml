@@ -30,7 +30,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -127,7 +126,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-
                         <dependencies>
                             <dependency>
                                 <groupId>org.apache.ant</groupId>
@@ -448,33 +446,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
                         <executions>
-                            <!-- Copy ARM binaries to META-INF/lib -->
-                            <!--<execution>
-                                <id>copy-lib-win</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/windows/amd64</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/windows/amd64/bin</directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>-->
                             <!-- Copy x86_64/amd64 binaries to lib -->
                             <execution>
                                 <id>copy-lib-amd64</id>
@@ -570,23 +541,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <!--<classesDirectory>${project.build.directory}/classes</classesDirectory>
-                    <includes>
-                        <include>**/classes/**</include>
-                        <include>**/META-INF/**</include>
-                    </includes>-->
                     <archive>
                         <manifest>
                             <!--<addClasspath>true</addClasspath>-->
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
-                        <manifestEntries>
-                            <!--<Built-By>Rafael Ibasco</Built-By>-->
-                        </manifestEntries>
                     </archive>
                 </configuration>
-
             </plugin>
         </plugins>
     </build>

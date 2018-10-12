@@ -59,7 +59,6 @@ public class U8g2Graphics {
     public static final int U8G2_DRAW_LOWER_RIGHT = 0x08;
     public static final int U8G2_DRAW_ALL = (U8G2_DRAW_UPPER_RIGHT | U8G2_DRAW_UPPER_LEFT | U8G2_DRAW_LOWER_RIGHT | U8G2_DRAW_LOWER_LEFT);
 
-
     static {
         try {
             NativeLibraryLoader.loadLibrary("pidisp");

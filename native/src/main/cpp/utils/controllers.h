@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 10 2018 01:02:14)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 12 2018 13:44:00) 
  */
 
 #ifndef PIDISP_CONTROLLERS_H
@@ -376,7 +376,7 @@ struct controller controller_list[] =
       { "os128064" },
       { NULL }
     }
-  },
+  },  
 
 
   {

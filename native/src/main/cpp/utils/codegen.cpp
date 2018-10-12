@@ -525,10 +525,10 @@ void buildCode_GlcdFont() {
     code << AUTOGEN_MSG << endl;
     code << "package com.ibasco.pidisplay.drivers.glcd.enums;\n\n";
 
-    code << "import com.ibasco.pidisplay.core.ui.Font;\n\n";
+    //code << "import com.ibasco.pidisplay.core.ui.Font;\n\n";
 
     code << "@SuppressWarnings(\"unused\")\n";
-    code << "public enum GlcdFont implements Font {" << endl;
+    code << "public enum GlcdFont {" << endl;
 
     for (const auto &font : fonts) {
         static int i = 1;
@@ -557,7 +557,7 @@ void buildCode_GlcdFont() {
     code << "\t\tthis.fontKey = fontKey;\n";
     code << "\t}\n\n";
 
-    code << "\t@Override\n";
+    //code << "\t@Override\n";
     code << "\tpublic String getKey() {\n";
     code << "\t\treturn fontKey;\n";
     code << "\t}\n";
