@@ -1,9 +1,9 @@
 package com.ibasco.pidisplay.examples.lcd;
 
-import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
 import com.ibasco.pidisplay.core.enums.TextAlignment;
 import com.ibasco.pidisplay.core.util.ByteUtils;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.CharDisplayDriver;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.CharProxyDisplayDriver;
 import com.ibasco.pidisplay.impl.charlcd.LcdController;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdPane;

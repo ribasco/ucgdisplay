@@ -1,12 +1,12 @@
 package com.ibasco.pidisplay.examples.lcd;
 
 import com.ibasco.pidisplay.core.enums.TextAlignment;
-import com.ibasco.pidisplay.core.providers.MCP23017GpioProviderExt;
 import com.ibasco.pidisplay.core.util.Node;
 import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.HD44780DisplayDriver;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.LcdTemplates;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.adapters.Mcp23017LcdAdapter;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.providers.MCP23017GpioProviderExt;
 import com.ibasco.pidisplay.impl.charlcd.components.LcdMenuOld;
 import com.ibasco.pidisplay.impl.charlcd.enums.LcdMenuCursorOrientation;
 import com.ibasco.pidisplay.impl.charlcd.enums.LcdMenuItemStyle;

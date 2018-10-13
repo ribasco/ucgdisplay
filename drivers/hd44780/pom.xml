@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>
-            <artifactId>pi-display-core</artifactId>
+            <artifactId>pi-display-native</artifactId>
         </dependency>
     </dependencies>
 </project>

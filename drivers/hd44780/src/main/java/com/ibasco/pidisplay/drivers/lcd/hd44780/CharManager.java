@@ -1,7 +1,6 @@
-package com.ibasco.pidisplay.core.ui;
+package com.ibasco.pidisplay.drivers.lcd.hd44780;
 
-import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
-import com.ibasco.pidisplay.core.util.RegexByteProcessor;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.util.RegexByteProcessor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 

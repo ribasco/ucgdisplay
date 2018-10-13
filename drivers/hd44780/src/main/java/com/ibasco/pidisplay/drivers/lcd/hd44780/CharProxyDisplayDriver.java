@@ -1,9 +1,7 @@
 package com.ibasco.pidisplay.drivers.lcd.hd44780;
 
-import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
-import com.ibasco.pidisplay.core.enums.ScrollDirection;
-import com.ibasco.pidisplay.core.enums.TextDirection;
-import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.ScrollDirection;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.TextDirection;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
@@ -161,7 +159,7 @@ public class CharProxyDisplayDriver implements CharDisplayDriver {
             buffer.get(out);
             device.write(out);
 
-            ThreadUtils.sleep(10);
+            Thread.sleep(10);
         } catch (IOException e) {
             if ("Remote I/O error".equalsIgnoreCase(e.getMessage())) {
                 try {
@@ -171,6 +169,8 @@ public class CharProxyDisplayDriver implements CharDisplayDriver {
                     throw new RuntimeException("Error while sending data to I2C Slave", e1);
                 }
             }
+        } catch (InterruptedException e) {
+            log.error("Interrupted", e);
         }
     }
 }

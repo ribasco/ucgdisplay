@@ -1,9 +1,9 @@
 package com.ibasco.pidisplay.drivers.lcd.hd44780;
 
 
-import com.ibasco.pidisplay.core.enums.ScrollDirection;
-import com.ibasco.pidisplay.core.enums.TextDirection;
 import com.ibasco.pidisplay.core.system.DisplayDriver;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.ScrollDirection;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.TextDirection;
 
 /**
  * Interface for Character based devices (e.e. HD44780)

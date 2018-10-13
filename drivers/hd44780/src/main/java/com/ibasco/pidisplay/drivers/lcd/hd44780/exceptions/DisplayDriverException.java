@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.exceptions;
+package com.ibasco.pidisplay.drivers.lcd.hd44780.exceptions;
 
 public class DisplayDriverException extends RuntimeException {
     public DisplayDriverException() {

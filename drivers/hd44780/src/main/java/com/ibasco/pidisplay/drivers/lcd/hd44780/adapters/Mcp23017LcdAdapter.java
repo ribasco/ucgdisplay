@@ -1,6 +1,5 @@
 package com.ibasco.pidisplay.drivers.lcd.hd44780.adapters;
 
-import com.ibasco.pidisplay.core.providers.MCP23017GpioProviderExt;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.BaseLcdGpioAdapter;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.LcdPinMapConfig;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.LcdPin;
@@ -8,6 +7,7 @@ import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.LcdReadWriteState;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.LcdRegisterSelectState;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.exceptions.InvalidPinMappingException;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.exceptions.PinNotSupportedException;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.providers.MCP23017GpioProviderExt;
 import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;

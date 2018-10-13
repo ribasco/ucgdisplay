@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.ui;
+package com.ibasco.pidisplay.drivers.lcd.hd44780;
 
 /**
  * A collection of pre-definied custom lcd characters
