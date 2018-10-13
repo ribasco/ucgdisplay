@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.ui;
+package com.ibasco.pidisplay.drivers.lcd.hd44780;
 
 import java.util.Objects;
 

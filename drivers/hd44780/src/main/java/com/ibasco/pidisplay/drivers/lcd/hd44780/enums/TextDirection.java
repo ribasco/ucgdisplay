@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.enums;
+package com.ibasco.pidisplay.drivers.lcd.hd44780.enums;
 
 public enum TextDirection {
     LEFT_TO_RIGHT,

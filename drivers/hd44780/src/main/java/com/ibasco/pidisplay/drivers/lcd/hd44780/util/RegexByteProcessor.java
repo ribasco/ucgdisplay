@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.util;
+package com.ibasco.pidisplay.drivers.lcd.hd44780.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

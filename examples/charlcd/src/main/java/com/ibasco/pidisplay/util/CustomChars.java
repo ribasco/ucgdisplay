@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.util;
 
-import com.ibasco.pidisplay.core.ui.CharData;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.CharData;
 
 public class CustomChars {
     public static final CharData SIGNAL_20_PCT = new CharData("SIGNAL_20_PCT", "SP_20", new byte[]{

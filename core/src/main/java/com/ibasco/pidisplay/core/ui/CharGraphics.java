@@ -1,6 +1,8 @@
 package com.ibasco.pidisplay.core.ui;
 
-import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.CharData;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.CharDisplayDriver;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.CharManager;
 
 public interface CharGraphics extends Graphics {
     @Override

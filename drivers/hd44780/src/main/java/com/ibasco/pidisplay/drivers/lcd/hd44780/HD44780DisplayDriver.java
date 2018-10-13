@@ -1,11 +1,8 @@
 package com.ibasco.pidisplay.drivers.lcd.hd44780;
 
-import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
-import com.ibasco.pidisplay.core.enums.ScrollDirection;
-import com.ibasco.pidisplay.core.enums.TextDirection;
-import com.ibasco.pidisplay.core.exceptions.DisplayDriverException;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.adapters.GpioLcdAdapter;
 import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.*;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.exceptions.DisplayDriverException;
 import com.pi4j.component.lcd.LCD;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.PinState;

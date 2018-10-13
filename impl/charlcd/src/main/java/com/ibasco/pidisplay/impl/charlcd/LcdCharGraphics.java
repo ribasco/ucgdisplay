@@ -1,10 +1,10 @@
 package com.ibasco.pidisplay.impl.charlcd;
 
-import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
-import com.ibasco.pidisplay.core.ui.CharData;
 import com.ibasco.pidisplay.core.ui.CharGraphics;
-import com.ibasco.pidisplay.core.ui.CharManager;
 import com.ibasco.pidisplay.core.ui.DisplayBuffer;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.CharData;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.CharDisplayDriver;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.CharManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class LcdCharGraphics implements CharGraphics {
         }
     }
 
-    @Override
+    //@Override
     public CharManager charManager() {
         if (charManager == null) {
             charManager = new CharManager(this.driver);
@@ -67,7 +67,7 @@ public class LcdCharGraphics implements CharGraphics {
         drawChar(charManager.getCharData(key));
     }
 
-    @Override
+    //@Override
     public void drawChar(CharData charData) {
         byte allocationIndex = charManager.allocateChar(charData);
         if (allocationIndex > -1) {
@@ -135,6 +135,11 @@ public class LcdCharGraphics implements CharGraphics {
     }
 
     @Override
+    public CharDisplayDriver getDriver() {
+        return null;
+    }
+
+    @Override
     public void setAutoscroll(boolean state) {
         synchronized (mutex) {
             driver.autoscroll(state);
@@ -159,11 +164,6 @@ public class LcdCharGraphics implements CharGraphics {
             buffer.cursor(0, lineNumber);
             buffer.put(StringUtils.repeat(StringUtils.SPACE, getWidth()).getBytes());
         }
-    }
-
-    @Override
-    public CharDisplayDriver getDriver() {
-        return driver;
     }
 
     public DisplayBuffer getBuffer() {

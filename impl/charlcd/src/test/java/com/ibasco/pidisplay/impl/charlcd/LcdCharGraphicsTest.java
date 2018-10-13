@@ -1,6 +1,6 @@
 package com.ibasco.pidisplay.impl.charlcd;
 
-import com.ibasco.pidisplay.core.drivers.CharDisplayDriver;
+import com.ibasco.pidisplay.drivers.lcd.hd44780.CharDisplayDriver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
