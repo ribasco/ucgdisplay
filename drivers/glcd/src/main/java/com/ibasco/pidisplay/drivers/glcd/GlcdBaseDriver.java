@@ -118,10 +118,12 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         log.debug("GLCD driver initialized (Address: {})", _id);
     }
 
+    @SuppressWarnings({"unchecked", "unused"})
     public final <T extends GlcdDriverEventHandler> T getDriverEventHandler() {
         return (T) driverEventHandler;
     }
 
+    @SuppressWarnings("unused")
     protected final void setDriverEventHandler(GlcdDriverEventHandler driverEventHandler) {
         this.driverEventHandler = driverEventHandler;
     }
@@ -254,6 +256,7 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     @Deprecated
     public void drawBitmap(int x, int y, int count, int height, byte[] bitmap) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawBitmap(_id, x, y, count, height, bitmap);
     }
 
@@ -270,87 +273,172 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     }
 
     @Override
+    public void drawDisc(int radius, int options) {
+        drawDisc(x, y, radius, options);
+    }
+
+    @Override
     public void drawDisc(int x, int y, int radius, int options) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawDisc(_id, x, y, radius, options);
+    }
+
+    @Override
+    public void drawEllipse(int rx, int ry, int options) {
+        drawEllipse(x, y, rx, ry, options);
     }
 
     @Override
     public void drawEllipse(int x, int y, int rx, int ry, int options) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawEllipse(_id, x, y, rx, ry, options);
+    }
+
+    @Override
+    public void drawFilledEllipse(int rx, int ry, int options) {
+        drawFilledEllipse(x, y, rx, ry, options);
     }
 
     @Override
     public void drawFilledEllipse(int x, int y, int rx, int ry, int options) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawFilledEllipse(_id, x, y, rx, ry, options);
+    }
+
+    @Override
+    public void drawFrame(int width, int height) {
+        drawFrame(x, y, width, height);
     }
 
     @Override
     public void drawFrame(int x, int y, int width, int height) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawFrame(_id, x, y, width, height);
+    }
+
+    @Override
+    public void drawGlyph(short encoding) {
+        drawGlyph(x, y, encoding);
     }
 
     @Override
     public void drawGlyph(int x, int y, short encoding) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawGlyph(_id, x, y, encoding);
+    }
+
+    @Override
+    public void drawHLine(int width) {
+        drawHLine(x, y, width);
     }
 
     @Override
     public void drawHLine(int x, int y, int width) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawHLine(_id, x, y, width);
+    }
+
+    @Override
+    public void drawVLine(int length) {
+        drawVLine(x, y, length);
     }
 
     @Override
     public void drawVLine(int x, int y, int length) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawVLine(_id, x, y, length);
+    }
+
+    @Override
+    public void drawLine(int x1, int y1) {
+        drawLine(x, y, x1, y1);
     }
 
     @Override
     public void drawLine(int x, int y, int x1, int y1) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawLine(_id, x, y, x1, y1);
+    }
+
+    @Override
+    public void drawPixel() {
+        drawPixel(x, y);
     }
 
     @Override
     public void drawPixel(int x, int y) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawPixel(_id, x, y);
+    }
+
+    @Override
+    public void drawRoundedBox(int width, int height, int radius) {
+        drawRoundedBox(x, y, width, height, radius);
     }
 
     @Override
     public void drawRoundedBox(int x, int y, int width, int height, int radius) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawRoundedBox(_id, x, y, width, height, radius);
+    }
+
+    @Override
+    public void drawRoundedFrame(int width, int height, int radius) {
+        drawRoundedFrame(x, y, width, height, radius);
     }
 
     @Override
     public void drawRoundedFrame(int x, int y, int width, int height, int radius) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawRoundedFrame(_id, x, y, width, height, radius);
+    }
+
+    @Override
+    public void drawString(String value) {
+        drawString(x, y, value);
     }
 
     @Override
     public void drawString(int x, int y, String value) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawString(_id, x, y, value);
+    }
+
+    @Override
+    public void drawTriangle(int x1, int y1, int x2, int y2) {
+        drawTriangle(x, y, x1, y1, x2, y2);
     }
 
     @Override
     public void drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2) {
         checkRequirements();
+        setCursor(x0, y0);
         U8g2Graphics.drawTriangle(_id, x0, y0, x1, y1, x2, y2);
     }
 
-    public void drawXBM(int x, int y, int width, int height, File data) {
+    @Override
+    public void drawXBM(int width, int height, File file) {
+        drawXBM(x, y, width, height, file);
+    }
+
+    @Override
+    public void drawXBM(int x, int y, int width, int height, File file) {
         checkRequirements();
+        setCursor(x, y);
         try {
-            XBMData xbmData = XBMUtils.decodeXbmFile(data);
+            XBMData xbmData = XBMUtils.decodeXbmFile(file);
             assert xbmData != null;
             drawXBM(x, y, width, height, xbmData.getData());
         } catch (XBMDecodeException e) {
@@ -359,14 +447,26 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     }
 
     @Override
+    public void drawXBM(int width, int height, byte[] data) {
+        drawXBM(x, y, width, height, data);
+    }
+
+    @Override
     public void drawXBM(int x, int y, int width, int height, byte[] data) {
         checkRequirements();
+        setCursor(x, y);
         U8g2Graphics.drawXBM(_id, x, y, width, height, data);
+    }
+
+    @Override
+    public int drawUTF8(String value) {
+        return drawUTF8(x, y, value);
     }
 
     @Override
     public int drawUTF8(int x, int y, String value) {
         checkRequirements();
+        setCursor(x, y);
         return U8g2Graphics.drawUTF8(_id, x, y, value);
     }
 
@@ -454,7 +554,6 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         U8g2Graphics.setPowerSave(_id, enable);
     }
 
-    //TODO: Replace int parameter with a color type enumeration
     @Override
     public void setDrawColor(int color) {
         checkRequirements();

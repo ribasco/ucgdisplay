@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 /**
- * Represents a raw input device event
+ * Holds raw input event information
  *
  * @author Rafael Ibasco
  */

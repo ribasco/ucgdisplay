@@ -118,7 +118,7 @@ uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
             //initialize spi device
             int fd = spi_setup(U8G2_HAL_SPI_CHANNEL, U8G2_HAL_SPI_SPEED, U8G2_HAL_SPI_MODE);
             if (fd < 0) {
-                cerr << "Problem initializing SPI on RPI" << endl;
+                cerr << "Problem initializing SPI interface" << endl;
                 return 0;
             }
 

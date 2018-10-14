@@ -2,6 +2,11 @@ package com.ibasco.pidisplay.core.system;
 
 import java.util.List;
 
+/**
+ * Holds information about an input event
+ *
+ * @author Rafael Ibasco
+ */
 public class InputEventType {
     private String key;
     private int value;

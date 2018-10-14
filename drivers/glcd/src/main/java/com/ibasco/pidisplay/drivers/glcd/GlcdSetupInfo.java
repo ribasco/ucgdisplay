@@ -2,7 +2,12 @@ package com.ibasco.pidisplay.drivers.glcd;
 
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdBusInterface;
 
-public class GlcdSetupInfo {
+/**
+ * Holds information of u8g2 setup procedure and supported bus protocols of a {@link GlcdDisplay}
+ *
+ * @author Rafael Ibasco
+ */
+public final class GlcdSetupInfo {
     private int protocols;
     private String function;
 

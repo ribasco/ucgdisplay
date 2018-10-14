@@ -24,7 +24,7 @@ public class GlcdPinMapConfig {
      * @param glcdPin
      *         A {@link GlcdPin} to be mapped
      * @param value
-     *         The pin number of the device to be mapped
+     *         The pin number of the device to be mapped. Follows the wiring pi numbering scheme.
      *
      * @return GlcdPinMapConfig
      */
