@@ -35,7 +35,7 @@ void U8g2Graphics_UnLoad(JNIEnv *env) {
 void set_font_flag(JNIEnv *env, jlong id, bool value) {
     shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
     if (info == nullptr) {
-        JNI_ThrowNativeDriverException(env, "Unable to set font flag. Device Info for address does not exist");
+        JNI_ThrowNativeLibraryException(env, "Unable to set font flag. Device Info for address does not exist");
         return;
     }
     info.get()->flag_font = value;
@@ -44,7 +44,7 @@ void set_font_flag(JNIEnv *env, jlong id, bool value) {
 bool get_font_flag(JNIEnv *env, jlong id) {
     shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
     if (info == nullptr) {
-        JNI_ThrowNativeDriverException(env, "Unable to set font flag. Device Info for address does not exist");
+        JNI_ThrowNativeLibraryException(env, "Unable to set font flag. Device Info for address does not exist");
         return false;
     }
     return info.get()->flag_font;
@@ -52,7 +52,7 @@ bool get_font_flag(JNIEnv *env, jlong id) {
 
 bool check_validity(JNIEnv *env, jlong id) {
     if (u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id)) == nullptr) {
-        JNI_ThrowNativeDriverException(env, string("Invalid Id specified (") + to_string(id) + string(")"));
+        JNI_ThrowNativeLibraryException(env, string("Invalid Id specified (") + to_string(id) + string(")"));
         return false;
     }
     return true;
@@ -64,25 +64,25 @@ jlong Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass
     if (setupProc != nullptr) {
         setup_proc_name = string(env->GetStringUTFChars(setupProc, nullptr));
     } else {
-        JNI_ThrowNativeDriverException(env, "Setup procedure name cannot be null");
+        JNI_ThrowNativeLibraryException(env, "Setup procedure name cannot be null");
         return -1;
     }
 
     //1. Setup procedure should not be empty
     if (setup_proc_name.empty()) {
-        JNI_ThrowNativeDriverException(env, "Setup procedure name cannot be empty");
+        JNI_ThrowNativeLibraryException(env, "Setup procedure name cannot be empty");
         return -1;
     }
 
     //2. Verify pin mapping
     if (pin_config == nullptr) {
-        JNI_ThrowNativeDriverException(env, "Pin map argument cannot be null");
+        JNI_ThrowNativeLibraryException(env, "Pin map argument cannot be null");
         return -1;
     }
     jsize len = env->GetArrayLength(pin_config);
     if (len != 16) {
-        JNI_ThrowNativeDriverException(env, string("Pin map array should be exactly 16 of length (Actual: ") +
-                                            to_string(len) + string(")"));
+        JNI_ThrowNativeLibraryException(env, string("Pin map array should be exactly 16 of length (Actual: ") +
+                                             to_string(len) + string(")"));
         return -1;
     }
 
@@ -94,7 +94,7 @@ jlong Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass
 
     //3. Verify that the rotation number is within the allowed range
     if (rotation > 4)
-        JNI_ThrowNativeDriverException(env, string("Invalid rotation (") + to_string(rotation) + ")");
+        JNI_ThrowNativeLibraryException(env, string("Invalid rotation (") + to_string(rotation) + ")");
 
     //Get actual rotation value
     const u8g2_cb_t *_rotation = u8g2util_ToRotation(rotation);
@@ -104,8 +104,8 @@ jlong Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass
 
     //5. Verify if display has been initialized successfully
     if (info == nullptr) {
-        JNI_ThrowNativeDriverException(env,
-                                       string("Unable to initialize the display device. Please re-visit your configuration parameters and verify that they are correct"));
+        JNI_ThrowNativeLibraryException(env,
+                                        string("Unable to initialize the display device. Please re-visit your configuration parameters and verify that they are correct"));
         return -1;
     }
 
@@ -126,7 +126,7 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawBitmap(JNIEnv *env, jc
     if (!check_validity(env, id))
         return;
     if (bitmap == nullptr) {
-        JNI_ThrowNativeDriverException(env, "Bitmap data cannot be null");
+        JNI_ThrowNativeLibraryException(env, "Bitmap data cannot be null");
         return;
     }
     jsize len = env->GetArrayLength(bitmap);
@@ -223,7 +223,7 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawString(JNIEnv *env, jc
     if (!check_validity(env, id))
         return;
     if (!get_font_flag(env, id)) {
-        JNI_ThrowNativeDriverException(env, "A font needs to be assigned prior to calling this method");
+        JNI_ThrowNativeLibraryException(env, "A font needs to be assigned prior to calling this method");
         return;
     }
     const char *c = env->GetStringUTFChars(value, nullptr);
@@ -260,7 +260,7 @@ jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getUTF8Width(JNIEnv *env, 
     if (!check_validity(env, id))
         return -1;
     if (text == nullptr) {
-        JNI_ThrowNativeDriverException(env, "Text cannot be null");
+        JNI_ThrowNativeLibraryException(env, "Text cannot be null");
         return -1;
     }
     const char *c = env->GetStringUTFChars(text, nullptr);
@@ -272,12 +272,12 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFont__J_3B(JNIEnv *env,
     if (!check_validity(env, id))
         return;
     if (data == nullptr) {
-        JNI_ThrowNativeDriverException(env, "Font data cannot be null");
+        JNI_ThrowNativeLibraryException(env, "Font data cannot be null");
         return;
     }
     jsize len = env->GetArrayLength(data);
     if (len <= 0) {
-        JNI_ThrowNativeDriverException(env, "Invalid font data");
+        JNI_ThrowNativeLibraryException(env, "Invalid font data");
         return;
     }
     uint8_t tmp[len];
@@ -290,13 +290,13 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFont__JLjava_lang_Strin
     if (!check_validity(env, id))
         return;
     if (fontName == nullptr) {
-        JNI_ThrowNativeDriverException(env, "Font key cannot be null");
+        JNI_ThrowNativeLibraryException(env, "Font key cannot be null");
         return;
     }
     string font = string(env->GetStringUTFChars(fontName, nullptr));
     uint8_t *fontData = u8g2hal_GetFontByName(font);
     if (fontData == nullptr) {
-        JNI_ThrowNativeDriverException(env, string("Unable to retrieve font data for: ") + font);
+        JNI_ThrowNativeLibraryException(env, string("Unable to retrieve font data for: ") + font);
         return;
     }
     u8g2_SetFont(toU8g2(id), fontData);

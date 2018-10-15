@@ -1,11 +1,11 @@
 package com.ibasco.pidisplay.drivers.glcd.enums;
 
-import com.ibasco.pidisplay.drivers.glcd.U8g2DisplayDriver;
+import com.ibasco.pidisplay.core.u8g2.U8g2Graphics;
 
-import static com.ibasco.pidisplay.drivers.glcd.U8g2DisplayDriver.*;
+import static com.ibasco.pidisplay.core.u8g2.U8g2Graphics.*;
 
 /**
- * Indicates the rotation type of the display
+ * The rotation state of a graphics display
  *
  * @author Rafael Ibasco
  */
@@ -30,7 +30,7 @@ public enum GlcdRotation {
     /**
      * No rotation. Landscape, display content is mirrored
      */
-    ROTATION_MIRROR(U8g2DisplayDriver.ROTATION_MIRROR);
+    ROTATION_MIRROR(U8g2Graphics.ROTATION_MIRROR);
 
     private int value;
 

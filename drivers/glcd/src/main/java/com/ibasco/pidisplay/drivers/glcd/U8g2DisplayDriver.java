@@ -1,8 +1,11 @@
 package com.ibasco.pidisplay.drivers.glcd;
 
 import com.ibasco.pidisplay.core.system.DisplayDriver;
+import com.ibasco.pidisplay.drivers.glcd.enums.GlcdDrawColor;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
+
+import java.io.File;
 
 /**
  * Graphics Display Driver methods based on the U8G2 Interface.
@@ -12,44 +15,6 @@ import com.ibasco.pidisplay.drivers.glcd.enums.GlcdRotation;
  */
 @SuppressWarnings("unused")
 public interface U8g2DisplayDriver extends DisplayDriver {
-
-    int U8G2_DRAW_UPPER_RIGHT = 0x01;
-    int U8G2_DRAW_UPPER_LEFT = 0x02;
-    int U8G2_DRAW_LOWER_LEFT = 0x04;
-    int U8G2_DRAW_LOWER_RIGHT = 0x08;
-    int U8G2_DRAW_ALL = (U8G2_DRAW_UPPER_RIGHT | U8G2_DRAW_UPPER_LEFT | U8G2_DRAW_LOWER_RIGHT | U8G2_DRAW_LOWER_LEFT);
-
-    /**
-     * No rotation
-     *
-     * @see #setDisplayRotation
-     */
-    int ROTATION_R0 = 0;
-    /**
-     * 90 degree clockwise rotation
-     *
-     * @see #setDisplayRotation
-     */
-    int ROTATION_R1 = 1;
-    /**
-     * 180 degree clockwise rotation
-     *
-     * @see #setDisplayRotation
-     */
-    int ROTATION_R2 = 2;
-    /**
-     * 270 degree clockwise rotation
-     *
-     * @see #setDisplayRotation
-     */
-    int ROTATION_R3 = 3;
-    /**
-     * No rotation, landscape, display content is mirrored
-     *
-     * @see #setDisplayRotation
-     */
-    int ROTATION_MIRROR = 4;
-
     /**
      * <p>Draw a box (filled frame), starting at x/y position (upper left edge). The box has width w and height h.
      * Parts of the box can be outside of the display boundaries. This procedure will use the current color
@@ -191,6 +156,30 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * These values can be combined with the | operator. This procedure will use the current color ({@link
      * #setDrawColor(int)}) for drawing.</p>
      *
+     * @param radius
+     *         Defines the size of the circle: Radus = rad.
+     * @param options
+     *         Selects some or all sections of the disc.
+     */
+    void drawDisc(int radius, int options);
+
+    /**
+     * <p>Draw a filled circle with radus rad at position (x0, y0). The diameter of the circle is 2*rad+1.
+     * Depending on opt, it is possible to draw only some sections of the disc.
+     * <p>
+     * <p>
+     * Possible values for options are:
+     * <ul>
+     * <li>U8G2_DRAW_UPPER_RIGHT</li>
+     * <li>U8G2_DRAW_UPPER_LEFT</li>
+     * <li>U8G2_DRAW_LOWER_LEFT</li>
+     * <li>U8G2_DRAW_LOWER_RIGHT</li>
+     * <li>U8G2_DRAW_ALL</li>
+     * </ul>
+     * <p>
+     * These values can be combined with the | operator. This procedure will use the current color ({@link
+     * #setDrawColor(int)}) for drawing.</p>
+     *
      * @param x
      *         X-Position of the center of the disc.
      * @param y
@@ -201,6 +190,30 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      *         Selects some or all sections of the disc.
      */
     void drawDisc(int x, int y, int radius, int options);
+
+    /**
+     * <p>Draw ellipse with radus rx and 'ry' at position (x0, y0). rx*ry must be lower than 512 in 8 Bit mode of
+     * u8g2.</p>
+     * <p>
+     * Possible values for options are:
+     * <ul>
+     * <li>U8G2_DRAW_UPPER_RIGHT</li>
+     * <li>U8G2_DRAW_UPPER_LEFT</li>
+     * <li>U8G2_DRAW_LOWER_LEFT</li>
+     * <li>U8G2_DRAW_LOWER_RIGHT</li>
+     * <li>U8G2_DRAW_ALL</li>
+     * </ul>
+     * <p>
+     * The diameter is twice the radius plus one.
+     *
+     * @param rx
+     *         Defines the size of the ellipse.
+     * @param ry
+     *         Defines the size of the ellipse.
+     * @param options
+     *         Selects some or all sections of the ellipse.
+     */
+    void drawEllipse(int rx, int ry, int options);
 
     /**
      * <p>Draw ellipse with radus rx and 'ry' at position (x0, y0). rx*ry must be lower than 512 in 8 Bit mode of
@@ -245,6 +258,30 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * <p>
      * These values can be combined with the | operator.
      *
+     * @param rx
+     *         X-the size of the ellipse.
+     * @param ry
+     *         Y- the size of the ellipse.
+     * @param options
+     *         Selects some or all sections of the ellipse.
+     */
+    void drawFilledEllipse(int rx, int ry, int options);
+
+    /**
+     * <p>Draw a filled ellipse with radus rx and 'ry' at position (x0, y0). rx*ry must be lower than 512 in 8 Bit mode
+     * of u8g2.Depending on opt, it is possible to draw only some sections of the disc.</p>
+     * <p>
+     * Possible values for options are:
+     * <ul>
+     * <li>U8G2_DRAW_UPPER_RIGHT</li>
+     * <li>U8G2_DRAW_UPPER_LEFT</li>
+     * <li>U8G2_DRAW_LOWER_LEFT</li>
+     * <li>U8G2_DRAW_LOWER_RIGHT</li>
+     * <li>U8G2_DRAW_ALL</li>
+     * </ul>
+     * <p>
+     * These values can be combined with the | operator.
+     *
      * @param x
      *         X-Position of the center of the filled circle.
      * @param y
@@ -257,6 +294,19 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      *         Selects some or all sections of the ellipse.
      */
     void drawFilledEllipse(int x, int y, int rx, int ry, int options);
+
+    /**
+     * <p>Draw a frame (empty box), starting at x/y position (upper left edge). The box has width w and height h.
+     * Parts of the frame can be outside of the display boundaries. This procedure will use the current color
+     * (setDrawColor) to draw the box. For a monochrome display, the color index 0 will clear a pixel and the color
+     * index 1 will set a pixel.</p>
+     *
+     * @param width
+     *         Width of the frame.
+     * @param height
+     *         Height of the frame.
+     */
+    void drawFrame(int width, int height);
 
     /**
      * <p>Draw a frame (empty box), starting at x/y position (upper left edge). The box has width w and height h.
@@ -280,6 +330,18 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * lower 16 bit of the unicode character range (plane 0/Basic Multilingual Plane): The encoding can be any value
      * from 0 to 65535. The glyph can be drawn only, if the encoding exists in the active font.</p>
      *
+     * @param encoding
+     *         Unicode value of the character.
+     *
+     * @see #setFont(byte[])
+     */
+    void drawGlyph(short encoding);
+
+    /**
+     * <p>Draw a single character. The character is placed at the specified pixel posion x and y. U8g2 supports the
+     * lower 16 bit of the unicode character range (plane 0/Basic Multilingual Plane): The encoding can be any value
+     * from 0 to 65535. The glyph can be drawn only, if the encoding exists in the active font.</p>
+     *
      * @param x
      *         X-Position of the character on the display.
      * @param y
@@ -296,6 +358,16 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * Parts of the line can be outside of the display boundaries. This procedure uses the current color index to draw
      * the line. Color index 0 will clear a pixel and the color index 1 will set a pixel.</p>
      *
+     * @param width
+     *         Length of the horizontal line
+     */
+    void drawHLine(int width);
+
+    /**
+     * <p>Draw a horizontal line, starting at x/y position (left edge). The width (length) of the line is w pixel.
+     * Parts of the line can be outside of the display boundaries. This procedure uses the current color index to draw
+     * the line. Color index 0 will clear a pixel and the color index 1 will set a pixel.</p>
+     *
      * @param x
      *         X-Position
      * @param y
@@ -305,6 +377,15 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      */
     void drawHLine(int x, int y, int width);
 
+    /**
+     * <p>Draw a vertical line, starting at x/y position (upper end). The height (length) of the line is h pixel. Parts
+     * of the line can be outside of the display boundaries. This procedure uses the current color index to draw the
+     * line. Color index 0 will clear a pixel and the color index 1 will set a pixel.</p>
+     *
+     * @param length
+     *         Length of the vertical line.
+     */
+    void drawVLine(int length);
 
     /**
      * <p>Draw a vertical line, starting at x/y position (upper end). The height (length) of the line is h pixel. Parts
@@ -319,6 +400,16 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      *         Length of the vertical line.
      */
     void drawVLine(int x, int y, int length);
+
+    /**
+     * Draw a line between two points. This procedure will use the current color (setDrawColor).
+     *
+     * @param x1
+     *         X-position of the second point.
+     * @param y1
+     *         Y-position of the second point.
+     */
+    void drawLine(int x1, int y1);
 
     /**
      * Draw a line between two points. This procedure will use the current color (setDrawColor).
@@ -338,6 +429,13 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * <p>Draw a pixel at the specified x/y position. Position (0,0) is at the upper left corner of the display. The
      * position may be outside the display boundaries.This procedure uses the current color index to draw the pixel. The
      * color index 0 will clear a pixel and the color index 1 will set a pixel.</p>
+     */
+    void drawPixel();
+
+    /**
+     * <p>Draw a pixel at the specified x/y position. Position (0,0) is at the upper left corner of the display. The
+     * position may be outside the display boundaries.This procedure uses the current color index to draw the pixel. The
+     * color index 0 will clear a pixel and the color index 1 will set a pixel.</p>
      *
      * @param x
      *         X-position.
@@ -345,6 +443,22 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      *         Y-position.
      */
     void drawPixel(int x, int y);
+
+    /**
+     * <p>Draw a box with round edges, starting at x/y position (upper left edge). The box/frame has width w and height
+     * h. Parts of the box can be outside of the display boundaries. Edges have radius r. It is required that w >=
+     * 2*(r+1) and h >= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than 2*(r+1).
+     * This procedure uses the current color index to draw the box. For a monochrome display, the color index 0 will
+     * clear a pixel and the color index 1 will set a pixel.</p>
+     *
+     * @param width
+     *         Width of the box.
+     * @param height
+     *         Height of the box.
+     * @param radius
+     *         Radius for the four edges.
+     */
+    void drawRoundedBox(int width, int height, int radius);
 
     /**
      * <p>Draw a box with round edges, starting at x/y position (upper left edge). The box/frame has width w and height
@@ -373,6 +487,22 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * 2*(r+1). This procedure uses the current color index to draw the box. For a monochrome display, the color index 0
      * will clear a pixel and the color index 1 will set a pixel.</p>
      *
+     * @param width
+     *         Width of the box.
+     * @param height
+     *         Height of the box.
+     * @param radius
+     *         Radius for the four edges.
+     */
+    void drawRoundedFrame(int width, int height, int radius);
+
+    /**
+     * <p>Draw a frame with round edges, starting at x/y position (upper left edge). The box/frame has width w and
+     * height h. Parts of the box can be outside of the display boundaries. Edges have radius r. It is required that w
+     * >= 2*(r+1) and h >= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than
+     * 2*(r+1). This procedure uses the current color index to draw the box. For a monochrome display, the color index 0
+     * will clear a pixel and the color index 1 will set a pixel.</p>
+     *
      * @param x
      *         X-position of upper left edge.
      * @param y
@@ -392,6 +522,17 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * "\xab" (hex value ab) or "\xyz" (octal value xyz). This function can not draw any glyph with encoding greater or
      * equal to 256. Use drawUTF8 or drawGlyph to access glyphs with encoding greater or equal to 256.</p>
      *
+     * @param value
+     *         The text to draw on the display
+     */
+    void drawString(String value);
+
+    /**
+     * <p>Draw a string. The first character is placed at position x andy. Use setFont to assign a font before drawing
+     * a string on the display. To draw a character with encoding 127 to 255, use the C/C++/Arduino escape sequence
+     * "\xab" (hex value ab) or "\xyz" (octal value xyz). This function can not draw any glyph with encoding greater or
+     * equal to 256. Use drawUTF8 or drawGlyph to access glyphs with encoding greater or equal to 256.</p>
+     *
      * @param x
      *         X-Position of the first character on the display.
      * @param y
@@ -400,6 +541,22 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      *         The text to draw on the display
      */
     void drawString(int x, int y, String value);
+
+    /**
+     * <p>Draw a triangle (filled polygon). Arguments are 16 bit and the polygon is clipped to the size of the display.
+     * Multiple polygons are drawn so that they exactly match without overlap:The left side of a polygon is drawn, the
+     * right side is not draw. The upper side is only draw if it is flat.</p>
+     *
+     * @param x1
+     *         X-position point 1.
+     * @param y1
+     *         Y-position point 1.
+     * @param x2
+     *         X-position point 2.
+     * @param y2
+     *         Y-position point 2.
+     */
+    void drawTriangle(int x1, int y1, int x2, int y2);
 
     /**
      * <p>Draw a triangle (filled polygon). Arguments are 16 bit and the polygon is clipped to the size of the display.
@@ -432,6 +589,76 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
      * (external link). The result will look like this:</p>
      *
+     * @param width
+     *         Width of the bitmap.
+     * @param height
+     *         Height of the bitmap.
+     * @param file
+     *         File containing bitmap data
+     *
+     * @see #setBitmapMode
+     */
+    void drawXBM(int width, int height, File file);
+
+    /**
+     * <p>Draw a <a href="http://en.wikipedia.org/wiki/X_BitMap">XBM Bitmap</a>. Position (x,y) is the upper left
+     * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
+     *
+     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. Version
+     * 2.15.x of U8g2 introduces a solid and a transparent mode for bitmaps. By default, drawXBM will draw solid
+     * bitmaps. This differs from the previous versions: Use setBitmapMode(1) to switch to the previous behavior. The
+     * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
+     * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
+     * (external link). The result will look like this:</p>
+     *
+     * @param x
+     *         X-position.
+     * @param y
+     *         Y-position.
+     * @param width
+     *         Width of the bitmap.
+     * @param height
+     *         Height of the bitmap.
+     * @param data
+     *         File containing bitmap data
+     *
+     * @see #setBitmapMode
+     */
+    void drawXBM(int x, int y, int width, int height, File data);
+
+    /**
+     * <p>Draw a <a href="http://en.wikipedia.org/wiki/X_BitMap">XBM Bitmap</a>. Position (x,y) is the upper left
+     * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
+     *
+     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. Version
+     * 2.15.x of U8g2 introduces a solid and a transparent mode for bitmaps. By default, drawXBM will draw solid
+     * bitmaps. This differs from the previous versions: Use setBitmapMode(1) to switch to the previous behavior. The
+     * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
+     * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
+     * (external link). The result will look like this:</p>
+     *
+     * @param width
+     *         Width of the bitmap.
+     * @param height
+     *         Height of the bitmap.
+     * @param data
+     *         Bitmap data
+     *
+     * @see #setBitmapMode
+     */
+    void drawXBM(int width, int height, byte[] data);
+
+    /**
+     * <p>Draw a <a href="http://en.wikipedia.org/wiki/X_BitMap">XBM Bitmap</a>. Position (x,y) is the upper left
+     * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
+     *
+     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. Version
+     * 2.15.x of U8g2 introduces a solid and a transparent mode for bitmaps. By default, drawXBM will draw solid
+     * bitmaps. This differs from the previous versions: Use setBitmapMode(1) to switch to the previous behavior. The
+     * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
+     * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
+     * (external link). The result will look like this:</p>
+     *
      * @param x
      *         X-position.
      * @param y
@@ -446,6 +673,28 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * @see #setBitmapMode
      */
     void drawXBM(int x, int y, int width, int height, byte[] data);
+
+    /**
+     * <p>Draw a string which is encoded as UTF-8. There are two preconditions for the use of this function:
+     * (A) the C/C++/Arduino compiler must support UTF-8 encoding (this is default for the gnu compiler, which is also
+     * used for most Arduino boards) and (B) the code editor/IDE must support and store the C/C++/Arduino code as UTF-8
+     * (true for the Arduino IDE). If these conditions are met, you can use the character with code value greater than
+     * 127 directly in the string (of course the character must exist in the font file, see also setFont). Advantage: No
+     * escape codes are required and the source code is more readable. The glyph can be copied and paste into the editor
+     * from a "char set" tool. Disadvantage: The code is less portable and the strlen function will not return the
+     * number of visible characters.</p>
+     *
+     * @param value
+     *         UTF-8 encoded text
+     *
+     * @return Width of the string.
+     *
+     * @apiNote This drawing function depends on the current font mode and drawing color.
+     * @see #getUTF8Width(String)
+     * @see #setFont
+     * @see #drawString(int, int, String)
+     */
+    int drawUTF8(String value);
 
     /**
      * <p>Draw a string which is encoded as UTF-8. There are two preconditions for the use of this function:
@@ -772,6 +1021,89 @@ public interface U8g2DisplayDriver extends DisplayDriver {
     void setDrawColor(int color);
 
     /**
+     * <p>Defines the bit value (color index) for all drawing functions. All drawing function will change the display
+     * memory to this bit value. Default value is 1. For example the {@link #drawBox(int, int, int, int)} procedure will
+     * set all pixels for the defined area to the bit value, provided here. In v2.11 the new color value 2 will activate
+     * the XOR mode. Exceptions:</p>
+     *
+     * <p>Both functions will always set the buffer to the pixel value 0. The color argument of setDrawColor is
+     * ignored.</p>
+     * <p>
+     * <br /> Note: Not all graphics procedures will support XOR mode. Especially XOR mode is not supported by
+     * drawCircle, drawDisc, drawEllipse and drawFilledEllipse.</p>
+     * <p>
+     * <br />
+     * <strong>Exceptions:</strong>
+     *
+     * <ul>
+     * <li>{@link #clear()}, {@link #clearBuffer()}: Both functions will always set the buffer to the pixel value 0.
+     * The color argument of setDrawColor is ignored.</li>
+     * <li>drawGlyph: All font drawing procedures will use this color argument as foreground color. In none-transparent
+     * (solid) mode (setFontMode) the complement of the color value will be the background color and is set to 0 for
+     * color value 2 (However, suggestion is not to use solid and XOR mode together):</li>
+     * </ul>
+     *
+     * <table border="1">
+     * <thead>
+     * <tr>
+     * <th>Font Mode</th>
+     * <th>Draw Color</th>
+     * <th>Glyph Foreground Color</th>
+     * <th>Glyph Background Color</th>
+     * </tr>
+     * </thead>
+     * <tbody>
+     * <tr>
+     * <td>0: solid</td>
+     * <td>0</td>
+     * <td>0</td>
+     * <td>1</td>
+     * </tr>
+     * <tr>
+     * <td>0: solid</td>
+     * <td>1</td>
+     * <td>1</td>
+     * <td>0</td>
+     * </tr>
+     * <tr>
+     * <td>0: solid</td>
+     * <td>2</td>
+     * <td>XOR</td>
+     * <td>0</td>
+     * </tr>
+     * <tr>
+     * <td>1: transparent</td>
+     * <td>0</td>
+     * <td>0</td>
+     * <td>-</td>
+     * </tr>
+     * <tr>
+     * <td>1: transparent</td>
+     * <td>1</td>
+     * <td>1</td>
+     * <td>-</td>
+     * </tr>
+     * <tr>
+     * <td>1: transparent</td>
+     * <td>2</td>
+     * <td>XOR</td>
+     * <td>-</td>
+     * </tr>
+     * </tbody>
+     * </table>
+     *
+     * @param color
+     *         The {@link GlcdDrawColor} value
+     *
+     * @see #drawBox(int, int, int, int)
+     * @see #drawGlyph(int, int, short)
+     * @see #setFontMode(int)
+     */
+    default void setDrawColor(GlcdDrawColor color) {
+        setDrawColor(color.getValue());
+    }
+
+    /**
      * <p>Puts the cursor for the print function into the upper left corner. Parts of the text might be invisible after
      * this command if the glyph reference is not at the top of the characters..</p>
      */
@@ -1052,7 +1384,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
     /**
      * <p>Return the address of the start of the buffer. This is a also the address of the leftmost tile of the current
      * page (Byte 0 in the above memory structure). The total memory size of the buffer is 8 *
-     * u8g2.getBufferTileHeight() * u8g2.getBufferTileWidth(). The buffer can be erased with {@link
+     * ({@link #getBufferTileHeight()} * {@link #getBufferTileWidth()}). The buffer can be erased with {@link
      * #clearBuffer()}.</p>
      *
      * @return Address of the internal page buffer.

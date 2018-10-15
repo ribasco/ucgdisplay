@@ -153,8 +153,8 @@ u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, 
     if (cb_byte == nullptr) {
         JNIEnv *env;
         GETENV(env);
-        JNI_ThrowNativeDriverException(env, string("No available byte callback procedures for CommInt = ") +
-                                            to_string(commInt) + string(", CommType = ") + to_string(commType));
+        JNI_ThrowNativeLibraryException(env, string("No available byte callback procedures for CommInt = ") +
+                                             to_string(commInt) + string(", CommType = ") + to_string(commType));
         return nullptr;
     }
 

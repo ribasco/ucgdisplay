@@ -15,7 +15,7 @@ using namespace std;
 #define CLS_HASHMAP  "java/util/HashMap"
 #define CLS_INTEGER "java/lang/Integer"
 #define CLS_THREADGROUP "java/lang/ThreadGroup"
-#define CLS_GlcdNativeDriverException "com/ibasco/pidisplay/drivers/glcd/exceptions/GlcdNativeDriverException"
+#define CLS_NativeLibraryException "com/ibasco/pidisplay/core/exceptions/NativeLibraryException"
 #define CLS_U8g2EventDispatcher "com/ibasco/pidisplay/core/u8g2/U8g2EventDispatcher"
 #define CLS_U8g2GpioEvent "com/ibasco/pidisplay/core/u8g2/U8g2GpioEvent"
 
@@ -30,18 +30,18 @@ using namespace std;
 extern JavaVM *cachedJVM;
 extern jclass clsU8g2GpioEvent;
 extern jclass clsU8g2EventDispatcher;
-extern jclass clsGlcdNativeDriverException;
+extern jclass clsNativeLibraryException;
 extern jmethodID midU8g2EventDispatcher_onGpioEvent;
 extern jmethodID midU8g2EventDispatcher_onByteEvent;
 extern jmethodID midU8g2GpioEventCtr;
 
 /**
- * Throws a GlcdNativeDriverException to java
+ * Throws a NativeLibraryException to java
  *
  * @param env JNIEnv instance
  * @param msg The exception message
  */
-void JNI_ThrowNativeDriverException(JNIEnv *env, string msg);
+void JNI_ThrowNativeLibraryException(JNIEnv *env, string msg);
 
 /**
  * Throws an IOException to java

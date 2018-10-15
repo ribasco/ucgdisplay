@@ -9,7 +9,7 @@
 
 JavaVM *cachedJVM;
 
-jclass clsGlcdNativeDriverException;
+jclass clsNativeLibraryException;
 jclass clsU8g2EventDispatcher;
 jclass clsU8g2GpioEvent;
 jmethodID midU8g2EventDispatcher_onGpioEvent;
@@ -26,7 +26,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     jvm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
 
     //START: Cache Class/methods
-    JNI_MakeGlobal(env, CLS_GlcdNativeDriverException, clsGlcdNativeDriverException);
+    JNI_MakeGlobal(env, CLS_NativeLibraryException, clsNativeLibraryException);
     JNI_MakeGlobal(env, CLS_U8g2GpioEvent, clsU8g2GpioEvent);
     JNI_MakeGlobal(env, CLS_U8g2EventDispatcher, clsU8g2EventDispatcher);
     midU8g2EventDispatcher_onGpioEvent = env->GetStaticMethodID(clsU8g2EventDispatcher, "onGpioEvent", "(JII)V");
@@ -80,17 +80,17 @@ void JNI_ThrowIOException(JNIEnv *env, string msg) {
     env->ThrowNew(clsEx, msg.c_str());
 }
 
-void JNI_ThrowNativeDriverException(JNIEnv *env, string msg) {
-    env->ThrowNew(clsGlcdNativeDriverException, msg.c_str());
+void JNI_ThrowNativeLibraryException(JNIEnv *env, string msg) {
+    env->ThrowNew(clsNativeLibraryException, msg.c_str());
 }
 
 void JNI_CopyJByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length) {
     if (length <= 0) {
-        JNI_ThrowNativeDriverException(env, "Invalid array length");
+        JNI_ThrowNativeLibraryException(env, "Invalid array length");
         return;
     }
     if (buffer == nullptr) {
-        JNI_ThrowNativeDriverException(env, "Buffer is null");
+        JNI_ThrowNativeLibraryException(env, "Buffer is null");
         return;
     }
     jbyte *body = env->GetByteArrayElements(arr, nullptr);

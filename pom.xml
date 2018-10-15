@@ -114,7 +114,7 @@
         <module>core</module>
         <module>examples/charlcd</module>
         <module>examples/glcd</module>
-        <module>drivers/hd44780</module>
+        <module>drivers/clcd</module>
         <module>drivers/glcd</module>
         <module>impl/charlcd</module>
         <module>impl/glcd</module>
