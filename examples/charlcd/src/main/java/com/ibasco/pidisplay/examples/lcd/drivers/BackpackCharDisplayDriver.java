@@ -1,8 +1,8 @@
 package com.ibasco.pidisplay.examples.lcd.drivers;
 
-import com.ibasco.pidisplay.drivers.lcd.hd44780.CharDisplayDriver;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.ScrollDirection;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.enums.TextDirection;
+import com.ibasco.pidisplay.drivers.clcd.CharDisplayDriver;
+import com.ibasco.pidisplay.drivers.clcd.enums.ScrollDirection;
+import com.ibasco.pidisplay.drivers.clcd.enums.TextDirection;
 import com.ibasco.pidisplay.examples.lcd.exceptions.BackpackDriverException;
 import com.ibasco.pidisplay.examples.lcd.exceptions.CreateCharException;
 import com.ibasco.pidisplay.examples.lcd.exceptions.I2CException;

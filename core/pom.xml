@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.ibasco.pidisplay</groupId>
-            <artifactId>pi-display-drivers-hd44780</artifactId>
+            <artifactId>pi-display-drivers-clcd</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>

@@ -2,9 +2,9 @@ package com.ibasco.pidisplay.impl.charlcd;
 
 import com.ibasco.pidisplay.core.ui.CharGraphics;
 import com.ibasco.pidisplay.core.ui.DisplayBuffer;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.CharData;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.CharDisplayDriver;
-import com.ibasco.pidisplay.drivers.lcd.hd44780.CharManager;
+import com.ibasco.pidisplay.drivers.clcd.CharData;
+import com.ibasco.pidisplay.drivers.clcd.CharDisplayDriver;
+import com.ibasco.pidisplay.drivers.clcd.CharManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
