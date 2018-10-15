@@ -15,63 +15,6 @@ import java.io.File;
  */
 @SuppressWarnings("unused")
 public interface U8g2DisplayDriver extends DisplayDriver {
-
-    /**
-     * Draw the upper right portion of the shape
-     */
-    int U8G2_DRAW_UPPER_RIGHT = 0x01;
-
-    /**
-     * Draw the upper left portion of the shape
-     */
-    int U8G2_DRAW_UPPER_LEFT = 0x02;
-
-    /**
-     * Draw the lower left portion of the shape
-     */
-    int U8G2_DRAW_LOWER_LEFT = 0x04;
-
-    /**
-     * Draw the lower right portion of the shape
-     */
-    int U8G2_DRAW_LOWER_RIGHT = 0x08;
-
-    /**
-     * Draw the whole shape
-     */
-    int U8G2_DRAW_ALL = (U8G2_DRAW_UPPER_RIGHT | U8G2_DRAW_UPPER_LEFT | U8G2_DRAW_LOWER_RIGHT | U8G2_DRAW_LOWER_LEFT);
-
-    /**
-     * No rotation
-     *
-     * @see #setDisplayRotation
-     */
-    int ROTATION_R0 = 0;
-    /**
-     * 90 degree clockwise rotation
-     *
-     * @see #setDisplayRotation
-     */
-    int ROTATION_R1 = 1;
-    /**
-     * 180 degree clockwise rotation
-     *
-     * @see #setDisplayRotation
-     */
-    int ROTATION_R2 = 2;
-    /**
-     * 270 degree clockwise rotation
-     *
-     * @see #setDisplayRotation
-     */
-    int ROTATION_R3 = 3;
-    /**
-     * No rotation, landscape, display content is mirrored
-     *
-     * @see #setDisplayRotation
-     */
-    int ROTATION_MIRROR = 4;
-
     /**
      * <p>Draw a box (filled frame), starting at x/y position (upper left edge). The box has width w and height h.
      * Parts of the box can be outside of the display boundaries. This procedure will use the current color

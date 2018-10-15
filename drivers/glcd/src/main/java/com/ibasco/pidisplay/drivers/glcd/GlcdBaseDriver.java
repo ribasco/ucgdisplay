@@ -63,7 +63,7 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
      * @param virtual
      *         Set to <code>true</code> to enable virtual mode.
      */
-    public GlcdBaseDriver(GlcdConfig config, boolean virtual) {
+    protected GlcdBaseDriver(GlcdConfig config, boolean virtual) {
         this(config, virtual, null);
     }
 
@@ -74,13 +74,13 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
      * @param config
      *         The {@link GlcdConfig} associated with this instance
      * @param virtual
-     *         Set to <code>true</code> to enable virtual mode.
+     *         Set to <code>true</code> to enable virtual mode. If virtual mode is enabled, all instruction/data events are routed to {@link GlcdDriverEventHandler} for further processing.
      * @param handler
      *         The {@link GlcdDriverEventHandler} instance that will handle the data and instruction events thrown by
      *         the native display driver. If a null value is provided, the internal event handler of this driver
      *         instance will be used instead.
      */
-    public GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) {
+    protected GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) {
         this.config = config;
         this.virtual = virtual;
         this.driverEventHandler = handler == null ? createDefaultEventHandler() : handler;
@@ -148,7 +148,6 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
      * @param event
      *         The event details
      */
-    @Deprecated
     protected void onByteEvent(U8g2ByteEvent event) {
         //no-op
     }
@@ -159,7 +158,6 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
      * @param event
      *         The event details
      */
-    @Deprecated
     protected void onGpioEvent(U8g2GpioEvent event) {
         //no-op
     }

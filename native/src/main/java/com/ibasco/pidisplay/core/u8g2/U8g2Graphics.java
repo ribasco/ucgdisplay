@@ -3,14 +3,15 @@ package com.ibasco.pidisplay.core.u8g2;
 import com.ibasco.pidisplay.core.utils.NativeLibraryLoader;
 
 /**
- * <p>This is a wrapper class for the U8G2 native graphics interface. It is not advisable to uses this class
- * directly.</p>
+ * <p>This is a wrapper class for the U8G2 native graphics interface. It is not advisable to use this class
+ * directly unless you know what you are doing. Use the facilities provided in the glcd drivers module.</p>
  *
  * @author Rafael Ibasco
  */
 @SuppressWarnings({"Duplicates", "WeakerAccess"})
 public class U8g2Graphics {
 
+    //<editor-fold desc="Display rotation options">
     /**
      * No rotation
      *
@@ -41,23 +42,93 @@ public class U8g2Graphics {
      * @see #setDisplayRotation
      */
     public static final int ROTATION_MIRROR = 4;
+    //</editor-fold>
 
-    //List of supported communication protocols by U8G2
+    //<editor-fold desc="Bus Interface types">
+    /**
+     * Bus interface using the device hardware specific features for data transport
+     */
+    public static final int BUS_HARDWARE = 0;
+
+    /**
+     * Bus interface using software bit-banging procedures for data transport
+     */
+    public static final int BUS_SOFTWARE = 1;
+    //</editor-fold>
+
+    //<editor-fold desc="Bus Interfaces">
+    /**
+     * 4-Wire SPI protocol
+     */
     public static final int COM_4WSPI = 0x0001;
-    public static final int COM_3WSPI = 0x0002;
-    public static final int COM_6800 = 0x0004;
-    public static final int COM_8080 = 0x0008;
-    public static final int COM_I2C = 0x0010;
-    public static final int COM_ST7920SPI = 0x0020;     /* mostly identical to COM_4WSPI, but does not use DC */
-    public static final int COM_UART = 0x0040;
-    public static final int COM_KS0108 = 0x0080;        /* mostly identical to 6800 mode, but has more chip select lines */
-    public static final int COM_SED1520 = 0x0100;
 
+    /**
+     * 3-Wire SPI protocol
+     */
+    public static final int COM_3WSPI = 0x0002;
+
+    /**
+     * Parallel 8-bit 6800 protocol
+     */
+    public static final int COM_6800 = 0x0004;
+
+    /**
+     * Parallel 8-bit 8080 protocol
+     */
+    public static final int COM_8080 = 0x0008;
+
+    /**
+     * I2C Protocol
+     */
+    public static final int COM_I2C = 0x0010;
+
+    /**
+     * 4-Wire SPI protocol but does not use DC pin (Used by ST7920 controller)
+     */
+    public static final int COM_ST7920SPI = 0x0020;     /* mostly identical to COM_4WSPI, but does not use DC */
+
+    /**
+     * Serial/UART protocol
+     */
+    public static final int COM_UART = 0x0040;
+
+    /**
+     * Parallel 6800 protocol for KS0108 (Contains more chip select lines)
+     */
+    public static final int COM_KS0108 = 0x0080;        /* mostly identical to 6800 mode, but has more chip select lines */
+
+    /**
+     * Special protocol for SED1520
+     */
+    public static final int COM_SED1520 = 0x0100;
+    //</editor-fold>
+
+    //<editor-fold desc="Draw Options">
+    /**
+     * Draw the upper right portion of the shape
+     */
     public static final int U8G2_DRAW_UPPER_RIGHT = 0x01;
+
+    /**
+     * Draw the upper left portion of the shape
+     */
     public static final int U8G2_DRAW_UPPER_LEFT = 0x02;
+
+    /**
+     * Draw the lower left portion of the shape
+     */
     public static final int U8G2_DRAW_LOWER_LEFT = 0x04;
+
+    /**
+     * Draw the lower right portion of the shape
+     */
     public static final int U8G2_DRAW_LOWER_RIGHT = 0x08;
+
+    /**
+     * Draw the whole shape
+     */
     public static final int U8G2_DRAW_ALL = (U8G2_DRAW_UPPER_RIGHT | U8G2_DRAW_UPPER_LEFT | U8G2_DRAW_LOWER_RIGHT | U8G2_DRAW_LOWER_LEFT);
+    //</editor-fold>
 
     static {
         try {
@@ -72,10 +143,10 @@ public class U8g2Graphics {
      *
      * @param setupProc
      *         The setup procedure name. This is equivalent to the u8g2 setup function in c/c++
-     * @param commInt
-     *         The communications interface that will be used (e.g. {@link #COM_4WSPI})
-     * @param commType
-     *         The communication type (HARDWARE = 0, SOFTWARE = 1)
+     * @param busInterface
+     *         The bus communications interface (e.g. {@link #COM_4WSPI})
+     * @param busInterfaceType
+     *         The bus interface type (HARDWARE = 0, SOFTWARE = 1)
      * @param rotation
      *         The display rotation.
      * @param address
@@ -89,7 +160,7 @@ public class U8g2Graphics {
      *
      * @return The id of the u8g2 instance. -1 if the setup failed.
      */
-    public static native long setup(String setupProc, int commInt, int commType, int rotation, int address, byte[] pinConfig, boolean virtual);
+    public static native long setup(String setupProc, int busInterface, int busInterfaceType, int rotation, int address, byte[] pinConfig, boolean virtual);
 
     /**
      * <p>Draw a box (filled frame), starting at x/y position (upper left edge). The box has width w and height h.
