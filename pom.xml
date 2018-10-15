@@ -111,7 +111,7 @@
 
     <!-- Project Modules -->
     <modules>
-        <module>drivers/hd44780</module>
+        <module>drivers/clcd</module>
         <module>drivers/glcd</module>
         <module>native</module>
     </modules>
