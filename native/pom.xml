@@ -5,7 +5,7 @@
     <parent>
         <artifactId>pi-display</artifactId>
         <groupId>com.ibasco.pidisplay</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.1-alpha-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -18,6 +18,8 @@
         <lib-output-filename>libpidisp.so</lib-output-filename>
         <lib-output-filename-win>pidisp.dll</lib-output-filename-win>
         <lib-output-name>pidisp</lib-output-name>
+        <cpp.proj.dir>${project.basedir}/src/main/cpp</cpp.proj.dir>
+        <cpp.build.dir>${cpp.proj.dir}/build</cpp.build.dir>
         <cmake-generator-arg>-G 'CodeBlocks - Unix Makefiles'</cmake-generator-arg>
     </properties>
 
@@ -536,17 +538,15 @@
                                         <!-- Refresh CMake cache -->
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for Mac OS
                                         </echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
-                                              failonerror="true">
+                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
                                             <arg line="--target all"/>
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/mac/amd64"/>
                                         </exec>
                                         <!-- Build project -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/mac/amd64"
-                                              failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/mac/amd64"/>
+                                        <exec executable="cmake" dir="${cpp.build.dir}/mac/amd64" failonerror="true">
+                                            <arg line="--build ${cpp.build.dir}/mac/amd64"/>
                                             <arg line="--target pidisp --"/>
                                             <arg line=" -j 4"/>
                                         </exec>
@@ -572,7 +572,7 @@
                                     <outputDirectory>${basedir}/target/classes/lib/mac/amd64</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/mac/amd64/bin
+                                            <directory>${cpp.build.dir}/mac/amd64/bin
                                             </directory>
                                             <filtering>true</filtering>
                                             <includes>
@@ -581,7 +581,7 @@
                                         </resource>
                                     </resources>
                                     <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>dll</nonFilteredFileExtension>
+                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
                                     </nonFilteredFileExtensions>
                                     <fileNameFiltering>
                                         true

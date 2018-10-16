@@ -5,7 +5,7 @@
     <parent>
         <artifactId>pi-display</artifactId>
         <groupId>com.ibasco.pidisplay</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.1-alpha-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
