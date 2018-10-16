@@ -499,7 +499,7 @@
                 </os>
             </activation>
             <properties>
-                <current-osarch>windows-amd64</current-osarch>
+                <current-osarch>mac-amd64</current-osarch>
             </properties>
             <build>
                 <plugins>

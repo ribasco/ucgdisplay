@@ -1314,23 +1314,23 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * </thead>
      * <tbody>
      * <tr>
-     * <td><code>{@link #ROTATION_R0}</code></td>
+     * <td><code>ROTATION_R0</code></td>
      * <td>No rotation, landscape</td>
      * </tr>
      * <tr>
-     * <td><code>{@link #ROTATION_R1}</code></td>
+     * <td><code>ROTATION_R1</code></td>
      * <td>90 degree clockwise rotation</td>
      * </tr>
      * <tr>
-     * <td><code>{@link #ROTATION_R2}</code></td>
+     * <td><code>ROTATION_R2</code></td>
      * <td>180 degree clockwise rotation</td>
      * </tr>
      * <tr>
-     * <td><code>{@link #ROTATION_R3}</code></td>
+     * <td><code>ROTATION_R3</code></td>
      * <td>270 degree clockwise rotation</td>
      * </tr>
      * <tr>
-     * <td><code>{@link #ROTATION_MIRROR}</code></td>
+     * <td><code>ROTATION_MIRROR</code></td>
      * <td>No rotation, landscape, display content is mirrored (v2.6.x)</td>
      * </tr>
      * </tbody>
