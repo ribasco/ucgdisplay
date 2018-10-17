@@ -1,9 +1,11 @@
 ### Introduction
 
+---
 A universal character/graphics display library for ARM embedded devices based on Java. Provides drivers for character based lcd devices (Hitachi HD44780) and over 40+ graphic monochrome lcd devices (Powered by U8g2). 
 
 ### Features
-   
+
+---
 * Display drivers
     * Character LCD driver features
         * Pure java implementation for Hitachi HD44780 driver powered by Pi4j (Will probably add JNI/native support if performance is an issue)
@@ -17,6 +19,7 @@ A universal character/graphics display library for ARM embedded devices based on
 
 ### Supported display controllers
 
+---
 * Character LCD
 
     Hitachi HD44780
@@ -27,32 +30,39 @@ A universal character/graphics display library for ARM embedded devices based on
  
 ### Pre-requisites
 
+---
 * Wiring Pi library
  
 ### Installation
 
+---
 * Note: Make sure you have Wiring Pi library installed on your ARM device
 
 ### Usage examples
 
+---
 #### Character LCD Example (HD44780)
 
 #### Graphic LCD Example (ST7920)
 
 ### Limitations
 
+---
 * This library is guaranteed to work on the Raspberry Pi, but I cannot guarantee that it would work on other ARM based devices (e.g. Tinker Board) as I only have Raspberry Pi in my possession (Donations welcome :D)
 * As of this writing, only the display drivers are available. The UI framework is still under development.
 * Only fullbuffer mode is supported on the graphics display driver.
  
 ### Known Issues/Troubleshooting
 
-* Click [here](https://docs.google.com/spreadsheets/d/1WDh6J3zFE3j332CEIOvFzXhryOhoF7VAGc9Pf5vEo0s/edit?usp=sharing "Google spreadsheets") to check the current status of the display controller
+---
+* Click [here](https://docs.google.com/spreadsheets/d/1WDh6J3zFE3j332CEIOvFzXhryOhoF7VAGc9Pf5vEo0s/edit?usp=sharing "Google spreadsheets") to check the current status of each graphics display controller
 
 ### Contribution guidelines
 
+---
 * Build instructions
 
 ### Related projects
 
+---
 * GLCD Emulator/Simulator
