@@ -132,7 +132,7 @@ public class U8g2Graphics {
 
     static {
         try {
-            NativeLibraryLoader.loadLibrary("pidisp");
+            NativeLibraryLoader.loadLibrary("ucgdisp");
         } catch (Exception e) {
             throw new RuntimeException("Unable to load required native library", e);
         }

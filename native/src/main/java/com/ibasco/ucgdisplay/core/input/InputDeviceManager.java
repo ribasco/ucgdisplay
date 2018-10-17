@@ -49,7 +49,7 @@ public class InputDeviceManager {
 
     static {
         try {
-            NativeLibraryLoader.loadLibrary("pidisp");
+            NativeLibraryLoader.loadLibrary("ucgdisp");
         } catch (Exception e) {
             log.error("Unable to load required native library", e);
         }
