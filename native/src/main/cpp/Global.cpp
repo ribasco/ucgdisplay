@@ -101,9 +101,7 @@ void JNI_CopyJByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length
 }
 
 void JNI_FireGpioEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value) {
-    //jobject event = env->NewObject(clsU8g2GpioEvent, midU8g2GpioEventCtr, msg, value);
     env->CallStaticVoidMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_onGpioEvent, (jlong) id,  msg, value);
-    //env->DeleteLocalRef(event);
 }
 
 void JNI_FireByteEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value) {

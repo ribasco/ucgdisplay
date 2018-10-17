@@ -2,8 +2,8 @@
 // Created by raffy on 7/7/18.
 //
 
-#ifndef PIDISP_U8G2UTILS_H
-#define PIDISP_U8G2UTILS_H
+#ifndef UCGDISP_U8G2UTILS_H
+#define UCGDISP_U8G2UTILS_H
 
 #include "U8g2Hal.h"
 
@@ -51,4 +51,4 @@ uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, voi
 
 uint8_t u8g2util_SetupHelperGpio(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
-#endif //PIDISP_U8G2UTILS_H
+#endif //UCGDISP_U8G2UTILS_H

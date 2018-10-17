@@ -5,8 +5,6 @@
 #include <functional>
 #include <utility>
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 #define __unix__xxxxxx_THIS_IS_DISABLED
 
 #include "U8g2Graphics.h"
@@ -58,7 +56,7 @@ bool check_validity(JNIEnv *env, jlong id) {
     return true;
 }
 
-jlong Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jbyteArray pin_config, jboolean emulation) {
+jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jbyteArray pin_config, jboolean emulation) {
     string setup_proc_name;
 
     if (setupProc != nullptr) {
@@ -115,14 +113,14 @@ jlong Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass
 }
 
 //long id, int x, int y, int width, int height
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawBox(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawBox(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawBox(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width), static_cast<u8g2_uint_t>(height));
 }
 
 //long id, int x, int y, int count, int height, byte[] bitmap
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawBitmap(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint count, jint height, jbyteArray bitmap) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawBitmap(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint count, jint height, jbyteArray bitmap) {
     if (!check_validity(env, id))
         return;
     if (bitmap == nullptr) {
@@ -136,90 +134,90 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawBitmap(JNIEnv *env, jc
 }
 
 //long id, int x, int y, int radius, int options
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawCircle(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint radius, jint options) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawCircle(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint radius, jint options) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawCircle(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(radius), static_cast<uint8_t>(options));
 }
 
 //long id, int x, int y, int radius, int options
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawDisc(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint radius, jint options) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawDisc(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint radius, jint options) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawDisc(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(radius), static_cast<uint8_t>(options));
 }
 
 //long id, int x, int y, int rx, int ry, int options
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawEllipse(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint rx, jint ry, jint options) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawEllipse(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint rx, jint ry, jint options) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawEllipse(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(rx), static_cast<u8g2_uint_t>(ry), static_cast<uint8_t>(options));
 }
 
 //long id, int x, int y, int rx, int ry, int options
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawFilledEllipse(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint rx, jint ry, jint options) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawFilledEllipse(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint rx, jint ry, jint options) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawFilledEllipse(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(rx), static_cast<u8g2_uint_t>(ry), static_cast<uint8_t>(options));
 }
 
 //long id, int x, int y, int width, int height
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawFrame(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawFrame(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawFrame(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width), static_cast<u8g2_uint_t>(height));
 }
 
 //long id, int x, int y, short encoding
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawGlyph(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jshort encoding) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawGlyph(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jshort encoding) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawGlyph(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<uint16_t>(encoding));
 }
 
 //long id, int x, int y, int width
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawHLine(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawHLine(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawHLine(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawVLine (JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawVLine (JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawVLine(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width));
 }
 
 //long id, int x, int y, int x1, int y1
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawLine(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint x1, jint y1) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawLine(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint x1, jint y1) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawLine(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(x1), static_cast<u8g2_uint_t>(y1));
 }
 
 //long id, int x, int y
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawPixel(JNIEnv *env, jclass cls, jlong id, jint x, jint y) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixel(JNIEnv *env, jclass cls, jlong id, jint x, jint y) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawPixel(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y));
 }
 
 //long id, int x, int y, int width, int height, int radius
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawRoundedBox(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height, jint radius) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawRoundedBox(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height, jint radius) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawRBox(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width), static_cast<u8g2_uint_t>(height), static_cast<u8g2_uint_t>(radius));
 }
 
 //long id, int x, int y, int width, int height, int radius
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawRoundedFrame(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height, jint radius) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawRoundedFrame(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height, jint radius) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawRFrame(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width), static_cast<u8g2_uint_t>(height), static_cast<u8g2_uint_t>(radius));
 }
 
 //long id, int x, int y, String value
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawString(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jstring value) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawString(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jstring value) {
     if (!check_validity(env, id))
         return;
     if (!get_font_flag(env, id)) {
@@ -231,14 +229,14 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawString(JNIEnv *env, jc
 }
 
 //long id, int x0, int y0, int x1, int y1, int x2, int y2
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawTriangle(JNIEnv *env, jclass cls, jlong id, jint x0, jint y0, jint x1, jint y1, jint x2, jint y2) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawTriangle(JNIEnv *env, jclass cls, jlong id, jint x0, jint y0, jint x1, jint y1, jint x2, jint y2) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawTriangle(toU8g2(id), static_cast<int16_t>(x0), static_cast<int16_t>(y0), static_cast<int16_t>(x1), static_cast<int16_t>(y1), static_cast<int16_t>(x2), static_cast<int16_t>(y2));
 }
 
 //long id, int x, int y, int width, int height, byte[] data
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawXBM(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height, jbyteArray data) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawXBM(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height, jbyteArray data) {
     if (!check_validity(env, id))
         return;
     jsize len = env->GetArrayLength(data);
@@ -248,7 +246,7 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawXBM(JNIEnv *env, jclas
 }
 
 //long id, int x, int y, String value
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawUTF8(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jstring value) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawUTF8(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jstring value) {
     if (!check_validity(env, id))
         return -1;
     const char *c = env->GetStringUTFChars(value, nullptr);
@@ -256,7 +254,7 @@ jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_drawUTF8(JNIEnv *env, jcla
 }
 
 //long id, String text
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getUTF8Width(JNIEnv *env, jclass cls, jlong id, jstring text) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getUTF8Width(JNIEnv *env, jclass cls, jlong id, jstring text) {
     if (!check_validity(env, id))
         return -1;
     if (text == nullptr) {
@@ -268,7 +266,7 @@ jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getUTF8Width(JNIEnv *env, 
 }
 
 //long id, byte[] data
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFont__J_3B(JNIEnv *env, jclass cls, jlong id, jbyteArray data) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFont__J_3B(JNIEnv *env, jclass cls, jlong id, jbyteArray data) {
     if (!check_validity(env, id))
         return;
     if (data == nullptr) {
@@ -286,7 +284,7 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFont__J_3B(JNIEnv *env,
     set_font_flag(env, id, true);
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFont__JLjava_lang_String_2(JNIEnv *env, jclass cls, jlong id, jstring fontName) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFont__JLjava_lang_String_2(JNIEnv *env, jclass cls, jlong id, jstring fontName) {
     if (!check_validity(env, id))
         return;
     if (fontName == nullptr) {
@@ -304,140 +302,140 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFont__JLjava_lang_Strin
 }
 
 //long id, int mode
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFontMode(JNIEnv *env, jclass cls, jlong id, jint mode) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFontMode(JNIEnv *env, jclass cls, jlong id, jint mode) {
     if (!check_validity(env, id))
         return;
     u8g2_SetFontMode(toU8g2(id), static_cast<uint8_t>(mode));
 }
 
 //long id, int direction
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFontDirection(JNIEnv *env, jclass cls, jlong id, jint mode) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFontDirection(JNIEnv *env, jclass cls, jlong id, jint mode) {
     if (!check_validity(env, id))
         return;
     u8g2_SetFontDirection(toU8g2(id), static_cast<uint8_t>(mode));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFontPosBaseline(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFontPosBaseline(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_SetFontPosBaseline(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFontPosBottom(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFontPosBottom(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_SetFontPosBottom(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFontPosTop(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFontPosTop(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_SetFontPosTop(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFontPosCenter(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFontPosCenter(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_SetFontPosCenter(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFontRefHeightAll(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFontRefHeightAll(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_SetFontRefHeightAll(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFontRefHeightExtendedText(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFontRefHeightExtendedText(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_SetFontRefHeightExtendedText(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFontRefHeightText(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFontRefHeightText(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_SetFontRefHeightText(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setFlipMode(JNIEnv *env, jclass cls, jlong id, jboolean enable) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFlipMode(JNIEnv *env, jclass cls, jlong id, jboolean enable) {
     if (!check_validity(env, id))
         return;
     u8g2_SetFlipMode(toU8g2(id), enable);
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setPowerSave(JNIEnv *env, jclass cls, jlong id, jboolean enable) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setPowerSave(JNIEnv *env, jclass cls, jlong id, jboolean enable) {
     if (!check_validity(env, id))
         return;
     u8g2_SetPowerSave(toU8g2(id), enable);
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setDrawColor(JNIEnv *env, jclass cls, jlong id, jint color) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setDrawColor(JNIEnv *env, jclass cls, jlong id, jint color) {
     if (!check_validity(env, id))
         return;
     u8g2_SetDrawColor(toU8g2(id), static_cast<uint8_t>(color));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_initDisplay(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_initDisplay(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_InitDisplay(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_firstPage(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_firstPage(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_FirstPage(toU8g2(id));
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_nextPage(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_nextPage(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_NextPage(toU8g2(id));
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getAscent(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getAscent(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_GetAscent(toU8g2(id));
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getDescent(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getDescent(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_GetDescent(toU8g2(id));
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getMaxCharWidth(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getMaxCharWidth(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_GetMaxCharWidth(toU8g2(id));
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getMaxCharHeight(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getMaxCharHeight(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_GetMaxCharHeight(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_sendBuffer(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_sendBuffer(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_SendBuffer(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_clearBuffer(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_clearBuffer(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_ClearBuffer(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_clearDisplay(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_clearDisplay(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_ClearDisplay(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_begin(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_begin(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_t *u8g2 = toU8g2(id);
@@ -446,19 +444,19 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_begin(JNIEnv *env, jclass 
     u8g2_SetPowerSave(u8g2, 0);
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getHeight(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getHeight(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_GetDisplayHeight(toU8g2(id));
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getWidth(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getWidth(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_GetDisplayWidth(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_clear(JNIEnv *env, jclass cls, jlong id) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_clear(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     //Process: home(); clearDisplay(); clearBuffer();
@@ -468,25 +466,25 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_clear(JNIEnv *env, jclass 
     u8g2_ClearBuffer(u8g2);
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setAutoPageClear(JNIEnv *env, jclass cls, jlong id, jint clear) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setAutoPageClear(JNIEnv *env, jclass cls, jlong id, jint clear) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_SetAutoPageClear(toU8g2(id), clear);;
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setBitmapMode(JNIEnv *env, jclass cls, jlong id, jint mode) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setBitmapMode(JNIEnv *env, jclass cls, jlong id, jint mode) {
     if (!check_validity(env, id))
         return;
     u8g2_SetBitmapMode(toU8g2(id), static_cast<uint8_t>(mode));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setContrast(JNIEnv *env, jclass cls, jlong id, uint8_t value) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setContrast(JNIEnv *env, jclass cls, jlong id, uint8_t value) {
     if (!check_validity(env, id))
         return;
     u8g2_SetContrast(toU8g2(id), value);
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setDisplayRotation(JNIEnv *env, jclass cls, jlong id, jint rotation) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setDisplayRotation(JNIEnv *env, jclass cls, jlong id, jint rotation) {
     if (!check_validity(env, id))
         return;
     u8g2_cb_t *_rotation = u8g2util_ToRotation(rotation);
@@ -496,43 +494,40 @@ void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setDisplayRotation(JNIEnv 
 }
 
 //TODO: Still need to figure out how to pass this back to java
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getBuffer(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getBuffer(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     uint8_t *buffer = u8g2_GetBufferPtr(toU8g2(id));
     return -1;
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getBufferTileWidth(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getBufferTileWidth(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_GetBufferTileWidth(toU8g2(id));
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getBufferTileHeight(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getBufferTileHeight(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_GetBufferTileHeight(toU8g2(id));
 }
 
-void Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_setBufferCurrTileRow(JNIEnv *env, jclass cls, jlong id, jint row) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setBufferCurrTileRow(JNIEnv *env, jclass cls, jlong id, jint row) {
     if (!check_validity(env, id))
         return;
     u8g2_SetBufferCurrTileRow(toU8g2(id), static_cast<uint8_t>(row));
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getBufferCurrTileRow(JNIEnv *env, jclass cls, jlong id) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getBufferCurrTileRow(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return -1;
     return u8g2_GetBufferCurrTileRow(toU8g2(id));
 }
 
-jint Java_com_ibasco_pidisplay_core_u8g2_U8g2Graphics_getStrWidth(JNIEnv *env, jclass cls, jlong id, jstring text) {
+jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getStrWidth(JNIEnv *env, jclass cls, jlong id, jstring text) {
     if (!check_validity(env, id))
         return -1;
     const char *c = env->GetStringUTFChars(text, nullptr);
     return u8g2_GetStrWidth(toU8g2(id), c);
 }
-
-#pragma clang diagnostic pop
-#pragma clang diagnostic pop

@@ -1,9 +1,5 @@
-//
-// Created by raffy on 7/4/18.
-//
-
-#ifndef PIDISP_GLOBAL_H
-#define PIDISP_GLOBAL_H
+#ifndef UCGDISP_GLOBAL_H
+#define UCGDISP_GLOBAL_H
 
 #include <jni.h>
 #include <string>
@@ -15,9 +11,28 @@ using namespace std;
 #define CLS_HASHMAP  "java/util/HashMap"
 #define CLS_INTEGER "java/lang/Integer"
 #define CLS_THREADGROUP "java/lang/ThreadGroup"
-#define CLS_NativeLibraryException "com/ibasco/pidisplay/core/exceptions/NativeLibraryException"
-#define CLS_U8g2EventDispatcher "com/ibasco/pidisplay/core/u8g2/U8g2EventDispatcher"
-#define CLS_U8g2GpioEvent "com/ibasco/pidisplay/core/u8g2/U8g2GpioEvent"
+#define CLS_NativeLibraryException "com/ibasco/ucgdisplay/core/exceptions/NativeLibraryException"
+#define CLS_U8g2EventDispatcher "com/ibasco/ucgdisplay/core/u8g2/U8g2EventDispatcher"
+#define CLS_U8g2GpioEvent "com/ibasco/ucgdisplay/core/u8g2/U8g2GpioEvent"
+
+#define CLS_INPUT_DEVICE "com/ibasco/ucgdisplay/core/input/InputDevice"
+#define CLS_INPUT_EVENT_TYPE "com/ibasco/ucgdisplay/core/input/InputEventType"
+#define CLS_INPUT_EVENT_CODE "com/ibasco/ucgdisplay/core/input/InputEventCode"
+#define CLS_INPUT_DEVICE_MGR "com/ibasco/ucgdisplay/core/input/InputDeviceManager"
+#define CLS_RAW_INPUT_EVENT "com/ibasco/ucgdisplay/core/input/RawInputEvent"
+#define CLS_DEVICE_STATE_EVENT "com/ibasco/ucgdisplay/core/input/DeviceStateEvent"
+
+#define FSIG_INPUTEVENTCODE_ABSDATA "Ljava/util/Map;"
+#define MIDSIG_INPUTDEVICE_CTR "(Ljava/lang/String;Ljava/lang/String;[SLjava/lang/String;Ljava/util/List;)V"
+#define MIDSIG_INPUTDEVMGR_DEVEVENTCB "(Lcom/ibasco/ucgdisplay/core/input/DeviceStateEvent;)V"
+#define MIDSIG_INPUTEVENTTYPE_CTR1 "(Ljava/lang/String;ILjava/util/List;Z)V"
+#define MIDSIG_INPUTEVENTCODE_CTR1 "(Ljava/lang/String;I)V"
+#define MIDSIG_INPUTEVENTCODE_CTR2 "(Ljava/lang/String;II)V"
+#define MIDSIG_INPUTDEVMGR_CALLBACK "(Lcom/ibasco/ucgdisplay/core/input/RawInputEvent;)V"
+#define MIDSIG_RAWINPUTEVENT_CTR "(Lcom/ibasco/ucgdisplay/core/input/InputDevice;JIIILjava/lang/String;Ljava/lang/String;I)V"
+#define MIDSIG_HASHMAP_PUT "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+#define MIDSIG_HASHMAP_CTR "()V"
+#define MIDSIG_DEVSTATEVT_CTR "(Lcom/ibasco/ucgdisplay/core/input/InputDevice;Ljava/lang/String;)V"
 
 #define JNI_VERSION JNI_VERSION_1_8
 
@@ -99,4 +114,4 @@ void U8g2Graphics_Load(JNIEnv *env);
 
 void U8g2Graphics_UnLoad(JNIEnv *env);
 
-#endif //PIDISP_GLOBAL_H
+#endif //UCGDISP_GLOBAL_H

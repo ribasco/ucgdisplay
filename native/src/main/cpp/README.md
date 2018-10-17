@@ -20,7 +20,7 @@
 - Install MinGW 
 - Add 'bin' of ming and msys to USER path environment variables 
 
-PiDisplay Configuration Requirements for GLCD
+UCGDisplay Configuration Requirements for GLCD
 --------------------------------------------------------------------------------------------------------------------------------
 1. Rotation
 2. Communication Protocol

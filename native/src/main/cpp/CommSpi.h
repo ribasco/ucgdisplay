@@ -2,8 +2,8 @@
 // Created by raffy on 7/4/18.
 //
 
-#ifndef PIDISP_SPI_H
-#define PIDISP_SPI_H
+#ifndef UCGDISP_SPI_H
+#define UCGDISP_SPI_H
 
 #include <cstdint>
 
@@ -82,4 +82,4 @@ int spi_setup(int channel, int speed, int mode = 0);
 #endif
 
 
-#endif //PIDISP_SPI_H
+#endif //UCGDISP_SPI_H

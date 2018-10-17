@@ -2,8 +2,8 @@
 // Created by raffy on 6/8/18.
 //
 
-#ifndef PIDISP_INPUTEVENTMANAGER_H
-#define PIDISP_INPUTEVENTMANAGER_H
+#ifndef UCGDISP_INPUTEVENTMANAGER_H
+#define UCGDISP_INPUTEVENTMANAGER_H
 
 #include <string>
 #include <map>
@@ -131,4 +131,4 @@ private:
 };
 
 
-#endif //PIDISP_INPUTEVENTMANAGER_H
+#endif //UCGDISP_INPUTEVENTMANAGER_H

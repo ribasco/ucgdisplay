@@ -3,21 +3,21 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>pi-display</artifactId>
-        <groupId>com.ibasco.pidisplay</groupId>
+        <artifactId>ucgdisplay</artifactId>
+        <groupId>com.ibasco.ucgdisplay</groupId>
         <version>0.1-alpha-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>pi-display-native</artifactId>
+    <artifactId>ucgd-native</artifactId>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
     <name>${project.prefix} Native Library</name>
 
     <properties>
-        <lib-output-filename>libpidisp.so</lib-output-filename>
-        <lib-output-filename-win>pidisp.dll</lib-output-filename-win>
-        <lib-output-name>pidisp</lib-output-name>
+        <lib-output-filename>libucgdisp.so</lib-output-filename>
+        <lib-output-filename-win>ucgdisp.dll</lib-output-filename-win>
+        <lib-output-name>ucgdisp</lib-output-name>
         <cpp.proj.dir>${project.basedir}/src/main/cpp</cpp.proj.dir>
         <cpp.build.dir>${cpp.proj.dir}/build</cpp.build.dir>
         <cmake-generator-arg>-G 'CodeBlocks - Unix Makefiles'</cmake-generator-arg>
@@ -110,7 +110,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <target name="build-pidisp">
+                                    <target name="build-ucgdisp">
                                         <!-- Build both architectures when Cross-Compiling -->
                                         <echo>[HOST=ARM] Building ARM binaries only</echo>
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
@@ -123,7 +123,7 @@
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm"
                                               failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
-                                            <arg line="--target pidisp --"/>
+                                            <arg line="--target ucgdisp --"/>
                                             <arg line=" -j 4"/>
                                         </exec>
                                     </target>
@@ -225,7 +225,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <target name="build-pidisp">
+                                    <target name="build-ucgdisp">
                                         <!-- Build both architectures when Cross-Compiling -->
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions</echo>
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
@@ -255,13 +255,13 @@
                                         <!-- Build AMD64 -->
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/amd64" failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/linux/amd64"/>
-                                            <arg line="--target pidisp --"/>
+                                            <arg line="--target ucgdisp --"/>
                                             <arg line=" -j 4"/>
                                         </exec>
                                         <!-- Build ARM -->
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
-                                            <arg line="--target pidisp --"/>
+                                            <arg line="--target ucgdisp --"/>
                                             <arg line=" -j 4"/>
                                         </exec>
                                         <!-- Build Windows -->
@@ -269,7 +269,7 @@
                                               dir="${project.basedir}/src/main/cpp/build/windows/amd64"
                                               failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64"/>
-                                            <arg line="--target pidisp --"/>
+                                            <arg line="--target ucgdisp --"/>
                                             <arg line=" -j 4"/>
                                         </exec>
                                     </target>
@@ -422,7 +422,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <target name="build-pidisp">
+                                    <target name="build-ucgdisp">
                                         <!-- Refresh CMake cache -->
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for windows
                                         </echo>
@@ -436,7 +436,7 @@
                                         <!-- Build project -->
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/windows/amd64" failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64"/>
-                                            <arg line="--target pidisp --"/>
+                                            <arg line="--target ucgdisp --"/>
                                             <arg line=" -j 4"/>
                                         </exec>
                                     </target>
@@ -534,7 +534,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <target name="build-pidisp">
+                                    <target name="build-ucgdisp">
                                         <!-- Refresh CMake cache -->
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for Mac OS
                                         </echo>
@@ -547,7 +547,7 @@
                                         <!-- Build project -->
                                         <exec executable="cmake" dir="${cpp.build.dir}/mac/amd64" failonerror="true">
                                             <arg line="--build ${cpp.build.dir}/mac/amd64"/>
-                                            <arg line="--target pidisp --"/>
+                                            <arg line="--target ucgdisp --"/>
                                             <arg line=" -j 4"/>
                                         </exec>
                                     </target>
@@ -620,15 +620,15 @@
                             <javahPath>${env.JAVA_HOME}/bin/javah</javahPath>
                             <javahIncludes>
                                 <javahInclude>
-                                    <className>com.ibasco.pidisplay.core.system.InputDeviceManager</className>
+                                    <className>com.ibasco.ucgdisplay.core.input.InputDeviceManager</className>
                                     <headerName>InputDeviceManager.h</headerName>
                                 </javahInclude>
                                 <javahInclude>
-                                    <className>com.ibasco.pidisplay.core.u8g2.U8g2Graphics</className>
+                                    <className>com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics</className>
                                     <headerName>U8g2Graphics.h</headerName>
                                 </javahInclude>
                                 <javahInclude>
-                                    <className>com.ibasco.pidisplay.core.u8g2.U8g2EventDispatcher</className>
+                                    <className>com.ibasco.ucgdisplay.core.u8g2.U8g2EventDispatcher</className>
                                     <headerName>U8g2EventDispatcher.h</headerName>
                                 </javahInclude>
                             </javahIncludes>

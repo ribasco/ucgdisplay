@@ -2,8 +2,8 @@
 // Created by raffy on 7/4/18.
 //
 
-#ifndef PIDISP_U8G2CALLBACKS_H
-#define PIDISP_U8G2CALLBACKS_H
+#ifndef UCGDISP_U8G2CALLBACKS_H
+#define UCGDISP_U8G2CALLBACKS_H
 
 #include <u8g2.h>
 #include <memory>
@@ -11,9 +11,6 @@
 #include <functional>
 #include <jni.h>
 #include "Global.h"
-
-#define EMULATOR_MSG_TYPE_BYTE 0
-#define EMULATOR_MSG_TYPE_GPIO 1
 
 using namespace std;
 
@@ -254,4 +251,4 @@ static void i2c_write_byte(u8x8_t *u8x8, uint8_t b) {
 
 #endif
 
-#endif //PIDISP_U8G2CALLBACKS_H
+#endif //UCGDISP_U8G2CALLBACKS_H

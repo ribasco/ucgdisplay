@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ibasco.pidisplay</groupId>
-    <artifactId>pi-display</artifactId>
+    <groupId>com.ibasco.ucgdisplay</groupId>
+    <artifactId>ucgdisplay</artifactId>
     <version>0.1-alpha-SNAPSHOT</version>
-    <name>${project.prefix} 00 - Parent Module</name>
-    <url>https://github.com/ribasco/pi-display</url>
+    <name>${project.prefix} Parent Module</name>
+    <url>https://github.com/ribasco/ucgdisplay</url>
     <packaging>pom</packaging>
 
     <!-- Project properties -->
@@ -32,7 +32,7 @@
         <native.lib.loader.version>2.2.0</native.lib.loader.version>
         <ant.version>1.10.4</ant.version>
         <ant-contrib.version>1.0b3</ant-contrib.version>
-        <project.prefix>PiDisplay ::</project.prefix>
+        <project.prefix>UCGDisplay ::</project.prefix>
     </properties>
 
     <!-- License Information -->
@@ -45,7 +45,7 @@
 
     <!-- Project Organization -->
     <organization>
-        <name>pi-display</name>
+        <name>ucgdisplay</name>
         <url>https://github.com/ribasco</url>
     </organization>
 
@@ -71,7 +71,7 @@
 
     <!-- Issue management -->
     <issueManagement>
-        <url>http://dev.ibasco.com/raffy/pi-display/issues</url>
+        <url>http://dev.ibasco.com/raffy/ucgdisplay/issues</url>
         <system>gogit</system>
     </issueManagement>
 
@@ -95,7 +95,7 @@
     <!-- Continuous Integration -->
     <ciManagement>
         <system>Travis CI</system>
-        <url>https://travis-ci.org/ribasco/pi-display</url>
+        <url>https://travis-ci.org/ribasco/ucgdisplay</url>
     </ciManagement>
 
     <!-- Profiles -->
@@ -301,7 +301,7 @@
                         <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
                         <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>release</releaseProfiles>
-                        <tagNameFormat>pi-display-@{project.version}</tagNameFormat>
+                        <tagNameFormat>ucgdisplay-@{project.version}</tagNameFormat>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -415,18 +415,18 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.ibasco.pidisplay</groupId>
-                <artifactId>pi-display-drivers-clcd</artifactId>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-drivers-clcd</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ibasco.pidisplay</groupId>
-                <artifactId>pi-display-drivers-glcd</artifactId>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-drivers-glcd</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ibasco.pidisplay</groupId>
-                <artifactId>pi-display-native</artifactId>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-native</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
