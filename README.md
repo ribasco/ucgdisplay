@@ -45,9 +45,9 @@ This project aims to minimize the hassle of s
 ### Usage examples
 
 ---
-#### Character LCD Example (HD44780)
+######  Character LCD Example (HD44780)
 
-#### Graphic LCD Example (ST7920)
+######  Graphic LCD Example (ST7920)
 
 ### Limitations
 
