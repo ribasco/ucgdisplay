@@ -49,7 +49,7 @@ A universal character/graphics display library for ARM embedded devices based on
 
 ---
 * This library is guaranteed to work on the Raspberry Pi, but I cannot guarantee that it would work on other ARM based devices (e.g. Asus Tinker Board etc) as I only have Raspberry Pi in my possession (Donations welcome :D)
-* As of this writing, only the display drivers are available. The UI framework is still under development.
+* As of this writing (10/17/2018), only the display drivers are available. The UI framework is still under development.
 * Only fullbuffer mode is supported on the graphics display driver.
 * The graphics display library does not utilize Pi4j for device communication. It directly interface with the JNI native library which makes use of the Wiring Pi library internally, so the Wiring Pi library is required to be installed on your ARM device.  
 * The graphics display library only supports monochrome devices, hence colored displays are not supported.
