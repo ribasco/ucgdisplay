@@ -105,9 +105,9 @@ public class GlcdST7920Example {
 ### Contribution guidelines
 
 ---
-* Build instructions
+* Build instructions (TODO)
 
 ### Related projects
 
 ---
-* GLCD Emulator/Simulator
+* GLCD Emulator/Simulator (Coming soon)
