@@ -3,8 +3,6 @@
 ---
 A universal character/graphics display library for ARM embedded devices based on Java. Provides drivers for character based lcd devices (Hitachi HD44780) and over 40+ graphic monochrome lcd devices (Powered by U8g2). 
 
-This project aims to minimize the hassle of s
-
 ### Features
 
 ---
@@ -35,7 +33,7 @@ This project aims to minimize the hassle of s
 ### Pre-requisites
 
 ---
-* Wiring Pi library
+* Wiring Pi library (Required by native module)
  
 ### Installation
 
@@ -46,6 +44,59 @@ This project aims to minimize the hassle of s
 
 ---
 ######  Character LCD Example (HD44780)
+
+```java
+package com.ibasco.ucgdisplay.examples;
+
+import com.ibasco.ucgdisplay.drivers.clcd.HD44780DisplayDriver;
+import com.ibasco.ucgdisplay.drivers.clcd.LcdGpioAdapter;
+import com.ibasco.ucgdisplay.drivers.clcd.LcdPinMapConfig;
+import com.ibasco.ucgdisplay.drivers.clcd.LcdTemplates;
+import com.ibasco.ucgdisplay.drivers.clcd.adapters.GpioLcdAdapter;
+import com.ibasco.ucgdisplay.drivers.clcd.adapters.Mcp23017LcdAdapter;
+import com.ibasco.ucgdisplay.drivers.clcd.adapters.ShiftRegisterLcdAdapter;
+import com.ibasco.ucgdisplay.drivers.clcd.enums.LcdPin;
+import com.ibasco.ucgdisplay.drivers.clcd.providers.MCP23017GpioProviderExt;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.i2c.I2CBus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class HD44780Example {
+
+    private static final Logger log = LoggerFactory.getLogger(HD44780Example.class);
+
+    public static void main(String[] args) {
+        try {
+            LcdPinMapConfig config = new LcdPinMapConfig()
+                    .map(LcdPin.RS, RaspiPin.GPIO_02)
+                    .map(LcdPin.EN, RaspiPin.GPIO_03)
+                    .map(LcdPin.DATA_4, RaspiPin.GPIO_04)
+                    .map(LcdPin.DATA_5, RaspiPin.GPIO_05)
+                    .map(LcdPin.DATA_6, RaspiPin.GPIO_06)
+                    .map(LcdPin.DATA_7, RaspiPin.GPIO_07);
+            
+            //GPIO adapter
+            LcdGpioAdapter adapter = new GpioLcdAdapter(config);
+
+            //Shift register adapter
+            //LcdGpioAdapter adapter = new ShiftRegisterLcdAdapter(GpioFactory.getDefaultProvider(), RaspiPin.GPIO_02, RaspiPin.GPIO_03, RaspiPin.GPIO_04, config);
+
+            //MCP23017 I2C adapter (Using built-in templates)
+            //MCP23017GpioProviderExt mcp23017GpioProvider = new MCP23017GpioProviderExt(I2CBus.BUS_1, 0x15);
+            //LcdGpioAdapter adapter = new Mcp23017LcdAdapter(mcp23017GpioProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017);
+            
+            HD44780DisplayDriver charDriver = new HD44780DisplayDriver(adapter, 20, 4);
+            charDriver.home();
+            charDriver.write("Hello World".getBytes());
+        } catch (Exception e) {
+            log.error("Error occured", e);
+        }
+    }
+}
+
+```
 
 ######  Graphic LCD Example (ST7920)
 
@@ -89,13 +140,9 @@ public class GlcdST7920Example {
 ### Limitations
 
 ---
-* This library is guaranteed to work on the Raspberry Pi, but I cannot guarantee that it would work on other ARM based devices (e.g. Asus Tinker Board etc) as I only have Raspberry Pi in my possession (Donations welcome :D)
-* As of this writing (10/17/2018), only the display drivers are available. The UI framework is still under development.
-* Only full buffer mode is supported on the graphics display driver. Page buffer mode is not available.
-* The glcd library does not utilize Pi4j for device communication. It is directly interfaced with the JNI native library which makes use of the Wiring Pi library internally, so the Wiring Pi library is required to be installed on your ARM device.  
-* The glcd library only supports monochrome devices, hence colored display devices are not supported.
-* Since the glcd library is only a wrapper of u8g2, please do not ask me to implement display controllers that are not yet available on u8g2 or in this library. Please forward your request to oliver (author of the u8g2 library) and I will make the necessary changes on my end. 
-* The native library should work for Linux and Windows OS, but does not yet offer support for Mac OS.  (Note: This is only applicable for those who intend to use the driver in virtual mode only).
+* This library is guaranteed to work on the Raspberry Pi, but I cannot guarantee that it would work on other ARM based devices (e.g. Asus Tinker Board etc) as I only have Raspberry Pi in my possession.
+* Only full buffer mode is supported on the graphics display driver. Page buffer mode is not available. 
+* Colored graphics lcd devices are not supported. This is because u8g2 only supports monochrome displays.  
 
 ### Known Issues/Troubleshooting
 
