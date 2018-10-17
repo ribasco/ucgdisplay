@@ -58,6 +58,7 @@ This project aims to minimize the hassle of s
 * The glcd library does not utilize Pi4j for device communication. It is directly interfaced with the JNI native library which makes use of the Wiring Pi library internally, so the Wiring Pi library is required to be installed on your ARM device.  
 * The glcd library only supports monochrome devices, hence colored display devices are not supported.
 * Since the glcd library is only a wrapper of u8g2, please do not ask me to implement display controllers that are not yet available on u8g2 or in this library. Please forward your request to oliver (author of the u8g2 library) and I will make the necessary changes on my end. 
+* The native library should work for Linux and Windows OS, but does not yet offer support for Mac OS.  (Note: This is only applicable for those who intend to use the driver in virtual mode only).
 
 ### Known Issues/Troubleshooting
 
