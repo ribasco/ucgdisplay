@@ -85,7 +85,18 @@
             <id>${dm.repo.id}</id>
             <url>${dm.repo.snapshots.url}</url>
         </snapshotRepository>
+        <!--<site>
+            <id>github-site</id>
+            <name>pi-display library</name>
+            <url>https://ribasco.github.io/pi-display</url>
+        </site>-->
     </distributionManagement>
+
+    <!-- Continuous Integration -->
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/ribasco/pi-display</url>
+    </ciManagement>
 
     <!-- Profiles -->
     <profiles>
@@ -197,6 +208,20 @@
         <!-- Plugin management -->
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <fork>true</fork>
+                        <debug>false</debug>
+                        <optimize>true</optimize>
+                        <showDeprecation>true</showDeprecation>
+                        <showWarnings>false</showWarnings>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
