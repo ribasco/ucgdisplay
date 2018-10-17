@@ -13,7 +13,7 @@ A universal character/graphics display library for ARM embedded devices based on
         * No mandatory pin mapping configuration! You have the freedom to choose whatever device pins you want to use for your LCD device.
     * Graphic LCD driver features
         * Over 46+ display controllers supported. Refer to the table below for the supported display controllers.
-        * Powered by U8g2. Basically, the graphics lcd driver is just a wrapper for the u8g2 library, so the drawing operations found in this library should be equivalent to the ones available in U8g2. 
+        * Powered by U8g2. Basically, the graphics lcd driver is just a wrapper for the u8g2 library, so the available drawing operations should be equivalent to the ones found in U8g2. 
 
 * Event-driven UI framework (Currently under development) 
 
@@ -48,9 +48,11 @@ A universal character/graphics display library for ARM embedded devices based on
 ### Limitations
 
 ---
-* This library is guaranteed to work on the Raspberry Pi, but I cannot guarantee that it would work on other ARM based devices (e.g. Tinker Board) as I only have Raspberry Pi in my possession (Donations welcome :D)
+* This library is guaranteed to work on the Raspberry Pi, but I cannot guarantee that it would work on other ARM based devices (e.g. Asus Tinker Board etc) as I only have Raspberry Pi in my possession (Donations welcome :D)
 * As of this writing, only the display drivers are available. The UI framework is still under development.
 * Only fullbuffer mode is supported on the graphics display driver.
+* The graphics display library does not utilize Pi4j for device communication. It directly interface with the JNI native library which makes use of the Wiring Pi library internally, so the Wiring Pi library is required to be installed on your ARM device.  
+* The graphics display library only supports monochrome devices, hence colored displays are not supported.
  
 ### Known Issues/Troubleshooting
 
