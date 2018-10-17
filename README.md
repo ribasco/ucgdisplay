@@ -19,7 +19,6 @@ This project aims to minimize the hassle of s
 * Over 46+ display controllers supported. Refer to the table below for the supported display controllers.
 * Powered by U8g2. Basically, the graphics lcd driver is just a wrapper for the u8g2 library, so the available drawing operations should be equivalent to the ones found in U8g2. 
 * Virtual mode support.  
-        
 * Event-driven UI framework (Currently under development) 
 
 ### Supported display controllers
