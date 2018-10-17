@@ -1,8 +1,8 @@
-# Introduction
+### Introduction
 
 A universal character/graphics display library for ARM embedded devices based on Java. Provides drivers for character based lcd devices (Hitachi HD44780) and over 40+ graphic monochrome lcd devices (Powered by U8g2). 
 
-# Features
+### Features
    
 * Display drivers
     * Character LCD driver features
@@ -15,43 +15,44 @@ A universal character/graphics display library for ARM embedded devices based on
 
 * Event-driven UI framework (Currently under development) 
 
-# Supported display controllers
+### Supported display controllers
 
 * Character LCD
 
     Hitachi HD44780
+    
 * Graphic/Dot-Matrix LCD
 
     A2PRINTER, HX1230, IL3820, IST3020, KS0108, LC7981, LD7032, LS013B7DH03, LS027B7DH01, MAX7219, NT7534, PCD8544, PCF8812, RA8835, SBN1661, SED1330, SED1520, SH1106, SH1107, SH1108, SH1122, SSD1305, SSD1306, SSD1309, SSD1317, SSD1322, SSD1325, SSD1326, SSD1327, SSD1329, SSD1606, SSD1607, ST75256, ST7565, ST7567, ST7586S, ST7588, ST7920, T6963, UC1601, UC1604, UC1608, UC1610, UC1611, UC1638, UC1701
  
-# Pre-requisites
+### Pre-requisites
 
 * Wiring Pi library
  
-# Installation
+### Installation
 
 * Note: Make sure you have Wiring Pi library installed on your ARM device
 
-# Usage examples
+### Usage examples
 
-## Character LCD Example (HD44780)
+#### Character LCD Example (HD44780)
 
-## Graphic LCD Example (ST7920)
+#### Graphic LCD Example (ST7920)
 
-# Limitations
+### Limitations
 
 * This library is guaranteed to work on the Raspberry Pi, but I cannot guarantee that it would work on other ARM based devices (e.g. Tinker Board) as I only have Raspberry Pi in my possession (Donations welcome :D)
 * As of this writing, only the display drivers are available. The UI framework is still under development.
 * Only fullbuffer mode is supported on the graphics display driver.
  
-# Known Issues/Troubleshooting
+### Known Issues/Troubleshooting
 
 * Click [here](https://docs.google.com/spreadsheets/d/1WDh6J3zFE3j332CEIOvFzXhryOhoF7VAGc9Pf5vEo0s/edit?usp=sharing "Google spreadsheets") to check the current status of the display controller
 
-# Contributing
+### Contribution guidelines
 
 * Build instructions
 
-# Other projects you might be interested on
+### Related projects
 
 * GLCD Emulator/Simulator
