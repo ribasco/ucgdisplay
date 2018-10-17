@@ -87,8 +87,8 @@
         </snapshotRepository>
         <!--<site>
             <id>github-site</id>
-            <name>pi-display library</name>
-            <url>https://ribasco.github.io/pi-display</url>
+            <name>UCGDisplay Library</name>
+            <url>https://ribasco.github.io/ucgdisplay</url>
         </site>-->
     </distributionManagement>
 
