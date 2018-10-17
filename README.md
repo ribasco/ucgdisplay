@@ -3,18 +3,23 @@
 ---
 A universal character/graphics display library for ARM embedded devices based on Java. Provides drivers for character based lcd devices (Hitachi HD44780) and over 40+ graphic monochrome lcd devices (Powered by U8g2). 
 
+This project aims to minimize the hassle of s
+
 ### Features
 
 ---
-* Display drivers
-    * Character LCD driver features
-        * Pure java implementation for Hitachi HD44780 driver powered by Pi4j (Will probably add JNI/native support if performance is an issue)
-        * Designed with flexibility in mind allowing different for configuration setups for interfacing with your ARM device (e.g. Gpio expanders/I2C/SPI/Shift Registers)
-        * No mandatory pin mapping configuration! You have the freedom to choose whatever device pins you want to use for your LCD device.
-    * Graphic LCD driver features
-        * Over 46+ display controllers supported. Refer to the table below for the supported display controllers.
-        * Powered by U8g2. Basically, the graphics lcd driver is just a wrapper for the u8g2 library, so the available drawing operations should be equivalent to the ones found in U8g2. 
+##### Display drivers
 
+######  Character LCD driver features
+* Pure java implementation for Hitachi HD44780 driver powered by Pi4j (Will probably add JNI/native support if performance is an issue)
+* Designed with flexibility in mind allowing different configurations for interfacing with your ARM device (e.g. GPIO expanders/I2C/SPI)
+* No mandatory pin mapping configuration! You have the freedom to choose whatever device pins you want to use for your LCD device.
+
+###### Graphic LCD driver features
+* Over 46+ display controllers supported. Refer to the table below for the supported display controllers.
+* Powered by U8g2. Basically, the graphics lcd driver is just a wrapper for the u8g2 library, so the available drawing operations should be equivalent to the ones found in U8g2. 
+* Virtual mode support.  
+        
 * Event-driven UI framework (Currently under development) 
 
 ### Supported display controllers
@@ -50,10 +55,11 @@ A universal character/graphics display library for ARM embedded devices based on
 ---
 * This library is guaranteed to work on the Raspberry Pi, but I cannot guarantee that it would work on other ARM based devices (e.g. Asus Tinker Board etc) as I only have Raspberry Pi in my possession (Donations welcome :D)
 * As of this writing (10/17/2018), only the display drivers are available. The UI framework is still under development.
-* Only fullbuffer mode is supported on the graphics display driver.
-* The graphics display library does not utilize Pi4j for device communication. It directly interface with the JNI native library which makes use of the Wiring Pi library internally, so the Wiring Pi library is required to be installed on your ARM device.  
-* The graphics display library only supports monochrome devices, hence colored displays are not supported.
- 
+* Only full buffer mode is supported on the graphics display driver. Page buffer mode is not available.
+* The glcd library does not utilize Pi4j for device communication. It is directly interfaced with the JNI native library which makes use of the Wiring Pi library internally, so the Wiring Pi library is required to be installed on your ARM device.  
+* The glcd library only supports monochrome devices, hence colored display devices are not supported.
+* Since the glcd library is only a wrapper of u8g2, please do not ask me to implement display controllers that are not yet available on u8g2 or in this library. Please forward your request to oliver (author of the u8g2 library) and I will make the necessary changes on my end. 
+
 ### Known Issues/Troubleshooting
 
 ---
