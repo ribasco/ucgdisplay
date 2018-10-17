@@ -18,7 +18,9 @@ public class GlcdST7920Example {
                         .map(GlcdPin.CS, 0)
                 )
                 .build();
+
         GlcdDriver driver = new GlcdDriver(config);
+
 
         driver.setCursor(0, 10);
         driver.setFont(GlcdFont.FONT_6X12_MR);
