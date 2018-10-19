@@ -348,14 +348,6 @@
                                 </roots>
                             </configuration>
                         </execution>
-                        <execution>
-                            <id>default-cli</id>
-                            <configuration>
-                                <licenseMerges>
-                                    <licenseMerge>Test</licenseMerge>
-                                </licenseMerges>
-                            </configuration>
-                        </execution>
                     </executions>
                 </plugin>
             </plugins>
