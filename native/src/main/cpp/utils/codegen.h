@@ -1,7 +1,3 @@
-//
-// Created by raffy on 7/5/18.
-//
-
 #ifndef UCGDISP_GENERATE_H
 #define UCGDISP_GENERATE_H
 

@@ -10,6 +10,7 @@
     <name>${project.prefix} Parent Module</name>
     <url>https://github.com/ribasco/ucgdisplay</url>
     <packaging>pom</packaging>
+    <inceptionYear>2018</inceptionYear>
 
     <!-- Project properties -->
     <properties>
@@ -33,20 +34,22 @@
         <ant.version>1.10.4</ant.version>
         <ant-contrib.version>1.0b3</ant-contrib.version>
         <project.prefix>UCGDisplay ::</project.prefix>
+        <main.basedir>${project.basedir}</main.basedir>
     </properties>
 
     <!-- License Information -->
     <licenses>
         <license>
-            <name>BSD License (2-Clause)</name>
-            <url>https://opensource.org/licenses/bsd-license.php</url>
+            <name>GNU General Lesser Public License (LGPL) version 3.0</name>
+            <url>http://www.gnu.org/licenses/lgpl.txt</url>
+            <distribution>repo</distribution>
         </license>
     </licenses>
 
     <!-- Project Organization -->
     <organization>
-        <name>ucgdisplay</name>
-        <url>https://github.com/ribasco</url>
+        <name>Universal Character/Graphics display library</name>
+        <url>https://github.com/ribasco/ucgdisplay</url>
     </organization>
 
     <!-- Developer Information -->
@@ -71,8 +74,8 @@
 
     <!-- Issue management -->
     <issueManagement>
-        <url>http://dev.ibasco.com/raffy/ucgdisplay/issues</url>
-        <system>gogit</system>
+        <url>https://github.com/ribasco/ucgdisplay/issues</url>
+        <system>github</system>
     </issueManagement>
 
     <!-- Distribution management -->
@@ -85,11 +88,6 @@
             <id>${dm.repo.id}</id>
             <url>${dm.repo.snapshots.url}</url>
         </snapshotRepository>
-        <!--<site>
-            <id>github-site</id>
-            <name>UCGDisplay Library</name>
-            <url>https://ribasco.github.io/ucgdisplay</url>
-        </site>-->
     </distributionManagement>
 
     <!-- Continuous Integration -->
@@ -217,6 +215,7 @@
                         <source>${maven.compiler.source}</source>
                         <target>${maven.compiler.target}</target>
                         <fork>true</fork>
+                        <verbose>true</verbose>
                         <debug>false</debug>
                         <optimize>true</optimize>
                         <showDeprecation>true</showDeprecation>
@@ -255,28 +254,31 @@
                     <artifactId>native-maven-plugin</artifactId>
                     <version>1.0-alpha-9</version>
                 </plugin>
-                <!-- Skip official maven deploy plugin, use nexus plugin instead -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
-                    <configuration>
-                        <skip>true</skip>
-                        <deployAtEnd>true</deployAtEnd>
-
-                    </configuration>
-                </plugin>
                 <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-enforcer-plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>3.0.0-M2</version>
                 </plugin>
-                <!-- Sonatype deploy plugin -->
                 <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.8</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                    <configuration>
+                        <deployAtEnd>true</deployAtEnd>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <releaseProfiles>release</releaseProfiles>
+                        <tagNameFormat>ucgdisplay-@{project.version}</tagNameFormat>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -295,46 +297,91 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5.3</version>
-                    <configuration>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
-                        <useReleaseProfile>false</useReleaseProfile>
-                        <releaseProfiles>release</releaseProfiles>
-                        <tagNameFormat>ucgdisplay-@{project.version}</tagNameFormat>
-                    </configuration>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>1.11.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
                     <version>2.7</version>
                 </plugin>
+                <!-- License Plugin -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>1.16</version>
+                    <executions>
+                        <execution>
+                            <id>append-license-file-headers</id>
+                            <goals>
+                                <goal>update-file-header</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                            <configuration>
+                                <licenseName>lgpl_v3</licenseName>
+                                <descriptionTemplate>${project.parent.main.basedir}/../scripts/license/template.ftl
+                                </descriptionTemplate>
+                                <canUpdateCopyright>true</canUpdateCopyright>
+                                <canUpdateDescription>true</canUpdateDescription>
+                                <canUpdateLicense>true</canUpdateLicense>
+                                <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                                <processStartTag>========================START=================================
+                                </processStartTag>
+                                <processEndTag>=========================END==================================
+                                </processEndTag>
+                                <excludes>
+                                    <exclude>*.sh</exclude>
+                                    <exclude>src/main/cpp/lib/**</exclude>
+                                    <exclude>U8g2LookupFonts.cpp</exclude>
+                                    <exclude>U8g2LookupSetup.cpp</exclude>
+                                    <exclude>controllers.h</exclude>
+                                </excludes>
+                                <includes>
+                                    <include>**/*.java</include>
+                                    <include>*.cpp</include>
+                                    <include>*.h</include>
+                                </includes>
+                                <roots>
+                                    <root>src/main/java</root>
+                                    <root>src/test</root>
+                                    <root>src/main/cpp</root>
+                                </roots>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
 
         <!-- Parent plugins -->
         <plugins>
-            <!-- STAGING Plugin (Sonatype) -->
+            <!-- Generate license file -->
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <!-- TODO: Externalize properties -->
-                    <serverId>ibasco-nexus</serverId>
-                    <nexusUrl>http://repo.ibasco.com/</nexusUrl>
-                    <skipStaging>true</skipStaging>
-                </configuration>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
+                        <id>update-project-license</id>
                         <goals>
-                            <goal>deploy</goal>
+                            <goal>update-project-license</goal>
                         </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <licenseName>lgpl_v3</licenseName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>append-license-file-headers</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <descriptionTemplate>${project.basedir}/scripts/license/template.ftl</descriptionTemplate>
+                        </configuration>
                     </execution>
                 </executions>
+                <inherited>false</inherited>
             </plugin>
             <!-- ENFORCER Plugin -->
             <plugin>
@@ -408,6 +455,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <!-- SCM Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <configuration>
+                    <goals>install</goals>
+                </configuration>
             </plugin>
         </plugins>
     </build>
