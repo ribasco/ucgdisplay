@@ -1,7 +1,7 @@
 ### Introduction
 
 ---
-A universal character/graphics display library for ARM embedded devices based on Java. Provides drivers for character based lcd devices (Hitachi HD44780) and over 40+ graphic monochrome displays (Powered by U8g2). 
+A universal character/graphics display library for ARM embedded devices based on Java. Provides drivers for character based lcd devices (Hitachi HD44780) and over 40+ graphic monochrome displays (Powered by [U8g2](https://github.com/olikraus/u8g2)). 
 
 ### Features
 
@@ -20,7 +20,7 @@ A universal character/graphics display library for ARM embedded devices based on
 
 ###### Graphic LCD driver features
 * Over 46+ controllers are supported. Refer to the table below for the list of supported display controllers.
-* Wraps around the popular U8g2 library. All drawing operations present in the library should be similar to the ones found in U8g2. 
+* The graphics display module wraps around the popular c/c++ [U8g2](https://github.com/olikraus/u8g2) library by Oliver. All drawing operations present in the library should be similar to the ones found in U8g2 (Refer to the official [U8g2 reference manual](https://github.com/olikraus/u8g2/wiki/u8g2reference) for more information). 
 
 #####  Event-driven UI framework (Coming soon) 
 
@@ -39,7 +39,7 @@ A universal character/graphics display library for ARM embedded devices based on
 
 ---
 * Java JDK 1.8 or higher
-* Wiring Pi library (Required on ARM devices)
+* [Wiring Pi](http://wiringpi.com/) library (Only required for ARM based devices)
  
 ### Installation
 
