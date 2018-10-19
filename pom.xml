@@ -67,9 +67,9 @@
 
     <!-- Source Control -->
     <scm>
-        <developerConnection>scm:git:ssh://git@dev.ibasco.com:10022/raffy/pi-display.git</developerConnection>
-        <connection>scm:git:ssh://git@dev.ibasco.com:10022/raffy/pi-display.git</connection>
-        <url>http://dev.ibasco.com/raffy/pi-display.git</url>
+        <connection>scm:git:git://github.com/ribasco/ucgdisplay.git</connection>
+        <developerConnection>scm:git:git@github.com:ribasco/ucgdisplay.git</developerConnection>
+        <url>https://github.com/ribasco/ucgdisplay</url>
     </scm>
 
     <!-- Issue management -->
@@ -82,10 +82,12 @@
     <distributionManagement>
         <repository>
             <id>${dm.repo.id}</id>
+            <name>${dm.repo.name}</name>
             <url>${dm.repo.release.url}</url>
         </repository>
         <snapshotRepository>
             <id>${dm.repo.id}</id>
+            <name>${dm.repo.snapshots.name}</name>
             <url>${dm.repo.snapshots.url}</url>
         </snapshotRepository>
     </distributionManagement>
