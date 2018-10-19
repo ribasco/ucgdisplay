@@ -38,6 +38,7 @@ A universal character/graphics display library for ARM embedded devices based on
 ### Pre-requisites
 
 ---
+* Java JDK 1.8 or higher
 * Wiring Pi library (Required on ARM devices)
  
 ### Installation
