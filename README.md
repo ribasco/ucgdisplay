@@ -49,11 +49,21 @@ A universal character/graphics display library for ARM embedded devices based on
 1. From maven repository
 
     ```xml
-    <dependency>
-        <groupId>com.ibasco.ucgdisplay</groupId>
-        <artifactId>ucgdisplay</artifactId>
-        <version>0.1-alpha</version>
-    </dependency>
+    <dependencies>
+        <!-- Character display driver (HD44780) -->
+         <dependency>
+             <groupId>com.ibasco.ucgdisplay</groupId>
+             <artifactId>ucgd-drivers-clcd</artifactId>
+             <version>0.1-alpha</version>
+         </dependency>
+      
+         <!-- Graphics display driver -->
+         <dependency>
+             <groupId>com.ibasco.ucgdisplay</groupId>
+             <artifactId>0.1-alpha</artifactId>
+             <version>0.1-alpha</version>
+         </dependency>
+    </dependencies>
     ```
     
 2. From source
@@ -179,7 +189,8 @@ public class GlcdST7920Example {
 
 ---
 * This library is guaranteed to work on the Raspberry Pi, but I cannot guarantee that it would work on other ARM based devices (e.g. Asus Tinker Board etc) as I only have Raspberry Pi in my possession.
- 
+* The adapters for character lcd driver Mcp23008LcdAdapter and Pcf8574TLcdAdapter are not yet implemented. 
+
 ### Known Issues/Troubleshooting
 
 ---
