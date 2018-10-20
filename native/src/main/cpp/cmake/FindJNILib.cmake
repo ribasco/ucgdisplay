@@ -13,8 +13,11 @@ if (CMAKE_CROSSCOMPILING)
 
     message(STATUS "[FIND-JNI] JDK Search Directory Path = ${TOOLS_DIR_PATH}/${JDK_SEARCH_DIR}")
 
+    //set(JDK_SEARCH_FULL_PATH "${TOOLS_DIR_PATH}/${JDK_SEARCH_DIR}/jdk*")
+    set(JDK_SEARCH_FULL_PATH "${JDK_INCLUDE_DIR}/${JDK_SEARCH_DIR}/jdk*")
+
     # Find JDK
-    file(GLOB files "${TOOLS_DIR_PATH}/${JDK_SEARCH_DIR}/jdk*")
+    file(GLOB files "${JDK_SEARCH_FULL_PATH}")
     foreach (file ${files})
         message(STATUS "[FIND-JNI] File: ${file}")
         set(JDK_DIR ${file})
