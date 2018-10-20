@@ -321,7 +321,7 @@
                             <phase>process-sources</phase>
                             <configuration>
                                 <licenseName>lgpl_v3</licenseName>
-                                <descriptionTemplate>${project.parent.main.basedir}/../scripts/license/template.ftl
+                                <descriptionTemplate>${main.basedir}/scripts/license/template.ftl
                                 </descriptionTemplate>
                                 <canUpdateCopyright>true</canUpdateCopyright>
                                 <canUpdateDescription>true</canUpdateDescription>

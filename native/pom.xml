@@ -15,6 +15,7 @@
     <name>${project.prefix} Native Library</name>
 
     <properties>
+        <main.basedir>${project.parent.basedir}</main.basedir>
         <lib-output-filename>libucgdisp.so</lib-output-filename>
         <lib-output-filename-win>ucgdisp.dll</lib-output-filename-win>
         <lib-output-name>ucgdisp</lib-output-name>

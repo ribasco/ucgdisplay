@@ -10,6 +10,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
+
     <artifactId>ucgd-drivers-glcd</artifactId>
     <packaging>jar</packaging>
     <name>${project.prefix} Graphics LCD Driver</name>

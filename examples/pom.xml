@@ -10,6 +10,11 @@
     <name>${project.prefix} Examples</name>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ucgd-examples</artifactId>
+
+    <properties>
+        <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.ibasco.ucgdisplay</groupId>

@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Character LCD Driver
- * Filename: Pcf8574TLcdAdapter.java
+ * Filename: Pcf8574LcdAdapter.java
  *
  * ---------------------------------------------------------
  * %%
