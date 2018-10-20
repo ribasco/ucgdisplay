@@ -49,7 +49,7 @@ import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
  * @author Rafael Ibasco
  */
 @SuppressWarnings("All")
-public class HD44780DisplayDriver implements CharDisplayDriver {
+public class HD44780DisplayDriver extends CharDisplayDriverBase {
     private static final Logger log = LoggerFactory.getLogger(HD44780DisplayDriver.class);
 
     //Maximum number of characters supported

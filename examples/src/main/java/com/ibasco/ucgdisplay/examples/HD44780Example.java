@@ -60,7 +60,8 @@ public class HD44780Example {
 
             HD44780DisplayDriver driver = new HD44780DisplayDriver(adapter, 20, 4);
             driver.home();
-            driver.write("Hello World".getBytes());
+            driver.setCursor(0, 0);
+            driver.write("Hello World");
         } catch (Exception e) {
             log.error("Error occured", e);
         }
