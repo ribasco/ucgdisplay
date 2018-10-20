@@ -17,7 +17,12 @@ A universal character/graphics display library for ARM embedded devices based on
 * Pure java implementation for Hitachi HD44780 driver powered by Pi4j (Will probably add JNI/native support in the future if performance is an issue)
 * Designed with flexibility in mind allowing for different configuration styles of interfacing with your ARM device (e.g. GPIO expanders/I2C/SPI)
 * No fixed/mandatory pin mapping. You have the freedom to choose whatever device pins you want to use for your LCD device.
-
+* Available LCD adapters
+    * MCP23017
+    * Shift Register (e.g. 74HC595)
+    * GPIO
+    * MCP23008 (Coming soon)
+    * PCF8574 (Coming soon)
 ###### Graphic LCD driver features
 * Over 46+ controllers are supported. Refer to the table below for the list of supported display controllers.
 * The graphics display module wraps around the popular c/c++ [U8g2](https://github.com/olikraus/u8g2) library by Oliver. All drawing operations present in the library should be similar to the ones found in U8g2 (Refer to the official [U8g2 reference manual](https://github.com/olikraus/u8g2/wiki/u8g2reference) for more information). 
