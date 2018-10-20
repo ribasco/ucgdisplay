@@ -3,21 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>pi-display</artifactId>
-        <groupId>com.ibasco.pidisplay</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <artifactId>ucgdisplay</artifactId>
+        <groupId>com.ibasco.ucgdisplay</groupId>
+        <version>0.1-alpha-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>pi-display-native</artifactId>
+    <artifactId>ucgd-native</artifactId>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
     <name>${project.prefix} Native Library</name>
 
     <properties>
-        <lib-output-filename>libpidisp.so</lib-output-filename>
-        <lib-output-filename-win>pidisp.dll</lib-output-filename-win>
-        <lib-output-name>pidisp</lib-output-name>
+        <lib-output-filename>libucgdisp.so</lib-output-filename>
+        <lib-output-filename-win>ucgdisp.dll</lib-output-filename-win>
+        <lib-output-name>ucgdisp</lib-output-name>
+        <cpp.proj.dir>${project.basedir}/src/main/cpp</cpp.proj.dir>
+        <cpp.build.dir>${cpp.proj.dir}/build</cpp.build.dir>
         <cmake-generator-arg>-G 'CodeBlocks - Unix Makefiles'</cmake-generator-arg>
     </properties>
 
@@ -108,19 +110,21 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <target name="build-pidisp">
+                                    <target name="build-ucgdisp">
                                         <!-- Build both architectures when Cross-Compiling -->
                                         <echo>[HOST=ARM] Building ARM binaries only</echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
+                                              failonerror="true">
                                             <arg line="--target all"/>
                                             <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/linux/arm"/>
                                         </exec>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm"
+                                              failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
-                                            <arg line="--target pidisp --" />
-                                            <arg line=" -j 4" />
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -221,7 +225,7 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <target name="build-pidisp">
+                                    <target name="build-ucgdisp">
                                         <!-- Build both architectures when Cross-Compiling -->
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions</echo>
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
@@ -251,21 +255,21 @@
                                         <!-- Build AMD64 -->
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/amd64" failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/linux/amd64"/>
-                                            <arg line="--target pidisp --" />
-                                            <arg line=" -j 4" />
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                         <!-- Build ARM -->
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
-                                            <arg line="--target pidisp --" />
-                                            <arg line=" -j 4" />
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                         <!-- Build Windows -->
                                         <exec executable="cmake"
                                               dir="${project.basedir}/src/main/cpp/build/windows/amd64"
                                               failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64"/>
-                                            <arg line="--target pidisp --"/>
+                                            <arg line="--target ucgdisp --"/>
                                             <arg line=" -j 4"/>
                                         </exec>
                                     </target>
@@ -418,22 +422,22 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <target name="build-pidisp">
+                                    <target name="build-ucgdisp">
                                         <!-- Refresh CMake cache -->
-                                        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for windows</echo>
+                                        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for windows
+                                        </echo>
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
                                             <arg line="--target all"/>
-                                            <!--<arg line="-DCMAKE_SH=CMAKE_SH-NOTFOUND" />-->
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
-                                           <arg line="-G 'CodeBlocks - MinGW Makefiles'"/>
+                                            <arg line="-G 'CodeBlocks - MinGW Makefiles'"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/windows/amd64"/>
                                         </exec>
                                         <!-- Build project -->
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/windows/amd64" failonerror="true">
                                             <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64"/>
-                                            <arg line="--target pidisp --" />
-                                            <arg line=" -j 4" />
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -457,7 +461,8 @@
                                     <outputDirectory>${basedir}/target/classes/lib/windows/amd64</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/windows/amd64/bin</directory>
+                                            <directory>${project.basedir}/src/main/cpp/build/windows/amd64/bin
+                                            </directory>
                                             <filtering>true</filtering>
                                             <includes>
                                                 <include>${lib-output-name}.dll</include>
@@ -466,6 +471,117 @@
                                     </resources>
                                     <nonFilteredFileExtensions>
                                         <nonFilteredFileExtension>dll</nonFilteredFileExtension>
+                                    </nonFilteredFileExtensions>
+                                    <fileNameFiltering>
+                                        true
+                                    </fileNameFiltering>
+                                    <overwrite>true</overwrite>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.ant</groupId>
+                    <artifactId>ant</artifactId>
+                    <version>${ant.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- BUILD PROFILE: Mac OSX - x86_64/amd64 -->
+        <profile>
+            <id>build-mac-amd64</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <arch>x86_64</arch>
+                    <name>mac os x</name>
+                </os>
+            </activation>
+            <properties>
+                <current-osarch>mac-amd64</current-osarch>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Ant-Run Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <!-- Prepare directories -->
+                            <execution>
+                                <id>generate-sources</id>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <target name="generate-sources">
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/mac/amd64"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>make-mac</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target name="build-ucgdisp">
+                                        <!-- Refresh CMake cache -->
+                                        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for Mac OS
+                                        </echo>
+                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/mac/amd64"/>
+                                        </exec>
+                                        <!-- Build project -->
+                                        <exec executable="cmake" dir="${cpp.build.dir}/mac/amd64" failonerror="true">
+                                            <arg line="--build ${cpp.build.dir}/mac/amd64"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Copy native libraries to project's target directory -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <!-- Copy x86_64/amd64 binaries to lib -->
+                            <execution>
+                                <id>copy-lib-amd64</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/classes/lib/mac/amd64</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${cpp.build.dir}/mac/amd64/bin
+                                            </directory>
+                                            <filtering>true</filtering>
+                                            <includes>
+                                                <include>${lib-output-filename}</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                    <nonFilteredFileExtensions>
+                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
                                     </nonFilteredFileExtensions>
                                     <fileNameFiltering>
                                         true
@@ -504,15 +620,15 @@
                             <javahPath>${env.JAVA_HOME}/bin/javah</javahPath>
                             <javahIncludes>
                                 <javahInclude>
-                                    <className>com.ibasco.pidisplay.core.system.InputDeviceManager</className>
+                                    <className>com.ibasco.ucgdisplay.core.input.InputDeviceManager</className>
                                     <headerName>InputDeviceManager.h</headerName>
                                 </javahInclude>
                                 <javahInclude>
-                                    <className>com.ibasco.pidisplay.core.u8g2.U8g2Graphics</className>
+                                    <className>com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics</className>
                                     <headerName>U8g2Graphics.h</headerName>
                                 </javahInclude>
                                 <javahInclude>
-                                    <className>com.ibasco.pidisplay.core.u8g2.U8g2EventDispatcher</className>
+                                    <className>com.ibasco.ucgdisplay.core.u8g2.U8g2EventDispatcher</className>
                                     <headerName>U8g2EventDispatcher.h</headerName>
                                 </javahInclude>
                             </javahIncludes>

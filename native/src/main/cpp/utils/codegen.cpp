@@ -296,7 +296,6 @@ void buildDisplayTree(glcd_info_tree_t &controllers) {
     }
 }
 
-
 /**
  * Builds the GlcdSetupInfo() line for Glcd.java
  */
@@ -355,9 +354,9 @@ void buildCode_Glcd() {
 
     appendAutogenMsg(code);
 
-    code << "package com.ibasco.pidisplay.drivers.glcd;\n\n";
-    code << "import com.ibasco.pidisplay.drivers.glcd.enums.GlcdControllerType;\n";
-    code << "import static com.ibasco.pidisplay.core.u8g2.U8g2Graphics.*;\n\n";
+    code << "package com.ibasco.ucgdisplay.drivers.glcd;\n\n";
+    code << "import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdControllerType;\n";
+    code << "import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.*;\n\n";
 
     code << "@SuppressWarnings(\"unused\")\n";
     code << "public interface Glcd {\n";
@@ -406,7 +405,7 @@ void buildCode_GlcdControllerType() {
 
     stringstream code;
     appendAutogenMsg(code);
-    code << "package com.ibasco.pidisplay.drivers.glcd.enums;\n\n";
+    code << "package com.ibasco.ucgdisplay.drivers.glcd.enums;\n\n";
 
     code << "@SuppressWarnings(\"unused\")\n";
     code << "public enum GlcdControllerType {" << endl;
@@ -429,7 +428,7 @@ void buildCode_GlcdSize() {
 
     stringstream code;
     code << AUTOGEN_MSG << endl;
-    code << "package com.ibasco.pidisplay.drivers.glcd.enums;\n\n";
+    code << "package com.ibasco.ucgdisplay.drivers.glcd.enums;\n\n";
 
     code << "import java.util.Arrays;\n\n";
 
@@ -523,9 +522,9 @@ void buildCode_GlcdFont() {
 
     stringstream code;
     code << AUTOGEN_MSG << endl;
-    code << "package com.ibasco.pidisplay.drivers.glcd.enums;\n\n";
+    code << "package com.ibasco.ucgdisplay.drivers.glcd.enums;\n\n";
 
-    //code << "import com.ibasco.pidisplay.core.ui.Font;\n\n";
+    //code << "import com.ibasco.ucgdisplay.core.ui.Font;\n\n";
 
     code << "@SuppressWarnings(\"unused\")\n";
     code << "public enum GlcdFont {" << endl;
@@ -654,8 +653,8 @@ void buildCode_updateControllerDefinitions(const string &codeBuildSrcFilePath) {
 
     appendAutogenMsg(ctrl_code);
 
-    ctrl_code << "#ifndef PIDISP_CONTROLLERS_H" << endl;
-    ctrl_code << "#define PIDISP_CONTROLLERS_H" << endl;
+    ctrl_code << "#ifndef UCGDISP__CONTROLLERS_H" << endl;
+    ctrl_code << "#define UCGDISP__CONTROLLERS_H" << endl;
 
     int lineNum = 0;
     bool done = false, startCapture = false;
@@ -675,7 +674,7 @@ void buildCode_updateControllerDefinitions(const string &codeBuildSrcFilePath) {
             ctrl_code << line << endl;
     } while (!inFile.eof() && !done);
 
-    ctrl_code << "#endif //PIDISP_CONTROLLERS_H" << endl;
+    ctrl_code << "#endif //UCGDISP__CONTROLLERS_H" << endl;
 
     string outputCode = ctrl_code.str();
     inFile.close();
@@ -785,7 +784,7 @@ int main(int argc, char *argv[]) {
     if (letters == "y") {
 
         string baseGlcdPackageDirPath =
-                BASE_PROJECT_PATH_DRIVERS + "/glcd/src/main/java/com/ibasco/pidisplay/drivers/glcd";
+                BASE_PROJECT_PATH_DRIVERS + "/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd";
         string enumDirPath = baseGlcdPackageDirPath + "/enums";
 
         exportFile(FILE_CONTROLLERS, BASE_PROJECT_PATH_NATIVE_CPP + "/utils/" + FILE_CONTROLLERS);

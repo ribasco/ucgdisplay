@@ -1,6 +1,28 @@
-//
-// Created by raffy on 7/4/18.
-//
+/*-
+ * ========================START=================================
+ * Organization: Universal Character/Graphics display library
+ * Project: UCGDisplay :: Native Library
+ * Filename: Global.cpp
+ * 
+ * ---------------------------------------------------------
+ * %%
+ * Copyright (C) 2018 Universal Character/Graphics display library
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * =========================END==================================
+ */
 
 #include "Global.h"
 #include "U8g2Hal.h"
@@ -101,9 +123,7 @@ void JNI_CopyJByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length
 }
 
 void JNI_FireGpioEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value) {
-    //jobject event = env->NewObject(clsU8g2GpioEvent, midU8g2GpioEventCtr, msg, value);
     env->CallStaticVoidMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_onGpioEvent, (jlong) id,  msg, value);
-    //env->DeleteLocalRef(event);
 }
 
 void JNI_FireByteEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value) {

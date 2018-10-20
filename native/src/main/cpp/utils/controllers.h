@@ -2,8 +2,8 @@
  * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 12 2018 13:44:00) 
  */
 
-#ifndef PIDISP_CONTROLLERS_H
-#define PIDISP_CONTROLLERS_H
+#ifndef UCGDISP_CONTROLLERS_H
+#define UCGDISP_CONTROLLERS_H
 /* display_controller_list_start */
 
 struct controller controller_list[] =

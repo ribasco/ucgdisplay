@@ -4,25 +4,52 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ibasco.pidisplay</groupId>
-    <artifactId>pi-display</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <name>${project.prefix} 00 - Parent Module</name>
-    <url>https://github.com/ribasco/pi-display</url>
+    <groupId>com.ibasco.ucgdisplay</groupId>
+    <artifactId>ucgdisplay</artifactId>
+    <version>0.1-alpha-SNAPSHOT</version>
+    <name>${project.prefix} Parent Module</name>
+    <url>https://github.com/ribasco/ucgdisplay</url>
     <packaging>pom</packaging>
+    <inceptionYear>2018</inceptionYear>
+
+    <!-- Project properties -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <pi4j.version>1.2-SNAPSHOT</pi4j.version>
+        <commons.io.version>2.6</commons.io.version>
+        <commons.lang3.version>3.6</commons.lang3.version>
+        <commons.text.version>1.1</commons.text.version>
+        <commons.codec.version>1.11</commons.codec.version>
+        <guava.version>23.0</guava.version>
+        <sl4j.version>1.7.25</sl4j.version>
+        <logback.version>1.2.3</logback.version>
+        <junit.version>RELEASE</junit.version>
+        <rxjava.version>2.1.5</rxjava.version>
+        <mockito.version>2.11.0</mockito.version>
+        <powermock.version>1.7.3</powermock.version>
+        <sysoutslf4j.version>1.0.2</sysoutslf4j.version>
+        <native.lib.loader.version>2.2.0</native.lib.loader.version>
+        <ant.version>1.10.4</ant.version>
+        <ant-contrib.version>1.0b3</ant-contrib.version>
+        <project.prefix>UCGDisplay ::</project.prefix>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
 
     <!-- License Information -->
     <licenses>
         <license>
-            <name>BSD License (2-Clause)</name>
-            <url>https://opensource.org/licenses/bsd-license.php</url>
+            <name>GNU General Lesser Public License (LGPL) version 3.0</name>
+            <url>http://www.gnu.org/licenses/lgpl.txt</url>
+            <distribution>repo</distribution>
         </license>
     </licenses>
 
     <!-- Project Organization -->
     <organization>
-        <name>pi-display</name>
-        <url>https://github.com/ribasco</url>
+        <name>Universal Character/Graphics display library</name>
+        <url>https://github.com/ribasco/ucgdisplay</url>
     </organization>
 
     <!-- Developer Information -->
@@ -40,45 +67,40 @@
 
     <!-- Source Control -->
     <scm>
-        <developerConnection>scm:git:ssh://git@dev.ibasco.com:10022/raffy/pi-display.git</developerConnection>
-        <connection>scm:git:ssh://git@dev.ibasco.com:10022/raffy/pi-display.git</connection>
-        <url>http://dev.ibasco.com/raffy/pi-display.git</url>
+        <connection>scm:git:git://github.com/ribasco/ucgdisplay.git</connection>
+        <developerConnection>scm:git:git@github.com:ribasco/ucgdisplay.git</developerConnection>
+        <url>https://github.com/ribasco/ucgdisplay</url>
     </scm>
 
     <!-- Issue management -->
     <issueManagement>
-        <url>http://dev.ibasco.com/raffy/pi-display/issues</url>
-        <system>gogit</system>
+        <url>https://github.com/ribasco/ucgdisplay/issues</url>
+        <system>github</system>
     </issueManagement>
 
     <!-- Distribution management -->
     <distributionManagement>
         <repository>
             <id>${dm.repo.id}</id>
+            <name>${dm.repo.name}</name>
             <url>${dm.repo.release.url}</url>
         </repository>
         <snapshotRepository>
             <id>${dm.repo.id}</id>
+            <name>${dm.repo.snapshots.name}</name>
             <url>${dm.repo.snapshots.url}</url>
         </snapshotRepository>
     </distributionManagement>
 
-    <!-- Sonatype Snapshots repository -->
-    <repositories>
-        <repository>
-            <id>oss-snapshots-repo</id>
-            <name>Sonatype OSS Maven Repository</name>
-            <url>https://oss.sonatype.org/content/groups/public</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </snapshots>
-        </repository>
-    </repositories>
+    <!-- Continuous Integration -->
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/ribasco/ucgdisplay</url>
+    </ciManagement>
 
     <!-- Profiles -->
     <profiles>
+        <!-- Disable doclint for java 8 -->
         <profile>
             <id>disable-java8-doclint</id>
             <activation>
@@ -107,6 +129,72 @@
                 </plugins>
             </reporting>
         </profile>
+        <!-- Only activate these plugins on release (source, javadoc, gpg) -->
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- SOURCE Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>aggregate-sources</id>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                </goals>
+                                <configuration>
+
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- JAVADOC Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>aggregate-javadocs</id>
+                                <goals>
+                                    <goal>aggregate-jar</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Specific configuration for the aggregate report -->
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- GPG Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <!-- Project Modules -->
@@ -121,65 +209,306 @@
         <module>native</module>
     </modules>
 
-    <!-- Project properties -->
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <pi4j.version>1.2-SNAPSHOT</pi4j.version>
-        <commons.io.version>2.6</commons.io.version>
-        <commons.lang3.version>3.6</commons.lang3.version>
-        <commons.text.version>1.1</commons.text.version>
-        <commons.codec.version>1.11</commons.codec.version>
-        <guava.version>23.0</guava.version>
-        <sl4j.version>1.7.25</sl4j.version>
-        <logback.version>1.2.3</logback.version>
-        <junit.version>RELEASE</junit.version>
-        <rxjava.version>2.1.5</rxjava.version>
-        <mockito.version>2.11.0</mockito.version>
-        <powermock.version>1.7.3</powermock.version>
-        <sysoutslf4j.version>1.0.2</sysoutslf4j.version>
-        <native.lib.loader.version>2.2.0</native.lib.loader.version>
-        <ant.version>1.10.4</ant.version>
-        <ant-contrib.version>1.0b3</ant-contrib.version>
-        <project.prefix>PiDisplay ::</project.prefix>
-    </properties>
+    <build>
+        <!-- Plugin management -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <fork>true</fork>
+                        <verbose>true</verbose>
+                        <debug>false</debug>
+                        <optimize>true</optimize>
+                        <showDeprecation>true</showDeprecation>
+                        <showWarnings>false</showWarnings>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                    <configuration>
+                        <installAtEnd>true</installAtEnd>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>native-maven-plugin</artifactId>
+                    <version>1.0-alpha-9</version>
+                </plugin>
+                <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-enforcer-plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.0.0-M2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                    <configuration>
+                        <deployAtEnd>true</deployAtEnd>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <releaseProfiles>release</releaseProfiles>
+                        <tagNameFormat>ucgdisplay-@{project.version}</tagNameFormat>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>1.11.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <!-- License Plugin -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>1.16</version>
+                    <executions>
+                        <execution>
+                            <id>append-license-file-headers</id>
+                            <goals>
+                                <goal>update-file-header</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                            <configuration>
+                                <licenseName>lgpl_v3</licenseName>
+                                <descriptionTemplate>${project.parent.main.basedir}/../scripts/license/template.ftl
+                                </descriptionTemplate>
+                                <canUpdateCopyright>true</canUpdateCopyright>
+                                <canUpdateDescription>true</canUpdateDescription>
+                                <canUpdateLicense>true</canUpdateLicense>
+                                <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                                <processStartTag>========================START=================================
+                                </processStartTag>
+                                <processEndTag>=========================END==================================
+                                </processEndTag>
+                                <excludes>
+                                    <exclude>*.sh</exclude>
+                                    <exclude>src/main/cpp/lib/**</exclude>
+                                    <exclude>U8g2LookupFonts.cpp</exclude>
+                                    <exclude>U8g2LookupSetup.cpp</exclude>
+                                    <exclude>controllers.h</exclude>
+                                </excludes>
+                                <includes>
+                                    <include>**/*.java</include>
+                                    <include>*.cpp</include>
+                                    <include>*.h</include>
+                                </includes>
+                                <roots>
+                                    <root>src/main/java</root>
+                                    <root>src/test</root>
+                                    <root>src/main/cpp</root>
+                                </roots>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
+        <!-- Parent plugins -->
+        <plugins>
+            <!-- Generate license file -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>update-project-license</id>
+                        <goals>
+                            <goal>update-project-license</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <licenseName>lgpl_v3</licenseName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>append-license-file-headers</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <descriptionTemplate>${project.basedir}/scripts/license/template.ftl</descriptionTemplate>
+                        </configuration>
+                    </execution>
+                </executions>
+                <inherited>false</inherited>
+            </plugin>
+            <!-- ENFORCER Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <!-- Enforce: Required properties (Deploy phase) -->
+                    <execution>
+                        <id>enforce</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireProperty>
+                                    <property>dm.repo.id</property>
+                                    <message>[DISTRIBUTION MANAGEMENT] Repository ID (dm.repo.id) has not been
+                                        specified.
+                                    </message>
+                                </requireProperty>
+                                <requireProperty>
+                                    <property>dm.repo.release.url</property>
+                                    <message>[DISTRIBUTION MANAGEMENT] Release URL (dm.repo.release.url) has not been
+                                        specified
+                                    </message>
+                                </requireProperty>
+                                <requireProperty>
+                                    <property>dm.repo.snapshots.url</property>
+                                    <message>[DISTRIBUTION MANAGEMENT] Snapshots URL (dm.repo.snapshots.url) has not
+                                        been specified
+                                    </message>
+                                </requireProperty>
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <!-- Enforce: Required maven version (Validate phase) -->
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.0,)</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- RELEASE Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
+            </plugin>
+            <!-- VERSIONS Plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+            </plugin>
+            <!-- JAR Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <!-- SCM Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <configuration>
+                    <goals>install</goals>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- Dependency management -->
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.ibasco.pidisplay</groupId>
-                <artifactId>pi-display-core</artifactId>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-impl-charlcd</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.ibasco.pidisplay</groupId>
-                <artifactId>pi-display-drivers-clcd</artifactId>
+                <artifactId>ucgd-impl-glcd</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ibasco.pidisplay</groupId>
-                <artifactId>pi-display-drivers-glcd</artifactId>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-drivers-clcd</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ibasco.pidisplay</groupId>
-                <artifactId>pi-display-examples</artifactId>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-drivers-glcd</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ibasco.pidisplay</groupId>
-                <artifactId>pi-display-impl-charlcd</artifactId>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-native</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ibasco.pidisplay</groupId>
-                <artifactId>pi-display-impl-glcd</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ibasco.pidisplay</groupId>
-                <artifactId>pi-display-native</artifactId>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-examples</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -286,170 +615,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>native-maven-plugin</artifactId>
-                    <version>1.0-alpha-9</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.1.0</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.1.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.2</version>
-                    <configuration>
-                        <installAtEnd>true</installAtEnd>
-                    </configuration>
-                </plugin>
-                <!-- Skip official maven deploy plugin, use nexus plugin instead -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
-                    <configuration>
-                        <skip>true</skip>
-                        <deployAtEnd>true</deployAtEnd>
-                    </configuration>
-                </plugin>
-                <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-enforcer-plugin -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.0.0-M2</version>
-                </plugin>
-                <!-- Sonatype deploy plugin -->
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.8</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.6</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
-        <!-- Parent plugins -->
-        <plugins>
-            <!-- STAGING Plugin (Sonatype) -->
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <!-- TODO: Externalize properties -->
-                    <serverId>ibasco-nexus</serverId>
-                    <nexusUrl>http://repo.ibasco.com/</nexusUrl>
-                    <skipStaging>true</skipStaging>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- ENFORCER Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <!-- Enforce: DEPLOY phase -->
-                    <execution>
-                        <id>enforce</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireProperty>
-                                    <property>dm.repo.id</property>
-                                    <message>[DISTRIBUTION MANAGEMENT] Repository ID (dm.repo.id) has not been
-                                        specified.
-                                    </message>
-                                </requireProperty>
-                                <requireProperty>
-                                    <property>dm.repo.release.url</property>
-                                    <message>[DISTRIBUTION MANAGEMENT] Release URL (dm.repo.release.url) has not been
-                                        specified
-                                    </message>
-                                </requireProperty>
-                                <requireProperty>
-                                    <property>dm.repo.snapshots.url</property>
-                                    <message>[DISTRIBUTION MANAGEMENT] Snapshots URL (dm.repo.snapshots.url) has not
-                                        been specified
-                                    </message>
-                                </requireProperty>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- SOURCE Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- JAVADOC Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
     <!-- Global dependencies -->
     <dependencies>

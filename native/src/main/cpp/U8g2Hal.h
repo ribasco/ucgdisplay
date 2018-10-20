@@ -1,9 +1,31 @@
-//
-// Created by raffy on 7/4/18.
-//
+/*-
+ * ========================START=================================
+ * Organization: Universal Character/Graphics display library
+ * Project: UCGDisplay :: Native Library
+ * Filename: U8g2Hal.h
+ * 
+ * ---------------------------------------------------------
+ * %%
+ * Copyright (C) 2018 Universal Character/Graphics display library
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * =========================END==================================
+ */
 
-#ifndef PIDISP_U8G2CALLBACKS_H
-#define PIDISP_U8G2CALLBACKS_H
+#ifndef UCGDISP_U8G2CALLBACKS_H
+#define UCGDISP_U8G2CALLBACKS_H
 
 #include <u8g2.h>
 #include <memory>
@@ -11,9 +33,6 @@
 #include <functional>
 #include <jni.h>
 #include "Global.h"
-
-#define EMULATOR_MSG_TYPE_BYTE 0
-#define EMULATOR_MSG_TYPE_GPIO 1
 
 using namespace std;
 
@@ -254,4 +273,4 @@ static void i2c_write_byte(u8x8_t *u8x8, uint8_t b) {
 
 #endif
 
-#endif //PIDISP_U8G2CALLBACKS_H
+#endif //UCGDISP_U8G2CALLBACKS_H

@@ -1,9 +1,5 @@
-//
-// Created by raffy on 7/5/18.
-//
-
-#ifndef PIDISP_GENERATE_H
-#define PIDISP_GENERATE_H
+#ifndef UCGDISP_GENERATE_H
+#define UCGDISP_GENERATE_H
 
 #include <iostream>
 #include <cstring>
@@ -201,4 +197,4 @@ vector<string> tokenizeString(const string &str, char delim) {
 
 #include "controllers.h"
 
-#endif //PIDISP_GENERATE_H
+#endif //UCGDISP_GENERATE_H

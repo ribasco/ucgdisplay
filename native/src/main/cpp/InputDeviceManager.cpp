@@ -1,3 +1,28 @@
+/*-
+ * ========================START=================================
+ * Organization: Universal Character/Graphics display library
+ * Project: UCGDisplay :: Native Library
+ * Filename: InputDeviceManager.cpp
+ * 
+ * ---------------------------------------------------------
+ * %%
+ * Copyright (C) 2018 Universal Character/Graphics display library
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * =========================END==================================
+ */
 #include <shared_mutex>
 #include <utility>
 #include <vector>
@@ -24,23 +49,6 @@
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
 #define DEVINPUT_DIR_PATH "/dev/input"
-
-#define CLS_INPUT_DEVICE "com/ibasco/pidisplay/core/system/InputDevice"
-#define CLS_INPUT_EVENT_TYPE "com/ibasco/pidisplay/core/system/InputEventType"
-#define CLS_INPUT_EVENT_CODE "com/ibasco/pidisplay/core/system/InputEventCode"
-#define CLS_INPUT_DEVICE_MGR "com/ibasco/pidisplay/core/system/InputDeviceManager"
-#define CLS_RAW_INPUT_EVENT "com/ibasco/pidisplay/core/system/RawInputEvent"
-#define CLS_DEVICE_STATE_EVENT "com/ibasco/pidisplay/core/system/DeviceStateEvent"
-
-#define FSIG_INPUTEVENTCODE_ABSDATA "Ljava/util/Map;"
-#define MIDSIG_INPUTDEVICE_CTR "(Ljava/lang/String;Ljava/lang/String;[SLjava/lang/String;Ljava/util/List;)V"
-#define MIDSIG_INPUTEVENTTYPE_CTR1 "(Ljava/lang/String;ILjava/util/List;Z)V"
-#define MIDSIG_INPUTEVENTCODE_CTR1 "(Ljava/lang/String;I)V"
-#define MIDSIG_INPUTEVENTCODE_CTR2 "(Ljava/lang/String;II)V"
-#define MIDSIG_INPUTDEVMGR_CALLBACK "(Lcom/ibasco/pidisplay/core/system/RawInputEvent;)V"
-#define MIDSIG_RAWINPUTEVENT_CTR "(Lcom/ibasco/pidisplay/core/system/InputDevice;JIIILjava/lang/String;Ljava/lang/String;I)V"
-#define MIDSIG_HASHMAP_PUT "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
-#define MIDSIG_HASHMAP_CTR "()V"
 
 using namespace std;
 
@@ -162,8 +170,9 @@ void InputDevManager_Load(JNIEnv *env) {
     midHashMapCtr = env->GetMethodID(clsHashMap, "<init>", MIDSIG_HASHMAP_CTR);
     midHashMapPut = env->GetMethodID(clsHashMap, "put", MIDSIG_HASHMAP_PUT);
     midIntegerCtr = env->GetMethodID(clsInteger, "<init>", "(I)V");
-    midDevStateEventCtr = env->GetMethodID(clsDeviceStateEvent, "<init>", "(Lcom/ibasco/pidisplay/core/system/InputDevice;Ljava/lang/String;)V");
-    midDevStateEventCb = env->GetStaticMethodID(clsInputDevManager, "deviceStateEventCallback", "(Lcom/ibasco/pidisplay/core/system/DeviceStateEvent;)V");
+
+    midDevStateEventCtr = env->GetMethodID(clsDeviceStateEvent, "<init>", MIDSIG_DEVSTATEVT_CTR);
+    midDevStateEventCb = env->GetStaticMethodID(clsInputDevManager, "deviceStateEventCallback", MIDSIG_INPUTDEVMGR_DEVEVENTCB);
     jmethodID midThreadGroupCtr = env->GetMethodID(clsThreadGroup, "<init>", "(Ljava/lang/String;)V");
 
     fidAbsData = env->GetFieldID(clsInputEventCode, "absData", FSIG_INPUTEVENTCODE_ABSDATA);
@@ -202,7 +211,7 @@ void InputDevManager_UnLoad(JNIEnv *env) {
     deviceInfoCache.clear();
 }
 
-jobject Java_com_ibasco_pidisplay_core_system_InputDeviceManager_queryDevice(JNIEnv *env, jclass cls, jstring devPath) {
+jobject Java_com_ibasco_ucgdisplay_core_input_InputDeviceManager_queryDevice(JNIEnv *env, jclass cls, jstring devPath) {
     string devicePath = string(env->GetStringUTFChars(devPath, 0));
     auto res = deviceInfoCache.find(devicePath);
     if (res != deviceInfoCache.end())
@@ -210,7 +219,7 @@ jobject Java_com_ibasco_pidisplay_core_system_InputDeviceManager_queryDevice(JNI
     return nullptr;
 }
 
-jobjectArray Java_com_ibasco_pidisplay_core_system_InputDeviceManager_getInputDevices(JNIEnv *env, jclass cls) {
+jobjectArray Java_com_ibasco_ucgdisplay_core_input_InputDeviceManager_getInputDevices(JNIEnv *env, jclass cls) {
     if (deviceInfoCache.empty())
         return nullptr;
 
@@ -222,7 +231,7 @@ jobjectArray Java_com_ibasco_pidisplay_core_system_InputDeviceManager_getInputDe
     return result;
 }
 
-void Java_com_ibasco_pidisplay_core_system_InputDeviceManager_startInputEventMonitor(JNIEnv *env, jclass cls) {
+void Java_com_ibasco_ucgdisplay_core_input_InputDeviceManager_startInputEventMonitor(JNIEnv *env, jclass cls) {
     if (initialized) {
         JNI_throwIOException(env, string("Monitor already started"));
         return;
@@ -243,7 +252,7 @@ void Java_com_ibasco_pidisplay_core_system_InputDeviceManager_startInputEventMon
     initialized = true;
 }
 
-void Java_com_ibasco_pidisplay_core_system_InputDeviceManager_stopInputEventMonitor(JNIEnv *env, jclass cls) {
+void Java_com_ibasco_ucgdisplay_core_input_InputDeviceManager_stopInputEventMonitor(JNIEnv *env, jclass cls) {
    if (initialized && !stopping) {
         stopping = true;
         eventManager->stopMonitor();
@@ -252,7 +261,7 @@ void Java_com_ibasco_pidisplay_core_system_InputDeviceManager_stopInputEventMoni
     }
 }
 
-void Java_com_ibasco_pidisplay_core_system_InputDeviceManager_refreshDeviceCache(JNIEnv *env, jclass cls) {
+void Java_com_ibasco_ucgdisplay_core_input_InputDeviceManager_refreshDeviceCache(JNIEnv *env, jclass cls) {
     refreshDevices();
 }
 

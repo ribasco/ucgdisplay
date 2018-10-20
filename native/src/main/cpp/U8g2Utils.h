@@ -1,9 +1,31 @@
-//
-// Created by raffy on 7/7/18.
-//
+/*-
+ * ========================START=================================
+ * Organization: Universal Character/Graphics display library
+ * Project: UCGDisplay :: Native Library
+ * Filename: U8g2Utils.h
+ * 
+ * ---------------------------------------------------------
+ * %%
+ * Copyright (C) 2018 Universal Character/Graphics display library
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * =========================END==================================
+ */
 
-#ifndef PIDISP_U8G2UTILS_H
-#define PIDISP_U8G2UTILS_H
+#ifndef UCGDISP_U8G2UTILS_H
+#define UCGDISP_U8G2UTILS_H
 
 #include "U8g2Hal.h"
 
@@ -51,4 +73,4 @@ uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, voi
 
 uint8_t u8g2util_SetupHelperGpio(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
-#endif //PIDISP_U8G2UTILS_H
+#endif //UCGDISP_U8G2UTILS_H
