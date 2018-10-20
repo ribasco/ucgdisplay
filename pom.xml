@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ibasco.ucgdisplay</groupId>
-    <artifactId>ucgdisplay</artifactId>
+    <artifactId>ucg-display</artifactId>
     <version>0.1-alpha-SNAPSHOT</version>
     <name>${project.prefix} Parent Module</name>
     <url>https://github.com/ribasco/ucgdisplay</url>
@@ -150,12 +150,12 @@
                                     <goal>jar</goal>
                                 </goals>
                             </execution>
-                            <!--<execution>
+                            <execution>
                                 <id>aggregate-sources</id>
                                 <goals>
                                     <goal>aggregate</goal>
                                 </goals>
-                            </execution>-->
+                            </execution>
                         </executions>
                     </plugin>
                     <!-- JAVADOC Plugin -->
@@ -169,12 +169,12 @@
                                     <goal>jar</goal>
                                 </goals>
                             </execution>
-                            <!--<execution>
+                            <execution>
                                 <id>aggregate-javadocs</id>
                                 <goals>
                                     <goal>aggregate-jar</goal>
                                 </goals>
-                            </execution>-->
+                            </execution>
                         </executions>
                     </plugin>
                     <!-- GPG Plugin -->
