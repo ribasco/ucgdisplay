@@ -132,6 +132,11 @@
         <!-- Only activate these plugins on release (source, javadoc, gpg) -->
         <profile>
             <id>release</id>
+            <modules>
+                <module>drivers/clcd</module>
+                <module>drivers/glcd</module>
+                <module>native</module>
+            </modules>
             <build>
                 <plugins>
                     <!-- SOURCE Plugin -->
@@ -145,15 +150,12 @@
                                     <goal>jar-no-fork</goal>
                                 </goals>
                             </execution>
-                            <execution>
+                            <!--<execution>
                                 <id>aggregate-sources</id>
                                 <goals>
                                     <goal>aggregate</goal>
                                 </goals>
-                                <configuration>
-
-                                </configuration>
-                            </execution>
+                            </execution>-->
                         </executions>
                     </plugin>
                     <!-- JAVADOC Plugin -->
@@ -167,15 +169,12 @@
                                     <goal>jar</goal>
                                 </goals>
                             </execution>
-                            <execution>
+                            <!--<execution>
                                 <id>aggregate-javadocs</id>
                                 <goals>
                                     <goal>aggregate-jar</goal>
                                 </goals>
-                                <configuration>
-                                    <!-- Specific configuration for the aggregate report -->
-                                </configuration>
-                            </execution>
+                            </execution>-->
                         </executions>
                     </plugin>
                     <!-- GPG Plugin -->
