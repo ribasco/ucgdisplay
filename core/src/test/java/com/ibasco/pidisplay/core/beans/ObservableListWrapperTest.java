@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.beans;
+package com.ibasco.ucgdisplay.core.beans;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

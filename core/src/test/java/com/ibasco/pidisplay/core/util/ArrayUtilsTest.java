@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core.util;
+package com.ibasco.ucgdisplay.core.util;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

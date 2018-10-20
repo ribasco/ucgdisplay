@@ -3,19 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>pi-display</artifactId>
-        <groupId>com.ibasco.pidisplay</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <artifactId>ucgdisplay</artifactId>
+        <groupId>com.ibasco.ucgdisplay</groupId>
+        <version>0.1-alpha-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>pi-display-core</artifactId>
+    <artifactId>ucgd-core</artifactId>
     <packaging>jar</packaging>
     <name>${project.prefix} Core Module</name>
     <dependencies>
         <dependency>
-            <groupId>com.ibasco.pidisplay</groupId>
-            <artifactId>pi-display-drivers-clcd</artifactId>
+            <groupId>com.ibasco.ucgdisplay</groupId>
+            <artifactId>ucgd-drivers-clcd</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ibasco.ucgdisplay</groupId>
+            <artifactId>ucgd-native</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -73,10 +77,6 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito2</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.ibasco.pidisplay</groupId>
-            <artifactId>pi-display-native</artifactId>
         </dependency>
     </dependencies>
 </project>

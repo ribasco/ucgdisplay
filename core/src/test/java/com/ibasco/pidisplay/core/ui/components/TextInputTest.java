@@ -1,6 +1,6 @@
-package com.ibasco.pidisplay.core.ui.components;
+package com.ibasco.ucgdisplay.core.ui.components;
 
-import com.ibasco.pidisplay.core.ui.Graphics;
+import com.ibasco.ucgdisplay.core.ui.Graphics;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

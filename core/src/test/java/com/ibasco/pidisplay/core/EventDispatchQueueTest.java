@@ -1,8 +1,8 @@
-package com.ibasco.pidisplay.core;
+package com.ibasco.ucgdisplay.core;
 
-import com.ibasco.pidisplay.core.events.DisplayEvent;
-import com.ibasco.pidisplay.core.events.InvocationEvent;
-import com.ibasco.pidisplay.core.util.concurrent.ThreadUtils;
+import com.ibasco.ucgdisplay.core.events.DisplayEvent;
+import com.ibasco.ucgdisplay.core.events.InvocationEvent;
+import com.ibasco.ucgdisplay.core.util.concurrent.ThreadUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

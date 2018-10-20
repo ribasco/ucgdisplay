@@ -61,17 +61,17 @@
         <appender-ref ref="file-error"/>
     </root>
 
-    <logger name="com.ibasco.pidisplay.core" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.core.beans" level="INFO"/>
-    <logger name="com.ibasco.pidisplay.core.beans.ObservableProperty" level="INFO"/>
-    <logger name="com.ibasco.pidisplay.core.ui.components" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.core.input.InputEventService" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.core.EventDispatchQueue" level="INFO"/>
-    <logger name="com.ibasco.pidisplay.core.Controller" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.core.DisplayParent" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.core.DisplayNode" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.core.util" level="INFO"/>
-    <logger name="com.ibasco.pidisplay.impl" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.drivers" level="DEBUG"/>
-    <logger name="com.ibasco.pidisplay.examples" level="INFO"/>
+    <logger name="com.ibasco.ucgdisplay.core" level="DEBUG"/>
+    <logger name="com.ibasco.ucgdisplay.core.beans" level="INFO"/>
+    <logger name="com.ibasco.ucgdisplay.core.beans.ObservableProperty" level="INFO"/>
+    <logger name="com.ibasco.ucgdisplay.core.ui.components" level="DEBUG"/>
+    <logger name="com.ibasco.ucgdisplay.core.input.InputEventService" level="DEBUG"/>
+    <logger name="com.ibasco.ucgdisplay.core.EventDispatchQueue" level="INFO"/>
+    <logger name="com.ibasco.ucgdisplay.core.Controller" level="DEBUG"/>
+    <logger name="com.ibasco.ucgdisplay.core.DisplayParent" level="DEBUG"/>
+    <logger name="com.ibasco.ucgdisplay.core.DisplayNode" level="DEBUG"/>
+    <logger name="com.ibasco.ucgdisplay.core.util" level="INFO"/>
+    <logger name="com.ibasco.ucgdisplay.impl" level="DEBUG"/>
+    <logger name="com.ibasco.ucgdisplay.drivers" level="DEBUG"/>
+    <logger name="com.ibasco.ucgdisplay.examples" level="INFO"/>
 </configuration>

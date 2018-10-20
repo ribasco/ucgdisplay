@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.core;
+package com.ibasco.ucgdisplay.core;
 
 import org.junit.jupiter.api.BeforeEach;
 

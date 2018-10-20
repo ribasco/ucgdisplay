@@ -3,20 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>pi-display</artifactId>
-        <groupId>com.ibasco.pidisplay</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <artifactId>ucgdisplay</artifactId>
+        <groupId>com.ibasco.ucgdisplay</groupId>
+        <version>0.1-alpha-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>pi-display-impl-glcd</artifactId>
+    <artifactId>ucgd-impl-glcd</artifactId>
     <packaging>jar</packaging>
-    <name>${project.prefix} Graphics LCD Implmentation</name>
+    <name>${project.prefix} Graphics LCD Implementation</name>
     <dependencies>
         <dependency>
-            <groupId>com.ibasco.pidisplay</groupId>
-            <artifactId>pi-display-core</artifactId>
+            <groupId>com.ibasco.ucgdisplay</groupId>
+            <artifactId>ucgd-core</artifactId>
         </dependency>
     </dependencies>
 </project>

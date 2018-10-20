@@ -487,7 +487,7 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ibasco.pidisplay</groupId>
+                <groupId>com.ibasco.ucgdisplay</groupId>
                 <artifactId>ucgd-impl-glcd</artifactId>
                 <version>${project.version}</version>
             </dependency>

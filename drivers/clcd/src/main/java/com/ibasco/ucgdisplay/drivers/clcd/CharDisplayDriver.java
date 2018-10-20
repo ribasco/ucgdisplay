@@ -26,7 +26,7 @@
 package com.ibasco.ucgdisplay.drivers.clcd;
 
 
-import com.ibasco.ucgdisplay.core.input.DisplayDriver;
+import com.ibasco.ucgdisplay.core.u8g2.DisplayDriver;
 import com.ibasco.ucgdisplay.drivers.clcd.enums.ScrollDirection;
 import com.ibasco.ucgdisplay.drivers.clcd.enums.TextDirection;
 

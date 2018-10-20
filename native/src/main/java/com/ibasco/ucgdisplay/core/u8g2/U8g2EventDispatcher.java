@@ -25,7 +25,6 @@
  */
 package com.ibasco.ucgdisplay.core.u8g2;
 
-import com.ibasco.ucgdisplay.core.input.DisplayDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

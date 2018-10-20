@@ -1,4 +1,4 @@
-package com.ibasco.pidisplay.drivers.glcd.exceptions;
+package com.ibasco.ucgdisplay.drivers.glcd.exceptions;
 
 public class GlcdNativeDriverException extends GlcdDriverException {
     public GlcdNativeDriverException() {

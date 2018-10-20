@@ -61,5 +61,5 @@
         <appender-ref ref="file-error"/>
     </root>
 
-    <logger name="com.ibasco.pidisplay.core" level="DEBUG"/>
+    <logger name="com.ibasco.ucgdisplay.core" level="DEBUG"/>
 </configuration>
