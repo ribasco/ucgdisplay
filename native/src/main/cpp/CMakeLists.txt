@@ -79,7 +79,7 @@ endif ()
 
 list(APPEND UCGDISP_HDR "Global.h" "U8g2Utils.h" "U8g2Graphics.h" "U8g2Hal.h")
 list(APPEND UCGDISP_SRC "Global.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
-message(STATUS "UCGDISP SOURCE = ${U8G2_SRC_FILES}")
+# message(STATUS "UCGDISP SOURCE = ${U8G2_SRC_FILES}")
 
 add_library(ucgdisp SHARED ${UCGDISP_HDR} ${UCGDISP_SRC})
 add_executable(ucgdisp-gen "utils/codegen.h" "utils/codegen.cpp")
