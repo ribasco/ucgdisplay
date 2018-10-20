@@ -38,11 +38,11 @@ import com.pi4j.io.gpio.PinState;
  *
  * @author Rafael Ibasco
  */
-public class Pcf8574TLcdAdapter extends BaseLcdGpioAdapter {
+public class Pcf8574LcdAdapter extends BaseLcdGpioAdapter {
 
     private PCF8574GpioProvider provider;
 
-    public Pcf8574TLcdAdapter(PCF8574GpioProvider provider, LcdPinMapConfig pinMapConfig) {
+    public Pcf8574LcdAdapter(PCF8574GpioProvider provider, LcdPinMapConfig pinMapConfig) {
         super(pinMapConfig);
         this.provider = provider;
     }
