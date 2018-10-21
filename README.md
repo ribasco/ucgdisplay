@@ -39,7 +39,11 @@ Universal Character and Graphics Display Library for Java
 ###### Graphic/Dot-Matrix LCD
 
 * A2PRINTER, HX1230, IL3820, IST3020, KS0108, LC7981, LD7032, LS013B7DH03, LS027B7DH01, MAX7219, NT7534, PCD8544, PCF8812, RA8835, SBN1661, SED1330, SED1520, SH1106, SH1107, SH1108, SH1122, SSD1305, SSD1306, SSD1309, SSD1317, SSD1322, SSD1325, SSD1326, SSD1327, SSD1329, SSD1606, SSD1607, ST75256, ST7565, ST7567, ST7586S, ST7588, ST7920, T6963, UC1601, UC1604, UC1608, UC1610, UC1611, UC1638, UC1701
- 
+
+### Project Resources
+
+* [Snapshot Builds](https://oss.sonatype.org/content/repositories/snapshots/com/ibasco/ucgdisplay/)
+
 ### Pre-requisites
 
 ---
@@ -193,7 +197,7 @@ public class GlcdST7920Example {
 ### Limitations
 
 ---
-* Only works for Raspberry Pi at the moment. I will add support for other SBCs as soon as I am able to obtain these devices.  
+* Only works for Raspberry Pi at the moment. I will add support for other SBCs as soon as I am able to obtain them.  
 * The adapters for character lcd driver Mcp23008LcdAdapter and Pcf8574TLcdAdapter are not yet implemented. 
 
 ### Contribution guidelines
