@@ -5,6 +5,10 @@ sudo: false
 jdk:
 - oraclejdk8
 
+cache:
+  directories:
+  - ${TRAVIS_BUILD_DIR}/native/src/main/cpp/tools
+
 env:
   global:
   - secure: "cyGi5uKzodeHrbqtIpDDgtKC6a1uqxN5rCOVAqe34xuuFY0vQzzpa+zAo9HADbI7syCbcwrF33iE+y7CzNWSieEU7NY5GJNzXArSHedxZa9ywYIo01H/7Tjza6y6LyTEem6xLopUBQFBpGEty/92nj0YesUsDRgSiyTmAgUgRp3bvOm6WLSmtiDys6LBDhhUBjwOG7guhRMGraxg50ReVqCgo2B4zCBZ3LvOBMplDw49aNP+/QSK8y+hIBFfE1MGJHGUflac3XuWTO7PJnVPOwKqJ/EC/ONRDZW+m143PLxbwbkvlHFBltZOgg7Wo6EsfNDWp4h1yndEaeVSKE83uXLKDkDiITqHn07zmig//qOn1EDyhttQDGve5zamDSuyGIjzCXKxTAnwIXH55CNeAqaKbFmtQe/AqpznpX5RFixe7arcSCHWIxcbESentRhUOFkXNPbUXzJ8+76+tTPFXbeHndliQhksr+T0EfgiMTWGEOOh3IVLhAD40qLXraKMKNWvWsmHYXrhinOXZijQisJyYhp+uTaMIHgQx84k9JmJqIxUC/R0W1YlQDlST0oV+OR9RmBgPCInv7JpFU7UeLSuEhGlyp+4SalwkHG5Ya6AziywSr1sL52RW7XOoPKPDovYO4FLuPy7v8CAnbUx6XuN6KE0JNVitpnV4pWWUIM="
@@ -17,7 +21,6 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - cmake
-    - cmake-data
     - gcc-7
     - g++-7
     - oracle-java8-installer
@@ -48,6 +51,4 @@ before_deploy:
 - cp scripts/settings.xml $HOME/.m2/settings.xml
 
 after_success:
-- "[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] echo 'Deploy snapshot test'"
-
-#- "[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] && mvn deploy -DskipTests --settings scripts/settings.xml"
+- "[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] && mvn deploy -DskipTests --settings scripts/settings.xml"
