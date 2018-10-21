@@ -22,6 +22,23 @@ License along with this program.  If not, see
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <profiles>
+        <profile>
+            <id>global-props</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+                <dm.repo.id>ossrh</dm.repo.id>
+                <dm.repo.name>Sonatype Release Repository</dm.repo.name>
+                <dm.repo.snapshots.name>Sonatype Snapshots Repository</dm.repo.snapshots.name>
+                <dm.repo.release.url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</dm.repo.release.url>
+                <dm.repo.snapshots.url>https://oss.sonatype.org/content/repositories/snapshots</dm.repo.snapshots.url>
+            </properties>
+        </profile>
+    </profiles>
+
     <servers>
         <server>
             <!-- Maven Central Deployment -->
