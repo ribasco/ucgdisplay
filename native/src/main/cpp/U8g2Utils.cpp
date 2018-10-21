@@ -24,6 +24,7 @@
  * =========================END==================================
  */
 
+#include <sstream>
 #include <iostream>
 #include <memory>
 #include <functional>
