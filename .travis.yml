@@ -13,9 +13,13 @@ env:
 
 addons:
   apt:
+    sources:
+    - ubuntu-toolchain-r-test
     packages:
     - cmake
     - cmake-data
+    - gcc-7
+    - g++-7
     - oracle-java8-installer
     - gcc-mingw-w64-base
     - binutils-mingw-w64-x86-64
@@ -33,6 +37,11 @@ install:
 - mvn --settings scripts/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 
 script:
+- sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
+- sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++
+- gcc -v && g++ -v && cmake --version
+- export CC=/usr/bin/gcc-7
+- export CXX=/usr/bin/g++-7
 - mvn package -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true
 
 before_deploy:
