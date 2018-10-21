@@ -51,10 +51,3 @@ after_success:
 - "[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] echo 'Deploy snapshot test'"
 
 #- "[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] && mvn deploy -DskipTests --settings scripts/settings.xml"
-
-# deploy:
-#  provider: script
-#  script: "mvn deploy"
-#  skip_cleanup: true
-#  on:
-#    tags: true
