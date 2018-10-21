@@ -67,6 +67,8 @@ find_package(JNILib REQUIRED)
 find_package(Threads REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
+
 if (UNIX)
     find_package(LibEvent REQUIRED)
     find_package(WiringPi REQUIRED)
