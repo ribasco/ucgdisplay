@@ -36,6 +36,18 @@ License along with this program.  If not, see
                 <dm.repo.release.url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</dm.repo.release.url>
                 <dm.repo.snapshots.url>https://oss.sonatype.org/content/repositories/snapshots</dm.repo.snapshots.url>
             </properties>
+            <repositories>
+                <repository>
+                    <id>oss-snapshots-repo</id>
+                    <name>Sonatype OSS Maven Repository</name>
+                    <url>https://oss.sonatype.org/content/groups/public</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>fail</checksumPolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
         </profile>
     </profiles>
 
