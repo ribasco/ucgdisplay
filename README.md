@@ -1,7 +1,7 @@
-### Introduction
+Universal Character and Graphics Display Library for Java
+==========================================================
 
----
-A universal character/graphics display library for ARM embedded devices based on Java. Provides drivers for character based lcd devices (Hitachi HD44780) and over 40+ graphic monochrome displays (Powered by [U8g2](https://github.com/olikraus/u8g2)). 
+[![Build Status](https://travis-ci.org/ribasco/ucgdisplay.svg?branch=master)](https://travis-ci.org/ribasco/ucgdisplay)
 
 ### Features
 
@@ -15,7 +15,7 @@ A universal character/graphics display library for ARM embedded devices based on
 
 ######  Character LCD driver features
 * Pure java implementation for Hitachi HD44780 driver powered by Pi4j (Will probably add JNI/native support in the future if performance is an issue)
-* Designed with flexibility in mind allowing for different configuration styles of interfacing with your ARM device (e.g. GPIO expanders/I2C/SPI)
+* Designed with flexibility in mind allowing for different configuration styles of interfacing with your SBC device (e.g. GPIO expanders/I2C/SPI)
 * No fixed/mandatory pin mapping. You have the freedom to choose whatever device pins you want to use for your LCD device.
 * Available LCD adapters
     * MCP23017
@@ -193,12 +193,8 @@ public class GlcdST7920Example {
 ### Limitations
 
 ---
-* This library is guaranteed to work on the Raspberry Pi, but I cannot guarantee that it would work on other ARM based devices (e.g. Asus Tinker Board etc) as I only have Raspberry Pi in my possession.
+* Only works for Raspberry Pi at the moment. I will add support for other SBCs as soon as I am able to obtain these devices.  
 * The adapters for character lcd driver Mcp23008LcdAdapter and Pcf8574TLcdAdapter are not yet implemented. 
-
-### Known Issues/Troubleshooting
-
----
 
 ### Contribution guidelines
 
