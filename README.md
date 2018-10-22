@@ -42,7 +42,9 @@ Universal Character and Graphics Display Library for Java
 
 ### Project Resources
 
+---
 * [Snapshot Builds](https://oss.sonatype.org/content/repositories/snapshots/com/ibasco/ucgdisplay/)
+* [Release Builds](https://oss.sonatype.org/content/repositories/releases/com/ibasco/ucgdisplay)
 
 ### Pre-requisites
 
