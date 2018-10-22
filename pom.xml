@@ -275,7 +275,7 @@
                     <version>2.5.3</version>
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
+                        <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
                         <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>release</releaseProfiles>
                         <tagNameFormat>ucgdisplay-@{project.version}</tagNameFormat>
