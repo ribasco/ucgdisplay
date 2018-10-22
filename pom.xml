@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ibasco.ucgdisplay</groupId>
@@ -9,6 +10,10 @@
     <url>https://github.com/ribasco/ucgdisplay</url>
     <packaging>pom</packaging>
     <inceptionYear>2018</inceptionYear>
+    <description>
+        A Java based display library for single board computers. Provides drivers for both character (Hitachi HD44780)
+        and graphics monochrome display devices (lcd, oled, e-ink etc) powered by U8g2
+    </description>
 
     <!-- Project properties -->
     <properties>
@@ -68,8 +73,8 @@
         <connection>scm:git:git://github.com/ribasco/ucgdisplay.git</connection>
         <developerConnection>scm:git:git@github.com:ribasco/ucgdisplay.git</developerConnection>
         <url>https://github.com/ribasco/ucgdisplay</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <!-- Issue management -->
     <issueManagement>
@@ -156,6 +161,14 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <includes>
+                                <include>**/*.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>native/src/main/cpp/**</exclude>
+                            </excludes>
+                        </configuration>
                     </plugin>
                     <!-- JAVADOC Plugin -->
                     <plugin>
