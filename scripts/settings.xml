@@ -38,7 +38,7 @@ License along with this program.  If not, see
             </properties>
             <repositories>
                 <repository>
-                    <id>oss-snapshots-repo</id>
+                    <id>ossrh</id>
                     <name>Sonatype OSS Maven Repository</name>
                     <url>https://oss.sonatype.org/content/groups/public</url>
                     <snapshots>
@@ -50,7 +50,6 @@ License along with this program.  If not, see
             </repositories>
         </profile>
     </profiles>
-
     <servers>
         <server>
             <!-- Maven Central Deployment -->
