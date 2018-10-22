@@ -279,6 +279,10 @@
                         <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>release</releaseProfiles>
                         <tagNameFormat>ucgdisplay-@{project.version}</tagNameFormat>
+                        <preparationGoals>clean install</preparationGoals>
+                        <checkModificationExcludes>
+                            <checkModificationExclude>pom.xml</checkModificationExclude>
+                        </checkModificationExcludes>
                     </configuration>
                 </plugin>
                 <plugin>
