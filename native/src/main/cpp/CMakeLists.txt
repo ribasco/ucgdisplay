@@ -104,7 +104,7 @@ if (UNIX AND (TARGET wiringPi))
 endif ()
 
 list(APPEND INC_DIRS ${JNI_INCLUDE_DIRS} ${U8G2_INCLUDE_DIR} ${WIRINGPI_INCLUDE_DIR} ${U8G2_INCLUDE_DIR})
-list(APPEND LINK_LIBS ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES} Threads::Threads)
+list(APPEND LINK_LIBS ${JNI_LIBRARIES} ${U8G2_LIBRARIES} ${WIRINGPI_LIBRARIES} Threads::Threads)
 
 # Add libevent dependency (called usually if the library was built from the repository)
 if (UNIX AND (LibEvent_FOUND AND TARGET libevent))
