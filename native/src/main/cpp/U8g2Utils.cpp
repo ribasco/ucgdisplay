@@ -28,6 +28,7 @@
 #include <memory>
 #include <functional>
 #include <iomanip>
+#include <iostream>
 
 #include "Global.h"
 #include "U8g2Utils.h"
