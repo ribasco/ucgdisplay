@@ -74,7 +74,7 @@ typedef struct {
     u8g2_msg_func_t gpio_cb;
     u8g2_cb_t *rotation;
     bool flag_font;
-    bool flag_emulation;
+    bool flag_virtual;
 
     uintptr_t address() {
         return (uintptr_t) u8g2.get();
