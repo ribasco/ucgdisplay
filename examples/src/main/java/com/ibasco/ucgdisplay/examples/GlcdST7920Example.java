@@ -38,9 +38,9 @@ public class GlcdST7920Example {
                 .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
                 .display(Glcd.ST7920.D_128x64)
                 .pinMap(new GlcdPinMapConfig()
-                        .map(GlcdPin.SPI_CLOCK, 0)
-                        .map(GlcdPin.SPI_MOSI, 0)
-                        .map(GlcdPin.CS, 0)
+                        .map(GlcdPin.SPI_CLOCK, 14)
+                        .map(GlcdPin.SPI_MOSI, 12)
+                        .map(GlcdPin.CS, 10)
                 )
                 .build();
 
