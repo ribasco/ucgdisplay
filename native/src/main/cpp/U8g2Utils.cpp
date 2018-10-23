@@ -25,14 +25,12 @@
  */
 
 #include <sstream>
-#include <iostream>
 #include <memory>
 #include <functional>
 #include <iomanip>
 
 #include "Global.h"
 #include "U8g2Utils.h"
-#include "U8g2Hal.h"
 
 static map<uintptr_t, shared_ptr<u8g2_info_t>> u8g2_device_cache; // NOLINT
 static map<int, string> pinNameIndexMap; //NOLINT
@@ -105,7 +103,6 @@ u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
         }
         case COMINT_6800: {
             if (commType == COMTYPE_HW) {
-                //TODO: Maybe in future, we could allow I2C/SPI/Shift register expansions for 6800 and 8080 modes
                 return nullptr;
             }
             return cb_byte_8bit_6800mode;

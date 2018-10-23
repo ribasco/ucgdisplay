@@ -32,11 +32,7 @@
 #endif
 
 #include <iostream>
-#include <cstring>
-#include <algorithm>
-#include <utility>
 #include <sstream>
-#include <iomanip>
 
 using namespace std;
 
@@ -458,6 +454,7 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
 
     return 1;
 }
+#endif
 
 /**
  * Wrapper for 'u8x8_byte_sw_i2c'
@@ -507,5 +504,3 @@ uint8_t cb_byte_ks0108(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
 uint8_t cb_byte_sed1520(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_sed1520(u8x8, msg, arg_int, arg_ptr);
 }
-
-#endif
