@@ -164,8 +164,6 @@ void u8g2hal_CreateMsgEvent(JNIEnv *env, jobject &obj, uint8_t msg, uint8_t type
 
 void u8g2hal_EmitMsgEvent(JNIEnv *env, jobject &gpioEvent);
 
-//USE_EMULATOR
-
 #if !(defined(__arm__) && defined(__linux__))
 
 static void i2c_delay(u8x8_t *u8x8) U8X8_NOINLINE;
@@ -181,8 +179,6 @@ static void i2c_init(u8x8_t *u8x8) {
 
     i2c_delay(u8x8);
 }
-
-/* actually, the scl line is not observed, so this procedure does not return a value */
 
 static void i2c_read_scl_and_delay(u8x8_t *u8x8) {
     /* set as input (line will be high) */
