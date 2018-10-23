@@ -155,7 +155,7 @@ u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, 
     info->u8g2 = make_shared<u8g2_t>();
     info->pin_map = pin_config;
     info->rotation = const_cast<u8g2_cb_t *>(rotation);
-    info->flag_emulation = virtualMode;
+    info->flag_virtual = virtualMode;
 
     //Get the setup procedure callback
     u8g2_setup_func_t setup_proc_callback = u8g2hal_GetSetupProc(setup_proc_name);
