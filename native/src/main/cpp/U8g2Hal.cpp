@@ -32,6 +32,9 @@
 #endif
 
 #include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <utility>
 #include <sstream>
 #include <iomanip>
 
