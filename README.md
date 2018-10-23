@@ -65,14 +65,14 @@ Universal Character and Graphics Display Library for Java
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-clcd</artifactId>
-             <version>0.1-alpha</version>
+             <version>0.2-alpha</version>
          </dependency>
       
          <!-- Graphics display driver -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
-             <artifactId>0.1-alpha</artifactId>
-             <version>0.1-alpha</version>
+             <artifactId>ucgd-drivers-glcd</artifactId>
+             <version>0.2-alpha</version>
          </dependency>
     </dependencies>
     ```
