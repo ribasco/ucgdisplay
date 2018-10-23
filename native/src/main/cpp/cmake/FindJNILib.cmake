@@ -46,7 +46,8 @@ if (CMAKE_CROSSCOMPILING)
         list(APPEND JNI_INCLUDE_DIRS "${JAVA_HOME}/include")
         list(APPEND JNI_INCLUDE_DIRS "${JAVA_HOME}/include/win32")
         list(APPEND JNI_LIBRARIES "${JAVA_HOME}/lib/jawt.lib")
-        list(APPEND JNI_LIBRARIES "${JAVA_HOME}/jre/lib/jvm.lib")
+        list(APPEND JNI_LIBRARIES "${JAVA_HOME}/lib/jvm.lib")
+        # list(APPEND JNI_LIBRARIES "${JAVA_HOME}/jre/lib/jvm.lib")
     endif ()
 
     foreach (item ${JNI_INCLUDE_DIRS})
@@ -58,6 +59,7 @@ if (CMAKE_CROSSCOMPILING)
     set(JNI_FOUND true)
 else ()
     # Use default find jni package if we are not cross-compiling
+    message(STATUS "[FIND-JNI] Using default FindJNI package")
     include(FindJNI)
 endif ()
 
