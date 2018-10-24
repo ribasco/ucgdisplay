@@ -29,9 +29,8 @@
 #include <cstdint>
 #include <functional>
 #include <utility>
-
-#define __unix__xxxxxx_THIS_IS_DISABLED
-
+#include <cstring>
+#include <iomanip>
 #include "U8g2Graphics.h"
 #include "Global.h"
 #include "U8g2Hal.h"
@@ -40,9 +39,6 @@
 #if defined( __linux__) && defined(__arm__)
 #include <wiringPi.h>
 #endif
-
-#include <cstring>
-#include <iomanip>
 
 using namespace std;
 

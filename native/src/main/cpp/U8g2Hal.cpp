@@ -335,14 +335,6 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
 
 #else
 
-/*
- * ============================================================================================================
- *
- * Below are the wrapper functions for the built-in U8G2 bit-bang implementations (Hardware and Software)
- *
- * ============================================================================================================
- */
-
 /**
  * SPI Callback Routine (virtual mode)
  */
@@ -458,7 +450,16 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
 
     return 1;
 }
+
 #endif
+
+/*
+ * ============================================================================================================
+ *
+ * Below are the wrapper functions for the built-in U8G2 bit-bang implementations (Hardware and Software)
+ *
+ * ============================================================================================================
+ */
 
 /**
  * Wrapper for 'u8x8_byte_sw_i2c'

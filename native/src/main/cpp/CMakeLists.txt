@@ -65,6 +65,9 @@ message(STATUS "[MAIN] JAVA_HOME: '${JAVA_HOME}'")
 find_package(U8G2 REQUIRED)
 find_package(JNILib REQUIRED)
 
+list(APPEND INC_DIRS ${JNI_INCLUDE_DIRS})
+list(APPEND LINK_LIBS "")
+
 # Find Libevent Package
 if (UNIX)
     find_package(Threads REQUIRED)
@@ -90,9 +93,6 @@ endif ()
 
 target_compile_options(ucgdisp PRIVATE -Wno-write-strings)
 target_compile_options(ucgdisp-gen PRIVATE -Wno-write-strings)
-
-list(APPEND INC_DIRS ${JNI_INCLUDE_DIRS})
-list(APPEND LINK_LIBS "")
 
 # Add Wiring Pi Package (ARM only)
 if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
