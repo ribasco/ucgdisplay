@@ -33,8 +33,8 @@
 
 #include <iostream>
 #include <cstring>
-#include <algorithm>
-#include <utility>
+//#include <algorithm>
+//#include <utility>
 #include <sstream>
 #include <iomanip>
 
@@ -344,21 +344,21 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
  */
 
 /**
- * SPI Callback Routine (emulation)
+ * SPI Callback Routine (virtual mode)
  */
 uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return cb_byte_4wire_sw_spi(info, u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
- * HW I2C Wrapper (Uses software bit-bang implementation)
+ * HW I2C Wrapper. Uses software bit-bang implementation (virtual mode)
  */
 uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return cb_byte_sw_i2c(info, u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
- * GPIO and Delay Routine (emulation)
+ * GPIO and Delay Routine (virtual mode)
  */
 uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
     switch (msg) {
