@@ -61,34 +61,34 @@ endif ()
 
 message(STATUS "[MAIN] JAVA_HOME: '${JAVA_HOME}'")
 
-#find_package(LibUdev REQUIRED)
 find_package(U8G2 REQUIRED)
 find_package(JNILib REQUIRED)
-find_package(Threads REQUIRED)
-set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
-
-if (UNIX)
-    find_package(LibEvent REQUIRED)
+# Find Wiring Pi Package (ARM only)
+if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
     find_package(WiringPi REQUIRED)
     message(STATUS "[WIRING-PI] WIRINGPI_LIBRARIES = ${WIRINGPI_LIBRARIES}")
     message(STATUS "[WIRING-PI] WIRINGPI_INCLUDE_DIR = ${WIRINGPI_INCLUDE_DIR}")
+endif()
 
+# Find Libevent Package
+if (UNIX)
+    find_package(Threads REQUIRED)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
+
+    find_package(LibEvent REQUIRED)
     list(APPEND UCGDISP_HDR "InputDevHelper.h" "InputDeviceManager.h" "InputEventManager.h" "CommSpi.h")
     list(APPEND UCGDISP_SRC "InputDevHelper.cpp" "InputDeviceManager.cpp" "InputEventManager.cpp" "CommSpi.cpp")
+
+    add_executable(ucgdisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
 endif ()
 
 list(APPEND UCGDISP_HDR "Global.h" "U8g2Utils.h" "U8g2Graphics.h" "U8g2Hal.h")
 list(APPEND UCGDISP_SRC "Global.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
-# message(STATUS "UCGDISP SOURCE = ${U8G2_SRC_FILES}")
 
 add_library(ucgdisp SHARED ${UCGDISP_HDR} ${UCGDISP_SRC})
 add_executable(ucgdisp-gen "utils/codegen.h" "utils/codegen.cpp")
-
-if (UNIX)
-    add_executable(ucgdisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
-endif ()
 
 if (WIN32)
     set(CMAKE_SHARED_LIBRARY_PREFIX "")
@@ -97,16 +97,16 @@ endif ()
 target_compile_options(ucgdisp PRIVATE -Wno-write-strings)
 target_compile_options(ucgdisp-gen PRIVATE -Wno-write-strings)
 
+list(APPEND INC_DIRS ${JNI_INCLUDE_DIRS})
+list(APPEND LINK_LIBS "")
+
 # Add Wiring Pi dependency
-if (UNIX AND (TARGET wiringPi) AND ${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm")
+if (UNIX AND (TARGET wiringPi) AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
     message(STATUS "[WIRING-PI] Adding wiringPi Target")
     add_dependencies(ucgdisp wiringPi)
     list(APPEND INC_DIRS ${WIRINGPI_INCLUDE_DIR})
     list(APPEND LINK_LIBS ${WIRINGPI_LIBRARIES})
 endif ()
-
-list(APPEND INC_DIRS ${JNI_INCLUDE_DIRS} ${U8G2_INCLUDE_DIR})
-list(APPEND LINK_LIBS ${U8G2_LIBRARIES})
 
 # Add libevent dependency (called usually if the library was built from the repository)
 if (UNIX AND (LibEvent_FOUND AND TARGET libevent))
@@ -121,6 +121,8 @@ endif ()
 # Add u8g2 dependency
 if (TARGET u8g2)
     add_dependencies(ucgdisp u8g2)
+    list(APPEND INC_DIRS ${U8G2_INCLUDE_DIR})
+    list(APPEND LINK_LIBS ${U8G2_LIBRARIES})
 endif ()
 
 include_directories(${INC_DIRS})
