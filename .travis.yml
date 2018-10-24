@@ -32,11 +32,12 @@ addons:
     - gcc-7
     - g++-7
     - oracle-java8-installer
-    - gcc-mingw-w64-base
-    - binutils-mingw-w64-x86-64
-    - gcc-mingw-w64-x86-64
-    - gcc-mingw-w64
-    - g++-mingw-w64-x86-64
+    - mingw-w64
+    #- gcc-mingw-w64-base
+    #- binutils-mingw-w64-x86-64
+    #- gcc-mingw-w64-x86-64
+    #- gcc-mingw-w64
+    #- g++-mingw-w64-x86-64
 os:
 - linux
 
