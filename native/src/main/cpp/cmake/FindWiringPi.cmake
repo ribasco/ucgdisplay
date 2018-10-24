@@ -23,18 +23,10 @@ if (CMAKE_CROSSCOMPILING OR (NOT ${CMAKE_CROSSCOMPILING} AND (NOT ${CMAKE_SYSTEM
         endif ()
 
         message(STATUS "[WIRING-PI] Moving '${LIB_DIR}/wiringPi-master/' to '${LIB_DIR}/wiringPi'")
-        execute_process(COMMAND mv ${LIB_DIR}/wiringPi-master/ ${LIB_DIR}/wiringPi ERROR_VARIABLE tc_move)
-
-        if (tc_move)
-            message(FATAL_ERROR "[WIRING-PI] Could not perform move operation (${tc_move})")
-        endif ()
+        file(RENAME "${LIB_DIR}/wiringPi-master/" "${LIB_DIR}/wiringPi")
 
         message(STATUS "[WIRING-PI] Removing wiringPi.zip from ${LIB_DIR}")
-        execute_process(COMMAND rm ${LIB_DIR}/wiringPi.zip ERROR_VARIABLE tc_remove ERROR_VARIABLE tc_remove)
-
-        if (tc_remove)
-            message(FATAL_ERROR "[WIRING-PI] Could not perform move operation (${tc_remove})")
-        endif ()
+        file(REMOVE ${LIB_DIR}/wiringPi.zip)
     endif ()
 
     # Have CMake find our pthreads library within our toolchain (required for this library)
