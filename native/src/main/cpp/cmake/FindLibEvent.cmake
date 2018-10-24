@@ -61,10 +61,6 @@ macro(GetLibFromRepo)
 
     list(APPEND LIBEVENT_LIBRARIES "pthread")
 
-    #[[if (NOT EXISTS ${LIBEVENT_INCLUDE_DIRS})
-        message(FATAL_ERROR "Lib event not found")
-    endif ()]]
-
     if (LIBEVENT_INCLUDE_DIRS AND LIBEVENT_LIBRARIES)
         message(STATUS "[LIBEVENT] GetLibFromRepo() = FOUND")
         set(LibEvent_FOUND TRUE)
