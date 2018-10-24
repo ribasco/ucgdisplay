@@ -138,17 +138,7 @@ u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
     return nullptr;
 }
 
-std::string hexs(unsigned char *data, int len) {
-    std::stringstream ss;
-    ss << std::hex;
-    for (int i = 0; i < len; ++i)
-        ss << std::setw(2) << std::setfill('0') << (int) data[i];
-    return ss.str();
-}
-
-shared_ptr<u8g2_info_t>
-u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation,
-                             u8g2_pin_map_t pin_config, bool virtualMode) {
+shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode) {
     shared_ptr<u8g2_info_t> info = make_shared<u8g2_info_t>();
 
     //Initialize device info details
@@ -172,12 +162,12 @@ u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, 
     //Retrieve the byte callback function based on the commInt and commType arguments
     u8g2_msg_func_info_t cb_byte = u8g2util_GetByteCb(commInt, commType);
     if (cb_byte == nullptr) {
-        JNIEnv *env;
-        GETENV(env);
-        JNI_ThrowNativeLibraryException(env, string("No available byte callback procedures for CommInt = ") +
-                                             to_string(commInt) + string(", CommType = ") + to_string(commType));
-        return nullptr;
-    }
+            JNIEnv *env;
+            GETENV(env);
+            JNI_ThrowNativeLibraryException(env, string("No available byte callback procedures for CommInt = ") + to_string(commInt) + string(", CommType = ") + to_string(commType));
+            return nullptr;
+     }
+
 
     //Byte callback
     info->byte_cb = [cb_byte, info, virtualMode, commInt, commType](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
@@ -185,19 +175,15 @@ u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, 
             JNIEnv *env;
             GETENV(env);
 
-            //Only process byte send events
             if (msg == U8X8_MSG_BYTE_SEND) {
                 uint8_t value;
                 uint8_t size = arg_int;
                 auto *data = (uint8_t *)arg_ptr;
-
-                JNI_FireByteEvent(env, info->address(), U8G2_BYTE_SEND_INIT, size);
-
+                JNI_FireByteEvent(env, info->address(), U8G2_BYTE_SEND_INIT, size); //fire custom event
                 while( size > 0 ) {
                     value = *data;
                     data++;
                     size--;
-                    //cout << ">> Data: " << hexs(&value, 1) << endl;
                     JNI_FireByteEvent(env, info->address(), msg, value);
                 }
             } else {
