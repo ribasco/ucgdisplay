@@ -61,15 +61,9 @@ endif ()
 
 message(STATUS "[MAIN] JAVA_HOME: '${JAVA_HOME}'")
 
+# Include default packages
 find_package(U8G2 REQUIRED)
 find_package(JNILib REQUIRED)
-
-# Find Wiring Pi Package (ARM only)
-if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
-    find_package(WiringPi REQUIRED)
-    message(STATUS "[WIRING-PI] WIRINGPI_LIBRARIES = ${WIRINGPI_LIBRARIES}")
-    message(STATUS "[WIRING-PI] WIRINGPI_INCLUDE_DIR = ${WIRINGPI_INCLUDE_DIR}")
-endif()
 
 # Find Libevent Package
 if (UNIX)
@@ -100,13 +94,17 @@ target_compile_options(ucgdisp-gen PRIVATE -Wno-write-strings)
 list(APPEND INC_DIRS ${JNI_INCLUDE_DIRS})
 list(APPEND LINK_LIBS "")
 
-# Add Wiring Pi dependency
-if (UNIX AND (TARGET wiringPi) AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
+# Add Wiring Pi Package (ARM only)
+if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
+    find_package(WiringPi REQUIRED)
+    message(STATUS "[WIRING-PI] WIRINGPI_LIBRARIES = ${WIRINGPI_LIBRARIES}")
+    message(STATUS "[WIRING-PI] WIRINGPI_INCLUDE_DIR = ${WIRINGPI_INCLUDE_DIR}")
+
     message(STATUS "[WIRING-PI] Adding wiringPi Target")
     add_dependencies(ucgdisp wiringPi)
     list(APPEND INC_DIRS ${WIRINGPI_INCLUDE_DIR})
     list(APPEND LINK_LIBS ${WIRINGPI_LIBRARIES})
-endif ()
+endif()
 
 # Add libevent dependency (called usually if the library was built from the repository)
 if (UNIX AND (LibEvent_FOUND AND TARGET libevent))
@@ -123,6 +121,8 @@ if (TARGET u8g2)
     add_dependencies(ucgdisp u8g2)
     list(APPEND INC_DIRS ${U8G2_INCLUDE_DIR})
     list(APPEND LINK_LIBS ${U8G2_LIBRARIES})
+else()
+    message(FATAL_ERROR "Required U8g2 target not found")
 endif ()
 
 include_directories(${INC_DIRS})
