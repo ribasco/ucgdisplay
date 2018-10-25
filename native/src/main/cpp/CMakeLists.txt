@@ -70,14 +70,13 @@ list(APPEND LINK_LIBS "")
 
 # Find Libevent Package
 if (UNIX)
+    find_package(LibEvent REQUIRED)
     find_package(Threads REQUIRED)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
 
-    find_package(LibEvent REQUIRED)
     list(APPEND UCGDISP_HDR "InputDevHelper.h" "InputDeviceManager.h" "InputEventManager.h" "CommSpi.h")
     list(APPEND UCGDISP_SRC "InputDevHelper.cpp" "InputDeviceManager.cpp" "InputEventManager.cpp" "CommSpi.cpp")
-
     add_executable(ucgdisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
 endif ()
 
