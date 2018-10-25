@@ -354,6 +354,7 @@
                                 <excludes>
                                     <exclude>*.sh</exclude>
                                     <exclude>src/main/cpp/lib/**</exclude>
+                                    <exclude>src/main/cpp/include/**</exclude>
                                     <exclude>U8g2LookupFonts.cpp</exclude>
                                     <exclude>U8g2LookupSetup.cpp</exclude>
                                     <exclude>controllers.h</exclude>
