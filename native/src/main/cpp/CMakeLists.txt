@@ -69,7 +69,7 @@ list(APPEND INC_DIRS ${JNI_INCLUDE_DIRS})
 list(APPEND LINK_LIBS "")
 
 # Find Libevent Package
-if (UNIX)
+#[[if (UNIX)
     find_package(LibEvent REQUIRED)
     find_package(Threads REQUIRED)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -78,7 +78,7 @@ if (UNIX)
     list(APPEND UCGDISP_HDR "InputDevHelper.h" "InputDeviceManager.h" "InputEventManager.h" "CommSpi.h")
     list(APPEND UCGDISP_SRC "InputDevHelper.cpp" "InputDeviceManager.cpp" "InputEventManager.cpp" "CommSpi.cpp")
     add_executable(ucgdisp-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
-endif ()
+endif ()]]
 
 list(APPEND UCGDISP_HDR "Global.h" "U8g2Utils.h" "U8g2Graphics.h" "U8g2Hal.h")
 list(APPEND UCGDISP_SRC "Global.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
@@ -106,14 +106,14 @@ if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
 endif()
 
 # Add libevent dependency (called usually if the library was built from the repository)
-if (UNIX AND (LibEvent_FOUND AND TARGET libevent))
+#[[if (UNIX AND (LibEvent_FOUND AND TARGET libevent))
     message(STATUS "[LIBEVENT] Found 'libevent' target. Adding as dependency")
     list(APPEND INC_DIRS ${LIBEVENT_INCLUDE_DIRS} Threads::Threads)
     list(APPEND LINK_LIBS ${LIBEVENT_LIBRARIES})
     add_dependencies(ucgdisp libevent)
     add_dependencies(ucgdisp-test libevent)
     target_link_libraries(ucgdisp-test ${LINK_LIBS})
-endif ()
+endif ()]]
 
 # Add u8g2 dependency
 if (TARGET u8g2)
