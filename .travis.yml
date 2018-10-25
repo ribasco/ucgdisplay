@@ -8,6 +8,7 @@ jdk:
 cache:
   directories:
   - ${TRAVIS_BUILD_DIR}/native/src/main/cpp/tools
+  - ${TRAVIS_BUILD_DIR}/native/src/main/cpp/lib
   - ${HOME}/.m2
 
 env:

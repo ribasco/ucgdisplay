@@ -88,6 +88,7 @@ add_executable(ucgdisp-gen "utils/codegen.h" "utils/codegen.cpp")
 
 if (WIN32)
     set(CMAKE_SHARED_LIBRARY_PREFIX "")
+    message(STATUS "[CMAKE_EXE_LINKER_FLAGS] Setting MINGW dependencies static")
     set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static") # Make dependencies static
 endif ()
 
@@ -126,4 +127,10 @@ else ()
 endif ()
 
 include_directories(${INC_DIRS})
-target_link_libraries(ucgdisp ${LINK_LIBS})
+
+if (WIN32)
+    message(STATUS "[target_link_libraries] Setting MINGW dependencies static")
+    target_link_libraries(ucgdisp ${LINK_LIBS} -static-libgcc -static-libstdc++ -static)
+else ()
+    target_link_libraries(ucgdisp ${LINK_LIBS})
+endif ()
