@@ -70,7 +70,7 @@ macro(GetLibFromRepo)
     endif ()
 endmacro()
 
-if (NOT CMAKE_CROSSCOMPILING)
+#[[if (NOT CMAKE_CROSSCOMPILING)
     GetLibFromSys()
 endif ()
 
@@ -78,7 +78,9 @@ endif ()
 if (CMAKE_CROSSCOMPILING OR (NOT CMAKE_CROSSCOMPILING AND NOT LibEvent_FOUND))
     message(STATUS "[LIBEVENT] Retrieving 'libevent' from external repository")
     GetLibFromRepo()
-endif ()
+endif ()]]
+
+GetLibFromRepo()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LibEvent FOUND_VAR LibEvent_FOUND REQUIRED_VARS LIBEVENT_INCLUDE_DIRS LIBEVENT_LIBRARIES FAIL_MESSAGE "Could not find libevent package")
