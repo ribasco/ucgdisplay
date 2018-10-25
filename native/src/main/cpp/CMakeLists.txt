@@ -88,8 +88,6 @@ add_executable(ucgdisp-gen "utils/codegen.h" "utils/codegen.cpp")
 
 if (WIN32)
     set(CMAKE_SHARED_LIBRARY_PREFIX "")
-    message(STATUS "[CMAKE_EXE_LINKER_FLAGS] Setting MINGW dependencies static")
-    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static") # Make dependencies static
 endif ()
 
 target_compile_options(ucgdisp PRIVATE -Wno-write-strings)
