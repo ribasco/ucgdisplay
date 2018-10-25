@@ -360,8 +360,8 @@
                                 </excludes>
                                 <includes>
                                     <include>**/*.java</include>
-                                    <include>*.cpp</include>
-                                    <include>*.h</include>
+                                    <include>**/*.cpp</include>
+                                    <include>**/*.h</include>
                                 </includes>
                                 <roots>
                                     <root>src/main/java</root>
