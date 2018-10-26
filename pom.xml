@@ -4,7 +4,7 @@
 
     <groupId>com.ibasco.ucgdisplay</groupId>
     <artifactId>ucg-display</artifactId>
-    <version>0.4-alpha-SNAPSHOT</version>
+    <version>0.5-alpha-SNAPSHOT</version>
     <name>${project.prefix} Parent Module</name>
     <url>https://github.com/ribasco/ucgdisplay</url>
     <packaging>pom</packaging>
