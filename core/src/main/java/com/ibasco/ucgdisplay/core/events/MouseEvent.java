@@ -2,7 +2,7 @@ package com.ibasco.ucgdisplay.core.events;
 
 import com.ibasco.ucgdisplay.core.Event;
 import com.ibasco.ucgdisplay.core.EventType;
-import com.ibasco.ucgdisplay.core.system.RawInputEvent;
+import com.ibasco.ucgdisplay.core.input.RawInputEvent;
 
 public class MouseEvent extends InputEvent {
 

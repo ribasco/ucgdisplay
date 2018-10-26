@@ -2,7 +2,7 @@ package com.ibasco.ucgdisplay.core.events;
 
 import com.ibasco.ucgdisplay.core.Event;
 import com.ibasco.ucgdisplay.core.EventType;
-import com.ibasco.ucgdisplay.core.system.DeviceStateEvent;
+import com.ibasco.ucgdisplay.core.input.DeviceStateEvent;
 
 public class InputDeviceEvent extends Event {
 

@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>com.ibasco.ucgdisplay</groupId>
-            <artifactId>pi-display-drivers-glcd</artifactId>
+            <artifactId>ucgd-drivers-glcd</artifactId>
         </dependency>
     </dependencies>
 </project>

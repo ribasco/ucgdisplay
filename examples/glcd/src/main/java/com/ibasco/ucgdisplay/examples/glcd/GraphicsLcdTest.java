@@ -1,8 +1,8 @@
 package com.ibasco.ucgdisplay.examples.glcd;
 
+import com.ibasco.ucgdisplay.core.input.InputDeviceManager;
 import com.ibasco.ucgdisplay.core.input.InputEventType;
-import com.ibasco.ucgdisplay.core.system.InputDeviceManager;
-import com.ibasco.ucgdisplay.core.system.RawInputEvent;
+import com.ibasco.ucgdisplay.core.input.RawInputEvent;
 import com.ibasco.ucgdisplay.core.util.XBMUtils;
 import com.ibasco.ucgdisplay.core.util.concurrent.ThreadUtils;
 import com.ibasco.ucgdisplay.drivers.glcd.Glcd;

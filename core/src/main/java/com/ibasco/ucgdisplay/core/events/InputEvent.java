@@ -2,8 +2,8 @@ package com.ibasco.ucgdisplay.core.events;
 
 import com.ibasco.ucgdisplay.core.Event;
 import com.ibasco.ucgdisplay.core.EventType;
-import com.ibasco.ucgdisplay.core.system.InputDevice;
-import com.ibasco.ucgdisplay.core.system.RawInputEvent;
+import com.ibasco.ucgdisplay.core.input.InputDevice;
+import com.ibasco.ucgdisplay.core.input.RawInputEvent;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
