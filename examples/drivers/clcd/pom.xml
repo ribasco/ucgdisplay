@@ -10,6 +10,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
+
     <artifactId>ucgd-examples-drivers-clcd</artifactId>
     <name>${project.prefix} Character LCD driver examples</name>
 
