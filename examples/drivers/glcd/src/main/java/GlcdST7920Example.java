@@ -23,7 +23,6 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-package com.ibasco.ucgdisplay.examples;
 
 import com.ibasco.ucgdisplay.drivers.glcd.*;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
