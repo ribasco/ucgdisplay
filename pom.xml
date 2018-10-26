@@ -212,7 +212,8 @@
         <module>drivers/clcd</module>
         <module>drivers/glcd</module>
         <module>native</module>
-        <module>examples</module>
+        <module>examples/drivers/clcd</module>
+        <module>examples/drivers/glcd</module>
     </modules>
 
     <build>
