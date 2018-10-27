@@ -30,7 +30,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "Global.h"
+#include "../../../../../include/Global.h"
 #include "U8g2Utils.h"
 
 static map<uintptr_t, shared_ptr<u8g2_info_t>> u8g2_device_cache; // NOLINT
@@ -52,7 +52,6 @@ static map<int, string> pinNameIndexMap; //NOLINT
 static bool _pins_initialized = false;
 
 jclass clsU8g2GpioEvent;
-
 jclass clsU8g2EventDispatcher;
 jmethodID midU8g2EventDispatcher_onGpioEvent;
 jmethodID midU8g2EventDispatcher_onByteEvent;

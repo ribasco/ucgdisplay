@@ -31,6 +31,8 @@
 
 using namespace std;
 
+// Global class/method signatures
+
 #define CLS_IOEXCEPTION "java/io/IOException"
 #define CLS_ARRAYLIST "java/util/ArrayList"
 #define CLS_HASHMAP  "java/util/HashMap"
@@ -63,18 +65,20 @@ using namespace std;
 
 #define GETENV(e) cachedJVM->GetEnv((void **) &e, JNI_VERSION);
 
-#if defined(__linux__) && (defined(__x86_64__) || defined(i386))
-#define USE_EMULATOR
-#endif
-
 extern JavaVM *cachedJVM;
 
-extern jclass clsU8g2GpioEvent;
-extern jclass clsNativeLibraryException;
-extern jclass clsU8g2EventDispatcher;
-extern jmethodID midU8g2EventDispatcher_onGpioEvent;
-extern jmethodID midU8g2EventDispatcher_onByteEvent;
-extern jmethodID midU8g2GpioEventCtr;
+/**
+ * Initialize global references
+ *
+ * @param jvm
+ */
+void JNI_Load(JavaVM *jvm);
+
+/**
+ * Unload/deinitialize global references
+ * @param vm
+ */
+void JNI_Unload(JavaVM *vm);
 
 /**
  * Throws a NativeLibraryException to java
@@ -115,29 +119,8 @@ void JNI_MakeGlobal(JNIEnv *env, const char *name, jclass &cls);
  */
 void JNI_CopyJByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length);
 
-/**
- * Fires a GpioEvent to the attached listeners
- *
- * @param env JNIEnv instance
- * @param msg The u8g2 message code
- * @param value The u8g2 messave value
- */
-void JNI_FireGpioEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value);
-
-/**
- * Fires a ByteEvent to the attached listeners
- *
- * @param env JNIEnv instance
- * @param value The data associated with the event
- */
-void JNI_FireByteEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value);
-
 void InputDevManager_Load(JNIEnv *env);
 
 void InputDevManager_UnLoad(JNIEnv *env);
-
-void U8g2Graphics_Load(JNIEnv *env);
-
-void U8g2Graphics_UnLoad(JNIEnv *env);
 
 #endif //UCGDISP_GLOBAL_H
