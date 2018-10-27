@@ -509,7 +509,12 @@
             </dependency>
             <dependency>
                 <groupId>com.ibasco.ucgdisplay</groupId>
-                <artifactId>ucgd-native</artifactId>
+                <artifactId>ucgd-native-graphics</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-native-input</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

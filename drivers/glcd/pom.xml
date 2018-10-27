@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>com.ibasco.ucgdisplay</groupId>
-            <artifactId>ucgd-native</artifactId>
+            <artifactId>ucgd-native-graphics</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
