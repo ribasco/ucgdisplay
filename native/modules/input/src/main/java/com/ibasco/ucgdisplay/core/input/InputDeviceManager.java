@@ -74,7 +74,7 @@ public class InputDeviceManager {
 
     static {
         try {
-            NativeLibraryLoader.loadLibrary("ucgdisp");
+            NativeLibraryLoader.loadLibrary("ucginput");
         } catch (Exception e) {
             log.error("Unable to load required native library", e);
         }
