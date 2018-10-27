@@ -92,5 +92,6 @@ hs_err_pid*
 *.mp3
 /logs/
 
-/native/src/main/cpp/build/
-/native/src/main/cpp/lib/
+/native/modules/graphics/src/main/cpp/build/
+/native/modules/graphics/src/main/cpp/lib/
+/native/modules/graphics/src/main/cpp/.idea/

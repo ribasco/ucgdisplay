@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ibasco.ucgdisplay</groupId>
@@ -135,11 +136,6 @@
         <!-- Only activate these plugins on release (source, javadoc, gpg) -->
         <profile>
             <id>release</id>
-            <modules>
-                <module>drivers/clcd</module>
-                <module>drivers/glcd</module>
-                <module>native</module>
-            </modules>
             <build>
                 <plugins>
                     <!-- SOURCE Plugin -->
@@ -209,11 +205,14 @@
 
     <!-- Project Modules -->
     <modules>
+        <module>common</module>
         <module>drivers/clcd</module>
         <module>drivers/glcd</module>
-        <module>native</module>
+        <module>native/modules/graphics</module>
+        <module>native/modules/input</module>
         <module>examples/drivers/clcd</module>
         <module>examples/drivers/glcd</module>
+        <module>common</module>
     </modules>
 
     <build>
@@ -494,6 +493,11 @@
     <!-- Dependency management -->
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.ibasco.ucgdisplay</groupId>
+                <artifactId>ucgd-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.ibasco.ucgdisplay</groupId>
                 <artifactId>ucgd-drivers-clcd</artifactId>
