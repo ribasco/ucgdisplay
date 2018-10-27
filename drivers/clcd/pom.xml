@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>com.ibasco.ucgdisplay</groupId>
-            <artifactId>ucgd-native</artifactId>
+            <artifactId>ucgd-common</artifactId>
         </dependency>
     </dependencies>
 </project>

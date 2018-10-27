@@ -25,7 +25,7 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-import com.ibasco.ucgdisplay.core.input.DisplayDriver;
+import com.ibasco.ucgdisplay.common.drivers.DisplayDriver;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdDrawColor;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
