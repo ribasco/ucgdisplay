@@ -57,4 +57,4 @@ before_deploy:
 - cp scripts/settings.xml $HOME/.m2/settings.xml
 
 after_success:
-- "[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] && mvn deploy -DskipTests --settings scripts/settings.xml"
+- scripts/deploy.sh
