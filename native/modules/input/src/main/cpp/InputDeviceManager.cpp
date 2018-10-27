@@ -125,6 +125,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
 
     //Initialize Utils
     InputDevManager_Load(env);
+
+    return JNI_VERSION;
 }
 
 JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {

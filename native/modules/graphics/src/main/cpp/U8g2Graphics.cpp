@@ -54,6 +54,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
 
     //Initialize HAL
     u8g2hal_Init();
+
+    return JNI_VERSION;
 }
 
 JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
