@@ -38,7 +38,7 @@ using namespace std;
 #define CLS_HASHMAP  "java/util/HashMap"
 #define CLS_INTEGER "java/lang/Integer"
 #define CLS_THREADGROUP "java/lang/ThreadGroup"
-#define CLS_NativeLibraryException "com/ibasco/ucgdisplay/core/exceptions/NativeLibraryException"
+#define CLS_NativeLibraryException "com/ibasco/ucgdisplay/common/exceptions/NativeLibraryException"
 #define CLS_U8g2EventDispatcher "com/ibasco/ucgdisplay/core/u8g2/U8g2EventDispatcher"
 #define CLS_U8g2GpioEvent "com/ibasco/ucgdisplay/core/u8g2/U8g2GpioEvent"
 
