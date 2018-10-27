@@ -95,3 +95,6 @@ hs_err_pid*
 /native/modules/graphics/src/main/cpp/build/
 /native/modules/graphics/src/main/cpp/lib/
 /native/modules/graphics/src/main/cpp/.idea/
+/native/modules/input/src/main/cpp/build/
+/native/modules/input/src/main/cpp/lib/
+/native/modules/input/src/main/cpp/.idea/
