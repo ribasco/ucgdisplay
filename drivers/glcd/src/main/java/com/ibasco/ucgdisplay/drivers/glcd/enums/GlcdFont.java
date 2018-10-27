@@ -1,7 +1,7 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Graphics LCD Driver
+ * Project: UCGDisplay :: Graphics LCD driver
  * Filename: GlcdFont.java
  *
  * ---------------------------------------------------------

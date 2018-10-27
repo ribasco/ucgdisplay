@@ -39,7 +39,7 @@ if (NOT EXISTS ${RPI_TOOLCHAIN_PATH})
     endif ()
 
     message(STATUS "[FIND-TOOLCHAIN] Removing toolchain.zip from ${TOOLS_DIR_PATH}" ERROR_VARIABLE tc_remove)
-    execute_process(COMMAND rm ${TOOLS_DIR_PATH}/toolchain.zip)
+    execute_process(COMMAND rm ${TOOLS_DIR_PATH}/toolchain.tar.gz)
 
     if (tc_remove)
         message(FATAL_ERROR "[FIND-TOOLCHAIN] Could not perform delete operation")

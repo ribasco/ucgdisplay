@@ -20,6 +20,7 @@
         <cpp.proj.dir>${project.basedir}/src/main/cpp</cpp.proj.dir>
         <cpp.build.dir>${cpp.proj.dir}/build</cpp.build.dir>
         <cmake-generator-arg>-G 'CodeBlocks - Unix Makefiles'</cmake-generator-arg>
+        <cmake.module.path>${project.basedir}/../../cmake</cmake.module.path>
     </properties>
 
     <dependencies>
@@ -238,7 +239,7 @@
                                         </exec>
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
                                             <arg line="--target all" />
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=./cmake/RpiToolchain.cmake" />
+                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cmake.module.path}/RpiToolchain.cmake"/>
                                             <arg line="-DCMAKE_BUILD_TYPE=Release" />
                                             <arg line="${cmake-generator-arg}" />
                                             <arg line="-H." />
@@ -246,7 +247,7 @@
                                         </exec>
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
                                             <arg line="--target all" />
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=./cmake/MingWToolchain.cmake" />
+                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cmake.module.path}/MingWToolchain.cmake"/>
                                             <arg line="-DCMAKE_BUILD_TYPE=Release" />
                                             <arg line="${cmake-generator-arg}" />
                                             <arg line="-H." />
@@ -617,18 +618,18 @@
                             <javahVerbose>true</javahVerbose>
                             <javahPath>${env.JAVA_HOME}/bin/javah</javahPath>
                             <javahIncludes>
-                                <javahInclude>
+                                <!--<javahInclude>
                                     <className>com.ibasco.ucgdisplay.core.input.InputDeviceManager</className>
                                     <headerName>InputDeviceManager.h</headerName>
-                                </javahInclude>
+                                </javahInclude>-->
                                 <javahInclude>
                                     <className>com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics</className>
                                     <headerName>U8g2Graphics.h</headerName>
                                 </javahInclude>
-                                <javahInclude>
+                                <!--<javahInclude>
                                     <className>com.ibasco.ucgdisplay.core.u8g2.U8g2EventDispatcher</className>
                                     <headerName>U8g2EventDispatcher.h</headerName>
-                                </javahInclude>
+                                </javahInclude>-->
                             </javahIncludes>
                             <javahOutputDirectory>${project.basedir}/src/main/cpp</javahOutputDirectory>
                         </configuration>

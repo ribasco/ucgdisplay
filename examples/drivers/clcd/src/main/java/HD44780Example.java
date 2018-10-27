@@ -1,7 +1,7 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Examples
+ * Project: UCGDisplay :: Character LCD driver examples
  * Filename: HD44780Example.java
  *
  * ---------------------------------------------------------
