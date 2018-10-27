@@ -1,7 +1,7 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Examples
+ * Project: UCGDisplay :: Graphics LCD driver examples
  * Filename: GlcdST7920Example.java
  *
  * ---------------------------------------------------------

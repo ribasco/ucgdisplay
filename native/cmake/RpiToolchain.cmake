@@ -6,7 +6,9 @@ set(CMAKE_SYSTEM_VERSION 1)
 message(STATUS "[TOOLCHAIN] Raspberry Pi Toolchain loaded")
 
 # Set module path
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../cmake")
+
+message(STATUS "[TOOLCHAIN] Using module path = ${CMAKE_MODULE_PATH}")
 
 # Load Raspberry Pi Toolchain
 find_package(RpiTools REQUIRED)

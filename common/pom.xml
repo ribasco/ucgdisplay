@@ -9,8 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
+
     <artifactId>ucgd-common</artifactId>
     <name>${project.prefix} Common</name>
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>org.scijava</groupId>

@@ -1,7 +1,7 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Native Library
+ * Project: UCGDisplay :: Native :: Input
  * Filename: InputEventCode.java
  *
  * ---------------------------------------------------------

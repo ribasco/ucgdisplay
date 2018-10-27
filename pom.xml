@@ -212,7 +212,6 @@
         <module>native/modules/input</module>
         <module>examples/drivers/clcd</module>
         <module>examples/drivers/glcd</module>
-        <module>common</module>
     </modules>
 
     <build>

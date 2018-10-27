@@ -1,7 +1,7 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Character LCD Driver
+ * Project: UCGDisplay :: Character LCD driver
  * Filename: LcdPin.java
  *
  * ---------------------------------------------------------
