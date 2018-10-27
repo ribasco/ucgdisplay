@@ -124,14 +124,14 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     jvm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
 
     //Initialize Utils
-    U8gUtils_Load(env);
-
-    //Initialize HAL
-    u8g2hal_Init();
+    InputDevManager_Load(env);
 }
 
 JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     JNI_Unload(vm);
+    JNIEnv *env;
+    vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
+    InputDevManager_UnLoad(env);
 }
 
 void InputDevManager_Load(JNIEnv *env) {

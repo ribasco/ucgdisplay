@@ -52,7 +52,7 @@
 
 #include "InputDevHelper.h"
 #include "InputEventManager.h"
-#include "Global.h"
+#include "../../../../../include/Global.h"
 
 using namespace std;
 
