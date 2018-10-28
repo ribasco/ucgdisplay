@@ -8,13 +8,36 @@ set -e
 # 2) Compile and run codegen
 # 3) Commit and push changes to master (if any)
 
+GITHUB_USER="ribasco"
+GITHUB_AUTHOR_NAME="Source Updater"
+GITHUB_AUTHOR_EMAIL="ribasco@gmail.com"
+
+echo '=============================================================='
+echo ''
+echo '_________              .___          ________                 '
+echo '\_   ___ \   ____    __| _/  ____   /  _____/   ____    ____  '
+echo '/    \  \/  /  _ \  / __ | _/ __ \ /   \  ___ _/ __ \  /    \ '
+echo '\     \____(  <_> )/ /_/ | \  ___/ \    \_\  \\  ___/ |   |  \'
+echo ' \______  / \____/ \____ |  \___  > \______  / \___  >|___|  /'
+echo '        \/              \/      \/         \/      \/      \/ '
+echo '                     code generator script                    '
+echo '=============================================================='
+
 SCRIPT_DIR=$(pwd)
-PROJECT_DIR=${SCRIPT_DIR}/../native/modules/graphics
+BASE_DIR=$(realpath ${SCRIPT_DIR}/..)
+PROJECT_DIR=$(realpath ${SCRIPT_DIR}/../native/modules/graphics)
 UTILS_DIR=${PROJECT_DIR}/src/main/cpp/utils
 ARCH=$(uname -m)
 
+echo "BASE_DIR=${BASE_DIR}"
+echo "SCRIPT_DIR=${SCRIPT_DIR}"
+echo "PROJECT_DIR=${PROJECT_DIR}"
+echo "UTILS_DIR=${UTILS_DIR}"
+
 # Switch working directory
-cd ${SCRIPT_DIR}
+cd ${PROJECT_DIR}
+
+echo "Current DIR = $(pwd)"
 
 # Compile and run UpdateControllerHeader program
 mvn compiler:compile
@@ -26,19 +49,52 @@ cd ${UTILS_DIR}
 GENERATOR=""
 
 if [ "$(uname)" == "Darwin" ]; then
+    echo "Using generator for Darwin system"
     # Do something under Mac OS X platform
     GENERATOR="CodeBlocks - Unix Makefiles"
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    echo "Using generator for Linux system"
     # Do something under GNU/Linux platform
     GENERATOR="CodeBlocks - Unix Makefiles"
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
-    # Do something under 32 bits Windows NT platform
-    GENERATOR="CodeBlocks - MinGW Makefiles"
+    exit -1
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
-    # Do something under 64 bits Windows NT platform
-    GENERATOR="CodeBlocks - MinGW Makefiles"
+    exit -1
 fi
 
 # Build the code
-cmake --target ucgd-code -G "${GENERATOR}'" -H. -Bbuild
+cmake --target ucgd-code -G 'CodeBlocks - Unix Makefiles' -H. -Bbuild
 
+cd ${UTILS_DIR}/build/bin
+
+echo "Running code-generator (Base Dir=${BASE_DIR})"
+./ucgd-code ${BASE_DIR} -a
+
+cd ${BASE_DIR}
+
+echo ===========================================
+echo "Configuring commit author details"
+echo ===========================================
+
+echo "Using GitHub Details = ${GITHUB_AUTHOR_EMAIL} and ${GITHUB_AUTHOR_NAME}"
+
+git config --global user.email "${GITHUB_AUTHOR_EMAIL}"
+git config --global user.name "${GITHUB_AUTHOR_NAME}"
+git config --global push.default simple
+
+git commit -m "Source code update"
+
+echo ===========================================
+echo "Pushing updates to remote repository"
+echo ===========================================
+
+# Push to the remote repository
+git push --quiet https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/ribasco/ucgdisplay
+
+if [ $? -eq 0 ]; then
+    echo "Source updated successfully"
+else
+    echo "Failed to commit source to remote repository"
+fi
+
+git push
