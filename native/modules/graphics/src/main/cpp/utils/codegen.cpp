@@ -613,7 +613,8 @@ void buildCode_updateCppLookupFonts() {
             continue;
         }
 //#if defined(_WIN32)
-        if (std::find(win32_excluded_fonts.begin(), win32_excluded_fonts.end(), fontName) != win32_excluded_fonts.end()) {
+        if (std::find(win32_excluded_fonts.begin(), win32_excluded_fonts.end(), fontName) !=
+            win32_excluded_fonts.end()) {
             cout << "> Skipped: " << fontName << endl;
             continue;
         }
@@ -738,14 +739,25 @@ bool exportFile(const string &srcFile, const string &dstFile) {
 
 int main(int argc, char *argv[]) {
     string projectPath;
+    bool autoExport = false;
 
-    if (argc != 2) {
-        cerr << "Please specify the project base path" << endl;
+    if (argc < 2) {
+        cerr << "Invalid number of arguments" << endl;
         return -1;
     }
 
     const char *basePathArg = argv[1];
     projectPath = string(basePathArg);
+
+    if (argc >= 3) {
+        const char *autoAcceptArg = argv[2];
+        if (strcmp(autoAcceptArg, "-a") == 0) {
+            autoExport = true;
+        }
+    }
+
+    if (autoExport)
+        cout << "Auto export files on completion: YES" << endl;
 
     if (!projectPath.empty()) {
         cout << "You have specified a project path: " << projectPath << endl;
@@ -758,11 +770,11 @@ int main(int argc, char *argv[]) {
     populatePathMap(projectPath, paths);
 
     for (auto path : paths) {
-        cout << "[PATH]: " << path.first << " = " << path.second << endl;
+        cout << "[PATH]: " << path.first << " = " << path.second << "\t(Dir Exists: " << (dirExists(path.second) ? "YES" : "NO") << ")" << endl;
     }
 
     //Update controller definitions
-    buildCode_updateControllerDefinitions(U8G2_CODEBUILD_SRCFILE);
+    //buildCode_updateControllerDefinitions(U8G2_CODEBUILD_SRCFILE);
 
     //Update lookup map for u8g2 setup functions
     buildCode_updateCppLookupSetupFunctions();
@@ -779,15 +791,14 @@ int main(int argc, char *argv[]) {
     //Optional: Move the generated files to their respective locations (overwrite existing)
     cout << "\nDONE!\n\n";
 
-    string letters = promptInput("Export files to their respective locations? [y/n]: ");
+    string letters = autoExport ? "y" : promptInput("Export files to their respective locations? [y/n]: ");
 
     if (letters == "y") {
-
         string baseGlcdPackageDirPath =
                 BASE_PROJECT_PATH_DRIVERS + "/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd";
         string enumDirPath = baseGlcdPackageDirPath + "/enums";
 
-        exportFile(FILE_CONTROLLERS, BASE_PROJECT_PATH_NATIVE_CPP + "/utils/" + FILE_CONTROLLERS);
+        //exportFile(FILE_CONTROLLERS, BASE_PROJECT_PATH_NATIVE_CPP + "/utils/" + FILE_CONTROLLERS);
         exportFile(FILE_LOOKUP_SETUP, BASE_PROJECT_PATH_NATIVE_CPP + "/" + FILE_LOOKUP_SETUP);
         exportFile(FILE_LOOKUP_FONTS, BASE_PROJECT_PATH_NATIVE_CPP + "/" + FILE_LOOKUP_FONTS);
         exportFile(FILE_JAVA_GLCDSIZE, enumDirPath + "/" + FILE_JAVA_GLCDSIZE);
