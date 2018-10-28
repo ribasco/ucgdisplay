@@ -70,6 +70,12 @@ cd ${UTILS_DIR}/build/bin
 echo "Running code-generator (Base Dir=${BASE_DIR})"
 ./ucgd-code ${BASE_DIR} -a
 
+if [ -z "${TRAVIS_JOB_NUMBER}" ]
+then
+      echo "You are not on Travis Build System. Skipping auto-commit"
+      exit 0
+fi
+
 cd ${BASE_DIR}
 
 echo ===========================================
