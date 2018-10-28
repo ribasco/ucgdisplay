@@ -319,7 +319,7 @@
                                             <arg line="--target all"/>
                                             <arg line="-DCMAKE_TOOLCHAIN_FILE=${cmake.module.path}/MingWToolchain.cmake"/>
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
-                                            <arg line="-G 'CodeBlocks - MinGW Makefiles'"/>
+                                            <arg line="${cmake-generator-arg}"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/windows/amd64"/>
                                         </exec>
