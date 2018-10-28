@@ -686,7 +686,7 @@ void buildCode_updateControllerDefinitions(const string &codeBuildSrcFilePath) {
 void populatePathMap(const string &baseProjectPath, map<string, string> &paths) {
     paths.clear();
     paths[BASE_PROJECT_PATH_KEY] = baseProjectPath;
-    paths[BASE_PROJECT_PATH_NATIVE_KEY] = BASE_PROJECT_PATH + "/native";
+    paths[BASE_PROJECT_PATH_NATIVE_KEY] = BASE_PROJECT_PATH + "/native/modules/graphics";
     paths[BASE_PROJECT_PATH_NATIVE_CPP_KEY] = BASE_PROJECT_PATH_NATIVE + "/src/main/cpp";
     paths[BASE_PROJECT_PATH_DRIVERS_KEY] = BASE_PROJECT_PATH + "/drivers";
     paths[U8G2_PROJECT_PATH_KEY] = BASE_PROJECT_PATH_NATIVE_CPP + "/lib/u8g2";
