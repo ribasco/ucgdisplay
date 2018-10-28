@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ucg-display</artifactId>
         <groupId>com.ibasco.ucgdisplay</groupId>
@@ -66,8 +67,72 @@
         </dependency>
     </dependencies>
 
-    <!-- Build Profiles for different platforms -->
     <profiles>
+        <!-- Update code sources prior to compilation -->
+        <profile>
+            <id>update-sources</id>
+            <build>
+                <plugins>
+                    <!-- Compile the UpdateControllerHeader class -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>compile-controller-updater</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>com/ibasco/ucgdisplay/utils/codegen/UpdateControllerHeader.java
+                                        </include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Start executing generate sources tasks -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <!-- Task #1: Download and update controllers.h -->
+                            <execution>
+                                <id>update-headers</id>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <mainClass>com.ibasco.ucgdisplay.utils.codegen.UpdateControllerHeader</mainClass>
+                                </configuration>
+                            </execution>
+                            <!-- Task #2: Compile, run and update sources -->
+                            <execution>
+                                <id>updated-sources</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <executable>${project.basedir}/../../../scripts/update-sources.sh</executable>
+                                    <workingDirectory>${project.basedir}/src/main/cpp/utils</workingDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--
+        - Build Profiles for different platforms. Supported OS/ARCH:
+        - 1) Linux - x86_64
+        - 2) Linux - ARM
+        - 3) Windows - x86_64
+        -->
         <!-- BUILD PROFILE: Linux - arm -->
         <profile>
             <id>build-linux-arm</id>
@@ -95,10 +160,10 @@
                                 <phase>generate-sources</phase>
                                 <configuration>
                                     <target name="generate-sources">
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/classes/lib" />
-                                        <mkdir dir="target/classes/lib/linux/arm" />
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/linux/arm"/>
                                     </target>
                                 </configuration>
                                 <goals>
@@ -117,16 +182,18 @@
                                     <target name="build-ucgdisp">
                                         <!-- Build both architectures when Cross-Compiling -->
                                         <echo>[HOST=ARM] Building ARM binaries only</echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-G 'CodeBlocks - Unix Makefiles'" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/linux/arm" />
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
+                                              failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/linux/arm"/>
                                         </exec>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm"
+                                              failonerror="true">
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -206,12 +273,12 @@
                                 <phase>generate-sources</phase>
                                 <configuration>
                                     <target name="generate-sources">
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/classes/lib" />
-                                        <mkdir dir="target/classes/lib/linux/arm" />
-                                        <mkdir dir="target/classes/lib/linux/amd64" />
-                                        <mkdir dir="target/classes/lib/windows/amd64" />
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/linux/arm"/>
+                                        <mkdir dir="target/classes/lib/linux/amd64"/>
+                                        <mkdir dir="target/classes/lib/windows/amd64"/>
                                     </target>
                                 </configuration>
                                 <goals>
@@ -230,46 +297,53 @@
                                     <target name="build-ucgdisp">
                                         <!-- Build both architectures when Cross-Compiling -->
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions</echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="${cmake-generator-arg}" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/linux/amd64" />
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
+                                              failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="${cmake-generator-arg}"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/linux/amd64"/>
                                         </exec>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
+                                              failonerror="true">
+                                            <arg line="--target all"/>
                                             <arg line="-DCMAKE_TOOLCHAIN_FILE=${cmake.module.path}/RpiToolchain.cmake"/>
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="${cmake-generator-arg}" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/linux/arm" />
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="${cmake-generator-arg}"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/linux/arm"/>
                                         </exec>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
+                                              failonerror="true">
+                                            <arg line="--target all"/>
                                             <arg line="-DCMAKE_TOOLCHAIN_FILE=${cmake.module.path}/MingWToolchain.cmake"/>
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="${cmake-generator-arg}" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/windows/amd64" />
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="${cmake-generator-arg}"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/windows/amd64"/>
                                         </exec>
                                         <!-- Build AMD64 -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/amd64" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/amd64" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/amd64"
+                                              failonerror="true">
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/amd64"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                         <!-- Build ARM -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm"
+                                              failonerror="true">
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                         <!-- Build Windows -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/windows/amd64" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                        <exec executable="cmake"
+                                              dir="${project.basedir}/src/main/cpp/build/windows/amd64"
+                                              failonerror="true">
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -403,11 +477,11 @@
                                 <phase>generate-sources</phase>
                                 <configuration>
                                     <target name="generate-sources">
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/classes/lib" />
-                                        <mkdir dir="target/classes/lib/linux/arm" />
-                                        <mkdir dir="target/classes/lib/windows/amd64" />
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/linux/arm"/>
+                                        <mkdir dir="target/classes/lib/windows/amd64"/>
                                     </target>
                                 </configuration>
                                 <goals>
@@ -425,18 +499,21 @@
                                         <!-- Refresh CMake cache -->
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for windows
                                         </echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="-G 'CodeBlocks - MinGW Makefiles'" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/windows/amd64" />
+                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp"
+                                              failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="-G 'CodeBlocks - MinGW Makefiles'"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/windows/amd64"/>
                                         </exec>
                                         <!-- Build project -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/windows/amd64" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                        <exec executable="cmake"
+                                              dir="${project.basedir}/src/main/cpp/build/windows/amd64"
+                                              failonerror="true">
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -516,10 +593,10 @@
                                 <phase>generate-sources</phase>
                                 <configuration>
                                     <target name="generate-sources">
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/classes/lib" />
-                                        <mkdir dir="target/classes/lib/mac/amd64" />
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/mac/amd64"/>
                                     </target>
                                 </configuration>
                                 <goals>
@@ -538,16 +615,16 @@
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for Mac OS
                                         </echo>
                                         <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/mac/amd64" />
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/mac/amd64"/>
                                         </exec>
                                         <!-- Build project -->
                                         <exec executable="cmake" dir="${cpp.build.dir}/mac/amd64" failonerror="true">
-                                            <arg line="--build ${cpp.build.dir}/mac/amd64" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                            <arg line="--build ${cpp.build.dir}/mac/amd64"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
