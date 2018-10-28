@@ -319,7 +319,7 @@
                                             <arg line="--target all"/>
                                             <arg line="-DCMAKE_TOOLCHAIN_FILE=${cmake.module.path}/MingWToolchain.cmake"/>
                                             <arg line="-DCMAKE_BUILD_TYPE=Release"/>
-                                            <arg line="${cmake-generator-arg}"/>
+                                            <arg line="-G 'CodeBlocks - MinGW Makefiles'"/>
                                             <arg line="-H."/>
                                             <arg line="-Bbuild/windows/amd64"/>
                                         </exec>
@@ -695,18 +695,10 @@
                             <javahVerbose>true</javahVerbose>
                             <javahPath>${env.JAVA_HOME}/bin/javah</javahPath>
                             <javahIncludes>
-                                <!--<javahInclude>
-                                    <className>com.ibasco.ucgdisplay.core.input.InputDeviceManager</className>
-                                    <headerName>InputDeviceManager.h</headerName>
-                                </javahInclude>-->
                                 <javahInclude>
                                     <className>com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics</className>
                                     <headerName>U8g2Graphics.h</headerName>
                                 </javahInclude>
-                                <!--<javahInclude>
-                                    <className>com.ibasco.ucgdisplay.core.u8g2.U8g2EventDispatcher</className>
-                                    <headerName>U8g2EventDispatcher.h</headerName>
-                                </javahInclude>-->
                             </javahIncludes>
                             <javahOutputDirectory>${project.basedir}/src/main/cpp</javahOutputDirectory>
                         </configuration>
@@ -726,6 +718,12 @@
                         </fileset>
                     </filesets>
                 </configuration>
+            </plugin>
+
+            <!-- Maven Exec Plugin: Update code sources -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
             </plugin>
 
             <!-- JAR Plugin: Include the classes and natives folder in jar packaging -->
