@@ -3,7 +3,7 @@
     <parent>
         <artifactId>ucg-display</artifactId>
         <groupId>com.ibasco.ucgdisplay</groupId>
-        <version>1.0-alpha</version>
+        <version>1.1-alpha-SNAPSHOT</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
@@ -262,8 +262,7 @@
                                             <arg line=" -j 4" />
                                         </exec>
                                         <!-- Build Windows -->
-                                        <!--<exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/windows/amd64"
-                                              failonerror="true">
+                                        <!--<exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/windows/amd64" failonerror="true">
                                             <arg line="&#45;&#45;build ${project.basedir}/src/main/cpp/build/windows/amd64" />
                                             <arg line="&#45;&#45;target ucgdisp &#45;&#45;" />
                                             <arg line=" -j 4" />
