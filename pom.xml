@@ -6,7 +6,7 @@
     <groupId>com.ibasco.ucgdisplay</groupId>
     <artifactId>ucg-display</artifactId>
     <version>1.0-alpha-SNAPSHOT</version>
-    <name>${project.prefix} Parent Module</name>
+    <name>UCGDisplay</name>
     <url>https://github.com/ribasco/ucgdisplay</url>
     <packaging>pom</packaging>
     <inceptionYear>2018</inceptionYear>
@@ -161,7 +161,8 @@
                                 <include>**/*.java</include>
                             </includes>
                             <excludes>
-                                <exclude>native/src/main/cpp/**</exclude>
+                                <exclude>native/modules/graphics/src/main/cpp/**</exclude>
+                                <exclude>native/modules/graphics/src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
@@ -183,6 +184,12 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <excludes>
+                                <exclude>native/modules/graphics/src/main/cpp/**</exclude>
+                                <exclude>native/modules/graphics/src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
+                            </excludes>
+                        </configuration>
                     </plugin>
                     <!-- GPG Plugin -->
                     <plugin>
@@ -477,11 +484,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-            </plugin>
-            <!-- JAR Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
             </plugin>
             <!-- SCM Plugin -->
             <plugin>
