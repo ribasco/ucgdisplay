@@ -9,13 +9,16 @@ find_package(U8G2 REQUIRED)
 list(APPEND UCGDISP_HDR "../../../../../include/Global.h" "U8g2Utils.h" "U8g2Graphics.h" "U8g2Hal.h")
 list(APPEND UCGDISP_SRC "../../../../../include/Global.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
 
+if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
+    list(APPEND UCGDISP_HDR "CommSpi.h")
+    list(APPEND UCGDISP_SRC "CommSpi.cpp")
+endif ()
+
 add_library(ucgdisp SHARED ${UCGDISP_HDR} ${UCGDISP_SRC})
-# add_executable(ucgdisp-gen "utils/codegen.h" "utils/codegen.cpp")
 
 add_subdirectory(utils)
 
 target_compile_options(ucgdisp PRIVATE -Wno-write-strings)
-#target_compile_options(ucgdisp-gen PRIVATE -Wno-write-strings)
 
 # Add Wiring Pi Package (ARM only)
 if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
