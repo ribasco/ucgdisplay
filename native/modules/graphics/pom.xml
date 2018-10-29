@@ -657,6 +657,10 @@
                             <directory>src/main/cpp/build</directory>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
+                        <fileset>
+                            <directory>src/main/cpp/utils/build</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
                     </filesets>
                 </configuration>
             </plugin>
