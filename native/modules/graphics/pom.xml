@@ -697,7 +697,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
+                        <exclude>**/UpdateControllerHeader.class</exclude>
                     </excludes>
                     <archive>
                         <manifest>
