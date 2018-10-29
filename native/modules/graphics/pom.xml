@@ -652,7 +652,7 @@
                 <artifactId>maven-source-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
+                        <exclude>**/UpdateControllerHeader.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -662,7 +662,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
+                        <exclude>**/UpdateControllerHeader.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
