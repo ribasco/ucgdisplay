@@ -64,14 +64,14 @@
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-clcd</artifactId>
-             <version>0.4-alpha</version>
+             <version>1.0-alpha</version>
          </dependency>
       
          <!-- Graphics display driver -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-glcd</artifactId>
-             <version>0.4-alpha</version>
+             <version>1.0-alpha</version>
          </dependency>
     </dependencies>
     ```
