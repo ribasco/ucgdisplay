@@ -301,6 +301,7 @@
                         <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
                         <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>release</releaseProfiles>
+                        <preparationGoals>clean install</preparationGoals>
                         <tagNameFormat>ucgdisplay-@{project.version}</tagNameFormat>
                         <checkModificationExcludes>
                             <checkModificationExclude>pom.xml</checkModificationExclude>
