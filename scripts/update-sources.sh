@@ -8,10 +8,6 @@ set -e
 # 2) Compile and run codegen
 # 3) Commit and push changes to master (if any)
 
-GITHUB_USER="ribasco"
-GITHUB_AUTHOR_NAME="Source Updater"
-GITHUB_AUTHOR_EMAIL="ribasco@gmail.com"
-
 echo '=============================================================='
 echo ''
 echo '_________              .___          ________                 '
@@ -37,7 +33,9 @@ echo "UTILS_DIR=${UTILS_DIR}"
 # Switch working directory
 cd ${PROJECT_DIR}
 
-echo "Current DIR = $(pwd)"
+echo ===========================================
+echo "Updating controllers.h definitions"
+echo ===========================================
 
 # Compile and run UpdateControllerHeader program
 mvn compiler:compile
@@ -48,26 +46,15 @@ cd ${UTILS_DIR}
 
 GENERATOR=""
 
-if [ "$(uname)" == "Darwin" ]; then
-    echo "Using generator for Darwin system"
-    # Do something under Mac OS X platform
-    GENERATOR="CodeBlocks - Unix Makefiles"
-elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    echo "Using generator for Linux system"
-    # Do something under GNU/Linux platform
-    GENERATOR="CodeBlocks - Unix Makefiles"
-elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
-    exit -1
-elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
-    exit -1
-fi
-
 # Build the code
 cmake --target ucgd-code -G 'CodeBlocks - Unix Makefiles' -H. -Bbuild
 
 cd ${UTILS_DIR}/build/bin
 
+echo ===========================================
 echo "Running code-generator (Base Dir=${BASE_DIR})"
+echo ===========================================
+
 ./ucgd-code ${BASE_DIR} -a
 
 if [ -z "${TRAVIS_JOB_NUMBER}" ]
@@ -75,6 +62,10 @@ then
       echo "You are not on Travis Build System. Skipping auto-commit"
       exit 0
 fi
+
+GITHUB_USER="ribasco"
+GITHUB_AUTHOR_NAME="Source Updater"
+GITHUB_AUTHOR_EMAIL="ribasco@gmail.com"
 
 cd ${BASE_DIR}
 
@@ -102,5 +93,3 @@ if [ $? -eq 0 ]; then
 else
     echo "Failed to commit source to remote repository"
 fi
-
-git push
