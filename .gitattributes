@@ -1,2 +1,2 @@
 *.enc binary
-native/src/main/cpp/include/* linguist-vendored
+native/include/jdk/* linguist-vendored
