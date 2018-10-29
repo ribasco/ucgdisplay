@@ -4,7 +4,7 @@
 
     <groupId>com.ibasco.ucgdisplay</groupId>
     <artifactId>ucg-display</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1-alpha-SNAPSHOT</version>
     <name>UCGDisplay</name>
     <url>https://github.com/ribasco/ucgdisplay</url>
     <packaging>pom</packaging>
