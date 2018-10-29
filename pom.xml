@@ -162,7 +162,6 @@
                             </includes>
                             <excludes>
                                 <exclude>native/modules/graphics/src/main/cpp/**</exclude>
-                                <exclude>native/modules/graphics/src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
@@ -187,7 +186,6 @@
                         <configuration>
                             <excludes>
                                 <exclude>native/modules/graphics/src/main/cpp/**</exclude>
-                                <exclude>native/modules/graphics/src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
                             </excludes>
                         </configuration>
                     </plugin>

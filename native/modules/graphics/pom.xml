@@ -647,6 +647,26 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
             <!-- Clean Plugin: Remove the native build directory during clean operation -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -677,7 +697,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>native/modules/graphics/src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
+                        <exclude>src/main/java/com/ibasco/ucgdisplay/utils/**</exclude>
                     </excludes>
                     <archive>
                         <manifest>
