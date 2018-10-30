@@ -64,14 +64,14 @@
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-clcd</artifactId>
-             <version>1.0-alpha</version>
+             <version>1.0.1-alpha</version>
          </dependency>
       
          <!-- Graphics display driver -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-glcd</artifactId>
-             <version>1.0-alpha</version>
+             <version>1.0.1-alpha</version>
          </dependency>
     </dependencies>
     ```
@@ -147,7 +147,7 @@ public class HD44780Example {
             
             HD44780DisplayDriver charDriver = new HD44780DisplayDriver(adapter, 20, 4);
             charDriver.home();
-            charDriver.write("Hello World".getBytes());
+            charDriver.write("Hello World");
         } catch (Exception e) {
             log.error("Error occured", e);
         }
