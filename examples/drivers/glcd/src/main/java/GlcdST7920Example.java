@@ -24,7 +24,11 @@
  * =========================END==================================
  */
 
-import com.ibasco.ucgdisplay.drivers.glcd.*;
+import com.ibasco.ucgdisplay.drivers.glcd.Glcd;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdConfig;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdConfigBuilder;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdDriver;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdPinMapConfig;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
