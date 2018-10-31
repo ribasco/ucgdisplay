@@ -25,6 +25,7 @@
  */
 package com.ibasco.ucgdisplay.drivers.clcd.util;
 
+import com.ibasco.ucgdisplay.drivers.clcd.exceptions.TokenCountMismatchException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +80,7 @@ public class RegexByteProcessor {
 
         //Make sure the start and end token count are equal
         if (startTokenCount != endTokenCount)
-            throw new RuntimeException(String.format("The count of the start and end brackets do not match (Start: %d, End: %d, Text: \"%s\")", startTokenCount, endTokenCount, text));
+            throw new TokenCountMismatchException(String.format("The count of the start and end brackets do not match (Start: %d, End: %d, Text: \"%s\")", startTokenCount, endTokenCount, text));
 
         Matcher matcher = customCharPattern.matcher(text);
         StringBuffer sb = new StringBuffer();
