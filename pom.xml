@@ -30,7 +30,7 @@
         <logback.version>1.2.3</logback.version>
         <junit.version>RELEASE</junit.version>
         <rxjava.version>2.1.5</rxjava.version>
-        <mockito.version>2.11.0</mockito.version>
+        <mockito.version>2.23.0</mockito.version>
         <powermock.version>1.7.3</powermock.version>
         <sysoutslf4j.version>1.0.2</sysoutslf4j.version>
         <native.lib.loader.version>2.2.0</native.lib.loader.version>
@@ -638,6 +638,14 @@
                 <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
             <!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2 -->
             <dependency>
                 <groupId>org.powermock</groupId>
@@ -687,6 +695,14 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
