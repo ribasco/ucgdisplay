@@ -25,6 +25,7 @@
  */
 package com.ibasco.ucgdisplay.core.u8g2;
 
+import com.ibasco.ucgdisplay.common.exceptions.NativeLibraryLoaderException;
 import com.ibasco.ucgdisplay.common.utils.NativeLibraryLoader;
 
 /**
@@ -159,7 +160,7 @@ public class U8g2Graphics {
         try {
             NativeLibraryLoader.loadLibrary("ucgdisp");
         } catch (Exception e) {
-            throw new RuntimeException("Unable to load required native library", e);
+            throw new NativeLibraryLoaderException("Unable to load required native library", e);
         }
     }
 

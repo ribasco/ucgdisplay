@@ -55,7 +55,7 @@ public class GlcdPinMapConfig {
      */
     public GlcdPinMapConfig map(GlcdPin glcdPin, int value) {
         if (value > 255)
-            throw new RuntimeException("", new GlcdPinMappingException("Invalid pin number", this));
+            throw new GlcdPinMappingException("Invalid pin number", this);
         pinMap.put(glcdPin, (byte) value);
         return this;
     }
