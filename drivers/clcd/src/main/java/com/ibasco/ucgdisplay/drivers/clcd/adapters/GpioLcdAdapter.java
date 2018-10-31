@@ -32,11 +32,17 @@ import com.ibasco.ucgdisplay.drivers.clcd.enums.LcdReadWriteState;
 import com.ibasco.ucgdisplay.drivers.clcd.enums.LcdRegisterSelectState;
 import com.ibasco.ucgdisplay.drivers.clcd.exceptions.InvalidPinMappingException;
 import com.ibasco.ucgdisplay.drivers.clcd.exceptions.LcdPinNotMappedException;
-import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.GpioProvider;
+import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinMode;
+import com.pi4j.io.gpio.PinState;
+import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 
 /**
  * A Standard GPIO Lcd Adapter that should work with any {@link GpioProvider} implementation.
