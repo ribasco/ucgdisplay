@@ -122,14 +122,7 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         //Make sure we have a valid configuration
         checkConfig(config);
 
-        //Get rotation setting
-        String setupProcedure = config.getSetupProcedure();
-        int rotation = config.getRotation().getValue();
-        int commInt = config.getBusInterface().getValue();
-        int commType = config.getBusInterface().getBusType().getValue();
-        int address = config.getDeviceAddress();
-        byte[] pinConfig = ObjectUtils.defaultIfNull(config.getPinMap(), new GlcdPinMapConfig()).toByteArray();
-        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, pinConfig, virtual);
+        _id = initNativeDriver(config);
 
         if (_id == -1)
             throw new GlcdDriverException("Could not initialize U8G2 Display Driver");
@@ -141,6 +134,16 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         }
         initialized = true;
         log.debug("GLCD driver initialized (Address: {})", _id);
+    }
+
+    protected long initNativeDriver(GlcdConfig config) {
+        String setupProcedure = config.getSetupProcedure();
+        int rotation = config.getRotation().getValue();
+        int commInt = config.getBusInterface().getValue();
+        int commType = config.getBusInterface().getBusType().getValue();
+        int address = config.getDeviceAddress();
+        byte[] pinConfig = ObjectUtils.defaultIfNull(config.getPinMap(), new GlcdPinMapConfig()).toByteArray();
+        return U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, pinConfig, virtual);
     }
 
     @SuppressWarnings({"unchecked", "unused"})
