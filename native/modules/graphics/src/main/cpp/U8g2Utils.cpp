@@ -162,7 +162,7 @@ u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
     return nullptr;
 }
 
-shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(string setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode) {
+shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const string& setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode) {
     shared_ptr<u8g2_info_t> info = make_shared<u8g2_info_t>();
 
     //Initialize device info details
