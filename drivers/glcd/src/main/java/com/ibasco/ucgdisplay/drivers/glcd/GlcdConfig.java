@@ -33,10 +33,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Arrays;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configuration class to be used by the glcd native library
@@ -116,13 +115,10 @@ public class GlcdConfig {
 
     private GlcdSetupInfo lookupSetupInfo() {
         if (display == null) {
-            throw new RuntimeException("Unable to obtain setup procedure",
-                    new GlcdConfigException("Display has not been set", this)
-            );
+            throw new GlcdConfigException("Display has not been set", this);
         }
         if (busInterface == null) {
-            throw new RuntimeException("Unable to obtain setup procedure",
-                    new GlcdConfigException("Protocol not set", this));
+            throw new GlcdConfigException("Protocol not set", this);
         }
 
         GlcdSetupInfo setupInfo = Arrays.stream(display.getSetupDetails())
