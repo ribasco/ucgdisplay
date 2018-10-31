@@ -25,6 +25,7 @@
  */
 package com.ibasco.ucgdisplay.drivers.clcd.util;
 
+import com.ibasco.ucgdisplay.drivers.clcd.exceptions.NoAvailableByteProcessorException;
 import com.ibasco.ucgdisplay.drivers.clcd.exceptions.TokenCountMismatchException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -91,7 +92,7 @@ public class RegexByteProcessor {
             if (varMap.containsKey(cmd)) {
                 Function<String, String> processor = varMap.get(cmd);
                 if (processor == null)
-                    throw new NullPointerException("No available processor found for command '" + cmd + "'");
+                    throw new NoAvailableByteProcessorException("No available processor found for command '" + cmd + "'");
                 log.debug("Match: 1 = {}, 3 = {}", cmd, args);
                 matcher.appendReplacement(sb, processor.apply(args));
             }
