@@ -25,7 +25,15 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.*;
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_3WSPI;
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_4WSPI;
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_6800;
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_8080;
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_I2C;
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_KS0108;
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_SED1520;
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_ST7920SPI;
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_UART;
 
 /**
  * Enumeration of supported bus interfaces of a controller
