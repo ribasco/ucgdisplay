@@ -1,2 +1,3 @@
 *.enc binary
 native/include/jdk/* linguist-vendored
+native/modules/graphics/src/main/cpp/utils/controllers.h linguist-language=C++
