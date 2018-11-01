@@ -1233,7 +1233,7 @@ public class U8g2Graphics {
      * @see #getBufferTileWidth
      * @see #clearBuffer
      */
-    public static native int getBuffer(long id);
+    public static native byte[] getBuffer(long id);
 
     /**
      * <p>Return the width of the page buffer in tiles (One tile has a width of 8 pixel).</p>

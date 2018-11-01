@@ -705,7 +705,7 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     }
 
     @Override
-    public int getBuffer() {
+    public byte[] getBuffer() {
         checkRequirements();
         return U8g2Graphics.getBuffer(_id);
     }

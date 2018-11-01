@@ -525,12 +525,19 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setDisplayRotation(JNIEnv
     u8g2_SetDisplayRotation(toU8g2(id), _rotation);
 }
 
-//TODO: Still need to figure out how to pass this back to java
-jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getBuffer(JNIEnv *env, jclass cls, jlong id) {
+jbyteArray Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getBuffer(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
-        return -1;
-    uint8_t *buffer = u8g2_GetBufferPtr(toU8g2(id));
-    return -1;
+        return nullptr;
+
+    u8g2_t* ptr = toU8g2(id);
+    uint8_t *buffer = u8g2_GetBufferPtr(ptr);
+    int width = u8g2_GetBufferTileWidth(ptr);
+    int height = u8g2_GetBufferTileHeight(ptr);
+    int size = 8 *  (width * height);
+
+    jbyteArray arr = env->NewByteArray(size);
+    env->SetByteArrayRegion(arr, 0, size, reinterpret_cast<jbyte*>(buffer));
+    return arr;
 }
 
 jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getBufferTileWidth(JNIEnv *env, jclass cls, jlong id) {
