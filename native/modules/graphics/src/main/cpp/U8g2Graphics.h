@@ -468,9 +468,9 @@ JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setDisp
 /*
  * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
  * Method:    getBuffer
- * Signature: (J)I
+ * Signature: (J)[B
  */
-JNIEXPORT jint JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getBuffer
+JNIEXPORT jbyteArray JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getBuffer
   (JNIEnv *, jclass, jlong);
 
 /*

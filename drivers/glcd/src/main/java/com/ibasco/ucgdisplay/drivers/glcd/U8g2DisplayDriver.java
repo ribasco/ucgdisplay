@@ -1418,7 +1418,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * @see #getBufferTileWidth
      * @see #clearBuffer
      */
-    int getBuffer();
+    byte[] getBuffer();
 
     /**
      * <p>Return the width of the page buffer in tiles (One tile has a width of 8 pixel).</p>
