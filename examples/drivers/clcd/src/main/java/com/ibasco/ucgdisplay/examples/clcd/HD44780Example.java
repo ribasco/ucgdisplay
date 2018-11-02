@@ -1,4 +1,4 @@
-/*-
+package com.ibasco.ucgdisplay.examples.clcd;/*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Character LCD driver examples

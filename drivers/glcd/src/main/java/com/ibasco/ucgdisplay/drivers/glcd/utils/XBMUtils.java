@@ -29,7 +29,11 @@ import com.ibasco.ucgdisplay.drivers.glcd.exceptions.XBMDecodeException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class XBMUtils {
@@ -44,7 +48,7 @@ public class XBMUtils {
 
             StringBuilder data = new StringBuilder();
 
-            BufferedReader br = new BufferedReader(new FileReader(file));//Files.newReader(file, Charset.defaultCharset());
+            BufferedReader br = new BufferedReader(new FileReader(file));
             int skipLines = 3, curLine = 1;
 
             String sCurrentLine;

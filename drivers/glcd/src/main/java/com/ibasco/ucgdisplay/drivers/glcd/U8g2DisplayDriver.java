@@ -33,7 +33,7 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
 import java.io.File;
 
 /**
- * Graphics Display Driver methods based on the U8G2 Interface.
+ * Graphics Display Driver interface based on the U8G2 Interface.
  *
  * @author Rafael Ibasco
  * @see <a href="https://github.com/olikraus/u8g2/wiki/u8g2reference#drawbox">U8G2 Reference</a>
@@ -51,6 +51,8 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      *         Width of the box.
      * @param height
      *         Height of the box.
+     *
+     * @see #setDrawColor(GlcdDrawColor)
      */
     void drawBox(int width, int height);
 
@@ -607,9 +609,8 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * <p>Draw a <a href="http://en.wikipedia.org/wiki/X_BitMap">XBM Bitmap</a>. Position (x,y) is the upper left
      * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
      *
-     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. Version
-     * 2.15.x of U8g2 introduces a solid and a transparent mode for bitmaps. By default, drawXBM will draw solid
-     * bitmaps. This differs from the previous versions: Use setBitmapMode(1) to switch to the previous behavior. The
+     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. By default, drawXBM will draw solid
+     * bitmaps, use {@link #setBitmapMode(int)} to switch between modes (solid or transparent). The
      * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
      * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
      * (external link). The result will look like this:</p>
@@ -629,9 +630,8 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * <p>Draw a <a href="http://en.wikipedia.org/wiki/X_BitMap">XBM Bitmap</a>. Position (x,y) is the upper left
      * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
      *
-     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. Version
-     * 2.15.x of U8g2 introduces a solid and a transparent mode for bitmaps. By default, drawXBM will draw solid
-     * bitmaps. This differs from the previous versions: Use setBitmapMode(1) to switch to the previous behavior. The
+     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. By default, drawXBM will draw solid
+     * bitmaps, use {@link #setBitmapMode(int)} to switch between modes (solid or transparent). The
      * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
      * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
      * (external link). The result will look like this:</p>
@@ -655,9 +655,8 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * <p>Draw a <a href="http://en.wikipedia.org/wiki/X_BitMap">XBM Bitmap</a>. Position (x,y) is the upper left
      * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
      *
-     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. Version
-     * 2.15.x of U8g2 introduces a solid and a transparent mode for bitmaps. By default, drawXBM will draw solid
-     * bitmaps. This differs from the previous versions: Use setBitmapMode(1) to switch to the previous behavior. The
+     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. By default, drawXBM will draw solid
+     * bitmaps, use {@link #setBitmapMode(int)} to switch between modes (solid or transparent). The
      * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
      * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
      * (external link). The result will look like this:</p>
@@ -667,7 +666,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * @param height
      *         Height of the bitmap.
      * @param data
-     *         Bitmap data
+     *         Byte array containing bitmap data
      *
      * @see #setBitmapMode
      */
@@ -677,9 +676,8 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * <p>Draw a <a href="http://en.wikipedia.org/wiki/X_BitMap">XBM Bitmap</a>. Position (x,y) is the upper left
      * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
      *
-     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. Version
-     * 2.15.x of U8g2 introduces a solid and a transparent mode for bitmaps. By default, drawXBM will draw solid
-     * bitmaps. This differs from the previous versions: Use setBitmapMode(1) to switch to the previous behavior. The
+     * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. By default, drawXBM will draw solid
+     * bitmaps, use {@link #setBitmapMode(int)} to switch between modes (solid or transparent). The
      * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
      * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
      * (external link). The result will look like this:</p>
@@ -701,8 +699,8 @@ public interface U8g2DisplayDriver extends DisplayDriver {
 
     /**
      * <p>Draw a string which is encoded as UTF-8. There are two preconditions for the use of this function:
-     * (A) the C/C++/Arduino compiler must support UTF-8 encoding (this is default for the gnu compiler, which is also
-     * used for most Arduino boards) and (B) the code editor/IDE must support and store the C/C++/Arduino code as UTF-8
+     * (A) <strike>the C/C++/Arduino compiler must support UTF-8 encoding (this is default for the gnu compiler, which is also
+     * used for most Arduino boards)</strike> and (B) the code editor/IDE must support and store the C/C++/Arduino code as UTF-8
      * (true for the Arduino IDE). If these conditions are met, you can use the character with code value greater than
      * 127 directly in the string (of course the character must exist in the font file, see also setFont). Advantage: No
      * escape codes are required and the source code is more readable. The glyph can be copied and paste into the editor
@@ -723,8 +721,8 @@ public interface U8g2DisplayDriver extends DisplayDriver {
 
     /**
      * <p>Draw a string which is encoded as UTF-8. There are two preconditions for the use of this function:
-     * (A) the C/C++/Arduino compiler must support UTF-8 encoding (this is default for the gnu compiler, which is also
-     * used for most Arduino boards) and (B) the code editor/IDE must support and store the C/C++/Arduino code as UTF-8
+     * (A) <strike>the C/C++/Arduino compiler must support UTF-8 encoding (this is default for the gnu compiler, which is also
+     * used for most Arduino boards)</strike> and (B) the code editor/IDE must support and store the C/C++/Arduino code as UTF-8
      * (true for the Arduino IDE). If these conditions are met, you can use the character with code value greater than
      * 127 directly in the string (of course the character must exist in the font file, see also setFont). Advantage: No
      * escape codes are required and the source code is more readable. The glyph can be copied and paste into the editor
@@ -967,7 +965,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
     /**
      * <p>Defines the bit value (color index) for all drawing functions. All drawing function will change the display
      * memory to this bit value. Default value is 1. For example the {@link #drawBox(int, int, int, int)} procedure will
-     * set all pixels for the defined area to the bit value, provided here. In v2.11 the new color value 2 will activate
+     * set all pixels for the defined area to the bit value, provided here. The color value 2 will activate
      * the XOR mode. Exceptions:</p>
      *
      * <p>Both functions will always set the buffer to the pixel value 0. The color argument of setDrawColor is
@@ -1048,7 +1046,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
     /**
      * <p>Defines the bit value (color index) for all drawing functions. All drawing function will change the display
      * memory to this bit value. Default value is 1. For example the {@link #drawBox(int, int, int, int)} procedure will
-     * set all pixels for the defined area to the bit value, provided here. In v2.11 the new color value 2 will activate
+     * set all pixels for the defined area to the bit value, provided here. The color value 2 will activate
      * the XOR mode. Exceptions:</p>
      *
      * <p>Both functions will always set the buffer to the pixel value 0. The color argument of setDrawColor is
@@ -1356,7 +1354,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * </tr>
      * <tr>
      * <td><code>ROTATION_MIRROR</code></td>
-     * <td>No rotation, landscape, display content is mirrored (v2.6.x)</td>
+     * <td>No rotation, landscape, display content is mirrored</td>
      * </tr>
      * </tbody>
      * </table>
@@ -1396,7 +1394,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * </tr>
      * <tr>
      * <td><code>{@link GlcdRotation#ROTATION_MIRROR}</code></td>
-     * <td>No rotation, landscape, display content is mirrored (v2.6.x)</td>
+     * <td>No rotation, landscape, display content is mirrored</td>
      * </tr>
      * </tbody>
      * </table>
