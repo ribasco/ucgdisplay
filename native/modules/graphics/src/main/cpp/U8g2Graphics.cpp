@@ -577,7 +577,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setClipWindow(JNIEnv *env
     u8g2_SetClipWindow(toU8g2(id), x0, y0, x1, y1);
 }
 
-void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setMaxClipWindow(JNIEnv *env, jclass, jlong) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setMaxClipWindow(JNIEnv *env, jclass cls, jlong id) {
     if (!check_validity(env, id))
         return;
     u8g2_SetMaxClipWindow(toU8g2(id));
