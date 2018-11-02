@@ -44,6 +44,7 @@
 ---
 * [Snapshot Builds](https://oss.sonatype.org/content/repositories/snapshots/com/ibasco/ucgdisplay/)
 * [Release Builds](https://oss.sonatype.org/content/repositories/releases/com/ibasco/ucgdisplay)
+* [Display Controller Status](https://goo.gl/5GNQmy) - Please feel free to edit this page if you were able to successfully test your device using this library
 
 ### Pre-requisites
 
