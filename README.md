@@ -209,4 +209,4 @@ public class GlcdST7920Example {
 ### Related projects
 
 ---
-* GLCD Emulator/Simulator (Coming soon)
+* [GLCD Emulator/Simulator](https://github.com/ribasco/glcd-emulator)
