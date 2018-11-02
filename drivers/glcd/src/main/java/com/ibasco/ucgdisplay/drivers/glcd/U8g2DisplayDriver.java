@@ -1379,23 +1379,23 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * </thead>
      * <tbody>
      * <tr>
-     * <td><code>{@link #ROTATION_R0}</code></td>
+     * <td><code>{@link GlcdRotation#ROTATION_NONE}</code></td>
      * <td>No rotation, landscape</td>
      * </tr>
      * <tr>
-     * <td><code>{@link #ROTATION_R1}</code></td>
+     * <td><code>{@link GlcdRotation#ROTATION_90}</code></td>
      * <td>90 degree clockwise rotation</td>
      * </tr>
      * <tr>
-     * <td><code>{@link #ROTATION_R2}</code></td>
+     * <td><code>{@link GlcdRotation#ROTATION_180}</code></td>
      * <td>180 degree clockwise rotation</td>
      * </tr>
      * <tr>
-     * <td><code>{@link #ROTATION_R3}</code></td>
+     * <td><code>{@link GlcdRotation#ROTATION_270}</code></td>
      * <td>270 degree clockwise rotation</td>
      * </tr>
      * <tr>
-     * <td><code>{@link #ROTATION_MIRROR}</code></td>
+     * <td><code>{@link GlcdRotation#ROTATION_MIRROR}</code></td>
      * <td>No rotation, landscape, display content is mirrored (v2.6.x)</td>
      * </tr>
      * </tbody>
@@ -1479,4 +1479,28 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * @see #drawString(int, int, String)
      */
     int getStrWidth(String text);
+
+    /**
+     * <p>Restricts all graphics output to the specified range. The range is defined from x0 (included) to x1 (excluded) and y0 (included) to y1 (excluded).
+     * Use setMaxClipWindow to restore writing to the complete window.</p>
+     *
+     * @param x0
+     *         Left edge of the visible area.
+     * @param y0
+     *         Upper edge of the visible area.
+     * @param x1
+     *         Right edge +1 of the visible area.
+     * @param y1
+     *         Lower edge +1 of the visible area.
+     *
+     * @see #setMaxClipWindow()
+     */
+    void setClipWindow(int x0, int y0, int x1, int y1);
+
+    /**
+     * <p>Removes the effect of {@link #setClipWindow(int, int, int, int)}. Graphics is written to the complete display.</p>
+     *
+     * @see #setClipWindow(int, int, int, int)
+     */
+    void setMaxClipWindow();
 }
