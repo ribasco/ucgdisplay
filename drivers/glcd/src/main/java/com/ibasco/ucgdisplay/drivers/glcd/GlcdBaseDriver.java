@@ -741,6 +741,18 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     }
 
     @Override
+    public void setClipWindow(int x0, int y0, int x1, int y1) {
+        checkRequirements();
+        U8g2Graphics.setClipWindow(_id, x0, y0, x1, y1);
+    }
+
+    @Override
+    public void setMaxClipWindow() {
+        checkRequirements();
+        U8g2Graphics.setMaxClipWindow(_id);
+    }
+
+    @Override
     public void write(byte... data) {
         throw new NotImplementedException("Write not implemented for this driver");
     }

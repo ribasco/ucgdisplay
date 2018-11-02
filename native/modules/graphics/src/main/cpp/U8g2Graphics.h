@@ -513,6 +513,22 @@ JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setBuff
 JNIEXPORT jint JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getStrWidth
   (JNIEnv *, jclass, jlong, jstring);
 
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    setClipWindow
+ * Signature: (JIIII)V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setClipWindow
+  (JNIEnv *, jclass, jlong, jint, jint, jint, jint);
+
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    setMaxClipWindow
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setMaxClipWindow
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif

@@ -563,3 +563,15 @@ jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getStrWidth(JNIEnv *env, 
     const char *c = env->GetStringUTFChars(text, nullptr);
     return u8g2_GetStrWidth(toU8g2(id), c);
 }
+
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setClipWindow(JNIEnv *env, jclass cls, jlong id, jint x0, jint y0, jint x1, jint y1) {
+    if (!check_validity(env, id))
+        return -1;
+    u8g2_SetClipWindow(toU8g2(id), x0, y0, x1, y1);
+}
+
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setMaxClipWindow(JNIEnv *env, jclass, jlong) {
+    if (!check_validity(env, id))
+        return -1;
+    u8g2_SetMaxClipWindow(toU8g2(id));
+}
