@@ -1308,4 +1308,33 @@ public class U8g2Graphics {
      * @see #drawString(long, int, int, String)
      */
     public static native int getStrWidth(long id, String text);
+
+    /**
+     * <p>Restricts all graphics output to the specified range. The range is defined from x0 (included) to x1 (excluded) and y0 (included) to y1 (excluded).
+     * Use setMaxClipWindow to restore writing to the complete window.</p>
+     *
+     * @param id
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     * @param x0
+     *         Left edge of the visible area.
+     * @param y0
+     *         Upper edge of the visible area.
+     * @param x1
+     *         Right edge +1 of the visible area.
+     * @param y1
+     *         Lower edge +1 of the visible area.
+     *
+     * @see #setMaxClipWindow(long)
+     */
+    public static native void setClipWindow(long id, int x0, int y0, int x1, int y1);
+
+    /**
+     * <p>Removes the effect of {@link #setClipWindow(long, int, int, int, int)}. Graphics is written to the complete display.</p>
+     *
+     * @param id
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *
+     * @see #setClipWindow(long, int, int, int, int)
+     */
+    public static native void setMaxClipWindow(long id);
 }
