@@ -26,6 +26,8 @@
 package com.ibasco.ucgdisplay.core.u8g2;
 
 import com.ibasco.ucgdisplay.common.drivers.DisplayDriver;
+import com.ibasco.ucgdisplay.core.u8g2.exceptions.U8g2ByteEventException;
+import com.ibasco.ucgdisplay.core.u8g2.exceptions.U8g2GpioEventException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +64,7 @@ public class U8g2EventDispatcher {
             if (listener != null)
                 listener.onGpioEvent(new U8g2GpioEvent(msg, data));
         } catch (Exception e) {
-            log.error("Error occured during gpio event", e);
+            throw new U8g2GpioEventException("Error occured on GPIO event listener", e);
         }
     }
 
@@ -82,7 +84,7 @@ public class U8g2EventDispatcher {
             if (listener != null)
                 listener.onByteEvent(new U8g2ByteEvent(msg, data));
         } catch (Exception e) {
-            log.error("Error occured during byte event", e);
+            throw new U8g2ByteEventException("Error occured on BYTE event listener", e);
         }
     }
 
