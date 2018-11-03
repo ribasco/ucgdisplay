@@ -14,7 +14,7 @@
 
 ######  Character LCD driver features
 * Pure java implementation for Hitachi HD44780 driver powered by Pi4j (Will probably add JNI/native support in the future if performance is an issue)
-* Designed with flexibility in mind allowing for different configuration styles of interfacing with your SBC device (e.g. GPIO expanders/I2C/SPI)
+* Flexible configuration options for interfacing with your SBC device (e.g. GPIO expanders/I2C/SPI)
 * No fixed/mandatory pin mapping. You have the freedom to choose whatever device pins you want to use for your LCD device.
 * Available LCD adapters
     * MCP23017
