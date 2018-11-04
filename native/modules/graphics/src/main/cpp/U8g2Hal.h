@@ -27,6 +27,9 @@
 #ifndef UCGDISP_U8G2CALLBACKS_H
 #define UCGDISP_U8G2CALLBACKS_H
 
+#include <iostream>
+#include <cstring>
+#include <sstream>
 #include <u8g2.h>
 #include <memory>
 #include <map>
