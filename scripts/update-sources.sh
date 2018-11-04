@@ -47,6 +47,7 @@ cd ${UTILS_DIR}
 GENERATOR=""
 
 # Build the code
+echo "Building codegen script"
 cmake --target ucgd-code -G 'CodeBlocks - Unix Makefiles' -H. -Bbuild
 
 cd ${UTILS_DIR}/build/bin
