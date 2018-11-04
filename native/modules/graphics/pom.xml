@@ -572,7 +572,7 @@
                                             </directory>
                                             <filtering>true</filtering>
                                             <includes>
-                                                <include>*.so</include>
+                                                <include>*.dylib</include>
                                             </includes>
                                         </resource>
                                     </resources>
