@@ -3,13 +3,16 @@ set(RPI_TOOLCHAIN_PATH "${TOOLS_DIR_PATH}/rpi" CACHE PATH "The path of the Raspb
 
 message(STATUS "[FIND-TOOLCHAIN] Search Path = ${RPI_TOOLCHAIN_PATH}")
 
-#-DRPI_TOOLCHAIN_PATH=/home/raffy/projects/rpi-tools
-
 if (NOT UNIX)
     message(FATAL_ERROR "Unsupported platform for this RPI Toolchain")
 endif ()
 
 # TODO: Use the built-in file manipulation provided by CMAKE
+
+if ((EXISTS ${RPI_TOOLCHAIN_PATH}) AND (NOT EXISTS "${RPI_TOOLCHAIN_PATH}/arm-bcm2708"))
+    message(STATUS "[FIND-TOOLCHAIN] RPi tools directory exists but missing required files...Removing")
+    file(REMOVE_RECURSE ${RPI_TOOLCHAIN_PATH})
+endif()
 
 # Check if the path exists, if it doesn't, download a copy to the source directory
 if (NOT EXISTS ${RPI_TOOLCHAIN_PATH})
@@ -18,7 +21,7 @@ if (NOT EXISTS ${RPI_TOOLCHAIN_PATH})
         file(DOWNLOAD https://github.com/raspberrypi/tools/archive/master.tar.gz ${TOOLS_DIR_PATH}/toolchain.tar.gz SHOW_PROGRESS)
 
         message(STATUS "[FIND-TOOLCHAIN] Unzipping '${TOOLS_DIR_PATH}/toolchain.tar.gz' to '${TOOLS_DIR_PATH}'")
-        execute_process(COMMAND tar xvzf ${TOOLS_DIR_PATH}/toolchain.tar.gz WORKING_DIRECTORY ${TOOLS_DIR_PATH} ERROR_VARIABLE tc_unzip)
+        execute_process(COMMAND tar xvzf ${TOOLS_DIR_PATH}/toolchain.tar.gz WORKING_DIRECTORY ${TOOLS_DIR_PATH} ERROR_VARIABLE tc_unzip OUTPUT_QUIET)
     else()
         message(STATUS "[FIND-TOOLCHAIN] Downloading toolchain to ${TOOLS_DIR_PATH}/toolchain.zip")
         file(DOWNLOAD https://github.com/raspberrypi/tools/archive/master.zip ${TOOLS_DIR_PATH}/toolchain.zip SHOW_PROGRESS)
@@ -39,11 +42,13 @@ if (NOT EXISTS ${RPI_TOOLCHAIN_PATH})
     endif ()
 
     message(STATUS "[FIND-TOOLCHAIN] Removing toolchain.zip from ${TOOLS_DIR_PATH}" ERROR_VARIABLE tc_remove)
-    execute_process(COMMAND rm ${TOOLS_DIR_PATH}/toolchain.tar.gz)
+    file(REMOVE ${TOOLS_DIR_PATH}/toolchain.tar.gz)
 
     if (tc_remove)
         message(FATAL_ERROR "[FIND-TOOLCHAIN] Could not perform delete operation")
     endif ()
+else()
+    message(STATUS "[FIND-TOOLCHAIN'] Toolchain path already exists. Skipping download (Valid = ${RPI_TOOLS_VALID})")
 endif ()
 
 if (EXISTS "${RPI_TOOLCHAIN_PATH}/arm-bcm2708")

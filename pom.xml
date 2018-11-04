@@ -4,13 +4,13 @@
 
     <groupId>com.ibasco.ucgdisplay</groupId>
     <artifactId>ucg-display</artifactId>
-    <version>1.1.1-alpha-SNAPSHOT</version>
+    <version>1.2.0-alpha-SNAPSHOT</version>
     <name>UCGDisplay</name>
     <url>https://github.com/ribasco/ucgdisplay</url>
     <packaging>pom</packaging>
     <inceptionYear>2018</inceptionYear>
     <description>
-        A Java based display library for single board computers. Provides drivers for both character (Hitachi HD44780)
+        A universal display library for single board computers. Supports character (Hitachi HD44780)
         and graphics monochrome display devices (lcd, oled, e-ink etc) powered by U8g2
     </description>
 
