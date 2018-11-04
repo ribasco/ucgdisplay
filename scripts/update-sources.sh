@@ -51,7 +51,7 @@ echo "Reloading CMAKE cache"
 cmake --target ucgd-code -G 'CodeBlocks - Unix Makefiles' -H. -Bbuild
 
 echo "Building ucgd-code"
-cmake --build ${UTILS_DIR}/build/linux/amd64 --target ucgd-code -- -j 4
+cmake --build ${UTILS_DIR}/build --target ucgd-code -- -j 4
 
 cd ${UTILS_DIR}/build/bin
 
