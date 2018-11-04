@@ -572,7 +572,7 @@
                                             </directory>
                                             <filtering>true</filtering>
                                             <includes>
-                                                <include>${lib-output-filename}</include>
+                                                <include>*.so</include>
                                             </includes>
                                         </resource>
                                     </resources>
