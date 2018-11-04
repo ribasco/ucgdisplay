@@ -623,8 +623,8 @@ void buildCode_updateCppLookupFonts() {
     }
 
 
-#ifdef _WIN32
-    code << "#if !defined(_WIN32)\n";
+#if defined(_WIN32) || defined(__APPLE__)
+    code << "#if !defined(_WIN32) && !defined(__APPLE___)\n";
     for (const auto &fontName : win32_excluded_fonts) {
         code << "\tfont_map[\"" << fontName << "\"] = " << fontName << ";" << endl;
     }
