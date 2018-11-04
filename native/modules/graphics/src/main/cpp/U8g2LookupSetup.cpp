@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Oct 28 2018 17:52:25) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Nov  4 2018 14:49:09) 
  */
 
 #include "U8g2Hal.h"
@@ -109,6 +109,7 @@ void u8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
 	setup_map["u8g2_Setup_st75256_jlx172104_f"] = u8g2_Setup_st75256_jlx172104_f;
 	setup_map["u8g2_Setup_st75256_jlx240160_f"] = u8g2_Setup_st75256_jlx240160_f;
 	setup_map["u8g2_Setup_st75256_jlx256128_f"] = u8g2_Setup_st75256_jlx256128_f;
+	setup_map["u8g2_Setup_st75256_jlx256160_alt_f"] = u8g2_Setup_st75256_jlx256160_alt_f;
 	setup_map["u8g2_Setup_st75256_jlx256160_f"] = u8g2_Setup_st75256_jlx256160_f;
 	setup_map["u8g2_Setup_st75256_jlx25664_f"] = u8g2_Setup_st75256_jlx25664_f;
 	setup_map["u8g2_Setup_st7565_64128n_f"] = u8g2_Setup_st7565_64128n_f;
