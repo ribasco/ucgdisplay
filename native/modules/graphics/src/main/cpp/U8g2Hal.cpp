@@ -31,11 +31,8 @@
 #include <wiringPiI2C.h>
 #endif
 
-#include <iostream>
-#include <cstring>
 //#include <algorithm>
 //#include <utility>
-#include <sstream>
 #include <iomanip>
 
 using namespace std;
