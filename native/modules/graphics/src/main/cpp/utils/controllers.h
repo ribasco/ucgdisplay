@@ -1,5 +1,5 @@
 /*
-* THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (October 28, 2018 07:07:16 PM)
+* THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (November 04, 2018 02:49:09 PM)
 */
 struct controller controller_list[] =
 {
@@ -829,6 +829,7 @@ struct controller controller_list[] =
     "", /* is_generate_u8g2_class= */ 1,
     {
       { "jlx256160" },
+      { "jlx256160_alt" },
       { NULL }
     },
   },
