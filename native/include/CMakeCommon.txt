@@ -35,18 +35,24 @@ include(GNUInstallDirs)
 
 set(LIB_DIR "${CMAKE_SOURCE_DIR}/lib")
 
+string(TOLOWER ${CMAKE_SYSTEM_NAME} TARGET_OS)
+
 # Find JAVA_HOME/INCLUDE DIR
 if (CMAKE_CROSSCOMPILING)
-    if (WIN32)
+
+    # Use CMAKE_SYSTEM_NAME to check OS
+    if (TARGET_OS STREQUAL "windows")
         set(JDK_SEARCH_PATH "${JDK_INCLUDE_DIR}/jdk/windows/${CMAKE_SYSTEM_PROCESSOR}")
-    elseif (UNIX)
+    elseif(TARGET_OS STREQUAL "linux")
         set(JDK_SEARCH_PATH "${JDK_INCLUDE_DIR}/jdk/linux/${CMAKE_SYSTEM_PROCESSOR}")
-    else ()
-        message(FATAL_ERROR "[FIND-JNI] Target OS/ARCH not supported = ${CMAKE_SYSTEM_PROCESSOR}")
-    endif ()
+    elseif(TARGET_OS STREQUAL "darwin")
+        set(JDK_SEARCH_PATH "${JDK_INCLUDE_DIR}/jdk/darwin/${CMAKE_SYSTEM_PROCESSOR}")
+    else()
+        message(FATAL_ERROR "[FIND-JNI] Target OS/ARCH not supported = ${TARGET_OS}/${CMAKE_SYSTEM_PROCESSOR}")
+    endif()
 
     if (NOT EXISTS ${JDK_SEARCH_PATH})
-        message(FATAL_ERROR "JDK search path undefined = ${JDK_SEARCH_PATH}")
+        message(FATAL_ERROR "JDK SEARCH PATH NOT FOUND = ${JDK_SEARCH_PATH}")
     endif ()
 
     # Find JDK

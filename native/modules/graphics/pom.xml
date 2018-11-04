@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ucg-display</artifactId>
         <groupId>com.ibasco.ucgdisplay</groupId>
-        <version>1.1.1-alpha-SNAPSHOT</version>
+        <version>1.2.0-alpha-SNAPSHOT</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
@@ -14,11 +15,25 @@
 
     <properties>
         <main.basedir>${project.parent.basedir}</main.basedir>
-        <lib-output-filename>libucgdisp.so</lib-output-filename>
-        <lib-output-filename-win>ucgdisp.dll</lib-output-filename-win>
-        <lib-output-name>ucgdisp</lib-output-name>
+        <lib-name>ucgdisp</lib-name>
+        <lib-output-filename-linux>lib${lib-name}.so</lib-output-filename-linux>
+        <lib-output-filename-mac>lib${lib-name}.dylib</lib-output-filename-mac>
+        <lib-output-filename-win>${lib-name}.dll</lib-output-filename-win>
+        <scripts.dir>${project.parent.basedir}/scripts</scripts.dir>
         <cpp.proj.dir>${project.basedir}/src/main/cpp</cpp.proj.dir>
         <cpp.build.dir>${cpp.proj.dir}/build</cpp.build.dir>
+        <cpp.include.dir>${project.basedir}/../../include</cpp.include.dir>
+        <cpp.build.type>Release</cpp.build.type>
+        <cpp.tools.dir>${project.basedir}/../../tools</cpp.tools.dir>
+        <cpp.tools.rpi.dir>${cpp.tools.dir}/rpi</cpp.tools.rpi.dir>
+        <cpp.tools.osx.archive>osx-tools.tar.gz</cpp.tools.osx.archive>
+        <cpp.tools.osx.dir>${cpp.tools.dir}/osxcross</cpp.tools.osx.dir>
+        <cpp.tools.osx.sdk>${cpp.tools.osx.dir}/SDK/MacOSX10.11.sdk</cpp.tools.osx.sdk>
+        <cpp.tools.osx.toolchain>${cmake.module.path}/OSXToolchain.cmake</cpp.tools.osx.toolchain>
+        <cpp.tools.rpi.toolchain>${cmake.module.path}/RpiToolchain.cmake</cpp.tools.rpi.toolchain>
+        <cpp.tools.win.toolchain>${cmake.module.path}/MingWToolchain.cmake</cpp.tools.win.toolchain>
+        <cpp.tools.osx.target>darwin15</cpp.tools.osx.target>
+        <cpp.tools.osx.host>x86_64-apple-darwin15</cpp.tools.osx.host>
         <cmake-generator-arg>-G 'CodeBlocks - Unix Makefiles'</cmake-generator-arg>
         <cmake.module.path>${project.basedir}/../../cmake</cmake.module.path>
     </properties>
@@ -92,10 +107,10 @@
                                 <phase>generate-sources</phase>
                                 <configuration>
                                     <target name="generate-sources">
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/classes/lib" />
-                                        <mkdir dir="target/classes/lib/linux/arm" />
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/linux/arm"/>
                                     </target>
                                 </configuration>
                                 <goals>
@@ -115,15 +130,15 @@
                                         <!-- Build both architectures when Cross-Compiling -->
                                         <echo>[HOST=ARM] Building ARM binaries only</echo>
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-G 'CodeBlocks - Unix Makefiles'" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/linux/arm" />
+                                            <arg line="--target all"/>
+                                            <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/linux/arm"/>
                                         </exec>
                                         <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -157,7 +172,7 @@
                                             <directory>${project.basedir}/src/main/cpp/build/linux/arm/bin</directory>
                                             <filtering>true</filtering>
                                             <includes>
-                                                <include>${lib-output-filename}</include>
+                                                <include>${lib-output-filename-linux}</include>
                                             </includes>
                                         </resource>
                                     </resources>
@@ -176,7 +191,7 @@
             </build>
         </profile>
 
-        <!-- BUILD PROFILE: Linux - x86_64/amd64 -->
+        <!-- BUILD PROFILE: Linux - x86_64/amd64 (CROSS-COMPILE) -->
         <profile>
             <id>build-linux-amd64</id>
             <activation>
@@ -202,14 +217,15 @@
                                 <id>generate-sources</id>
                                 <phase>generate-sources</phase>
                                 <configuration>
-                                    <target name="generate-sources">
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/classes/lib" />
-                                        <mkdir dir="target/classes/lib/linux/arm" />
-                                        <mkdir dir="target/classes/lib/linux/amd64" />
-                                        <mkdir dir="target/classes/lib/windows/amd64" />
-                                    </target>
+                                    <tasks>
+                                        <property name="project.dir" value="${project.basedir}"/>
+                                        <property name="project.scripts.dir" value="${project.basedir}/../../../scripts"/>
+                                        <property name="cpp.tools.dir" value="${cpp.tools.dir}"/>
+                                        <property name="cpp.tools.osx.dir" value="${cpp.tools.osx.dir}"/>
+                                        <property name="cpp.tools.osx.archive" value="${cpp.tools.osx.archive}"/>
+                                        <ant antfile="${project.scripts.dir}/build.xml" target="generate-native-sources-all"/>
+                                        <ant antfile="${project.scripts.dir}/build.xml" target="init-native-tools-all"/>
+                                    </tasks>
                                 </configuration>
                                 <goals>
                                     <goal>run</goal>
@@ -225,48 +241,72 @@
                                 </goals>
                                 <configuration>
                                     <target name="build-ucgdisp">
-                                        <!-- Build both architectures when Cross-Compiling -->
-                                        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions</echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="${cmake-generator-arg}" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/linux/amd64" />
+                                        <!-- Build Linux/x86_64 -->
+                                        <echo>[HOST=LINUX-AMD64] Invoking CMAKE Cross-compile build instructions for Linux - x86_64</echo>
+                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
+                                            <arg line="${cmake-generator-arg}"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/linux/amd64"/>
                                         </exec>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cmake.module.path}/RpiToolchain.cmake" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="${cmake-generator-arg}" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/linux/arm" />
+                                        <exec executable="cmake" dir="${cpp.proj.dir}/build/linux/amd64" failonerror="true">
+                                            <arg line="--build ${cpp.proj.dir}/build/linux/amd64"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cmake.module.path}/MingWToolchain.cmake" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="${cmake-generator-arg}" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/windows/amd64" />
+
+                                        <!-- Build Linux/ARM -->
+                                        <echo>[HOST=LINUX-AMD64] Invoking CMAKE Cross-compile build for Linux - ARM</echo>
+                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cpp.tools.rpi.toolchain}"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
+                                            <!--<arg line="-DRPI_TOOLCHAIN_PATH=${cpp.tools.rpi.dir}"/>-->
+                                            <arg line="${cmake-generator-arg}"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/linux/arm"/>
                                         </exec>
-                                        <!-- Build AMD64 -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/amd64" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/amd64" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                        <exec executable="cmake" dir="${cpp.proj.dir}/build/linux/arm" failonerror="true">
+                                            <arg line="--build ${cpp.proj.dir}/build/linux/arm"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
-                                        <!-- Build ARM -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+
+                                        <!-- Build Windows/x86_64 -->
+                                        <echo>[HOST=LINUX-AMD64] Invoking CMAKE Cross-compile build for Windows - x86_64</echo>
+                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cpp.tools.win.toolchain}"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
+                                            <arg line="${cmake-generator-arg}"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/windows/amd64"/>
                                         </exec>
-                                        <!-- Build Windows -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/windows/amd64" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                        <exec executable="cmake" dir="${cpp.proj.dir}/build/windows/amd64" failonerror="true">
+                                            <arg line="--build ${cpp.proj.dir}/build/windows/amd64"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
+                                        </exec>
+
+                                        <!-- Build Mac/x86_64 -->
+                                        <echo>[HOST=LINUX-AMD64] Invoking CMAKE Cross-compile build for Mac - x86_64</echo>
+                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cpp.tools.osx.toolchain}"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
+                                            <arg line="-DOSXCROSS_HOST=${cpp.tools.osx.host}"/>
+                                            <arg line="-DOSXCROSS_TARGET_DIR=${cpp.tools.osx.dir}"/>
+                                            <arg line="-DOSXCROSS_SDK=${cpp.tools.osx.sdk}"/>
+                                            <arg line="-DOSXCROSS_TARGET=${cpp.tools.osx.target}"/>
+                                            <arg line="${cmake-generator-arg}"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/mac/amd64"/>
+                                        </exec>
+                                        <exec executable="cmake" dir="${cpp.proj.dir}/build/mac/amd64" failonerror="true">
+                                            <arg line="--build ${cpp.proj.dir}/build/mac/amd64"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -287,7 +327,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
                         <executions>
-                            <!-- Copy ARM binaries to META-INF/lib -->
+                            <!-- Copy Linux/ARM binaries to target/classes/lib/linux/arm -->
                             <execution>
                                 <id>copy-lib-arm</id>
                                 <phase>compile</phase>
@@ -298,10 +338,10 @@
                                     <outputDirectory>${basedir}/target/classes/lib/linux/arm</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/linux/arm/bin</directory>
+                                            <directory>${cpp.proj.dir}/build/linux/arm/bin</directory>
                                             <filtering>true</filtering>
                                             <includes>
-                                                <include>${lib-output-filename}</include>
+                                                <include>${lib-output-filename-linux}</include>
                                             </includes>
                                         </resource>
                                     </resources>
@@ -314,7 +354,7 @@
                                     <overwrite>true</overwrite>
                                 </configuration>
                             </execution>
-                            <!-- Copy x86_64/amd64 binaries to META-INF/lib -->
+                            <!-- Copy Linux/x86_64 binaries to target/classes/lib/linux/amd64 -->
                             <execution>
                                 <id>copy-lib-amd64</id>
                                 <phase>compile</phase>
@@ -325,10 +365,10 @@
                                     <outputDirectory>${basedir}/target/classes/lib/linux/amd64</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/linux/amd64/bin</directory>
+                                            <directory>${cpp.proj.dir}/build/linux/amd64/bin</directory>
                                             <filtering>true</filtering>
                                             <includes>
-                                                <include>${lib-output-filename}</include>
+                                                <include>${lib-output-filename-linux}</include>
                                             </includes>
                                         </resource>
                                     </resources>
@@ -341,7 +381,7 @@
                                     <overwrite>true</overwrite>
                                 </configuration>
                             </execution>
-                            <!-- Copy x86_64/amd64 windows binaries to META-INF/lib -->
+                            <!-- Copy Windows/x86_64 windows binaries to target/classes/lib/windows/amd64 -->
                             <execution>
                                 <id>copy-lib-amd64-win32</id>
                                 <phase>compile</phase>
@@ -352,7 +392,7 @@
                                     <outputDirectory>${basedir}/target/classes/lib/windows/amd64</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/windows/amd64/bin
+                                            <directory>${cpp.proj.dir}/build/windows/amd64/bin
                                             </directory>
                                             <filtering>true</filtering>
                                             <includes>
@@ -362,6 +402,34 @@
                                     </resources>
                                     <nonFilteredFileExtensions>
                                         <nonFilteredFileExtension>dll</nonFilteredFileExtension>
+                                    </nonFilteredFileExtensions>
+                                    <fileNameFiltering>
+                                        true
+                                    </fileNameFiltering>
+                                    <overwrite>true</overwrite>
+                                </configuration>
+                            </execution>
+                            <!-- Copy MacOS/x86_64 binaries to target/classes/lib/mac/amd64 -->
+                            <execution>
+                                <id>copy-lib-amd64-macos</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/classes/lib/mac/amd64</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${cpp.proj.dir}/build/mac/amd64/bin
+                                            </directory>
+                                            <filtering>true</filtering>
+                                            <includes>
+                                                <include>${lib-output-filename-mac}</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                    <nonFilteredFileExtensions>
+                                        <nonFilteredFileExtension>dylib</nonFilteredFileExtension>
                                     </nonFilteredFileExtensions>
                                     <fileNameFiltering>
                                         true
@@ -400,11 +468,11 @@
                                 <phase>generate-sources</phase>
                                 <configuration>
                                     <target name="generate-sources">
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/classes/lib" />
-                                        <mkdir dir="target/classes/lib/linux/arm" />
-                                        <mkdir dir="target/classes/lib/windows/amd64" />
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/linux/arm"/>
+                                        <mkdir dir="target/classes/lib/windows/amd64"/>
                                     </target>
                                 </configuration>
                                 <goals>
@@ -422,18 +490,18 @@
                                         <!-- Refresh CMake cache -->
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for windows
                                         </echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="-G 'CodeBlocks - MinGW Makefiles'" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/windows/amd64" />
+                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="-G 'CodeBlocks - MinGW Makefiles'"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/windows/amd64"/>
                                         </exec>
                                         <!-- Build project -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/windows/amd64" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/windows/amd64" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                        <exec executable="cmake" dir="${cpp.proj.dir}/build/windows/amd64" failonerror="true">
+                                            <arg line="--build ${cpp.proj.dir}/build/windows/amd64"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -457,11 +525,11 @@
                                     <outputDirectory>${basedir}/target/classes/lib/windows/amd64</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/windows/amd64/bin
+                                            <directory>${cpp.proj.dir}/build/windows/amd64/bin
                                             </directory>
                                             <filtering>true</filtering>
                                             <includes>
-                                                <include>${lib-output-name}.dll</include>
+                                                <include>${lib-output-filename-win}</include>
                                             </includes>
                                         </resource>
                                     </resources>
@@ -513,10 +581,10 @@
                                 <phase>generate-sources</phase>
                                 <configuration>
                                     <target name="generate-sources">
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/classes/lib" />
-                                        <mkdir dir="target/classes/lib/mac/amd64" />
+                                        <mkdir dir="target"/>
+                                        <mkdir dir="target/classes"/>
+                                        <mkdir dir="target/classes/lib"/>
+                                        <mkdir dir="target/classes/lib/mac/amd64"/>
                                     </target>
                                 </configuration>
                                 <goals>
@@ -535,16 +603,16 @@
                                         <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for Mac OS
                                         </echo>
                                         <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/mac/amd64" />
+                                            <arg line="--target all"/>
+                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
+                                            <arg line="-H."/>
+                                            <arg line="-Bbuild/mac/amd64"/>
                                         </exec>
                                         <!-- Build project -->
                                         <exec executable="cmake" dir="${cpp.build.dir}/mac/amd64" failonerror="true">
-                                            <arg line="--build ${cpp.build.dir}/mac/amd64" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
+                                            <arg line="--build ${cpp.build.dir}/mac/amd64"/>
+                                            <arg line="--target ucgdisp --"/>
+                                            <arg line=" -j 4"/>
                                         </exec>
                                     </target>
                                 </configuration>
@@ -620,7 +688,7 @@
                                     <headerName>U8g2Graphics.h</headerName>
                                 </javahInclude>
                             </javahIncludes>
-                            <javahOutputDirectory>${project.basedir}/src/main/cpp</javahOutputDirectory>
+                            <javahOutputDirectory>${cpp.proj.dir}</javahOutputDirectory>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,0 +1,54 @@
+<project name="ucgdisplay" basedir="../">
+    <target name="generate-native-sources-all" depends="generate-native-sources, generate-native-sources-win, generate-native-sources-mac, generate-native-sources-linux">
+        <echo>Generating native source directories to ${project.basedir}</echo>
+    </target>
+
+    <target name="generate-native-sources">
+        <mkdir dir="${project.dir}/target"/>
+        <mkdir dir="${project.dir}/target/classes"/>
+        <mkdir dir="${project.dir}/target/classes/lib"/>
+    </target>
+
+    <target name="generate-native-sources-win">
+        <mkdir dir="${project.dir}/target/classes/lib/windows/amd64"/>
+    </target>
+
+    <target name="generate-native-sources-linux">
+        <mkdir dir="${project.dir}/target/classes/lib/linux/arm"/>
+        <mkdir dir="${project.dir}/target/classes/lib/linux/amd64"/>
+    </target>
+
+    <target name="generate-native-sources-mac">
+        <mkdir dir="${project.dir}/target/classes/lib/mac/amd64"/>
+    </target>
+
+    <target name="init-native-tools-all" depends="init-native-tools-mac">
+        <echo>Initializing native tools (ALL)</echo>
+    </target>
+
+    <!-- Check if the OSX toolchain directory is valid (contains the required files) -->
+    <target name="osx.tools.dir.check">
+        <condition property="osx.tools.dir.valid">
+            <and>
+                <available file="${cpp.tools.osx.dir}" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/bin" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/SDK" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/SDK/MacOSX10.11.sdk" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/bin/x86_64-apple-darwin15-wrapper" type="file"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="init-native-tools-mac" depends="osx.tools.dir.check" unless="osx.tools.dir.valid">
+        <echo>Initializing OSXCross toolchain</echo>
+        <echo>Deleting existing OSX toolchain directory (if applicable)</echo>
+        <delete dir="${cpp.tools.osx.dir}" failonerror="false"/>
+        <echo>Extracting toolchain contents from the archive</echo>
+        <exec executable="tar" dir="${cpp.tools.dir}" failonerror="true">
+            <arg line="xzf"/>
+            <arg line="${cpp.tools.osx.archive}"/>
+        </exec>
+        <echo>Moving extracted contents to ${cpp.tools.osx.dir}</echo>
+        <move file="${cpp.tools.dir}/target" tofile="${cpp.tools.osx.dir}"/>
+    </target>
+</project>

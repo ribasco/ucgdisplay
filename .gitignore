@@ -59,7 +59,7 @@ fabric.properties
 *.war
 *.ear
 *.zip
-*.tar.gz
+#*.tar.gz
 *.rar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
@@ -77,5 +77,5 @@ hs_err_pid*
 /native/modules/input/src/main/cpp/build/
 /native/modules/input/src/main/cpp/lib/
 /native/modules/input/src/main/cpp/.idea/
-/native/tools/
+# /native/tools/
 /native/modules/graphics/src/main/cpp/utils/build/

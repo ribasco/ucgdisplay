@@ -3,7 +3,7 @@
     <parent>
         <artifactId>ucg-display</artifactId>
         <groupId>com.ibasco.ucgdisplay</groupId>
-        <version>1.1.1-alpha-SNAPSHOT</version>
+        <version>1.2.0-alpha-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
