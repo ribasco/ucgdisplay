@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2018 Universal Character/Graphics display library
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Lesser Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Lesser Public
+  ~ License along with this program.  If not, see
+  ~ <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
@@ -15,27 +33,6 @@
 
     <properties>
         <main.basedir>${project.parent.basedir}</main.basedir>
-        <lib-name>ucgdisp</lib-name>
-        <lib-output-filename-linux>lib${lib-name}.so</lib-output-filename-linux>
-        <lib-output-filename-mac>lib${lib-name}.dylib</lib-output-filename-mac>
-        <lib-output-filename-win>${lib-name}.dll</lib-output-filename-win>
-        <scripts.dir>${project.parent.basedir}/scripts</scripts.dir>
-        <cpp.proj.dir>${project.basedir}/src/main/cpp</cpp.proj.dir>
-        <cpp.build.dir>${cpp.proj.dir}/build</cpp.build.dir>
-        <cpp.include.dir>${project.basedir}/../../include</cpp.include.dir>
-        <cpp.build.type>Release</cpp.build.type>
-        <cpp.tools.dir>${project.basedir}/../../tools</cpp.tools.dir>
-        <cpp.tools.rpi.dir>${cpp.tools.dir}/rpi</cpp.tools.rpi.dir>
-        <cpp.tools.osx.archive>osx-tools.tar.gz</cpp.tools.osx.archive>
-        <cpp.tools.osx.dir>${cpp.tools.dir}/osxcross</cpp.tools.osx.dir>
-        <cpp.tools.osx.sdk>${cpp.tools.osx.dir}/SDK/MacOSX10.11.sdk</cpp.tools.osx.sdk>
-        <cpp.tools.osx.toolchain>${cmake.module.path}/OSXToolchain.cmake</cpp.tools.osx.toolchain>
-        <cpp.tools.rpi.toolchain>${cmake.module.path}/RpiToolchain.cmake</cpp.tools.rpi.toolchain>
-        <cpp.tools.win.toolchain>${cmake.module.path}/MingWToolchain.cmake</cpp.tools.win.toolchain>
-        <cpp.tools.osx.target>darwin15</cpp.tools.osx.target>
-        <cpp.tools.osx.host>x86_64-apple-darwin15</cpp.tools.osx.host>
-        <cmake-generator-arg>-G 'CodeBlocks - Unix Makefiles'</cmake-generator-arg>
-        <cmake.module.path>${project.basedir}/../../cmake</cmake.module.path>
     </properties>
 
     <dependencies>
@@ -74,12 +71,62 @@
     </dependencies>
 
     <profiles>
-        <!--
-        - Build Profiles for different platforms. Supported OS/ARCH:
-        - 1) Linux - x86_64
-        - 2) Linux - ARM
-        - 3) Windows - x86_64
-        -->
+        <!-- Cross-compile profile (can only be ran under linux os) -->
+        <profile>
+            <id>cross-compile</id>
+            <properties>
+                <current-os>linux</current-os>
+                <current-arch>amd64</current-arch>
+                <crossCompile>true</crossCompile>
+                <build-target>native-build-cc-all</build-target>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Enforcer: Make sure this can only be run from the Linux OS -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-os</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireOS>
+                                            <name>Linux</name>
+                                            <family>unix</family>
+                                            <arch>amd64</arch>
+                                        </requireOS>
+                                    </rules>
+                                    <failFast>true</failFast>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- BUILD PROFILE: Linux - x86_64/amd64 -->
+        <profile>
+            <id>build-linux-amd64</id>
+            <activation>
+                <os>
+                    <name>linux</name>
+                    <family>unix</family>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <current-os>linux</current-os>
+                <current-arch>amd64</current-arch>
+                <build-target>native-build-linux-x86_64</build-target>
+            </properties>
+        </profile>
+
         <!-- BUILD PROFILE: Linux - arm -->
         <profile>
             <id>build-linux-arm</id>
@@ -91,356 +138,10 @@
                 </os>
             </activation>
             <properties>
-                <current-osarch>linux-arm</current-osarch>
+                <current-os>linux</current-os>
+                <current-arch>arm</current-arch>
+                <build-target>native-build-linux-arm</build-target>
             </properties>
-
-            <build>
-                <plugins>
-                    <!-- Ant-Run Plugin -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <!-- Prepare target directories -->
-                            <execution>
-                                <id>generate-sources</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <target name="generate-sources">
-                                        <mkdir dir="target"/>
-                                        <mkdir dir="target/classes"/>
-                                        <mkdir dir="target/classes/lib"/>
-                                        <mkdir dir="target/classes/lib/linux/arm"/>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-
-                            <!-- Compile native library using CMake -->
-                            <execution>
-                                <id>make</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target name="build-ucgdisp">
-                                        <!-- Build both architectures when Cross-Compiling -->
-                                        <echo>[HOST=ARM] Building ARM binaries only</echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all"/>
-                                            <arg line="-G 'CodeBlocks - Unix Makefiles'"/>
-                                            <arg line="-H."/>
-                                            <arg line="-Bbuild/linux/arm"/>
-                                        </exec>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm"/>
-                                            <arg line="--target ucgdisp --"/>
-                                            <arg line=" -j 4"/>
-                                        </exec>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.ant</groupId>
-                                <artifactId>ant</artifactId>
-                                <version>${ant.version}</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-
-                    <!-- Copy native libraries to project's target directory -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <!-- Copy ARM binaries -->
-                            <execution>
-                                <id>copy-lib-arm</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/linux/arm</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/linux/arm/bin</directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename-linux}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- BUILD PROFILE: Linux - x86_64/amd64 (CROSS-COMPILE) -->
-        <profile>
-            <id>build-linux-amd64</id>
-            <activation>
-                <os>
-                    <name>linux</name>
-                    <family>unix</family>
-                    <arch>amd64</arch>
-                </os>
-            </activation>
-            <properties>
-                <current-osarch>linux-amd64</current-osarch>
-            </properties>
-
-            <build>
-                <plugins>
-                    <!-- Ant-Run Plugin -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <!-- Prepare directories -->
-                            <execution>
-                                <id>generate-sources</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <tasks>
-                                        <property name="project.dir" value="${project.basedir}"/>
-                                        <property name="project.scripts.dir" value="${project.basedir}/../../../scripts"/>
-                                        <property name="cpp.tools.dir" value="${cpp.tools.dir}"/>
-                                        <property name="cpp.tools.osx.dir" value="${cpp.tools.osx.dir}"/>
-                                        <property name="cpp.tools.osx.archive" value="${cpp.tools.osx.archive}"/>
-                                        <ant antfile="${project.scripts.dir}/build.xml" target="generate-native-sources-all"/>
-                                        <ant antfile="${project.scripts.dir}/build.xml" target="init-native-tools-all"/>
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-
-                            <!-- Compile native library using CMake -->
-                            <execution>
-                                <id>make</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target name="build-ucgdisp">
-                                        <!-- Build Linux/x86_64 -->
-                                        <echo>[HOST=LINUX-AMD64] Invoking CMAKE Cross-compile build instructions for Linux - x86_64</echo>
-                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
-                                            <arg line="--target all"/>
-                                            <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
-                                            <arg line="${cmake-generator-arg}"/>
-                                            <arg line="-H."/>
-                                            <arg line="-Bbuild/linux/amd64"/>
-                                        </exec>
-                                        <exec executable="cmake" dir="${cpp.proj.dir}/build/linux/amd64" failonerror="true">
-                                            <arg line="--build ${cpp.proj.dir}/build/linux/amd64"/>
-                                            <arg line="--target ucgdisp --"/>
-                                            <arg line=" -j 4"/>
-                                        </exec>
-
-                                        <!-- Build Linux/ARM -->
-                                        <echo>[HOST=LINUX-AMD64] Invoking CMAKE Cross-compile build for Linux - ARM</echo>
-                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
-                                            <arg line="--target all"/>
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cpp.tools.rpi.toolchain}"/>
-                                            <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
-                                            <!--<arg line="-DRPI_TOOLCHAIN_PATH=${cpp.tools.rpi.dir}"/>-->
-                                            <arg line="${cmake-generator-arg}"/>
-                                            <arg line="-H."/>
-                                            <arg line="-Bbuild/linux/arm"/>
-                                        </exec>
-                                        <exec executable="cmake" dir="${cpp.proj.dir}/build/linux/arm" failonerror="true">
-                                            <arg line="--build ${cpp.proj.dir}/build/linux/arm"/>
-                                            <arg line="--target ucgdisp --"/>
-                                            <arg line=" -j 4"/>
-                                        </exec>
-
-                                        <!-- Build Windows/x86_64 -->
-                                        <echo>[HOST=LINUX-AMD64] Invoking CMAKE Cross-compile build for Windows - x86_64</echo>
-                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
-                                            <arg line="--target all"/>
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cpp.tools.win.toolchain}"/>
-                                            <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
-                                            <arg line="${cmake-generator-arg}"/>
-                                            <arg line="-H."/>
-                                            <arg line="-Bbuild/windows/amd64"/>
-                                        </exec>
-                                        <exec executable="cmake" dir="${cpp.proj.dir}/build/windows/amd64" failonerror="true">
-                                            <arg line="--build ${cpp.proj.dir}/build/windows/amd64"/>
-                                            <arg line="--target ucgdisp --"/>
-                                            <arg line=" -j 4"/>
-                                        </exec>
-
-                                        <!-- Build Mac/x86_64 -->
-                                        <echo>[HOST=LINUX-AMD64] Invoking CMAKE Cross-compile build for Mac - x86_64</echo>
-                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
-                                            <arg line="--target all"/>
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cpp.tools.osx.toolchain}"/>
-                                            <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
-                                            <arg line="-DOSXCROSS_HOST=${cpp.tools.osx.host}"/>
-                                            <arg line="-DOSXCROSS_TARGET_DIR=${cpp.tools.osx.dir}"/>
-                                            <arg line="-DOSXCROSS_SDK=${cpp.tools.osx.sdk}"/>
-                                            <arg line="-DOSXCROSS_TARGET=${cpp.tools.osx.target}"/>
-                                            <arg line="${cmake-generator-arg}"/>
-                                            <arg line="-H."/>
-                                            <arg line="-Bbuild/mac/amd64"/>
-                                        </exec>
-                                        <exec executable="cmake" dir="${cpp.proj.dir}/build/mac/amd64" failonerror="true">
-                                            <arg line="--build ${cpp.proj.dir}/build/mac/amd64"/>
-                                            <arg line="--target ucgdisp --"/>
-                                            <arg line=" -j 4"/>
-                                        </exec>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.ant</groupId>
-                                <artifactId>ant</artifactId>
-                                <version>${ant.version}</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-
-                    <!-- Copy native libraries to project's target directory -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <!-- Copy Linux/ARM binaries to target/classes/lib/linux/arm -->
-                            <execution>
-                                <id>copy-lib-arm</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/linux/arm</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${cpp.proj.dir}/build/linux/arm/bin</directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename-linux}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>
-                            <!-- Copy Linux/x86_64 binaries to target/classes/lib/linux/amd64 -->
-                            <execution>
-                                <id>copy-lib-amd64</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/linux/amd64</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${cpp.proj.dir}/build/linux/amd64/bin</directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename-linux}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>
-                            <!-- Copy Windows/x86_64 windows binaries to target/classes/lib/windows/amd64 -->
-                            <execution>
-                                <id>copy-lib-amd64-win32</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/windows/amd64</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${cpp.proj.dir}/build/windows/amd64/bin
-                                            </directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename-win}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>dll</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>
-                            <!-- Copy MacOS/x86_64 binaries to target/classes/lib/mac/amd64 -->
-                            <execution>
-                                <id>copy-lib-amd64-macos</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/mac/amd64</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${cpp.proj.dir}/build/mac/amd64/bin
-                                            </directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename-mac}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>dylib</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
         <!-- BUILD PROFILE: Windows - x86_64/amd64 -->
@@ -453,106 +154,10 @@
                 </os>
             </activation>
             <properties>
-                <current-osarch>windows-amd64</current-osarch>
+                <current-os>windows</current-os>
+                <current-arch>amd64</current-arch>
+                <build-target>native-build-windows-x86_64</build-target>
             </properties>
-            <build>
-                <plugins>
-                    <!-- Ant-Run Plugin -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <!-- Prepare directories -->
-                            <execution>
-                                <id>generate-sources</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <target name="generate-sources">
-                                        <mkdir dir="target"/>
-                                        <mkdir dir="target/classes"/>
-                                        <mkdir dir="target/classes/lib"/>
-                                        <mkdir dir="target/classes/lib/linux/arm"/>
-                                        <mkdir dir="target/classes/lib/windows/amd64"/>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>make-win</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target name="build-ucgdisp">
-                                        <!-- Refresh CMake cache -->
-                                        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for windows
-                                        </echo>
-                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
-                                            <arg line="--target all"/>
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
-                                            <arg line="-G 'CodeBlocks - MinGW Makefiles'"/>
-                                            <arg line="-H."/>
-                                            <arg line="-Bbuild/windows/amd64"/>
-                                        </exec>
-                                        <!-- Build project -->
-                                        <exec executable="cmake" dir="${cpp.proj.dir}/build/windows/amd64" failonerror="true">
-                                            <arg line="--build ${cpp.proj.dir}/build/windows/amd64"/>
-                                            <arg line="--target ucgdisp --"/>
-                                            <arg line=" -j 4"/>
-                                        </exec>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <!-- Copy native libraries to project's target directory -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <!-- Copy x86_64/amd64 binaries to lib -->
-                            <execution>
-                                <id>copy-lib-amd64</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/windows/amd64</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${cpp.proj.dir}/build/windows/amd64/bin
-                                            </directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename-win}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>dll</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.ant</groupId>
-                    <artifactId>ant</artifactId>
-                    <version>${ant.version}</version>
-                </dependency>
-            </dependencies>
         </profile>
 
         <!-- BUILD PROFILE: Mac OSX - x86_64/amd64 -->
@@ -566,109 +171,43 @@
                 </os>
             </activation>
             <properties>
-                <current-osarch>mac-amd64</current-osarch>
+                <current-os>macosx</current-os>
+                <current-arch>amd64</current-arch>
+                <build-target>native-build-macosx-x86_64</build-target>
             </properties>
-            <build>
-                <plugins>
-                    <!-- Ant-Run Plugin -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <!-- Prepare directories -->
-                            <execution>
-                                <id>generate-sources</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <target name="generate-sources">
-                                        <mkdir dir="target"/>
-                                        <mkdir dir="target/classes"/>
-                                        <mkdir dir="target/classes/lib"/>
-                                        <mkdir dir="target/classes/lib/mac/amd64"/>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>make-mac</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target name="build-ucgdisp">
-                                        <!-- Refresh CMake cache -->
-                                        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for Mac OS
-                                        </echo>
-                                        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
-                                            <arg line="--target all"/>
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release"/>
-                                            <arg line="-H."/>
-                                            <arg line="-Bbuild/mac/amd64"/>
-                                        </exec>
-                                        <!-- Build project -->
-                                        <exec executable="cmake" dir="${cpp.build.dir}/mac/amd64" failonerror="true">
-                                            <arg line="--build ${cpp.build.dir}/mac/amd64"/>
-                                            <arg line="--target ucgdisp --"/>
-                                            <arg line=" -j 4"/>
-                                        </exec>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <!-- Copy native libraries to project's target directory -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <!-- Copy x86_64/amd64 binaries to lib -->
-                            <execution>
-                                <id>copy-lib-amd64</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/mac/amd64</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${cpp.build.dir}/mac/amd64/bin
-                                            </directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>*.dylib</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.ant</groupId>
-                    <artifactId>ant</artifactId>
-                    <version>${ant.version}</version>
-                </dependency>
-            </dependencies>
         </profile>
     </profiles>
 
     <build>
         <plugins>
+            <!-- Ant-Run Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <!-- Compile native library using CMake -->
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <!-- Pass maven properties to ant -->
+                                <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${build-target}</echo>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <property name="root.dir" location="../../.."/>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <ant antfile="${root.dir}/scripts/build-common.xml" target="show-prop-info"/>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${build-target}"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Native Maven Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -694,6 +233,7 @@
                 </executions>
             </plugin>
 
+            <!-- Source Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -704,6 +244,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Javadoc Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>

@@ -11,7 +11,7 @@ if (NOT EXISTS ${U8G2_DIR})
     if (NOT EXISTS ${U8G2_ARCHIVE_FILE_PATH})
         message(STATUS "[U8G2] Downloading to ${U8G2_ARCHIVE_FILE_PATH}")
         message(STATUS "[U8G2] Not yet existing: ${U8G2_DIR}, Working directory: ${CMAKE_SOURCE_DIR}")
-        file(DOWNLOAD https://github.com/olikraus/u8g2/archive/master.zip ${U8G2_ARCHIVE_FILE_PATH} SHOW_PROGRESS)
+        file(DOWNLOAD https://github.com/ribasco/u8g2/archive/master.zip ${U8G2_ARCHIVE_FILE_PATH} SHOW_PROGRESS)
     endif ()
 
     if (NOT EXISTS ${U8G2_ARCHIVE_FILE_PATH})
