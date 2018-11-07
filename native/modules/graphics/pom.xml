@@ -17,12 +17,11 @@
   ~ <http://www.gnu.org/licenses/lgpl-3.0.html>.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ucg-display</artifactId>
         <groupId>com.ibasco.ucgdisplay</groupId>
-        <version>1.2.0-alpha-SNAPSHOT</version>
+        <version>1.2.0-alpha</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
@@ -197,11 +196,11 @@
                                 <!-- Pass maven properties to ant -->
                                 <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${build-target}</echo>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <property name="root.dir" location="../../.."/>
+                                <property name="root.dir" location="../../.." />
                                 <!--suppress UnresolvedMavenProperty -->
-                                <ant antfile="${root.dir}/scripts/build-common.xml" target="show-prop-info"/>
+                                <ant antfile="${root.dir}/scripts/build-common.xml" target="show-prop-info" />
                                 <!--suppress UnresolvedMavenProperty -->
-                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${build-target}"/>
+                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${build-target}" />
                             </tasks>
                         </configuration>
                     </execution>
