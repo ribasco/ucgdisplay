@@ -52,7 +52,7 @@ install:
 - mvn --settings scripts/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 
 script:
-- mvn package -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true
+- mvn package -P'cross-compile,!build-linux-amd64' -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true
 - mvn test && mvn verify
 
 before_deploy:

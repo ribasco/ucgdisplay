@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2018 Universal Character/Graphics display library
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Lesser Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Lesser Public
+  ~ License along with this program.  If not, see
+  ~ <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ucg-display</artifactId>
@@ -56,109 +73,37 @@
 
     <!-- Build Profiles for different platforms -->
     <profiles>
-        <!-- BUILD PROFILE: Linux - arm -->
+        <!-- Cross-compile profile (can only be ran under linux os) -->
         <profile>
-            <id>build-linux-arm</id>
-            <activation>
-                <os>
-                    <name>linux</name>
-                    <family>unix</family>
-                    <arch>arm</arch>
-                </os>
-            </activation>
+            <id>cross-compile</id>
             <properties>
-                <current-osarch>linux-arm</current-osarch>
+                <current-os>linux</current-os>
+                <current-arch>amd64</current-arch>
+                <crossCompile>true</crossCompile>
+                <build-target>native-build-cc-all</build-target>
             </properties>
-
             <build>
                 <plugins>
-                    <!-- Ant-Run Plugin -->
+                    <!-- Enforcer: Make sure this can only be run from the Linux OS -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
                         <executions>
-                            <!-- Prepare target directories -->
                             <execution>
-                                <id>generate-sources</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <target name="generate-sources">
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/classes/lib" />
-                                        <mkdir dir="target/classes/lib/linux/arm" />
-                                    </target>
-                                </configuration>
+                                <id>enforce-os</id>
                                 <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-
-                            <!-- Compile native library using CMake -->
-                            <execution>
-                                <id>make</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>run</goal>
+                                    <goal>enforce</goal>
                                 </goals>
                                 <configuration>
-                                    <target name="build-ucgdisp">
-                                        <!-- Build both architectures when Cross-Compiling -->
-                                        <echo>[HOST=ARM] Building ARM binaries only</echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-G 'CodeBlocks - Unix Makefiles'" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/linux/arm" />
-                                        </exec>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm" />
-                                            <arg line="--target ucgdisp --" />
-                                            <arg line=" -j 4" />
-                                        </exec>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.ant</groupId>
-                                <artifactId>ant</artifactId>
-                                <version>${ant.version}</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-
-                    <!-- Copy native libraries to project's target directory -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <!-- Copy ARM binaries -->
-                            <execution>
-                                <id>copy-lib-arm</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/linux/arm</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/linux/arm/bin</directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <overwrite>true</overwrite>
+                                    <rules>
+                                        <requireOS>
+                                            <name>Linux</name>
+                                            <family>unix</family>
+                                            <arch>amd64</arch>
+                                        </requireOS>
+                                    </rules>
+                                    <failFast>true</failFast>
+                                    <fail>true</fail>
                                 </configuration>
                             </execution>
                         </executions>
@@ -178,197 +123,60 @@
                 </os>
             </activation>
             <properties>
-                <current-osarch>linux-amd64</current-osarch>
+                <current-os>linux</current-os>
+                <current-arch>amd64</current-arch>
+                <build-target>native-build-linux-x86_64</build-target>
             </properties>
+        </profile>
 
-            <build>
-                <plugins>
-                    <!-- Ant-Run Plugin -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <!-- Prepare directories -->
-                            <execution>
-                                <id>generate-sources</id>
-                                <phase>generate-sources</phase>
-                                <configuration>
-                                    <target name="generate-sources">
-                                        <mkdir dir="target" />
-                                        <mkdir dir="target/classes" />
-                                        <mkdir dir="target/classes/lib" />
-                                        <mkdir dir="target/classes/lib/linux/arm" />
-                                        <mkdir dir="target/classes/lib/linux/amd64" />
-                                        <!--<mkdir dir="target/classes/lib/windows/amd64" />-->
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-
-                            <!-- Compile native library using CMake -->
-                            <execution>
-                                <id>make</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target name="build-ucgdisp">
-                                        <!-- Build both architectures when Cross-Compiling -->
-                                        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions</echo>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="${cmake-generator-arg}" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/linux/amd64" />
-                                        </exec>
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="--target all" />
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cmake.module.path}/RpiToolchain.cmake" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="${cmake-generator-arg}" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/linux/arm" />
-                                        </exec>
-                                        <!--<exec executable="cmake" dir="${project.basedir}/src/main/cpp" failonerror="true">
-                                            <arg line="&#45;&#45;target all" />
-                                            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cmake.module.path}/MingWToolchain.cmake" />
-                                            <arg line="-DCMAKE_BUILD_TYPE=Release" />
-                                            <arg line="${cmake-generator-arg}" />
-                                            <arg line="-H." />
-                                            <arg line="-Bbuild/windows/amd64" />
-                                        </exec>-->
-                                        <!-- Build AMD64 -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/amd64" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/amd64" />
-                                            <arg line="--target ucginput --" />
-                                            <arg line=" -j 4" />
-                                        </exec>
-                                        <!-- Build ARM -->
-                                        <exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/linux/arm" failonerror="true">
-                                            <arg line="--build ${project.basedir}/src/main/cpp/build/linux/arm" />
-                                            <arg line="--target ucginput --" />
-                                            <arg line=" -j 4" />
-                                        </exec>
-                                        <!-- Build Windows -->
-                                        <!--<exec executable="cmake" dir="${project.basedir}/src/main/cpp/build/windows/amd64" failonerror="true">
-                                            <arg line="&#45;&#45;build ${project.basedir}/src/main/cpp/build/windows/amd64" />
-                                            <arg line="&#45;&#45;target ucgdisp &#45;&#45;" />
-                                            <arg line=" -j 4" />
-                                        </exec>-->
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.ant</groupId>
-                                <artifactId>ant</artifactId>
-                                <version>${ant.version}</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-
-                    <!-- Copy native libraries to project's target directory -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <!-- Copy ARM binaries to META-INF/lib -->
-                            <execution>
-                                <id>copy-lib-arm</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/linux/arm</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/linux/arm/bin</directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>
-                            <!-- Copy x86_64/amd64 binaries to META-INF/lib -->
-                            <execution>
-                                <id>copy-lib-amd64</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/linux/amd64</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/linux/amd64/bin</directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>so</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>
-                            <!-- Copy x86_64/amd64 windows binaries to META-INF/lib -->
-                            <!--<execution>
-                                <id>copy-lib-amd64-win32</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/classes/lib/windows/amd64</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${project.basedir}/src/main/cpp/build/windows/amd64/bin
-                                            </directory>
-                                            <filtering>true</filtering>
-                                            <includes>
-                                                <include>${lib-output-filename-win}</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <nonFilteredFileExtensions>
-                                        <nonFilteredFileExtension>dll</nonFilteredFileExtension>
-                                    </nonFilteredFileExtensions>
-                                    <fileNameFiltering>
-                                        true
-                                    </fileNameFiltering>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>-->
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
+        <!-- BUILD PROFILE: Linux - arm -->
+        <profile>
+            <id>build-linux-arm</id>
+            <activation>
+                <os>
+                    <name>linux</name>
+                    <family>unix</family>
+                    <arch>arm</arch>
+                </os>
+            </activation>
+            <properties>
+                <current-os>linux</current-os>
+                <current-arch>arm</current-arch>
+                <build-target>native-build-linux-arm</build-target>
+            </properties>
         </profile>
     </profiles>
 
     <build>
         <plugins>
+            <!-- Ant-Run Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <!-- Compile native library using CMake -->
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <!-- Pass maven properties to ant -->
+                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${build-target}</echo>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <property name="root.dir" location="../../.."/>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <ant antfile="${root.dir}/scripts/build-common.xml" target="show-prop-info"/>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <ant antfile="${root.dir}/scripts/build-input.xml" target="${build-target}"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Native Maven Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

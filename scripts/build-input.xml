@@ -1,0 +1,173 @@
+<!--
+  ~ Copyright (C) 2018 Universal Character/Graphics display library
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Lesser Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Lesser Public
+  ~ License along with this program.  If not, see
+  ~ <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  -->
+
+<project name="ucgd-build-input" basedir=".">
+    <!-- Build properties -->
+    <property name="project.dir.root" location="${root.dir}"/>
+    <property name="project.dir.base" location="${project.dir.root}/native/modules/input"/>
+    <property name="project.dir.target" value="${project.dir.base}/target"/>
+    <property name="project.target.dir.linux.amd64" value="${project.dir.target}/classes/lib/linux/amd64"/>
+    <property name="project.target.dir.linux.arm" value="${project.dir.target}/classes/lib/linux/arm"/>
+    <property name="project.target.dir.win.amd64" value="${project.dir.target}/classes/lib/windows/amd64"/>
+    <property name="project.target.dir.mac.amd64" value="${project.dir.target}/classes/lib/mac/amd64"/>
+    <property name="cmake.module.dir" value="${project.dir.root}/native/cmake"/>
+    <property name="cmake.generator.unix" value="-G 'CodeBlocks - Unix Makefiles'"/>
+    <property name="cmake.generator.win" value="-G 'CodeBlocks - MinGW Makefiles'"/>
+    <property name="cpp.proj.dir" value="${project.dir.base}/src/main/cpp"/>
+    <property name="cpp.tools.dir" value="${project.dir.root}/native/tools"/>
+    <property name="cpp.tools.osx.dir" value="${cpp.tools.dir}/osxcross"/>
+    <property name="cpp.tools.osx.archive" value="osx-tools.tar.gz"/>
+    <property name="cpp.tools.osx.sdk" value="${cpp.tools.osx.dir}/SDK/MacOSX10.11.sdk"/>
+    <property name="cpp.tools.osx.target" value="darwin15"/>
+    <property name="cpp.tools.osx.host" value="x86_64-apple-${cpp.tools.osx.target}"/>
+    <property name="cpp.tools.rpi.dir" value="${cpp.tools.dir}/rpi"/>
+    <property name="cpp.tools.osx.toolchain" value="${cmake.module.dir}/OSXToolchain.cmake"/>
+    <property name="cpp.tools.rpi.toolchain" value="${cmake.module.dir}/RpiToolchain.cmake"/>
+    <property name="cpp.tools.win.toolchain" value="${cmake.module.dir}/MingWToolchain.cmake"/>
+    <property name="cpp.build.target" value="ucginput"/>
+    <property name="cpp.build.dir" value="${cpp.proj.dir}/build"/>
+    <property name="cpp.build.type" value="Release"/>
+    <property name="cpp.build.output.linux" value="lib${cpp.build.target}.so"/>
+    <property name="cpp.build.output.mac" value="lib${cpp.build.target}.dylib"/>
+    <property name="cpp.build.output.win" value="${cpp.build.target}.dll"/>
+
+    <include file="build-common.xml"/>
+
+    <target name="generate-native-sources-all" depends="generate-native-sources-linux-arm, generate-native-sources-linux-amd64">
+        <echo>Generating native source directories to ${project.basedir}</echo>
+    </target>
+
+    <target name="generate-native-sources-linux-arm">
+        <mkdir dir="${project.dir.target}/classes/lib/linux/arm"/>
+    </target>
+
+    <target name="generate-native-sources-linux-amd64">
+        <mkdir dir="${project.dir.target}/classes/lib/linux/amd64"/>
+    </target>
+
+    <!-- Check validity of all required tools -->
+    <target name="tools-check-all" depends="tools-check-rpi">
+        <echo>Checking validity of all required tools for native library build</echo>
+    </target>
+
+    <!-- Check if RPI Tools is valid -->
+    <target name="tools-check-rpi">
+        <condition property="rpi.tools.dir.valid">
+            <and>
+                <available file="${cpp.tools.rpi.dir}" type="dir"/>
+                <available file="${cpp.tools.rpi.dir}/arm-bcm2708" type="dir"/>
+                <available file="${cpp.tools.rpi.dir}/arm-bcm2708/arm-linux-gnueabihf" type="dir"/>
+                <available file="${cpp.tools.rpi.dir}/arm-bcm2708/arm-linux-gnueabihf/bin" type="dir"/>
+                <available file="${cpp.tools.rpi.dir}/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc" type="file"/>
+                <available file="${cpp.tools.rpi.dir}/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++" type="file"/>
+            </and>
+        </condition>
+    </target>
+
+    <!-- Initialize RPi/ARM toolchain -->
+    <target name="init-native-tools-rpi" depends="tools-check-rpi" unless="rpi.tools.dir.valid">
+        <echo>Deleting Raspberry Pi tools directory</echo>
+        <delete dir="${cpp.tools.rpi.dir}" failonerror="false"/>
+    </target>
+
+    <target name="init-native-tools-all" depends="init-native-tools-rpi">
+        <echo>Initializing native tools (ALL)</echo>
+    </target>
+
+    <!-- Cross-compile for all OS/Arch (Can only be run from Linux) -->
+    <target name="native-build-cc-all" depends="ucgd-build-common.os-check-linux-x86_64, native-build-linux-x86_64, native-build-cc-linux-arm" if="os.linux.amd64">
+        <echo message="============================================================================"/>
+        <echo message=" "/>
+        <echo>Cross-compilation complete</echo>
+        <echo message=" "/>
+        <echo message="============================================================================"/>
+    </target>
+
+    <!-- Compile for Linux - x86_64 (Host OS) -->
+    <target name="native-build-linux-x86_64" depends="ucgd-build-common.os-check-linux-x86_64, generate-native-sources-linux-amd64" if="os.linux.amd64">
+        <!-- Build Linux/x86_64 -->
+        <echo>[HOST=LINUX-AMD64] Compiling for Linux - x86_64</echo>
+        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
+            <arg line="--target ${cpp.build.target}"/>
+            <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
+            <arg line="${cmake.generator.unix}"/>
+            <arg line="-H."/>
+            <arg line="-Bbuild/linux/amd64"/>
+        </exec>
+        <exec executable="cmake" dir="${cpp.build.dir}/linux/amd64" failonerror="true">
+            <arg line="--build ${cpp.build.dir}/linux/amd64"/>
+            <arg line="--target ${cpp.build.target} --"/>
+            <arg line=" -j 4"/>
+        </exec>
+        <!-- Copy output files to target resources directory -->
+        <antcall target="native-copy-resources-linux-x86_64"/>
+    </target>
+
+    <!-- Compile for Linux - ARM (Host OS) -->
+    <target name="native-build-linux-arm" depends="ucgd-build-common.os-check-linux-arm, generate-native-sources-linux-arm" if="os.linux.arm">
+        <!-- Build both architectures when Cross-Compiling -->
+        <echo>[HOST=ARM] Building ARM binaries only</echo>
+        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
+            <arg line="--target ${cpp.build.target}"/>
+            <arg line="${cmake.generator.unix}"/>
+            <arg line="-H."/>
+            <arg line="-Bbuild/linux/arm"/>
+        </exec>
+        <exec executable="cmake" dir="${cpp.build.dir}/linux/arm" failonerror="true">
+            <arg line="--build ${cpp.build.dir}/linux/arm"/>
+            <arg line="--target ${cpp.build.target} --"/>
+            <arg line=" -j 4"/>
+        </exec>
+        <!-- Copy output files to target resources directory -->
+        <antcall target="native-copy-resources-linux-arm"/>
+    </target>
+
+    <!-- Cross-compile for Linux - ARM (applicable only in linux) -->
+    <target name="native-build-cc-linux-arm" depends="ucgd-build-common.os-check-linux-x86_64, init-native-tools-rpi, generate-native-sources-linux-arm" if="os.linux.amd64">
+        <!-- Build Linux/ARM -->
+        <echo>[HOST=LINUX-AMD64] Cross-compiling for Linux - ARM</echo>
+        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
+            <arg line="--target ${cpp.build.target}"/>
+            <arg line="-DCMAKE_TOOLCHAIN_FILE=${cpp.tools.rpi.toolchain}"/>
+            <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
+            <arg line="${cmake.generator.unix}"/>
+            <arg line="-H."/>
+            <arg line="-Bbuild/linux/arm"/>
+        </exec>
+        <exec executable="cmake" dir="${cpp.build.dir}/linux/arm" failonerror="true">
+            <arg line="--build ${cpp.build.dir}/linux/arm"/>
+            <arg line="--target ${cpp.build.target} --"/>
+            <arg line=" -j 4"/>
+        </exec>
+        <!-- Copy output files to target resources directory -->
+        <antcall target="native-copy-resources-linux-arm"/>
+    </target>
+
+    <target name="native-copy-resources-all" depends="native-copy-resources-linux-arm, native-copy-resources-linux-x86_64">
+        <echo>Copying ALL native output to target resource folders</echo>
+    </target>
+
+    <!-- Copies the cmake output binaries to their respective target resource location -->
+    <target name="native-copy-resources-linux-x86_64">
+        <copy file="${cpp.build.dir}/linux/amd64/bin/${cpp.build.output.linux}" todir="${project.target.dir.linux.amd64}" failonerror="true"/>
+    </target>
+
+    <target name="native-copy-resources-linux-arm">
+        <copy file="${cpp.build.dir}/linux/arm/bin/${cpp.build.output.linux}" todir="${project.target.dir.linux.arm}" failonerror="true"/>
+    </target>
+</project>

@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!--
+  ~ Copyright (C) 2018 Universal Character/Graphics display library
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Lesser Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Lesser Public
+  ~ License along with this program.  If not, see
+  ~ <http://www.gnu.org/licenses/lgpl-3.0.html>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ibasco.ucgdisplay</groupId>
@@ -33,7 +52,7 @@
         <powermock.version>1.7.3</powermock.version>
         <sysoutslf4j.version>1.0.2</sysoutslf4j.version>
         <native.lib.loader.version>2.2.0</native.lib.loader.version>
-        <ant.version>1.10.4</ant.version>
+        <ant.version>1.10.5</ant.version>
         <ant-contrib.version>1.0b3</ant-contrib.version>
         <project.prefix>UCGDisplay ::</project.prefix>
         <main.basedir>${project.basedir}</main.basedir>
@@ -309,6 +328,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.8</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant</artifactId>
+                            <version>${ant.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
