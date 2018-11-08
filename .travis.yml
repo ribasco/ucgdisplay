@@ -49,7 +49,7 @@ before_install:
 - gpg2 --import scripts/travis.dec
 
 install:
-- mvn --settings scripts/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
+- mvn --settings scripts/settings.xml install -P'cross-compile,!build-linux-amd64' -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 
 script:
 - mvn package -P'cross-compile,!build-linux-amd64' -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true
