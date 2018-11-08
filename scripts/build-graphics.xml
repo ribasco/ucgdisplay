@@ -164,7 +164,7 @@
     <!-- Compile for Linux - ARM (Host OS) -->
     <target name="native-build-linux-arm" depends="ucgd-build-common.os-check-linux-arm, generate-native-sources-linux-arm" if="os.linux.arm">
         <!-- Build both architectures when Cross-Compiling -->
-        <echo>[HOST=ARM] Building ARM binaries only</echo>
+        <echo>[HOST=ARM] Compiling for Linux - arm host</echo>
         <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
             <arg line="--target ${cpp.build.target}"/>
             <arg line="${cmake.generator.unix}"/>
@@ -183,7 +183,7 @@
     <!-- Compile for Windows - x86_64 (Host OS) -->
     <target name="native-build-windows-x86_64" depends="ucgd-build-common.os-check-windows-x86_64, generate-native-sources-win" if="os.windows.amd64">
         <!-- Refresh CMake cache -->
-        <echo>[HOST=AMD64] Compiling for Windows</echo>
+        <echo>[HOST=AMD64] Compiling for Windows host</echo>
         <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
             <arg line="--target ${cpp.build.target}"/>
             <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
@@ -204,7 +204,7 @@
     <!-- Compile for MacOSX - x86_64 (Host OS) -->
     <target name="native-build-macosx-x86_64" depends="ucgd-build-common.os-check-macosx-x86_64, generate-native-sources-mac" if="os.macosx.amd64">
         <!-- Refresh CMake cache -->
-        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for Mac OS
+        <echo>[HOST=AMD64] Compiling for Mac OS host
         </echo>
         <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
             <arg line="--target ${cpp.build.target}"/>
