@@ -14,3 +14,4 @@ echo '--------------------------------------------------------------------------
 
 cd ..
 
+mvn clean compile -P'cross-compile,!build-linux-amd64'
