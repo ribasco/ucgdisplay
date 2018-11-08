@@ -1,6 +1,6 @@
 language: java
 
-sudo: false
+sudo: required
 
 jdk:
 - oraclejdk8
@@ -39,10 +39,13 @@ matrix:
         - g++-7
         - oracle-java8-installer
         - mingw-w64
+    env:
+    - MATRIX_EVAL="CC=/usr/bin/gcc-7 && CXX=/usr/bin/g++-7"
   - os: osx
     osx_image: xcode9.3
 
 before_install:
+- eval "${MATRIX_EVAL}"
 - scripts/before-install.sh
 
 install:
