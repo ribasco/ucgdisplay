@@ -7,8 +7,14 @@ if [ "${TRAVIS_PULL_REQUEST}" != "false" -o "${TRAVIS_BRANCH}" != "master" ]; th
     exit 0
 fi
 
-echo "============================================="
-echo "Deploying Project to OSS Sonatype"
-echo "============================================="
+if [[ $TRAVIS_OS_NAME == 'linux' ]] && [[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]]; then
+    echo " _____   ______  _____    _         _____    _     _ "
+    echo "(_____) (______)(_____)  (_)       (_____)  (_)   (_)"
+    echo "(_)  (_)(_)__   (_)__(_) (_)      (_)   (_)  (_)_(_) "
+    echo "(_)  (_)(____)  (_____)  (_)      (_)   (_)    (_)   "
+    echo "(_)__(_)(_)____ (_)      (_)____  (_)___(_)    (_)   "
+    echo "(_____) (______)(_)      (______)  (_____)     (_)   "
+    echo "                                                     "
 
-[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] && mvn deploy -DskipTests --settings scripts/settings.xml
+    mvn deploy -DskipTests --settings scripts/settings.xml
+fi

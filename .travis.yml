@@ -26,33 +26,30 @@ notifications:
     on_failure: always  # options: [always|never|change] default: always
     on_start: never     # options: [always|never|change] default: always
 
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - cmake
-    - gcc-7
-    - g++-7
-    - oracle-java8-installer
-    - mingw-w64
-os:
-- linux
+matrix:
+  include:
+  - os: linux
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - cmake
+        - gcc-7
+        - g++-7
+        - oracle-java8-installer
+        - mingw-w64
+  - os: osx
+    osx_image: xcode9.3
 
 before_install:
-- sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
-- sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++
-- gcc -v && g++ -v && cmake --version
-- export CC=/usr/bin/gcc-7
-- export CXX=/usr/bin/g++-7
-- if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then openssl aes-256-cbc -K $encrypted_0b32ef791498_key -iv $encrypted_0b32ef791498_iv -in scripts/travis.enc -out scripts/travis.dec -d; fi
-- gpg2 --import scripts/travis.dec
+- scripts/before-install.sh
 
 install:
-- mvn --settings scripts/settings.xml install -P'cross-compile,!build-linux-amd64' -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
+- scripts/install.sh
 
 script:
-- mvn package -P'cross-compile,!build-linux-amd64' -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true
+- scripts/package.sh
 - mvn test && mvn verify
 
 before_deploy:
