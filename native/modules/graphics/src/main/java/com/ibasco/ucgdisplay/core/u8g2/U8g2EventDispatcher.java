@@ -1,13 +1,6 @@
-/*-
- * ========================START=================================
- * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Native :: Graphics
- * Filename: U8g2EventDispatcher.java
- *
- * ---------------------------------------------------------
- * %%
+/*
  * Copyright (C) 2018 Universal Character/Graphics display library
- * %%
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,7 +14,6 @@
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * =========================END==================================
  */
 package com.ibasco.ucgdisplay.core.u8g2;
 
@@ -35,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Listening service for U8g2 byte and gpio events
+ * Listening service for U8g2 byte and gpio events. Not thread-safe.
  *
  * @author Rafael Ibasco
  */
