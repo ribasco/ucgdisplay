@@ -5,11 +5,11 @@ sudo: false
 jdk:
 - oraclejdk8
 
-cache:
-  directories:
-  - ${HOME}/.m2
-  - ${TRAVIS_BUILD_DIR}/native/tools/rpi
-  - ${TRAVIS_BUILD_DIR}/native/tools/osxcross
+cache: false
+#  directories:
+#  - ${HOME}/.m2
+#  - ${TRAVIS_BUILD_DIR}/native/tools/rpi
+#  - ${TRAVIS_BUILD_DIR}/native/tools/osxcross
 #  - ${TRAVIS_BUILD_DIR}/native/modules/graphics/src/main/cpp/lib
 
 env:
@@ -34,18 +34,19 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         packages:
-        - cmake
         - gcc-7
         - g++-7
         - oracle-java8-installer
         - mingw-w64
-    env:
-    - MATRIX_EVAL="CC=/usr/bin/gcc-7 && CXX=/usr/bin/g++-7"
   - os: osx
     osx_image: xcode9.3
 
 before_install:
-- eval "${MATRIX_EVAL}"
+- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc; fi
+- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++; fi
+- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CC=gcc-7; fi
+- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CXX=g++-7; fi
+- cmake --version
 - scripts/before-install.sh
 
 install:
