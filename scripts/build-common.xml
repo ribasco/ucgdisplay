@@ -58,7 +58,7 @@
 
     <target name="os-check-macosx-x86_64">
         <condition property="os.macosx.amd64">
-            <os family="unix" arch="amd64" name="Mac OS X"/>
+            <os family="unix" arch="x86_64" name="Mac OS X"/>
         </condition>
     </target>
 </project>
