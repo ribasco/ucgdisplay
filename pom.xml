@@ -311,7 +311,7 @@
                         <source>${maven.compiler.source}</source>
                         <target>${maven.compiler.target}</target>
                         <fork>true</fork>
-                        <verbose>true</verbose>
+                        <verbose>false</verbose>
                         <debug>false</debug>
                         <optimize>true</optimize>
                         <showDeprecation>true</showDeprecation>
