@@ -24,6 +24,7 @@
         <echo message="OS Name        : ${os.name}"/>
         <echo message="OS Architecture: ${os.arch}"/>
         <echo message="OS Version     : ${os.version}"/>
+        <echo message="OS Family      : ${os.family}"/>
         <echo message=" "/>
         <echoproperties>
             <propertyset>
@@ -35,10 +36,6 @@
             </propertyset>
         </echoproperties>
         <echo message="=============================================================="/>
-    </target>
-
-    <target name="skip-build">
-        <echo>Skipping build for ${os.name} - ${os.arch} - ${os.version}</echo>
     </target>
 
     <target name="os-check-windows-x86_64">
