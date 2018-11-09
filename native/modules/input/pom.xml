@@ -145,6 +145,39 @@
                 <build-target>native-build-linux-arm</build-target>
             </properties>
         </profile>
+
+        <!-- BUILD PROFILE: Windows - x86_64/amd64 -->
+        <profile>
+            <id>build-windows-amd64</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <current-os>windows</current-os>
+                <current-arch>amd64</current-arch>
+                <build-target>skip-build</build-target>
+            </properties>
+        </profile>
+
+        <!-- BUILD PROFILE: Mac OSX - x86_64/amd64 -->
+        <profile>
+            <id>build-mac-amd64</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <arch>x86_64</arch>
+                    <name>mac os x</name>
+                </os>
+            </activation>
+            <properties>
+                <current-os>macosx</current-os>
+                <current-arch>amd64</current-arch>
+                <build-target>skip-build</build-target>
+            </properties>
+        </profile>
     </profiles>
 
     <build>

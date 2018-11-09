@@ -37,6 +37,10 @@
         <echo message="=============================================================="/>
     </target>
 
+    <target name="skip-build">
+        <echo>Skipping build for ${os.name} - ${os.arch} - ${os.version}</echo>
+    </target>
+
     <target name="os-check-windows-x86_64">
         <condition property="os.windows.amd64">
             <os family="windows" arch="amd64"/>
