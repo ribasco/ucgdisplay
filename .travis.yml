@@ -5,12 +5,12 @@ sudo: false
 jdk:
 - oraclejdk8
 
-cache: false
+cache:
   directories:
   - ${HOME}/.m2
   - ${TRAVIS_BUILD_DIR}/native/tools/rpi
   - ${TRAVIS_BUILD_DIR}/native/tools/osxcross
-  - ${TRAVIS_BUILD_DIR}/native/modules/graphics/src/main/cpp/lib
+#  - ${TRAVIS_BUILD_DIR}/native/modules/graphics/src/main/cpp/lib
 
 env:
   global:
