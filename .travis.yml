@@ -6,11 +6,11 @@ jdk:
 - oraclejdk8
 
 cache: false
-#  directories:
-#  - ${HOME}/.m2
-#  - ${TRAVIS_BUILD_DIR}/native/tools/rpi
-#  - ${TRAVIS_BUILD_DIR}/native/tools/osxcross
-#  - ${TRAVIS_BUILD_DIR}/native/modules/graphics/src/main/cpp/lib
+  directories:
+  - ${HOME}/.m2
+  - ${TRAVIS_BUILD_DIR}/native/tools/rpi
+  - ${TRAVIS_BUILD_DIR}/native/tools/osxcross
+  - ${TRAVIS_BUILD_DIR}/native/modules/graphics/src/main/cpp/lib
 
 env:
   global:
