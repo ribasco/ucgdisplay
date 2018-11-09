@@ -1,13 +1,6 @@
-/*-
- * ========================START=================================
- * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Common
- * Filename: NativeLibraryLoader.java
- *
- * ---------------------------------------------------------
- * %%
+/*
  * Copyright (C) 2018 Universal Character/Graphics display library
- * %%
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,16 +14,14 @@
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * =========================END==================================
  */
 package com.ibasco.ucgdisplay.common.utils;
 
 import org.scijava.nativelib.NativeLoader;
 import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Utility for loading native libraries.
@@ -43,7 +34,7 @@ public class NativeLibraryLoader {
 
     static {
         try {
-            NativeLoader.setJniExtractor(new PidispJniExtractor());
+            NativeLoader.setJniExtractor(new UCGDJniExtractor());
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
