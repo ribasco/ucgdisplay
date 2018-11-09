@@ -1,13 +1,6 @@
-/*-
- * ========================START=================================
- * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Common
- * Filename: PidispJniExtractor.java
- *
- * ---------------------------------------------------------
- * %%
+/*
  * Copyright (C) 2018 Universal Character/Graphics display library
- * %%
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,7 +14,6 @@
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
- * =========================END==================================
  */
 package com.ibasco.ucgdisplay.common.utils;
 
@@ -30,11 +22,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.scijava.nativelib.DefaultJniExtractor;
 import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.IOException;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class PidispJniExtractor extends DefaultJniExtractor {
 
@@ -74,7 +65,7 @@ public class PidispJniExtractor extends DefaultJniExtractor {
 
         if (!StringUtils.isBlank(lPath)) {
             String fullPath = lPath + File.separator + mappedName;
-            log.debug("[JNI-EXTRACT #1]: Searching in path: {}", fullPath);
+            log.info("[JNI-EXTRACT #1]: Searching in path: {}", fullPath);
             File libFile = new File(fullPath);
             if (libFile.exists() && libFile.canRead()) {
                 return libFile;
@@ -86,11 +77,11 @@ public class PidispJniExtractor extends DefaultJniExtractor {
         String osArch = System.getProperty("os.arch");
         String osVer = System.getProperty("os.version");
 
-        log.debug("[JNI-EXTRACT] Os Name = {}, Os Arch = {}, Os version = {}", osName, osArch, osVer);
+        log.info("[JNI-EXTRACT] Os Name = {}, Os Arch = {}, Os version = {}", osName, osArch, osVer);
         String osPath = String.format("lib/%s%s%s/", osName, File.separator, osArch).toLowerCase();
         osPath = FilenameUtils.separatorsToUnix(osPath);
 
-        log.debug("[JNI-EXTRACT #2] Searching in path: {}", osPath);
+        log.info("[JNI-EXTRACT #2] Searching in path: {}", osPath);
         File file = super.extractJni(osPath, libName.trim());
         if (file != null)
             return file;
