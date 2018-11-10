@@ -20,7 +20,7 @@
     <parent>
         <artifactId>ucg-display</artifactId>
         <groupId>com.ibasco.ucgdisplay</groupId>
-        <version>1.2.2-alpha</version>
+        <version>1.2.3-alpha-SNAPSHOT</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
