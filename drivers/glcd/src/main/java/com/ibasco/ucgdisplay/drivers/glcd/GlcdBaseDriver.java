@@ -118,7 +118,7 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
      * @throws GlcdDriverException
      *         When a driver related exception occurs (e.g. invalid configuration setup)
      */
-    protected final void initialize() throws GlcdDriverException {
+    protected void initialize() throws GlcdDriverException {
         //Make sure we have a valid configuration
         checkConfig(config);
 
