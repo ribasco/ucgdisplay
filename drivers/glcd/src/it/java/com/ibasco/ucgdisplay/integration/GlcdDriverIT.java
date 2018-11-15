@@ -1,12 +1,15 @@
 package com.ibasco.ucgdisplay.integration;
 
+import com.ibasco.ucgdisplay.common.exceptions.NativeLibraryException;
 import com.ibasco.ucgdisplay.drivers.glcd.Glcd;
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdConfig;
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdConfigBuilder;
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdDisplay;
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdDriver;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdDriverEventHandler;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdControllerType;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdSize;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdConfigException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -18,13 +21,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Graphics display driver integration test
  *
  * @author Rafael Ibasco
  */
 class GlcdDriverIT {
-
     private GlcdDriver driver;
 
     private Executable createVirtualDriverExecutable(GlcdConfig config) {
@@ -80,5 +85,45 @@ class GlcdDriverIT {
                 .busInterface(GlcdBusInterface.SPI_SW_4WIRE)
                 .build();
         assertThrows(GlcdConfigException.class, createVirtualDriverExecutable(config));
+    }
+
+    @DisplayName("Test basic draw string operation")
+    @Test
+    void testDrawString() {
+        GlcdConfig config = GlcdConfigBuilder
+                .create()
+                .display(Glcd.ST7920.D_128x64)
+                .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                .build();
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        AtomicBoolean called = new AtomicBoolean();
+        GlcdDriverEventHandler byteEventHandler = event -> {
+            latch.countDown();
+            called.set(true);
+        };
+
+        driver = new GlcdDriver(config, true, byteEventHandler, null);
+        driver.setFont(GlcdFont.FONT_6X12_MR);
+        driver.drawString("Hello");
+        driver.sendBuffer();
+
+        assertDoesNotThrow((Executable) latch::await);
+        assertTrue(called.get());
+    }
+
+    @DisplayName("Test basic draw string operation. No font specified")
+    @Test
+    void testDrawString_NoFont() {
+        GlcdConfig config = GlcdConfigBuilder
+                .create()
+                .display(Glcd.ST7920.D_128x64)
+                .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                .build();
+
+        driver = new GlcdDriver(config, true);
+        assertThrows(NativeLibraryException.class, () -> driver.drawString("Hello"));
+        driver.sendBuffer();
     }
 }

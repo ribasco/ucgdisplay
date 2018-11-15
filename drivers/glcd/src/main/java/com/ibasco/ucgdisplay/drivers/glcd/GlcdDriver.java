@@ -54,7 +54,11 @@ public class GlcdDriver extends GlcdBaseDriver {
      *         When driver initialization fails
      */
     public GlcdDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) throws GlcdDriverException {
-        super(config, virtual, handler);
+        this(config, virtual, handler, null);
+    }
+
+    public GlcdDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler, GlcdDriverAdapter driverAdapter) {
+        super(config, virtual, handler, driverAdapter);
         initialize();
     }
 }
