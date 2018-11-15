@@ -32,6 +32,8 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
 
 import java.io.File;
 
+//TODO: Make this a generic graphics display interface. All U8g2 specific options/parameters/methods should be removed/replaced with a generic type suitable for the library
+
 /**
  * Graphics Display Driver interface based on the U8G2 Interface.
  *
