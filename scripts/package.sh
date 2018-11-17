@@ -10,7 +10,7 @@ echo " #        #     #  #     #  #   #   #     #  #     #  #      "
 echo " #        #     #   #####   #    #  #     #   #####   #######"
 
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
-    mvn package -P'cross-compile,!build-linux-amd64' -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true
+    mvn package -P'cross-compile,!build-linux-amd64' -DskipTests=true -Dgpg.skip
 else
-    mvn package -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true
+    mvn package -DskipTests=true -Dgpg.skip
 fi
