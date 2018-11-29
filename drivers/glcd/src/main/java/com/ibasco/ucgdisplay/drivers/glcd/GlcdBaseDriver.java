@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
  *
  * @author Rafael Ibasco
  */
+@SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
 abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
 
     private static final Logger log = LoggerFactory.getLogger(GlcdBaseDriver.class);
@@ -99,8 +100,7 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
      *         Set to <code>true</code> to enable virtual mode. If virtual mode is enabled, all instruction/data events are routed to {@link GlcdDriverEventHandler} for further processing.
      * @param handler
      *         The {@link GlcdDriverEventHandler} instance that will handle the data and instruction events thrown by
-     *         the native display driver. If a null value is provided, the internal event handler of this driver
-     *         instance will be used instead.
+     *         the native display driver. If a null value is provided, the {@link U8g2DriverAdapter} will be used by default.
      */
     protected GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler, GlcdDriverAdapter driverAdapter) {
         this.config = config;
@@ -136,12 +136,10 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         return initialized;
     }
 
-    @SuppressWarnings({"unchecked", "unused"})
     public final <T extends GlcdDriverEventHandler> T getDriverEventHandler() {
         return (T) driverEventHandler;
     }
 
-    @SuppressWarnings("unused")
     protected final void setDriverEventHandler(GlcdDriverEventHandler driverEventHandler) {
         this.driverEventHandler = driverEventHandler;
     }
