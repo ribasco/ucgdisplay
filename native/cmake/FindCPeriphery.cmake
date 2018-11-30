@@ -10,10 +10,10 @@ ExternalProject_Add(
         PATCH_COMMAND ""
         CONFIGURE_COMMAND ""
         INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-        SOURCE_DIR "${CMAKE_SOURCE_DIR}/lib/cperiphery"
-        INSTALL_COMMAND make install
+        SOURCE_DIR "${CMAKE_SOURCE_DIR}/lib/c-periphery"
+        INSTALL_COMMAND ""
         UPDATE_COMMAND ""
-        BUILD_COMMAND make all
+        BUILD_COMMAND "make all"
 )
 
 add_dependencies(ucgdisp cperiphery)
