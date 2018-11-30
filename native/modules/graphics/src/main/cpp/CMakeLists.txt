@@ -20,8 +20,9 @@ add_subdirectory(utils)
 
 target_compile_options(ucgdisp PRIVATE -Wno-write-strings)
 
-# Add Wiring Pi Package (ARM only)
+# Add Wiring Pi/C-periphery Package (ARM only)
 if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
+    find_package(CPeriphery REQUIRED)
     find_package(WiringPi REQUIRED)
     message(STATUS "[WIRING-PI] WIRINGPI_LIBRARIES = ${WIRINGPI_LIBRARIES}")
     message(STATUS "[WIRING-PI] WIRINGPI_INCLUDE_DIR = ${WIRINGPI_INCLUDE_DIR}")
