@@ -29,6 +29,10 @@
 #include "CommSpi.h"
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
+#include <gpio.h>
+#include <i2c.h>
+#include <serial.h>
+#include <spi.h>
 #endif
 
 //#include <algorithm>
