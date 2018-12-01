@@ -42,6 +42,14 @@ else ()
     message(FATAL_ERROR "U8g2 target not found")
 endif ()
 
+# Add c-periphery
+if (TARGET cperiphery AND CPeriphery_FOUND)
+    message(STATUS "Adding cperiphery dependency")
+    add_dependencies(ucgdisp cperiphery)
+    list(APPEND INC_DIRS ${CPERIPHERY_INCLUDE})
+    list(APPEND LINK_LIBS ${CPERIPHERY_LIB})
+endif ()
+
 include_directories(${INC_DIRS})
 
 if (WIN32)
