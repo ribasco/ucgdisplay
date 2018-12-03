@@ -1,8 +1,35 @@
-
 set(U8G2_DIR ${LIB_DIR}/u8g2)
-set(PROJ_NAME "u8g2")
 
-DOWNLOAD_GITPROJ("https://github.com/ribasco/u8g2" ${PROJ_NAME} "master")
+# Check if U8G2 is already on the lib directory
+find_path(U8G2_SOURCE_DIRS u8g2.h PATHS ${U8G2_DIR}/csrc NO_CMAKE_FIND_ROOT_PATH)
+
+if (NOT EXISTS ${U8G2_DIR})
+    set(U8G2_ARCHIVE_FILE_NAME u8g2.zip)
+    set(U8G2_ARCHIVE_FILE_PATH ${LIB_DIR}/${U8G2_ARCHIVE_FILE_NAME})
+
+    if (NOT EXISTS ${U8G2_ARCHIVE_FILE_PATH})
+        message(STATUS "[U8G2] Downloading to ${U8G2_ARCHIVE_FILE_PATH}")
+        message(STATUS "[U8G2] Not yet existing: ${U8G2_DIR}, Working directory: ${CMAKE_SOURCE_DIR}")
+        file(DOWNLOAD https://github.com/ribasco/u8g2/archive/master.zip ${U8G2_ARCHIVE_FILE_PATH} SHOW_PROGRESS)
+    endif ()
+
+    if (NOT EXISTS ${U8G2_ARCHIVE_FILE_PATH})
+        message(FATAL_ERROR "Could not find ${U8G2_ARCHIVE_FILE_PATH}")
+    endif ()
+
+    message(STATUS "[U8G2] Unzipping '${U8G2_ARCHIVE_FILE_NAME}' to '${LIB_DIR}'")
+    execute_process(COMMAND unzip ${U8G2_ARCHIVE_FILE_PATH} WORKING_DIRECTORY ${LIB_DIR} ERROR_VARIABLE tc_unzip)
+
+    if (tc_unzip)
+        message(FATAL_ERROR "[U8G2] Could not unzip contents of the downloaded toolchain (${tc_unzip})")
+    endif ()
+
+    message(STATUS "[U8G2] Moving '${LIB_DIR}/u8g2-master/' to '${U8G2_DIR}'")
+    file(RENAME "${LIB_DIR}/u8g2-master/" "${U8G2_DIR}")
+
+    message(STATUS "[U8G2] Removing u8g2.zip from ${LIB_DIR}")
+    file(REMOVE ${U8G2_ARCHIVE_FILE_PATH})
+endif ()
 
 if (NOT EXISTS ${U8G2_DIR}/csrc)
     message(FATAL_ERROR "[U8G2] Could not locate csrc directory")
