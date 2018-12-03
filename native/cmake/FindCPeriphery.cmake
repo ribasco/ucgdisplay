@@ -1,37 +1,27 @@
-set(PROJ_ROOT ${CMAKE_BINARY_DIR}/thirdparty/cperiphery)
-set(LIBNAME periphery)
+set(PROJ_NAME c-periphery)
+set(PROJ_PATH ${LIB_DIR}/${PROJ_NAME})
 
-include(ExternalProject)
+DOWNLOAD_GITPROJ("https://github.com/vsergeev/c-periphery" ${PROJ_NAME} "master")
 
-# c-periphery
-ExternalProject_Add(
-        cperiphery
-        GIT_REPOSITORY "https://github.com/vsergeev/c-periphery.git"
-        GIT_TAG "master"
-        #BUILD_IN_SOURCE true
-        UPDATE_COMMAND ""
-        PATCH_COMMAND ""
-        CONFIGURE_COMMAND ""
-        BINARY_DIR "${PROJ_ROOT}/src"
-        SOURCE_DIR "${PROJ_ROOT}/src"
-        INSTALL_COMMAND ""
-        UPDATE_COMMAND ""
-        BUILD_COMMAND make all
-)
+file(GLOB PROJ_SRC_FILES "${LIB_DIR}/${PROJ_NAME}/src/*.c")
+file(GLOB PROJ_HEADER_FILES "${LIB_DIR}/${PROJ_NAME}/src/*.h")
 
-ExternalProject_Get_property(cperiphery BINARY_DIR)
+add_library(cperiphery STATIC ${PROJ_HEADER_FILES} ${PROJ_SRC_FILES})
+set_target_properties(cperiphery
+        PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/install/${PROJ_NAME}/lib"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/install/${PROJ_NAME}/lib"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/install/${PROJ_NAME}/lib"
+        )
 
-message("[C-PERIPHERY] Binary directory = ${BINARY_DIR}")
-
-#file(GLOB CPERIPHERY_INCLUDE ${BINARY_DIR}/src/*.h)
-set(CPERIPHERY_INCLUDE "${BINARY_DIR}/src")
-set(CPERIPHERY_LIB "${BINARY_DIR}/${LIBNAME}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set(CPERIPHERY_INCLUDE "${PROJ_PATH}/src")
+set(CPERIPHERY_LIB ${PROJECT_BINARY_DIR}/install/${PROJ_NAME}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}cperiphery${CMAKE_STATIC_LIBRARY_SUFFIX})
 
 message(STATUS "[C-PERIPHERY] CPERIPHERY_INCLUDE = ${CPERIPHERY_INCLUDE}")
 message(STATUS "[C-PERIPHERY] CPERIPHERY_LIB = ${CPERIPHERY_LIB}")
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(CPeriphery FOUND_VAR CPeriphery_FOUND REQUIRED_VARS CPERIPHERY_INCLUDE CPERIPHERY_LIB FAIL_MESSAGE "Could not find cperiphery package")
+find_package_handle_standard_args(CPeriphery FOUND_VAR CPeriphery_FOUND REQUIRED_VARS CPERIPHERY_INCLUDE PROJ_SRC_FILES PROJ_HEADER_FILES FAIL_MESSAGE "Could not find cperiphery package")
 
 mark_as_advanced(
         CPERIPHERY_LIB
