@@ -265,9 +265,9 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
             gpioInit(info, info->pin_map.d6, GPIO_DIR_OUT);
             gpioInit(info, info->pin_map.d7, GPIO_DIR_OUT);
             gpioInit(info, info->pin_map.dc, GPIO_DIR_OUT);
-            gpioInit(info, info->pin_map.cs, GPIO_DIR_OUT);
-            gpioInit(info, info->pin_map.cs1, GPIO_DIR_OUT);
-            gpioInit(info, info->pin_map.cs2, GPIO_DIR_OUT);
+            gpioInit(info, info->pin_map.cs, GPIO_DIR_PRESERVE);
+            gpioInit(info, info->pin_map.cs1, GPIO_DIR_PRESERVE);
+            gpioInit(info, info->pin_map.cs2, GPIO_DIR_PRESERVE);
 
             //cout << "[GPIO] Init Success (MOSI: " << to_string(info->pin_map.d1) << ", CLOCK: " << to_string(info->pin_map.d1) << ", CS: " << to_string(info->pin_map.cs) << ")" << endl;
             break;
