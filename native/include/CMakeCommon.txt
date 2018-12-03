@@ -76,7 +76,7 @@ endif ()
 
 # Download Github Project
 function(DOWNLOAD_GITPROJ project_url project_name project_tag)
-    if (UNIX)
+    if (CMAKE_SYSTEM_NAME EQUAL "Linux")
         set(ARCHIVE_URL ${project_url}/archive/${project_tag}.tar.gz)
         set(ARCHIVE_EXT "tar.gz")
     else ()
@@ -100,7 +100,7 @@ function(DOWNLOAD_GITPROJ project_url project_name project_tag)
         endif ()
 
         if (NOT EXISTS ${LIB_DIR}/${PROJ_NAME}-master)
-            message(STATUS "${PROJ_TAG} Extracting '${PROJ_ARCHIVE_FILE_NAME}' to '${LIB_DIR}'")
+            message(STATUS "${PROJ_TAG} Extracting '${PROJ_ARCHIVE_FILE_NAME}' to '${LIB_DIR}' (ARCHIVE_EXT = ${ARCHIVE_EXT})")
             if (ARCHIVE_EXT EQUAL "zip")
                 execute_process(COMMAND unzip ${PROJ_ARCHIVE_FILE_PATH} WORKING_DIRECTORY ${LIB_DIR} ERROR_VARIABLE tc_unzip)
             else ()
