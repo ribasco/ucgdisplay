@@ -1,3 +1,28 @@
+/*-
+ * ========================START=================================
+ * Organization: Universal Character/Graphics display library
+ * Project: UCGDisplay :: Graphics LCD driver
+ * Filename: U8g2DriverAdapter.java
+ *
+ * ---------------------------------------------------------
+ * %%
+ * Copyright (C) 2018 Universal Character/Graphics display library
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * =========================END==================================
+ */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
 import com.ibasco.ucgdisplay.core.u8g2.U8g2EventDispatcher;
@@ -36,8 +61,9 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
         int commInt = config.getBusInterface().getValue();
         int commType = config.getBusInterface().getBusType().getValue();
         int address = config.getDeviceAddress();
+        String devicePath = config.getDevicePath();
         byte[] pinConfig = ObjectUtils.defaultIfNull(config.getPinMap(), new GlcdPinMapConfig()).toByteArray();
-        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, pinConfig, virtual);
+        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, devicePath, pinConfig, virtual);
     }
 
     @Override
