@@ -64,6 +64,16 @@ public class GlcdConfigBuilder {
         return this;
     }
 
+    public GlcdConfigBuilder devicePath(String path) {
+        config.setDevicePath(path);
+        return this;
+    }
+
+    public GlcdConfigBuilder deviceAddress(int address) {
+        config.setDeviceAddress(address);
+        return this;
+    }
+
     public GlcdConfig build() {
         return config;
     }
