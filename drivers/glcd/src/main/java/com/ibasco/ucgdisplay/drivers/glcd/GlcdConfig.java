@@ -33,9 +33,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Arrays;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configuration class to be used by the glcd native library
@@ -52,6 +53,7 @@ public class GlcdConfig {
     private GlcdPinMapConfig pinMap;
     private int deviceAddress = -1;
     private String setupProcedure;
+    private String devicePath;
 
     /**
      * @return The device address if available
@@ -68,6 +70,14 @@ public class GlcdConfig {
      */
     public void setDeviceAddress(int deviceAddress) {
         this.deviceAddress = deviceAddress;
+    }
+
+    public String getDevicePath() {
+        return devicePath;
+    }
+
+    public void setDevicePath(String devicePath) {
+        this.devicePath = devicePath;
     }
 
     public void setDisplay(GlcdDisplay display) {

@@ -35,7 +35,12 @@
 #include <map>
 #include <functional>
 #include <jni.h>
-//#include "Global.h"
+
+#if defined(__arm__) && defined(__linux__)
+#include <spi.h>
+#include <i2c.h>
+#include <gpio.h>
+#endif
 
 using namespace std;
 
@@ -61,8 +66,7 @@ typedef struct {
 
 typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;
 
-typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb,
-                           u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
+typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
 
 typedef std::map<std::string, u8g2_setup_func_t> u8g2_setup_func_map_t;
 
@@ -76,17 +80,20 @@ typedef struct {
     u8g2_msg_func_t byte_cb;
     u8g2_msg_func_t gpio_cb;
     u8g2_cb_t *rotation;
+#if defined(__arm__) && defined(__linux__)
+    shared_ptr<spi_t> spi;
+    shared_ptr<i2c_t> i2c;
+    map<int, shared_ptr<gpio_t>> gpio;
+    string device_path;
+#endif
     bool flag_font;
     bool flag_virtual;
-
     uintptr_t address() {
         return (uintptr_t) u8g2.get();
     }
 } u8g2_info_t;
 
 typedef std::function<uint8_t(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
-
-extern map<int, string> msgNames;
 
 /**
  * Hardware I2C byte communication callback (Platform dependent)
@@ -162,10 +169,6 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map);
 u8g2_setup_func_t u8g2hal_GetSetupProc(const std::string &function_name);
 
 uint8_t *u8g2hal_GetFontByName(const std::string &font_name);
-
-void u8g2hal_CreateMsgEvent(JNIEnv *env, jobject &obj, uint8_t msg, uint8_t type, uint8_t arg_int);
-
-void u8g2hal_EmitMsgEvent(JNIEnv *env, jobject &gpioEvent);
 
 #if !(defined(__arm__) && defined(__linux__))
 

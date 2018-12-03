@@ -178,6 +178,8 @@ public class U8g2Graphics {
      * @param address
      *         The device address. This is most commonly used by I2C. Set this to -1 if not applicable to the current
      *         setup.
+     * @param devicePath
+     *          The device path string
      * @param pinConfig
      *         Array of integers which represents the pin mapping configuration of the display
      * @param virtual
@@ -186,7 +188,7 @@ public class U8g2Graphics {
      *
      * @return The id of the u8g2 instance. -1 if the setup failed.
      */
-    public static native long setup(String setupProc, int busInterface, int busInterfaceType, int rotation, int address, byte[] pinConfig, boolean virtual);
+    public static native long setup(String setupProc, int busInterface, int busInterfaceType, int rotation, int address, String devicePath, byte[] pinConfig, boolean virtual);
 
     /**
      * <p>Draw a box (filled frame), starting at x/y position (upper left edge). The box has width w and height h.
@@ -196,7 +198,7 @@ public class U8g2Graphics {
      * </p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)} 
      * @param x
      *         X-position of upper left edge.
      * @param y
@@ -215,7 +217,7 @@ public class U8g2Graphics {
      * color index 0 will clear a pixel (in solid mode) and the color index 1 will set a pixel.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-position (left position of the bitmap).
      * @param y
@@ -251,7 +253,7 @@ public class U8g2Graphics {
      * </p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-Position of the center of the circle.
      * @param y
@@ -282,7 +284,7 @@ public class U8g2Graphics {
      * #setDrawColor(long, int)}) for drawing.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-Position of the center of the disc.
      * @param y
@@ -310,7 +312,7 @@ public class U8g2Graphics {
      * The diameter is twice the radius plus one.
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-Position of the center of the filled circle.
      * @param y
@@ -340,7 +342,7 @@ public class U8g2Graphics {
      * These values can be combined with the | operator.
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-Position of the center of the filled circle.
      * @param y
@@ -361,7 +363,7 @@ public class U8g2Graphics {
      * index 1 will set a pixel.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-position of upper left edge.
      * @param y
@@ -379,7 +381,7 @@ public class U8g2Graphics {
      * from 0 to 65535. The glyph can be drawn only, if the encoding exists in the active font.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-Position of the character on the display.
      * @param y
@@ -397,7 +399,7 @@ public class U8g2Graphics {
      * the line. Color index 0 will clear a pixel and the color index 1 will set a pixel.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-Position
      * @param y
@@ -413,7 +415,7 @@ public class U8g2Graphics {
      * line. Color index 0 will clear a pixel and the color index 1 will set a pixel.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-position.
      * @param y
@@ -427,7 +429,7 @@ public class U8g2Graphics {
      * Draw a line between two points. This procedure will use the current color (setDrawColor).
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-position of the first point.
      * @param y
@@ -445,7 +447,7 @@ public class U8g2Graphics {
      * color index 0 will clear a pixel and the color index 1 will set a pixel.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-position.
      * @param y
@@ -461,7 +463,7 @@ public class U8g2Graphics {
      * clear a pixel and the color index 1 will set a pixel.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-position of upper left edge.
      * @param y
@@ -483,7 +485,7 @@ public class U8g2Graphics {
      * will clear a pixel and the color index 1 will set a pixel.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-position of upper left edge.
      * @param y
@@ -504,7 +506,7 @@ public class U8g2Graphics {
      * equal to 256. Use drawUTF8 or drawGlyph to access glyphs with encoding greater or equal to 256.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-Position of the first character on the display.
      * @param y
@@ -520,7 +522,7 @@ public class U8g2Graphics {
      * right side is not draw. The upper side is only draw if it is flat.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x0
      *         X-position point 0.
      * @param y0
@@ -548,7 +550,7 @@ public class U8g2Graphics {
      * (external link). The result will look like this:</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-position.
      * @param y
@@ -575,7 +577,7 @@ public class U8g2Graphics {
      * number of visible characters.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x
      *         X-Position of the first character on the display.
      * @param y
@@ -596,7 +598,7 @@ public class U8g2Graphics {
      * <p>Return the pixel width of an UTF-8 encoded string.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param text
      *         UTF-8 encoded text.
      *
@@ -611,7 +613,7 @@ public class U8g2Graphics {
      * </p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param data
      *         Font data
      *
@@ -626,7 +628,7 @@ public class U8g2Graphics {
      * </p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param fontKey
      *         A key string representing the Font
      *
@@ -675,7 +677,7 @@ public class U8g2Graphics {
      * </table>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param mode
      *         Enable (1) or disable (0) transparent mode.
      *
@@ -721,7 +723,7 @@ public class U8g2Graphics {
      * </table>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param direction
      *         Writing direction/string rotation.
      *
@@ -734,7 +736,7 @@ public class U8g2Graphics {
      * "Baseline".</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      */
     public static native void setFontPosBaseline(long id);
 
@@ -743,7 +745,7 @@ public class U8g2Graphics {
      * "Baseline".</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      */
     public static native void setFontPosBottom(long id);
 
@@ -752,7 +754,7 @@ public class U8g2Graphics {
      * "Baseline".</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      */
     public static native void setFontPosTop(long id);
 
@@ -761,7 +763,7 @@ public class U8g2Graphics {
      * "Baseline".</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      */
     public static native void setFontPosCenter(long id);
 
@@ -776,7 +778,7 @@ public class U8g2Graphics {
      * </p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @see #getAscent
      * @see #getDescent
@@ -793,7 +795,7 @@ public class U8g2Graphics {
      * or "(" of the current font.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @see #getAscent
      * @see #getDescent
@@ -810,7 +812,7 @@ public class U8g2Graphics {
      * font (this is the default after startup).</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @see #getAscent
      * @see #getDescent
@@ -824,7 +826,7 @@ public class U8g2Graphics {
      * any existing content on the screen.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param enable
      *         Enable (true) or disable (false) 180 degree rotation of the display content
      */
@@ -836,7 +838,7 @@ public class U8g2Graphics {
      * This procedure is also called from begin.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param enable
      *         Enable (true) or disable (false) power save mode for the display.
      *
@@ -917,7 +919,7 @@ public class U8g2Graphics {
      * </table>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param color
      *         0 (clear pixel value in the display RAM), 1 (set pixel value) or 2 (XOR mode)
      *
@@ -934,7 +936,7 @@ public class U8g2Graphics {
      * initDisplay must be called initially.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      */
     public static native void initDisplay(long id);
 
@@ -945,7 +947,7 @@ public class U8g2Graphics {
      * consumption compared to a full frame buffer in RAM, see sendBuffer.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @apiNote This procedure sets the current page position to zero.
      * @see #nextPage
@@ -960,7 +962,7 @@ public class U8g2Graphics {
      * (refreshDisplay) to an e-Paper/e-Ink device after completion of the loop (just before returning 0).</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return 0, once the loop is completed (all data transfered to the display).
      *
@@ -974,7 +976,7 @@ public class U8g2Graphics {
      * reference height (see {@link #setFontRefHeightAll(long)}).</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return The ascent of the current font.
      *
@@ -989,7 +991,7 @@ public class U8g2Graphics {
      * negative. This value depends on the current reference height (see {@link #setFontRefHeightAll(long)}).</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return The descent of the current font.
      *
@@ -1003,7 +1005,7 @@ public class U8g2Graphics {
      * <p>Each glyph is stored as a bitmap. This returns the width of the largest bitmap in the font.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return The largest width of any glyph in the font.
      *
@@ -1015,7 +1017,7 @@ public class U8g2Graphics {
      * <p>Each glyph is stored as a bitmap. This returns the height of the largest bitmap in the font.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return The largest height of any glyph in the font.
      *
@@ -1030,7 +1032,7 @@ public class U8g2Graphics {
      * will also send a refresh message (refreshDisplay) to an e-Paper/e-Ink device.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @apiNote Actually this procedure will send the current page to the display. This means, the content of the
      * internal pixel buffer will be placed in the tile row given by the current page position. This means, that this
@@ -1049,7 +1051,7 @@ public class U8g2Graphics {
      * to an e-Paper/e-Ink device.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @see #sendBuffer
      */
@@ -1061,7 +1063,7 @@ public class U8g2Graphics {
      * #sendBuffer(long)} and {@link #nextPage(long)} will also overwrite (and clear) the display..</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @see #begin
      */
@@ -1085,7 +1087,7 @@ public class U8g2Graphics {
      * </ol>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @see #initDisplay
      * @see #setPowerSave
@@ -1097,7 +1099,7 @@ public class U8g2Graphics {
      * <p>Get the current height of the display instance</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return The display height or -1 if the instance id is invalid
      */
@@ -1107,7 +1109,7 @@ public class U8g2Graphics {
      * <p>Get the current width of the display instance</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return The display width or -1 if the instance id is invalid
      */
@@ -1124,7 +1126,7 @@ public class U8g2Graphics {
      * </ol>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @see <strike>print</strike>
      * @see <strike>home</strike>
@@ -1141,7 +1143,7 @@ public class U8g2Graphics {
      * DirectAccess.ino example).</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param mode
      *         0, to turn off automatic clearing of the internal pixel buffer. Default value is 1.
      *
@@ -1156,7 +1158,7 @@ public class U8g2Graphics {
      * not (mode 1/transparent, mode = 1). Default mode is 0 (solid mode).</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param mode
      *         Enable (1) or disable (0) transparent mode.
      *
@@ -1170,7 +1172,7 @@ public class U8g2Graphics {
      * (maximum contrast or brightness).</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param value
      *         Contrast or brightness from 0 to 255.
      */
@@ -1212,7 +1214,7 @@ public class U8g2Graphics {
      * </table>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param rotation
      *         Display rotation argument.
      */
@@ -1225,7 +1227,7 @@ public class U8g2Graphics {
      * #clearBuffer(long)}.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return Address of the internal page buffer.
      *
@@ -1239,7 +1241,7 @@ public class U8g2Graphics {
      * <p>Return the width of the page buffer in tiles (One tile has a width of 8 pixel).</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return The width of the buffer in tiles.
      *
@@ -1252,7 +1254,7 @@ public class U8g2Graphics {
      * <p>Return the height of the page buffer in tiles. The height of one tile is 8 pixel.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return The height of the buffer in tiles.
      *
@@ -1268,7 +1270,7 @@ public class U8g2Graphics {
      * content of the pixel buffer at the target position.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @return The current page position in tiles (one tile has a height of 8 pixel)
      *
@@ -1280,7 +1282,7 @@ public class U8g2Graphics {
      * <p>Set the position of the pixel buffer for the sendBuffer command.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param row
      *         Location for the pixel buffer on the display. row is the "tile" position and must be multiplied with 8 to
      *         get the pixel position.
@@ -1297,7 +1299,7 @@ public class U8g2Graphics {
      * <p>Return the pixel width of string.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param text
      *         Text string to be measured
      *
@@ -1314,7 +1316,7 @@ public class U8g2Graphics {
      * Use setMaxClipWindow to restore writing to the complete window.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      * @param x0
      *         Left edge of the visible area.
      * @param y0
@@ -1332,7 +1334,7 @@ public class U8g2Graphics {
      * <p>Removes the effect of {@link #setClipWindow(long, int, int, int, int)}. Graphics is written to the complete display.</p>
      *
      * @param id
-     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, byte[], boolean)}
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
      *
      * @see #setClipWindow(long, int, int, int, int)
      */

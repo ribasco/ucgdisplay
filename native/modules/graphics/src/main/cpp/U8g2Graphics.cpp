@@ -36,10 +36,6 @@
 #include "U8g2Hal.h"
 #include "U8g2Utils.h"
 
-#if defined( __linux__) && defined(__arm__)
-#include <wiringPi.h>
-#endif
-
 using namespace std;
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
@@ -88,7 +84,7 @@ bool check_validity(JNIEnv *env, jlong id) {
     return true;
 }
 
-jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jbyteArray pin_config, jboolean emulation) {
+jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jstring path, jbyteArray pin_config, jboolean virtualMode) {
     string setup_proc_name;
 
     if (setupProc != nullptr) {
@@ -111,8 +107,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     }
     jsize len = env->GetArrayLength(pin_config);
     if (len != 16) {
-        JNI_ThrowNativeLibraryException(env, string("Pin map array should be exactly 16 of length (Actual: ") +
-                                             to_string(len) + string(")"));
+        JNI_ThrowNativeLibraryException(env, string("Pin map array should be exactly 16 of length (Actual: ") + to_string(len) + string(")"));
         return -1;
     }
 
@@ -120,22 +115,32 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     JNI_CopyJByteArray(env, pin_config, tmp, len);
 
     //convert to struct
-    auto *pinMap = reinterpret_cast<u8g2_pin_map_t *>(tmp);
+    auto *pinMap = reinterpret_cast<u8g2_pin_map_t*>(tmp);
 
     //3. Verify that the rotation number is within the allowed range
-    if (rotation > 4)
+    if (rotation < 0 || rotation > 4)
         JNI_ThrowNativeLibraryException(env, string("Invalid rotation (") + to_string(rotation) + ")");
 
     //Get actual rotation value
     const u8g2_cb_t *_rotation = u8g2util_ToRotation(rotation);
 
+    string device_path;
+
+    //Get device path (applicable only in non-virtual mode)
+    if (!virtualMode) {
+        if (path == nullptr) {
+            JNI_ThrowNativeLibraryException(env, string("Device path not specified"));
+            return -1;
+        }
+        device_path = string(env->GetStringUTFChars(path, nullptr));
+    }
+
     //4. Setup and Initialize the Display
-    shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, _rotation, *pinMap, emulation);
+    shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, device_path, _rotation, *pinMap, virtualMode);
 
     //5. Verify if display has been initialized successfully
     if (info == nullptr) {
-        JNI_ThrowNativeLibraryException(env,
-                                        string("Unable to initialize the display device. Please re-visit your configuration parameters and verify that they are correct"));
+        JNI_ThrowNativeLibraryException(env, string("Unable to initialize the display device. Please re-visit your configuration parameters and verify that they are correct"));
         return -1;
     }
 
@@ -214,7 +219,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawHLine(JNIEnv *env, jc
     u8g2_DrawHLine(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width));
 }
 
-void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawVLine (JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawVLine(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width) {
     if (!check_validity(env, id))
         return;
     u8g2_DrawVLine(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width));
@@ -529,14 +534,14 @@ jbyteArray Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getBuffer(JNIEnv *e
     if (!check_validity(env, id))
         return nullptr;
 
-    u8g2_t* ptr = toU8g2(id);
+    u8g2_t *ptr = toU8g2(id);
     uint8_t *buffer = u8g2_GetBufferPtr(ptr);
     int width = u8g2_GetBufferTileWidth(ptr);
     int height = u8g2_GetBufferTileHeight(ptr);
-    int size = 8 *  (width * height);
+    int size = 8 * (width * height);
 
     jbyteArray arr = env->NewByteArray(size);
-    env->SetByteArrayRegion(arr, 0, size, reinterpret_cast<jbyte*>(buffer));
+    env->SetByteArrayRegion(arr, 0, size, reinterpret_cast<jbyte *>(buffer));
     return arr;
 }
 

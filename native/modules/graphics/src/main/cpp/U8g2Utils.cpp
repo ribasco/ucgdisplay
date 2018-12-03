@@ -162,7 +162,7 @@ u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
     return nullptr;
 }
 
-shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const string& setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode) {
+shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const string& setup_proc_name, int commInt, int commType, int address, const string& path, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode) {
     shared_ptr<u8g2_info_t> info = make_shared<u8g2_info_t>();
 
     //Initialize device info details
@@ -170,6 +170,12 @@ shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const string& setup_proc_na
     info->pin_map = pin_config;
     info->rotation = const_cast<u8g2_cb_t *>(rotation);
     info->flag_virtual = virtualMode;
+
+#if defined(__arm__) && defined(__linux__)
+    info->device_path = path;
+    info->spi = make_shared<spi_t>();
+    info->i2c = make_shared<i2c_t>();
+#endif
 
     //Get the setup procedure callback
     u8g2_setup_func_t setup_proc_callback = u8g2hal_GetSetupProc(setup_proc_name);
