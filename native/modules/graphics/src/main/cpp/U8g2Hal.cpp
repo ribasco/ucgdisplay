@@ -186,8 +186,6 @@ uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
             break;
         }
         case U8X8_MSG_BYTE_INIT: {
-            /*pinModeAlt(info->pin_map.sda, 0b100);
-            pinModeAlt(info->pin_map.scl, 0b100);*/
             if (i2c_open(info->i2c.get(), info->device_path.c_str()) < 0) {
                 fprintf(stderr, "i2c_open(): %s\n", i2c_errmsg(info->i2c.get()));
                 return 0;
