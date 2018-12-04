@@ -84,7 +84,6 @@ function(DOWNLOAD_GITPROJ project_url project_name project_tag)
         set(ARCHIVE_EXT "tar.gz")
     endif ()
 
-    message(STATUS "System Name = ${CMAKE_SYSTEM_NAME}")
     set(PROJ_NAME ${project_name})
     string(TOUPPER "[${PROJ_NAME}]" PROJ_TAG)
     set(PROJ_DIR "${LIB_DIR}/${project_name}")

@@ -27,10 +27,8 @@
 #include <unistd.h>
 
 #if defined(__linux__) && defined(__arm__)
-#include <gpio.h>
-#include <i2c.h>
-#include <serial.h>
-#include <spi.h>
+
+#include <gpiod.hpp>
 #endif
 
 #include <iomanip>

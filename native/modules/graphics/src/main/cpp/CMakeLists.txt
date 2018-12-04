@@ -13,14 +13,24 @@ add_library(ucgdisp SHARED ${UCGDISP_HDR} ${UCGDISP_SRC})
 add_subdirectory(utils)
 target_compile_options(ucgdisp PRIVATE -Wno-write-strings)
 
-# Add C-periphery Package (ARM only)
+# Add C-periphery and Libgpiod packages (ARM only)
 if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
+    find_package(LibGpiod REQUIRED)
     find_package(CPeriphery REQUIRED)
+
     # Add c-periphery
     if (TARGET cperiphery AND CPeriphery_FOUND)
         add_dependencies(ucgdisp cperiphery)
         list(APPEND INC_DIRS ${CPERIPHERY_INCLUDE})
         list(APPEND LINK_LIBS ${CPERIPHERY_LIB})
+    endif ()
+
+    # Add libgpiod
+    if (TARGET libgpiod AND LibGpiod_FOUND)
+        add_dependencies(ucgdisp libgpiod)
+        list(APPEND INC_DIRS ${LIBGPIOD_INCLUDE_DIR})
+        list(APPEND LINK_LIBS ${LIBGPIOD_LIB_C})
+        list(APPEND LINK_LIBS ${LIBGPIOD_LIB_CXX})
     endif ()
 endif ()
 
