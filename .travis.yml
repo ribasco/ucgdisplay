@@ -43,7 +43,6 @@ matrix:
     osx_image: xcode9.3
 
 before_install:
-- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6609E60DC62814E; fi
 - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc; fi
 - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++; fi
 - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CC=gcc-7; fi
