@@ -14,6 +14,7 @@ else ()
     message(STATUS "Detected travis environment. Using fixed kernel version = ${KERNEL_VERSION}")
 endif ()
 
+message(STATUS "${PROJ_TAG} Using kernel version = ${KERNEL_VERSION}")
 
 if (EXISTS /usr/src/linux-headers-${KERNEL_VERSION}/include/linux/compiler_types.h AND (NOT EXISTS ${PROJ_INCLUDE_DIR}/linux/compiler_types.h))
     file(COPY /usr/src/linux-headers-${KERNEL_VERSION}/include/linux/compiler_types.h DESTINATION ${PROJ_INCLUDE_DIR}/linux)
