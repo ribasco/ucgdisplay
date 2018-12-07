@@ -1,13 +1,15 @@
 cmake_minimum_required(VERSION 3.9)
 project(ucgd-mod-graphics)
 
-include(../../../../../include/CMakeCommon.txt)
+set(GLOBAL_INC_DIR "../../../../../include")
+
+include(${GLOBAL_INC_DIR}/CMakeCommon.txt)
 
 # Include default packages
 find_package(U8G2 REQUIRED)
 
-list(APPEND UCGDISP_HDR "../../../../../include/Global.h" "U8g2Utils.h" "U8g2Graphics.h" "U8g2Hal.h")
-list(APPEND UCGDISP_SRC "../../../../../include/Global.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
+list(APPEND UCGDISP_HDR "${GLOBAL_INC_DIR}/Global.h" "U8g2Utils.h" "U8g2Graphics.h" "U8g2Hal.h")
+list(APPEND UCGDISP_SRC "${GLOBAL_INC_DIR}/Global.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
 
 add_library(ucgdisp SHARED ${UCGDISP_HDR} ${UCGDISP_SRC})
 add_subdirectory(utils)
@@ -43,6 +45,7 @@ else ()
     message(FATAL_ERROR "U8g2 target not found")
 endif ()
 
+list(APPEND INC_DIRS ${GLOBAL_INC_DIR})
 include_directories(${INC_DIRS})
 
 message(STATUS "[INCL-LIBRARIES] ${INC_DIRS}")

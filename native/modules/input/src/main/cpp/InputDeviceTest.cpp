@@ -50,9 +50,9 @@
 #include <set>
 #include <sys/inotify.h>
 
+#include <Global.h>
 #include "InputDevHelper.h"
 #include "InputEventManager.h"
-#include "../../../../../include/Global.h"
 
 using namespace std;
 

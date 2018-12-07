@@ -28,6 +28,7 @@
 #include <vector>
 #include <dirent.h>
 #include <queue>
+#include <Global.h>
 
 #define USE_UDEV false
 
@@ -44,7 +45,6 @@
 #include "InputDeviceManager.h"
 #include "InputDevHelper.h"
 #include "InputEventManager.h"
-#include "../../../../../include/Global.h"
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )

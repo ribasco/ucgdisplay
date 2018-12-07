@@ -26,17 +26,13 @@
 #include <map>
 #include <memory>
 #include <iostream>
-#include <cstdint>
-#include <functional>
-#include <utility>
 #include <cstring>
 #include <iomanip>
+#include <Global.h>
+
 #include "U8g2Graphics.h"
-#include "../../../../../include/Global.h"
 #include "U8g2Hal.h"
 #include "U8g2Utils.h"
-
-using namespace std;
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     //Load global references
@@ -59,7 +55,7 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
 
 void set_font_flag(JNIEnv *env, jlong id, bool value) {
-    shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
+    std::shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
     if (info == nullptr) {
         JNI_ThrowNativeLibraryException(env, "Unable to set font flag. Device Info for address does not exist");
         return;
@@ -68,7 +64,7 @@ void set_font_flag(JNIEnv *env, jlong id, bool value) {
 }
 
 bool get_font_flag(JNIEnv *env, jlong id) {
-    shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
+    std::shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
     if (info == nullptr) {
         JNI_ThrowNativeLibraryException(env, "Unable to set font flag. Device Info for address does not exist");
         return false;
@@ -78,17 +74,17 @@ bool get_font_flag(JNIEnv *env, jlong id) {
 
 bool check_validity(JNIEnv *env, jlong id) {
     if (u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id)) == nullptr) {
-        JNI_ThrowNativeLibraryException(env, string("Invalid Id specified (") + to_string(id) + string(")"));
+        JNI_ThrowNativeLibraryException(env, std::string("Invalid Id specified (") + std::to_string(id) + std::string(")"));
         return false;
     }
     return true;
 }
 
 jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jstring path, jbyteArray pin_config, jboolean virtualMode) {
-    string setup_proc_name;
+    std::string setup_proc_name;
 
     if (setupProc != nullptr) {
-        setup_proc_name = string(env->GetStringUTFChars(setupProc, nullptr));
+        setup_proc_name = std::string(env->GetStringUTFChars(setupProc, nullptr));
     } else {
         JNI_ThrowNativeLibraryException(env, "Setup procedure name cannot be null");
         return -1;
@@ -107,7 +103,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     }
     jsize len = env->GetArrayLength(pin_config);
     if (len != 16) {
-        JNI_ThrowNativeLibraryException(env, string("Pin map array should be exactly 16 of length (Actual: ") + to_string(len) + string(")"));
+        JNI_ThrowNativeLibraryException(env, std::string("Pin map array should be exactly 16 of length (Actual: ") + std::to_string(len) + std::string(")"));
         return -1;
     }
 
@@ -119,34 +115,33 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
 
     //3. Verify that the rotation number is within the allowed range
     if (rotation < 0 || rotation > 4)
-        JNI_ThrowNativeLibraryException(env, string("Invalid rotation (") + to_string(rotation) + ")");
+        JNI_ThrowNativeLibraryException(env, std::string("Invalid rotation (") + std::to_string(rotation) + ")");
 
     //Get actual rotation value
     const u8g2_cb_t *_rotation = u8g2util_ToRotation(rotation);
 
-    string device_path;
+    std::string device_path;
 
     //Get device path (applicable only in non-virtual mode)
     if (!virtualMode) {
         if (path == nullptr) {
-            JNI_ThrowNativeLibraryException(env, string("Device path not specified"));
+            JNI_ThrowNativeLibraryException(env, std::string("Device path not specified"));
             return -1;
         }
-        device_path = string(env->GetStringUTFChars(path, nullptr));
+        device_path = std::string(env->GetStringUTFChars(path, nullptr));
     }
 
     //4. Setup and Initialize the Display
-    shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, device_path, _rotation, *pinMap, virtualMode);
+    std::shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, device_path, _rotation, *pinMap, virtualMode);
 
     //5. Verify if display has been initialized successfully
     if (info == nullptr) {
-        JNI_ThrowNativeLibraryException(env, string("Unable to initialize the display device. Please re-visit your configuration parameters and verify that they are correct"));
+        JNI_ThrowNativeLibraryException(env, std::string("Unable to initialize the display device. Please re-visit your configuration parameters and verify that they are correct"));
         return -1;
     }
 
-    //6. Retrieve the pointer address
-    auto addr = info->address();//(uintptr_t) info->u8g2.get();
-    return addr;
+    //6. Return the pointer address
+    return info->address();
 }
 
 //long id, int x, int y, int width, int height
@@ -328,10 +323,10 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFont__JLjava_lang_Stri
         JNI_ThrowNativeLibraryException(env, "Font key cannot be null");
         return;
     }
-    string font = string(env->GetStringUTFChars(fontName, nullptr));
+    std::string font = std::string(env->GetStringUTFChars(fontName, nullptr));
     uint8_t *fontData = u8g2hal_GetFontByName(font);
     if (fontData == nullptr) {
-        JNI_ThrowNativeLibraryException(env, string("Unable to retrieve font data for: ") + font);
+        JNI_ThrowNativeLibraryException(env, std::string("Unable to retrieve font data for: ") + font);
         return;
     }
     u8g2_SetFont(toU8g2(id), fontData);
