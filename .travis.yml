@@ -51,11 +51,7 @@ before_install:
   - scripts/before-install.sh
 
 install:
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.19/linux-headers-4.19.0-041900_4.19.0-041900.201810221809_all.deb; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.19/linux-headers-4.19.0-041900-generic_4.19.0-041900.201810221809_amd64.deb; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.19/linux-image-unsigned-4.19.0-041900-generic_4.19.0-041900.201810221809_amd64.deb; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo dpkg -i *.deb; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then uname -sr; fi
+  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-kernel.sh; fi
   - scripts/install.sh
 
 script:
