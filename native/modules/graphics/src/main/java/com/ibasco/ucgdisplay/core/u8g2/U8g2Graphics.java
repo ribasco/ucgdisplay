@@ -944,7 +944,7 @@ public class U8g2Graphics {
      * <p> This command is part of the (picture) loop which renders the content of the display. This command must be
      * used together with nextPage. There are some restrictions: Do not change the content when executing this loop.
      * Always redraw everything. It is not possible to redraw only parts of the content. The advantage is lesser RAM
-     * consumption compared to a full frame buffer in RAM, see sendBuffer.</p>
+     * consumption compared to a full frame buffer in RAM, see {@link #sendBuffer(long)}.</p>
      *
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int, String, byte[], boolean)}
@@ -957,8 +957,8 @@ public class U8g2Graphics {
     /**
      * <p> This command is part of the (picture) loop which renders the content of the display. This command must be
      * used together with firstPage. There are some restrictions: Do not change the content when executing this loop.
-     * Always redraw everything. It is not possible to redraw only parts oft the content. The advantage is lesser RAM
-     * consumption compared to a full frame buffer in RAM, see sendBuffer. This procedure will send a refresh message
+     * Always redraw everything. It is not possible to redraw only parts of the content. The advantage is lesser RAM
+     * consumption compared to a full frame buffer in RAM, see {@link #sendBuffer(long)}. This procedure will send a refresh message
      * (refreshDisplay) to an e-Paper/e-Ink device after completion of the loop (just before returning 0).</p>
      *
      * @param id
@@ -1038,8 +1038,8 @@ public class U8g2Graphics {
      * internal pixel buffer will be placed in the tile row given by the current page position. This means, that this
      * procedure could be used for partial updates on paged devices (constructor with buffer option "1" or "2").
      * However, this will only work for LCDs. It will not work with most e-Paper/e-Ink devices because of the buffer
-     * switch in the display controller. Conclusion: Use this command only together with full buffer constructors. It
-     * will then work with all LCDs and e-Paper/e-Ink devices.
+     * switch in the display controller. <strike>Conclusion: Use this command only together with full buffer constructors. It
+     * will then work with all LCDs and e-Paper/e-Ink devices.</strike>
      * @see #clearBuffer
      */
     public static native void sendBuffer(long id);
