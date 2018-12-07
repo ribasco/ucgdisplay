@@ -51,6 +51,7 @@ before_install:
   - scripts/before-install.sh
 
 install:
+  - sudo apt-cache search linux-headers
   - sudo apt-get install -y linux-headers-$(uname -r)
   - scripts/install.sh
 
