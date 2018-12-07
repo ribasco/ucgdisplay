@@ -24,6 +24,7 @@ endif ()
 
 if (EXISTS /usr/src/linux-headers-${KERNEL_VERSION}/include/uapi/linux/gpio.h)
     message(STATUS "${PROJ_TAG} Checking required header file 'gpio.h' = yes")
+    file(COPY /usr/src/linux-headers-${KERNEL_VERSION}/include/linux/gpio.h DESTINATION ${PROJ_INCLUDE_DIR}/linux)
 else ()
     message(STATUS "${PROJ_TAG} Checking required header file 'gpio.h' = no")
     execute_process(COMMAND ls -l /usr/src/linux-headers-${KERNEL_VERSION}/include/uapi)
