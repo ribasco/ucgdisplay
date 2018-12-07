@@ -7,7 +7,7 @@ set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install/libgpiod)
 set(PROJ_INCLUDE_DIR "${LIB_DIR}/include")
 set(PROJ_TAG "[LIBGPIOD]")
 
-if (DEFINED $ENV{TRAVIS_OS_NAME})
+if ($ENV{TRAVIS_OS_NAME})
     set(KERNEL_VERSION "4.8.17-040817")
     message(STATUS "Detected travis environment. Using fixed kernel version = ${KERNEL_VERSION}")
 else ()
