@@ -51,7 +51,7 @@ before_install:
   - scripts/before-install.sh
 
 install:
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; sudo apt-get install -qq -y dpkg; fi
+  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo apt-get install -qq -y dpkg; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-kernel.sh; fi
   - scripts/install.sh
 
