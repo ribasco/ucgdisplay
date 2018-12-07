@@ -7,7 +7,13 @@ set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install/libgpiod)
 set(PROJ_INCLUDE_DIR "${LIB_DIR}/include")
 set(PROJ_TAG "[LIBGPIOD]")
 
-execute_process(COMMAND uname -r OUTPUT_VARIABLE KERNEL_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+if (NOT $ENV{TRAVIS_OS_NAME})
+    execute_process(COMMAND uname -r OUTPUT_VARIABLE KERNEL_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+else ()
+    set(KERNEL_VERSION "4.8.17-040817")
+    message(STATUS "Detected travis environment. Using fixed kernel version = ${KERNEL_VERSION}")
+endif ()
+
 
 if (EXISTS /usr/src/linux-headers-${KERNEL_VERSION}/include/linux/compiler_types.h AND (NOT EXISTS ${PROJ_INCLUDE_DIR}/linux/compiler_types.h))
     file(COPY /usr/src/linux-headers-${KERNEL_VERSION}/include/linux/compiler_types.h DESTINATION ${PROJ_INCLUDE_DIR}/linux)
