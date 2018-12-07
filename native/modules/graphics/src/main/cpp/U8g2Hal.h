@@ -37,9 +37,18 @@
 #include <jni.h>
 
 #if defined(__arm__) && defined(__linux__)
+
 #include <spi.h>
 #include <i2c.h>
+
+#ifndef USE_GPIOUSERSPACE
 #include <gpio.h>
+#else
+
+#include <gpiod.hpp>
+
+#endif
+
 #endif
 
 typedef struct {
@@ -81,11 +90,17 @@ typedef struct {
 #if defined(__arm__) && defined(__linux__)
     std::shared_ptr<spi_t> spi;
     std::shared_ptr<i2c_t> i2c;
+#ifndef USE_GPIOUSERSPACE
     std::map<int, std::shared_ptr<gpio_t>> gpio;
-    std::string device_path;
+#endif
+    std::string gpio_device;
+#ifdef USE_GPIOUSERSPACE
+    gpiod::chip gpio_chip;
+#endif
 #endif
     bool flag_font;
     bool flag_virtual;
+
     uintptr_t address() {
         return (uintptr_t) u8g2.get();
     }

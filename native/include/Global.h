@@ -29,8 +29,14 @@
 #include <jni.h>
 #include <string>
 
-// Global class/method signatures
+//Comment USE_GPIOUSERSPACE to use the gpio sysfs version
+#define USE_GPIOUSERSPACE
 
+#ifdef USE_GPIOUSERSPACE
+#define GPIOUS_CONSUMER "ucgdisplay"
+#endif
+
+// Global class/method signatures
 #define CLS_IOEXCEPTION "java/io/IOException"
 #define CLS_ARRAYLIST "java/util/ArrayList"
 #define CLS_HASHMAP  "java/util/HashMap"
@@ -121,4 +127,25 @@ void InputDevManager_Load(JNIEnv *env);
 
 void InputDevManager_UnLoad(JNIEnv *env);
 
+/*
+string getBinaryString(unsigned int u) {
+    stringstream str;
+    int t;
+    for (t = 128; t > 0; t = t / 2) {
+        if (u & t) str << "1 ";
+        else str << "0 ";
+    }
+    return str.str();
+}
+
+std::string hexStr(unsigned char *data, int len) {
+    std::stringstream ss;
+    ss << std::hex;
+    for (int i = 0; i < len; ++i)
+        ss << std::setw(2) << std::setfill('0') << (int) data[i];
+    return ss.str();
+}
+*/
+
 #endif //UCGDISP_GLOBAL_H
+

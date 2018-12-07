@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.9)
 project(ucgd-mod-input)
 
-include(../../../../../include/CMakeCommon.txt)
+set(GLOBAL_INC_DIR "../../../../../include")
+
+include(${GLOBAL_INC_DIR}/CMakeCommon.txt)
 
 if (NOT UNIX)
     message(FATAL_ERROR "Only unix/linux system builds are currently supported by this module")
@@ -17,8 +19,8 @@ if (UNIX)
     target_compile_options(ucginput-test PRIVATE -Wno-write-strings)
 endif ()
 
-list(APPEND UCGINPUT_HDR "../../../../../include/Global.h" "InputDevHelper.h" "InputDeviceManager.h" "InputEventManager.h")
-list(APPEND UCGINPUT_SRC "../../../../../include/Global.cpp" "InputDevHelper.cpp" "InputDeviceManager.cpp" "InputEventManager.cpp")
+list(APPEND UCGINPUT_HDR "${GLOBAL_INC_DIR}/Global.h" "InputDevHelper.h" "InputDeviceManager.h" "InputEventManager.h")
+list(APPEND UCGINPUT_SRC "${GLOBAL_INC_DIR}/Global.cpp" "InputDevHelper.cpp" "InputDeviceManager.cpp" "InputEventManager.cpp")
 
 add_library(ucginput SHARED ${UCGINPUT_HDR} ${UCGINPUT_SRC})
 target_compile_options(ucginput PRIVATE -Wno-write-strings)
@@ -39,6 +41,8 @@ endif ()
 else ()
     target_link_libraries(ucginput ${LINK_LIBS})
 endif ()]]
+
+list(APPEND INC_DIRS ${GLOBAL_INC_DIR})
 
 include_directories(${INC_DIRS})
 target_link_libraries(ucginput ${LINK_LIBS})
