@@ -9,8 +9,10 @@ set(PROJ_TAG "[LIBGPIOD]")
 
 execute_process(COMMAND uname -r OUTPUT_VARIABLE KERNEL_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-if (NOT EXISTS ${PROJ_INCLUDE_DIR}/linux/compiler_types.h)
+if (EXISTS /usr/src/linux-headers-${KERNEL_VERSION}/include/linux/compiler_types.h AND (NOT EXISTS ${PROJ_INCLUDE_DIR}/linux/compiler_types.h))
     file(COPY /usr/src/linux-headers-${KERNEL_VERSION}/include/linux/compiler_types.h DESTINATION ${PROJ_INCLUDE_DIR}/linux)
+else ()
+    message(STATUS "Skipping copy of compiler_types.h")
 endif ()
 
 set(CFLAGS "-I/usr/src/linux-headers-${KERNEL_VERSION}/include/uapi -I${PROJ_INCLUDE_DIR} -fPIC")
