@@ -52,11 +52,9 @@ before_install:
   - scripts/before-install.sh
 
 install:
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo apt-get install snapd; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo snap install canonical-livepatch; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo canonical-livepatch enable ${LIVEPATCH_TOKEN}; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo apt-get install -qq -y dpkg; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-kernel.sh; fi
+  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo find / -name gpio.h; fi
   - scripts/install.sh
 
 script:
