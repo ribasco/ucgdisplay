@@ -22,6 +22,13 @@ else ()
     message(STATUS "Skipping copy of compiler_types.h")
 endif ()
 
+if (EXISTS /usr/src/linux-headers-${KERNEL_VERSION}/include/uapi/linux/gpio.h)
+    message(STATUS "${PROJ_TAG} Checking required header file 'gpio.h' = yes")
+else ()
+    message(STATUS "${PROJ_TAG} Checking required header file 'gpio.h' = no")
+    execute_process(COMMAND ls -l /usr/src/linux-headers-${KERNEL_VERSION}/include/uapi)
+endif ()
+
 set(CFLAGS "-I/usr/src/linux-headers-${KERNEL_VERSION}/include/uapi -I${PROJ_INCLUDE_DIR} -fPIC")
 
 message(STATUS "${PROJ_TAG} CFLAGS = ${CFLAGS}, LIB_DIR=${LIB_DIR}")
