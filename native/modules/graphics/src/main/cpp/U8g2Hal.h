@@ -42,8 +42,6 @@
 #include <gpio.h>
 #endif
 
-using namespace std;
-
 typedef struct {
     //pin configuration
     uint8_t d0; //spi-clock
@@ -74,17 +72,17 @@ typedef std::map<std::string, const uint8_t *> u8g2_lookup_font_map_t;
 
 typedef struct {
     u8g2_pin_map_t pin_map;
-    shared_ptr<u8g2_t> u8g2;
-    string setup_proc_name;
+    std::shared_ptr<u8g2_t> u8g2;
+    std::string setup_proc_name;
     u8g2_setup_func_t setup_cb;
     u8g2_msg_func_t byte_cb;
     u8g2_msg_func_t gpio_cb;
     u8g2_cb_t *rotation;
 #if defined(__arm__) && defined(__linux__)
-    shared_ptr<spi_t> spi;
-    shared_ptr<i2c_t> i2c;
-    map<int, shared_ptr<gpio_t>> gpio;
-    string device_path;
+    std::shared_ptr<spi_t> spi;
+    std::shared_ptr<i2c_t> i2c;
+    std::map<int, std::shared_ptr<gpio_t>> gpio;
+    std::string device_path;
 #endif
     bool flag_font;
     bool flag_virtual;
