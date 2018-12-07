@@ -29,8 +29,6 @@
 #include <jni.h>
 #include <string>
 
-using namespace std;
-
 // Global class/method signatures
 
 #define CLS_IOEXCEPTION "java/io/IOException"
@@ -86,14 +84,14 @@ void JNI_Unload(JavaVM *vm);
  * @param env JNIEnv instance
  * @param msg The exception message
  */
-void JNI_ThrowNativeLibraryException(JNIEnv *env, string msg);
+void JNI_ThrowNativeLibraryException(JNIEnv *env, std::string msg);
 
 /**
  * Throws an IOException to java
  * @param env JNIEnv instance
  * @param msg The exception message
  */
-void JNI_ThrowIOException(JNIEnv *env, string msg);
+void JNI_ThrowIOException(JNIEnv *env, std::string msg);
 
 /**
  * Creates a JNIEnv instance from the cached JVM

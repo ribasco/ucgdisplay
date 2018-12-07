@@ -39,7 +39,7 @@ void U8gUtils_Load(JNIEnv *env);
  * @param index The pin number
  * @return Name/Description of the Pin
  */
-string u8g2util_GetPinIndexDesc(int index);
+std::string u8g2util_GetPinIndexDesc(int index);
 
 /**
  * Converts a long pointer address to a u8g2_t instance
@@ -69,14 +69,16 @@ u8g2_cb_t *u8g2util_ToRotation(int rotation);
  * @param virtualMode Set to true to activate emulator mode
  * @return
  */
-shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const string& setup_proc_name, int commInt, int commType, int address, const string& path, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode = false);
+std::shared_ptr<u8g2_info_t>
+u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int address, const std::string &path, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config,
+                             bool virtualMode = false);
 
 /**
  * Retrieves the device details from the cache
  * @param addr  The pointer address to lookup
  * @return A shared_ptr of u8g2_info_t
  */
-shared_ptr<u8g2_info_t> u8g2util_GetDisplayDeviceInfo(uintptr_t addr);
+std::shared_ptr<u8g2_info_t> u8g2util_GetDisplayDeviceInfo(uintptr_t addr);
 
 uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 

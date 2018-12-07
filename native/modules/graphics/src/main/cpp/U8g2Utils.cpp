@@ -26,15 +26,14 @@
 
 #include <sstream>
 #include <memory>
-#include <functional>
 #include <iomanip>
 #include <iostream>
 
 #include "../../../../../include/Global.h"
 #include "U8g2Utils.h"
 
-static map<uintptr_t, shared_ptr<u8g2_info_t>> u8g2_device_cache; // NOLINT
-static map<int, string> pinNameIndexMap; //NOLINT
+static std::map<uintptr_t, std::shared_ptr<u8g2_info_t>> u8g2_device_cache; // NOLINT
+static std::map<int, std::string> pinNameIndexMap; //NOLINT
 
 #define COMINT_4WSPI 0x0001
 #define COMINT_3WSPI 0x0002
@@ -162,19 +161,21 @@ u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
     return nullptr;
 }
 
-shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const string& setup_proc_name, int commInt, int commType, int address, const string& path, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode) {
-    shared_ptr<u8g2_info_t> info = make_shared<u8g2_info_t>();
+std::shared_ptr<u8g2_info_t>
+u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int address, const std::string &path, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config,
+                             bool virtualMode) {
+    std::shared_ptr<u8g2_info_t> info = std::make_shared<u8g2_info_t>();
 
     //Initialize device info details
-    info->u8g2 = make_shared<u8g2_t>();
+    info->u8g2 = std::make_shared<u8g2_t>();
     info->pin_map = pin_config;
     info->rotation = const_cast<u8g2_cb_t *>(rotation);
     info->flag_virtual = virtualMode;
 
 #if defined(__arm__) && defined(__linux__)
     info->device_path = path;
-    info->spi = make_shared<spi_t>();
-    info->i2c = make_shared<i2c_t>();
+    info->spi = std::make_shared<spi_t>();
+    info->i2c = std::make_shared<i2c_t>();
 #endif
 
     //Get the setup procedure callback
@@ -182,7 +183,7 @@ shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const string& setup_proc_na
 
     //Verify that we have found a callback
     if (setup_proc_callback == nullptr) {
-        cerr << "u8g2 setup procedure not found: '" << setup_proc_name << "'" << endl;
+        std::cerr << "u8g2 setup procedure not found: '" << setup_proc_name << "'" << std::endl;
         return nullptr;
     }
 
@@ -194,7 +195,7 @@ shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const string& setup_proc_na
     if (cb_byte == nullptr) {
             JNIEnv *env;
             GETENV(env);
-            JNI_ThrowNativeLibraryException(env, string("No available byte callback procedures for CommInt = ") + to_string(commInt) + string(", CommType = ") + to_string(commType));
+        JNI_ThrowNativeLibraryException(env, std::string("No available byte callback procedures for CommInt = ") + std::to_string(commInt) + std::string(", CommType = ") + std::to_string(commType));
             return nullptr;
      }
 
@@ -257,7 +258,7 @@ shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const string& setup_proc_na
     return info;
 }
 
-shared_ptr<u8g2_info_t> u8g2util_GetDisplayDeviceInfo(uintptr_t addr) {
+std::shared_ptr<u8g2_info_t> u8g2util_GetDisplayDeviceInfo(uintptr_t addr) {
     auto it = u8g2_device_cache.find(addr);
     if (it != u8g2_device_cache.end())
         return it->second;
@@ -266,10 +267,9 @@ shared_ptr<u8g2_info_t> u8g2util_GetDisplayDeviceInfo(uintptr_t addr) {
 
 uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(addr);
+    std::shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(addr);
     if (info == nullptr) {
-        cerr << "[u8g2_setup_helper_byte] Unable to obtain display device info for address: " << to_string(addr)
-             << endl;
+        std::cerr << "[u8g2_setup_helper_byte] Unable to obtain display device info for address: " << std::to_string(addr) << std::endl;
         exit(-1);
     }
     return info->byte_cb(u8x8, msg, arg_int, arg_ptr);
@@ -277,16 +277,15 @@ uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, voi
 
 uint8_t u8g2util_SetupHelperGpio(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(addr);
+    std::shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(addr);
     if (info == nullptr) {
-        cerr << "[u8g2_setup_helper_gpio] Unable to obtain display device info for address: " << to_string(addr)
-             << endl;
+        std::cerr << "[u8g2_setup_helper_gpio] Unable to obtain display device info for address: " << std::to_string(addr) << std::endl;
         exit(-1);
     }
     return info->gpio_cb(u8x8, msg, arg_int, arg_ptr);
 }
 
-string u8g2util_GetPinIndexDesc(int index) {
+std::string u8g2util_GetPinIndexDesc(int index) {
     if (!_pins_initialized) {
         if (!pinNameIndexMap.empty())
             pinNameIndexMap.clear();
