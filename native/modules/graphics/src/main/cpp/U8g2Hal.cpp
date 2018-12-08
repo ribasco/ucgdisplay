@@ -194,8 +194,6 @@ gpio_t* get_gpio(u8g2_info_t *info, uint8_t pin) {
 }
 
 void gpio_init(u8g2_info_t *info, uint8_t pin, gpio_direction_t direction) {
-    if (pin == 0)
-        return;
     std::map<int, std::shared_ptr<gpio_t>> gpioMap = info->gpio;
     auto res = gpioMap.find(pin);
 
@@ -208,8 +206,45 @@ void gpio_init(u8g2_info_t *info, uint8_t pin, gpio_direction_t direction) {
     }
 
     if (gpio_open(gpio.get(), pin, direction) < 0) {
-        fprintf(stderr, "gpio_open(): %s\n", gpio_errmsg(gpio.get()));
-        exit(1);
+        JNIEnv *env;
+        GETENV(env);
+        std::stringstream ss;
+        ss << "Unable to open gpio pin from sysfs (Pin: " << std::to_string(pin) << ", Reason: " << gpio_errmsg(gpio.get()) << ")";
+        JNI_ThrowNativeLibraryException(env, ss.str());
+        return;
+    }
+}
+
+#else
+
+std::shared_ptr<gpiod::line> get_gpio_line(u8g2_info_t *info, uint8_t pin) {
+    auto res = info->gpio.find(pin);
+    std::shared_ptr<gpiod::line> gpio_line = nullptr;
+    if (res != info->gpio.end()) {
+        gpio_line = res->second;
+    }
+    return gpio_line;
+}
+
+void gpio_line_init(u8g2_info_t *info, uint8_t pin, int direction) {
+    try {
+        std::shared_ptr<gpiod::line> gpio_line = get_gpio_line(info, pin);
+        if (gpio_line == nullptr) {
+            gpiod::line line = info->gpio_chip.get_line(pin);
+            gpio_line = std::make_shared<gpiod::line>(line);
+            info->gpio.insert(make_pair(pin, gpio_line));
+        }
+        //Release if used
+        if (gpio_line->is_used()) {
+            gpio_line->release();
+        }
+        gpio_line->request({GPIOUS_CONSUMER, direction, 0});
+    } catch (const std::system_error &e) {
+        JNIEnv *env;
+        GETENV(env);
+        std::stringstream ss;
+        ss << "Unable to init gpio line (Line: " << std::to_string(pin) << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
+        JNI_ThrowNativeLibraryException(env, ss.str());
     }
 }
 
@@ -219,16 +254,23 @@ void digital_write(u8g2_info_t *info, uint8_t pin, uint8_t value) {
 #ifdef USE_GPIOUSERSPACE
     try {
         //GPIO Userspace code
-        gpiod::line gpio_line = info->gpio_chip.get_line(pin);
-        gpio_line.request({GPIOUS_CONSUMER, gpiod::line_request::DIRECTION_OUTPUT, 0}, value);
+        std::shared_ptr<gpiod::line> gpio_line = get_gpio_line(info, pin);
+        if (gpio_line == nullptr) {
+            JNIEnv *env;
+            GETENV(env);
+            std::stringstream ss;
+            ss << "digital_write(): Could not obtain line reference for line offset: " << pin;
+            JNI_ThrowNativeLibraryException(env, ss.str());
+            return;
+        }
+        gpio_line->set_value(value);
     } catch (const std::system_error &e) {
         JNIEnv *env;
         GETENV(env);
         std::stringstream ss;
-        ss << "Unable to open gpio device (Code: " << e.code() << ", Reason: " << e.what() << ")";
+        ss << "Unable to write value to gpio line (Line: " << std::to_string(pin) << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
         JNI_ThrowNativeLibraryException(env, ss.str());
     }
-
 #else
     gpio_t* gpio = get_gpio(info, pin);
     if (gpio == nullptr)
@@ -248,14 +290,25 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
     switch (msg) {
         case U8X8_MSG_GPIO_AND_DELAY_INIT: { // called once during init phase of u8g2/u8x8, can be used to setup pins
 #ifdef USE_GPIOUSERSPACE
-            std::vector<unsigned int> offsets;
-            gpiod::line_bulk bulk = info->gpio_chip.get_lines(offsets);
-            gpiod::line_request request = {"", gpiod::line_request::DIRECTION_OUTPUT, 0};
+            //Configure pin modes
+            gpio_line_init(info, info->pin_map.d0, gpiod::line_request::DIRECTION_AS_IS);
+            gpio_line_init(info, info->pin_map.d1, gpiod::line_request::DIRECTION_AS_IS);
+            gpio_line_init(info, info->pin_map.sda, gpiod::line_request::DIRECTION_AS_IS);
+            gpio_line_init(info, info->pin_map.scl, gpiod::line_request::DIRECTION_AS_IS);
+            gpio_line_init(info, info->pin_map.d2, gpiod::line_request::DIRECTION_OUTPUT);
+            gpio_line_init(info, info->pin_map.d3, gpiod::line_request::DIRECTION_OUTPUT);
+            gpio_line_init(info, info->pin_map.d4, gpiod::line_request::DIRECTION_OUTPUT);
+            gpio_line_init(info, info->pin_map.d5, gpiod::line_request::DIRECTION_OUTPUT);
+            gpio_line_init(info, info->pin_map.d6, gpiod::line_request::DIRECTION_OUTPUT);
+            gpio_line_init(info, info->pin_map.d7, gpiod::line_request::DIRECTION_OUTPUT);
+            gpio_line_init(info, info->pin_map.dc, gpiod::line_request::DIRECTION_OUTPUT);
+            gpio_line_init(info, info->pin_map.cs, gpiod::line_request::DIRECTION_AS_IS);
+            gpio_line_init(info, info->pin_map.cs1, gpiod::line_request::DIRECTION_AS_IS);
+            gpio_line_init(info, info->pin_map.cs2, gpiod::line_request::DIRECTION_AS_IS);
 #else
             //Configure pin modes
+            gpio_init(info, info->pin_map.d0, GPIO_DIR_PRESERVE);
             gpio_init(info, info->pin_map.d1, GPIO_DIR_PRESERVE);
-            gpio_init(info, info->pin_map.d0, GPIO_DIR_PRESERVE);
-            gpio_init(info, info->pin_map.d0, GPIO_DIR_PRESERVE);
             gpio_init(info, info->pin_map.sda, GPIO_DIR_PRESERVE);
             gpio_init(info, info->pin_map.scl, GPIO_DIR_PRESERVE);
             gpio_init(info, info->pin_map.d2, GPIO_DIR_OUT);

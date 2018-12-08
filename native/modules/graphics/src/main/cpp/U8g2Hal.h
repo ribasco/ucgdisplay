@@ -97,6 +97,7 @@ typedef struct {
     std::string gpio_device;
 #ifdef USE_GPIOUSERSPACE
     gpiod::chip gpio_chip;
+    std::map<int, std::shared_ptr<gpiod::line>> gpio;
 #endif
 #endif
     bool flag_font;
