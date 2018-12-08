@@ -184,7 +184,7 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
         info->gpio_chip = gpiod::chip(info->gpio_device);
     } catch (const std::system_error &e) {
         std::stringstream ss;
-        ss << "Unable to open gpio device (Code: " << e.code() << ", Reason: " << e.what() << ")";
+        ss << "Unable to open gpio device (Device: " << info->gpio_device << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
         JNI_ThrowNativeLibraryException(env, ss.str());
         return nullptr;
     }
