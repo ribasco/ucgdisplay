@@ -54,7 +54,6 @@ before_install:
 install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo apt-get install -qq -y dpkg; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-kernel.sh; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo find / -name gpio.h; fi
   - scripts/install.sh
 
 script:
