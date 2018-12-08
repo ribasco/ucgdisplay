@@ -8,7 +8,7 @@ set(PROJ_INCLUDE_DIR "${LIB_DIR}/include")
 set(PROJ_TAG "[LIBGPIOD]")
 
 if (NOT $ENV{TRAVIS_OS_NAME} STREQUAL "")
-    set(KERNEL_VERSION "4.8.17-040817")
+    set(KERNEL_VERSION "4.15.18-041518")
     message(STATUS "Detected travis environment. Using fixed kernel version = ${KERNEL_VERSION}")
 else ()
     execute_process(COMMAND uname -r OUTPUT_VARIABLE KERNEL_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
