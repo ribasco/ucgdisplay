@@ -2,11 +2,15 @@
 set -e
 
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
-    wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.8.17/linux-headers-4.8.17-040817_4.8.17-040817.201701090438_all.deb
-    wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.8.17/linux-headers-4.8.17-040817-generic_4.8.17-040817.201701090438_amd64.deb
-    wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.8.17/linux-image-4.8.17-040817-generic_4.8.17-040817.201701090438_amd64.deb
-    sudo dpkg -i linux-image-4.8.17-040817-generic_4.8.17-040817.201701090438_amd64.deb
-    sudo dpkg -i linux-headers-4.8.17-040817_4.8.17-040817.201701090438_all.deb
-    sudo dpkg -i linux-headers-4.8.17-040817-generic_4.8.17-040817.201701090438_amd64.deb
+    P1=http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.15.18/linux-image-4.15.18-041518-generic_4.15.18-041518.201804190330_amd64.deb
+    P2=http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.15.18/linux-headers-4.15.18-041518_4.15.18-041518.201804190330_all.deb
+    P3=http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.15.18/linux-headers-4.15.18-041518-generic_4.15.18-041518.201804190330_amd64.deb
+
+    wget ${P1}
+    wget ${P2}
+    wget ${P3}
+    sudo dpkg -i ${P1}
+    sudo dpkg -i ${P2}
+    sudo dpkg -i ${P3}
     uname -sr
 fi

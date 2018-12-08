@@ -15,22 +15,25 @@ else ()
 endif ()
 
 message(STATUS "${PROJ_TAG} Using kernel version = ${KERNEL_VERSION} (Travis Os Name = $ENV{TRAVIS_OS_NAME})")
+message(STATUS "${PROJ_TAG} Project Include Dir = ${PROJ_INCLUDE_DIR}")
 
+#[[
 if (EXISTS /usr/src/linux-headers-${KERNEL_VERSION}/include/linux/compiler_types.h AND (NOT EXISTS ${PROJ_INCLUDE_DIR}/linux/compiler_types.h))
     file(COPY /usr/src/linux-headers-${KERNEL_VERSION}/include/linux/compiler_types.h DESTINATION ${PROJ_INCLUDE_DIR}/linux)
 else ()
     message(STATUS "Skipping copy of compiler_types.h")
 endif ()
+]]
 
-if (EXISTS /usr/src/linux-headers-${KERNEL_VERSION}/include/uapi/linux/gpio.h)
+#[[if (EXISTS /usr/src/linux-headers-${KERNEL_VERSION}/include/uapi/linux/gpio.h)
     message(STATUS "${PROJ_TAG} Checking required header file 'gpio.h' = yes")
     file(COPY /usr/src/linux-headers-${KERNEL_VERSION}/include/linux/gpio.h DESTINATION ${PROJ_INCLUDE_DIR}/linux)
 else ()
     message(STATUS "${PROJ_TAG} Checking required header file 'gpio.h' = no")
     execute_process(COMMAND ls -l /usr/src/linux-headers-${KERNEL_VERSION}/include/uapi)
-endif ()
+endif ()]]
 
-set(CFLAGS "-I/usr/src/linux-headers-${KERNEL_VERSION}/include/uapi -I${PROJ_INCLUDE_DIR} -fPIC")
+set(CFLAGS "-I/usr/src/linux-headers-${KERNEL_VERSION}/include/uapi -I/usr/src/linux-headers-${KERNEL_VERSION}/include -I${PROJ_INCLUDE_DIR} -fPIC")
 
 message(STATUS "${PROJ_TAG} CFLAGS = ${CFLAGS}, LIB_DIR=${LIB_DIR}")
 
