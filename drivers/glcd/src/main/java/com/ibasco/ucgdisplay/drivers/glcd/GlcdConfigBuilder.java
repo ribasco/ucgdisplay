@@ -26,6 +26,7 @@
 package com.ibasco.ucgdisplay.drivers.glcd;
 
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
 
 /**
@@ -35,6 +36,8 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
  */
 public class GlcdConfigBuilder {
     private GlcdConfig config;
+
+    private GlcdPinMapConfig pinMapConfig;
 
     private GlcdConfigBuilder() {
         config = new GlcdConfig();
@@ -55,7 +58,20 @@ public class GlcdConfigBuilder {
     }
 
     public GlcdConfigBuilder pinMap(GlcdPinMapConfig pinmap) {
+        this.pinMapConfig = pinmap;
         config.setPinMapConfig(pinmap);
+        return this;
+    }
+
+    public GlcdConfigBuilder mapPin(GlcdPin glcdPin, int value) {
+        if (this.pinMapConfig == null)
+            this.pinMapConfig = new GlcdPinMapConfig();
+        this.pinMapConfig.map(glcdPin, value);
+        return this;
+    }
+
+    public GlcdConfigBuilder deviceSpeed(int speed) {
+        config.setDeviceSpeed(speed);
         return this;
     }
 

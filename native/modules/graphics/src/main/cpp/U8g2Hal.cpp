@@ -35,15 +35,13 @@
 
 #endif
 
-#define U8G2_HAL_SPI_SPEED 500000
-#define U8G2_HAL_SPI_MODE SPI_DEV_MODE_0
-#define U8G2_HAL_SPI_CHANNEL 0
-
 static bool initialized = false;
 static u8g2_setup_func_map_t u8g2_setup_functions; //NOLINT
 static u8g2_lookup_font_map_t u8g2_font_map; //NOLINT
 
 #define U8G2NAME(n) #n
+
+#define DEFAULT_SPI_SPEED 1000000
 
 std::map<int, std::string> msgNames = {
         {U8X8_MSG_GPIO_AND_DELAY_INIT, U8G2NAME(U8X8_MSG_GPIO_AND_DELAY_INIT)},
@@ -120,7 +118,8 @@ uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
             //disable chip-select
             u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
 
-            if (spi_open(info->spi.get(), info->transport_device.c_str(), 0, 1000000) < 0) {
+            int speed = info->device_speed <= -1 ? DEFAULT_SPI_SPEED : info->device_speed;
+            if (spi_open(info->spi.get(), info->transport_device.c_str(), 0, speed) < 0) {
                 fprintf(stderr, "spi_open(): %s\n", spi_errmsg(info->spi.get()));
                 return 0;
             }
