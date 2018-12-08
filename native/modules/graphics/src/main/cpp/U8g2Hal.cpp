@@ -120,7 +120,7 @@ uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
             //disable chip-select
             u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
 
-            if (spi_open(info->spi.get(), info->gpio_device.c_str(), 0, 1000000) < 0) {
+            if (spi_open(info->spi.get(), info->transport_device.c_str(), 0, 1000000) < 0) {
                 fprintf(stderr, "spi_open(): %s\n", spi_errmsg(info->spi.get()));
                 return 0;
             }
@@ -164,7 +164,7 @@ uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
             break;
         }
         case U8X8_MSG_BYTE_INIT: {
-            if (i2c_open(info->i2c.get(), info->gpio_device.c_str()) < 0) {
+            if (i2c_open(info->i2c.get(), info->transport_device.c_str()) < 0) {
                 fprintf(stderr, "i2c_open(): %s\n", i2c_errmsg(info->i2c.get()));
                 return 0;
             }

@@ -61,9 +61,10 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
         int commInt = config.getBusInterface().getValue();
         int commType = config.getBusInterface().getBusType().getValue();
         int address = config.getDeviceAddress();
-        String devicePath = config.getDevicePath();
+        String transportDevice = config.getTransportDevice();
+        String gpioDevice = config.getGpioDevice();
         byte[] pinConfig = ObjectUtils.defaultIfNull(config.getPinMap(), new GlcdPinMapConfig()).toByteArray();
-        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, devicePath, pinConfig, virtual);
+        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, transportDevice, gpioDevice, pinConfig, virtual);
     }
 
     @Override

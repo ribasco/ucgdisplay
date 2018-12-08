@@ -53,7 +53,8 @@ public class GlcdConfig {
     private GlcdPinMapConfig pinMap;
     private int deviceAddress = -1;
     private String setupProcedure;
-    private String devicePath;
+    private String transportDevice;
+    private String gpioDevice;
 
     /**
      * @return The device address if available
@@ -72,12 +73,20 @@ public class GlcdConfig {
         this.deviceAddress = deviceAddress;
     }
 
-    public String getDevicePath() {
-        return devicePath;
+    public String getTransportDevice() {
+        return transportDevice;
     }
 
-    public void setDevicePath(String devicePath) {
-        this.devicePath = devicePath;
+    public void setTransportDevice(String transportDevice) {
+        this.transportDevice = transportDevice;
+    }
+
+    public String getGpioDevice() {
+        return gpioDevice;
+    }
+
+    public void setGpioDevice(String gpioDevice) {
+        this.gpioDevice = gpioDevice;
     }
 
     public void setDisplay(GlcdDisplay display) {

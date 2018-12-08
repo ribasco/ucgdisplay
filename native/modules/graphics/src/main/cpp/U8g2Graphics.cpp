@@ -80,7 +80,7 @@ bool check_validity(JNIEnv *env, jlong id) {
     return true;
 }
 
-jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jstring path, jbyteArray pin_config, jboolean virtualMode) {
+jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jstring transport_device, jstring gpio_device, jbyteArray pin_config, jboolean virtualMode) {
     std::string setup_proc_name;
 
     if (setupProc != nullptr) {
@@ -101,6 +101,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
         JNI_ThrowNativeLibraryException(env, "Pin map argument cannot be null");
         return -1;
     }
+
     jsize len = env->GetArrayLength(pin_config);
     if (len != 16) {
         JNI_ThrowNativeLibraryException(env, std::string("Pin map array should be exactly 16 of length (Actual: ") + std::to_string(len) + std::string(")"));
@@ -120,19 +121,25 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     //Get actual rotation value
     const u8g2_cb_t *_rotation = u8g2util_ToRotation(rotation);
 
-    std::string device_path;
+    std::string transport_device_path;
+    std::string gpio_device_path;
 
     //Get device path (applicable only in non-virtual mode)
     if (!virtualMode) {
-        if (path == nullptr) {
-            JNI_ThrowNativeLibraryException(env, std::string("Device path not specified"));
+        if (transport_device == nullptr) {
+            JNI_ThrowNativeLibraryException(env, std::string("Transport device not specified"));
             return -1;
         }
-        device_path = std::string(env->GetStringUTFChars(path, nullptr));
+        if (gpio_device == nullptr) {
+            JNI_ThrowNativeLibraryException(env, std::string("GPIO device not specified"));
+            return -1;
+        }
+        transport_device_path = std::string(env->GetStringUTFChars(transport_device, nullptr));
+        gpio_device_path = std::string(env->GetStringUTFChars(gpio_device, nullptr));
     }
 
     //4. Setup and Initialize the Display
-    std::shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, device_path, _rotation, *pinMap, virtualMode);
+    std::shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, transport_device_path, gpio_device_path, _rotation, *pinMap, virtualMode);
 
     //5. Verify if display has been initialized successfully
     if (info == nullptr) {

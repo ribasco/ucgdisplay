@@ -93,6 +93,7 @@ typedef struct {
 #ifndef USE_GPIOUSERSPACE
     std::map<int, std::shared_ptr<gpio_t>> gpio;
 #endif
+    std::string transport_device;
     std::string gpio_device;
 #ifdef USE_GPIOUSERSPACE
     gpiod::chip gpio_chip;
@@ -109,17 +110,17 @@ typedef struct {
 typedef std::function<uint8_t(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
 
 /**
- * Hardware I2C byte communication callback (Platform dependent)
+ * Hardware I2C byte communication callback (Using c-periphery)
  */
 uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
- * Hardware SPI byte communications callback (Platform dependent)
+ * Hardware SPI byte communications callback (Using c-periphery)
  */
 uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
- * GPIO and Delay callback (Platform dependent)
+ * GPIO and Delay callback (Using libgpiod/linux userspace)
  */
 uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr);
 

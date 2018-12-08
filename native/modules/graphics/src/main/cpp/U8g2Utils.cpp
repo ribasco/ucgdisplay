@@ -162,9 +162,7 @@ u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
     return nullptr;
 }
 
-std::shared_ptr<u8g2_info_t>
-u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int device_address, const std::string &device_path, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config,
-                             bool virtualMode) {
+std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int device_address, const std::string &transport_device, const std::string &gpio_device, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode) {
     JNIEnv *env;
     GETENV(env);
 
@@ -177,7 +175,8 @@ u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, in
     info->flag_virtual = virtualMode;
 
 #if defined(__arm__) && defined(__linux__)
-    info->gpio_device = device_path;
+    info->transport_device = transport_device;
+    info->gpio_device = gpio_device;
     info->spi = std::make_shared<spi_t>();
     info->i2c = std::make_shared<i2c_t>();
 #ifdef USE_GPIOUSERSPACE

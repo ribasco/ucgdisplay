@@ -29,12 +29,14 @@ import com.ibasco.ucgdisplay.core.u8g2.U8g2ByteEvent;
 import com.ibasco.ucgdisplay.core.u8g2.U8g2EventDispatcher;
 import com.ibasco.ucgdisplay.core.u8g2.U8g2GpioEvent;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusType;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdConfigException;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdDriverException;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdNotInitializedException;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,16 +93,15 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     }
 
     /**
-     * <p>Creates a new instance based on the config provided. If virtual mode is enabled. Optionally you could also
-     * provided a {@link GlcdDriverEventHandler} for handling display events </p>
+     * <p>Creates a new instance based on the config provided. If virtual mode is enabled, all generated instructions will be re-routed to the {@link GlcdDriverEventHandler}.
      *
      * @param config
      *         The {@link GlcdConfig} associated with this instance
      * @param virtual
      *         Set to <code>true</code> to enable virtual mode. If virtual mode is enabled, all instruction/data events are routed to {@link GlcdDriverEventHandler} for further processing.
      * @param handler
-     *         The {@link GlcdDriverEventHandler} instance that will handle the data and instruction events thrown by
-     *         the native display driver. If a null value is provided, the {@link U8g2DriverAdapter} will be used by default.
+     *         The {@link GlcdDriverEventHandler} instance that will handle the data and instruction events thrown by the native display driver. If a null value is provided, the {@link
+     *         U8g2DriverAdapter} will be used by default.
      */
     protected GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler, GlcdDriverAdapter driverAdapter) {
         this.config = config;
@@ -202,8 +203,18 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
 
         GlcdBusInterface bus = config.getBusInterface();
 
-        if (!virtual && bus == null)
-            throw new GlcdConfigException("Bus interface not specified", config);
+        if (!virtual) {
+            if (bus == null)
+                throw new GlcdConfigException("Bus interface not specified", config);
+
+            if (GlcdBusType.HARDWARE.equals(bus.getBusType())) {
+                if (StringUtils.isBlank(config.getTransportDevice()))
+                    throw new GlcdConfigException("Transport device not specified or invalid", config);
+            }
+
+            if (StringUtils.isBlank(config.getGpioDevice()))
+                throw new GlcdConfigException("GPIO device not specified or invalid", config);
+        }
 
         //Check protocol if supported
         if (bus != null && !config.getDisplay().hasBusInterface(config.getBusInterface())) {
@@ -233,6 +244,10 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
             log.warn("No rotation specified. Using default = {}", DEFAULT_ROTATION);
             config.setRotation(DEFAULT_ROTATION);
         }
+    }
+
+    private void checkDeviceExistence(String device) {
+
     }
 
     private void checkRequirements() {

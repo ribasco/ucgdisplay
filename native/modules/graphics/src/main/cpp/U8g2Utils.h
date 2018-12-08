@@ -63,15 +63,14 @@ u8g2_cb_t *u8g2util_ToRotation(int rotation);
  * @param commInt
  * @param commType Communications type (e.g. COMINT_4WSPI)
  * @param device_address Device address
- * @param device_path Device path (e.g. /dev/i2c-1)
+ * @param transport_device The transport device path (e.g. /dev/i2c-1)
+ * @param gpio_device The gpio chip path
  * @param rotation Display rotation
  * @param pin_config Pin mapping configuration
  * @param virtualMode Set to true to activate emulator mode
  * @return
  */
-std::shared_ptr<u8g2_info_t>
-u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int device_address, const std::string &device_path, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config,
-                             bool virtualMode = false);
+std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int device_address, const std::string &transport_device, const std::string &gpio_device, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode = false);
 
 /**
  * Retrieves the device details from the cache
