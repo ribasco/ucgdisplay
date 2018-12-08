@@ -64,8 +64,13 @@ public class GlcdConfigBuilder {
         return this;
     }
 
-    public GlcdConfigBuilder devicePath(String path) {
-        config.setDevicePath(path);
+    public GlcdConfigBuilder transportDevice(String path) {
+        config.setTransportDevice(path);
+        return this;
+    }
+
+    public GlcdConfigBuilder gpioDevice(String path) {
+        config.setGpioDevice(path);
         return this;
     }
 
