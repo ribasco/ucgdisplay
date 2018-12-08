@@ -9,8 +9,8 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
     wget ${P1}
     wget ${P2}
     wget ${P3}
-    sudo dpkg -i ${P1}
-    sudo dpkg -i ${P2}
-    sudo dpkg -i ${P3}
+    sudo dpkg -i linux-image-4.15.18-041518-generic_4.15.18-041518.201804190330_amd64.deb
+    sudo dpkg -i linux-headers-4.15.18-041518_4.15.18-041518.201804190330_all.deb
+    sudo dpkg -i linux-headers-4.15.18-041518-generic_4.15.18-041518.201804190330_amd64.deb
     uname -sr
 fi
