@@ -80,7 +80,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;IIII[BZ)J
  */
 JNIEXPORT jlong JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup
-  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jstring, jstring, jbyteArray, jboolean);
+  (JNIEnv *, jclass, jstring, jint, jint, jint, jint, jint, jstring, jstring, jbyteArray, jboolean);
 
 /*
  * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics

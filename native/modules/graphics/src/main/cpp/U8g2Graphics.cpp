@@ -80,7 +80,7 @@ bool check_validity(JNIEnv *env, jlong id) {
     return true;
 }
 
-jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jstring transport_device, jstring gpio_device, jbyteArray pin_config, jboolean virtualMode) {
+jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jint device_speed, jstring transport_device, jstring gpio_device, jbyteArray pin_config, jboolean virtualMode) {
     std::string setup_proc_name;
 
     if (setupProc != nullptr) {

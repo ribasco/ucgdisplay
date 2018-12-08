@@ -90,14 +90,14 @@ typedef struct {
 #if defined(__arm__) && defined(__linux__)
     std::shared_ptr<spi_t> spi;
     std::shared_ptr<i2c_t> i2c;
-#ifndef USE_GPIOUSERSPACE
-    std::map<int, std::shared_ptr<gpio_t>> gpio;
-#endif
     std::string transport_device;
     std::string gpio_device;
+    int device_speed;
 #ifdef USE_GPIOUSERSPACE
     gpiod::chip gpio_chip;
     std::map<int, std::shared_ptr<gpiod::line>> gpio;
+#else
+    std::map<int, std::shared_ptr<gpio_t>> gpio;
 #endif
 #endif
     bool flag_font;

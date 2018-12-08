@@ -24,7 +24,7 @@
  * =========================END==================================
  */
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Nov  5 2018 17:59:35)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Dec  9 2018 01:30:34)
  */
 
 package com.ibasco.ucgdisplay.drivers.glcd;
