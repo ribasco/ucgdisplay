@@ -31,15 +31,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class GlcdPinMapConfigTest {
 
+    private GlcdPinMapConfig mapConfig;
+
+    @BeforeEach
+    void setup() {
+        mapConfig = new GlcdPinMapConfig();
+    }
+
     @Test
     @DisplayName("Test map to byte array conversion")
     void testByteArrayOutput() {
-        GlcdPinMapConfig mapConfig = new GlcdPinMapConfig();
         mapConfig.map(GlcdPin.D0, 0);
         mapConfig.map(GlcdPin.D1, 1);
         mapConfig.map(GlcdPin.D2, 2);
@@ -62,14 +69,12 @@ class GlcdPinMapConfigTest {
     @Test
     @DisplayName("Test pin value greater than 255")
     void testInvalidPinNumber() {
-        GlcdPinMapConfig mapConfig = new GlcdPinMapConfig();
         assertThrows(GlcdPinMappingException.class, () -> mapConfig.map(GlcdPin.D0, 300));
     }
 
     @Test
     @DisplayName("Test pin existence on the map")
     void testMapExistence() {
-        GlcdPinMapConfig mapConfig = new GlcdPinMapConfig();
         mapConfig.map(GlcdPin.D0, 0);
         mapConfig.map(GlcdPin.D2, 2);
         assertTrue(mapConfig.isMapped(GlcdPin.D0));
@@ -80,9 +85,8 @@ class GlcdPinMapConfigTest {
     @Test
     @DisplayName("Test empty map")
     void testEmptyMap() {
-        GlcdPinMapConfig config = new GlcdPinMapConfig();
-        assertTrue(config.isEmpty());
-        config.map(GlcdPin.D0, 0);
-        assertFalse(config.isEmpty());
+        assertTrue(mapConfig.isEmpty());
+        mapConfig.map(GlcdPin.D0, 0);
+        assertFalse(mapConfig.isEmpty());
     }
 }
