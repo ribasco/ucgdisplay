@@ -58,7 +58,6 @@ public class GlcdConfigBuilder {
     }
 
     public GlcdConfigBuilder pinMap(GlcdPinMapConfig pinmap) {
-        this.pinMapConfig = pinmap;
         config.setPinMapConfig(pinmap);
         return this;
     }
@@ -96,6 +95,8 @@ public class GlcdConfigBuilder {
     }
 
     public GlcdConfig build() {
+        if (config.getPinMap() == null && this.pinMapConfig != null)
+            config.setPinMapConfig(this.pinMapConfig);
         return config;
     }
 }
