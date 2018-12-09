@@ -207,6 +207,7 @@ public class GlcdST7920Example {
 ### Limitations
 
 ---
+* Works only on linux kernel v4.8 or higher
 * The adapters for character lcd driver Mcp23008LcdAdapter and Pcf8574TLcdAdapter are not yet implemented. 
 
 ### Contribution guidelines
