@@ -1,8 +1,8 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Common
- * Filename: NativeLibraryLoader.java
+ * Project: UCGDisplay :: Graphics LCD driver
+ * Filename: GlcdDriverAdapter.java
  *
  * ---------------------------------------------------------
  * %%
@@ -23,33 +23,8 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-package com.ibasco.ucgdisplay.common.utils;
+package com.ibasco.ucgdisplay.drivers.glcd;
 
-import org.scijava.nativelib.NativeLoader;
-import org.slf4j.Logger;
-
-import java.io.IOException;
-
-import static org.slf4j.LoggerFactory.getLogger;
-
-/**
- * Utility for loading native libraries.
- *
- * @author Rafael Ibasco
- */
-@SuppressWarnings("WeakerAccess")
-public class NativeLibraryLoader {
-    public static final Logger log = getLogger(NativeLibraryLoader.class);
-
-    static {
-        try {
-            NativeLoader.setJniExtractor(new UCGDJniExtractor());
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    public static void loadLibrary(String libName) throws IOException {
-        NativeLoader.loadLibrary(libName);
-    }
+public interface GlcdDriverAdapter extends U8g2DisplayDriver {
+    void initialize(GlcdConfig config, boolean virtual);
 }

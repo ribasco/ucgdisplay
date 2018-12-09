@@ -24,21 +24,14 @@
  * =========================END==================================
  */
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Nov  5 2018 17:59:35)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Dec  9 2018 01:30:34)
  */
 
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_3WSPI;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_4WSPI;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_6800;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_8080;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_I2C;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_KS0108;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_SED1520;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_ST7920SPI;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_UART;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdControllerType;
+
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.*;
 
 @SuppressWarnings("unused")
 public interface Glcd {

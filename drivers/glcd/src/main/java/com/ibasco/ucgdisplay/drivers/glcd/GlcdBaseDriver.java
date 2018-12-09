@@ -28,18 +28,15 @@ package com.ibasco.ucgdisplay.drivers.glcd;
 import com.ibasco.ucgdisplay.core.u8g2.U8g2ByteEvent;
 import com.ibasco.ucgdisplay.core.u8g2.U8g2EventDispatcher;
 import com.ibasco.ucgdisplay.core.u8g2.U8g2GpioEvent;
-import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusType;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdConfigException;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdDriverException;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdNotInitializedException;
-import com.ibasco.ucgdisplay.drivers.glcd.exceptions.XBMDecodeException;
-import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMData;
-import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMUtils;
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,13 +49,10 @@ import java.util.stream.Collectors;
  *
  * @author Rafael Ibasco
  */
+@SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
 abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
 
     private static final Logger log = LoggerFactory.getLogger(GlcdBaseDriver.class);
-
-    private long _id;
-
-    private int x = 0, y = 0;
 
     private static final GlcdRotation DEFAULT_ROTATION = GlcdRotation.ROTATION_90;
 
@@ -69,6 +63,8 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     private boolean initialized = false;
 
     private boolean virtual;
+
+    private GlcdDriverAdapter adapter;
 
     /**
      * Create new instance based on the config provided.
@@ -92,23 +88,26 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         this(config, virtual, null);
     }
 
+    protected GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) {
+        this(config, virtual, handler, null);
+    }
+
     /**
-     * <p>Creates a new instance based on the config provided. If virtual mode is enabled. Optionally you could also
-     * provided a {@link GlcdDriverEventHandler} for handling display events </p>
+     * <p>Creates a new instance based on the config provided. If virtual mode is enabled, all generated instructions will be re-routed to the {@link GlcdDriverEventHandler}.
      *
      * @param config
      *         The {@link GlcdConfig} associated with this instance
      * @param virtual
      *         Set to <code>true</code> to enable virtual mode. If virtual mode is enabled, all instruction/data events are routed to {@link GlcdDriverEventHandler} for further processing.
      * @param handler
-     *         The {@link GlcdDriverEventHandler} instance that will handle the data and instruction events thrown by
-     *         the native display driver. If a null value is provided, the internal event handler of this driver
-     *         instance will be used instead.
+     *         The {@link GlcdDriverEventHandler} instance that will handle the data and instruction events thrown by the native display driver. If a null value is provided, the {@link
+     *         U8g2DriverAdapter} will be used by default.
      */
-    protected GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) {
+    protected GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler, GlcdDriverAdapter driverAdapter) {
         this.config = config;
         this.virtual = virtual;
         this.driverEventHandler = handler == null ? createDefaultEventHandler() : handler;
+        this.adapter = driverAdapter == null ? new U8g2DriverAdapter() : driverAdapter;
     }
 
     /**
@@ -118,47 +117,32 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
      * @throws GlcdDriverException
      *         When a driver related exception occurs (e.g. invalid configuration setup)
      */
-    protected final void initialize() throws GlcdDriverException {
+    protected void initialize() throws GlcdDriverException {
         //Make sure we have a valid configuration
         checkConfig(config);
 
-        _id = initNativeDriver(config);
-
-        if (_id == -1)
-            throw new GlcdDriverException("Could not initialize U8G2 Display Driver");
+        adapter.initialize(config, virtual);
 
         if (virtual && driverEventHandler != null) {
             //check if a virtual event handler is present
             U8g2EventDispatcher.addByteListener(this, driverEventHandler);
             U8g2EventDispatcher.addGpioListener(this, driverEventHandler);
         }
+
         initialized = true;
-        log.debug("GLCD driver initialized (Address: {})", _id);
+        log.debug("GLCD driver initialized (Address: {})", getId());
     }
 
-    protected long initNativeDriver(GlcdConfig config) {
-        String setupProcedure = config.getSetupProcedure();
-        int rotation = config.getRotation().getValue();
-        int commInt = config.getBusInterface().getValue();
-        int commType = config.getBusInterface().getBusType().getValue();
-        int address = config.getDeviceAddress();
-        byte[] pinConfig = ObjectUtils.defaultIfNull(config.getPinMap(), new GlcdPinMapConfig()).toByteArray();
-        return U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, pinConfig, virtual);
+    protected boolean isInitialized() {
+        return initialized;
     }
 
-    @SuppressWarnings({"unchecked", "unused"})
     public final <T extends GlcdDriverEventHandler> T getDriverEventHandler() {
         return (T) driverEventHandler;
     }
 
-    @SuppressWarnings("unused")
     protected final void setDriverEventHandler(GlcdDriverEventHandler driverEventHandler) {
         this.driverEventHandler = driverEventHandler;
-    }
-
-    @Override
-    public final long getId() {
-        return _id;
     }
 
     /**
@@ -219,8 +203,18 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
 
         GlcdBusInterface bus = config.getBusInterface();
 
-        if (!virtual && bus == null)
-            throw new GlcdConfigException("Bus interface not specified", config);
+        if (!virtual) {
+            if (bus == null)
+                throw new GlcdConfigException("Bus interface not specified", config);
+
+            if (GlcdBusType.HARDWARE.equals(bus.getBusType())) {
+                if (StringUtils.isBlank(config.getTransportDevice()))
+                    throw new GlcdConfigException("Transport device not specified or invalid", config);
+            }
+
+            if (StringUtils.isBlank(config.getGpioDevice()))
+                throw new GlcdConfigException("GPIO device not specified or invalid", config);
+        }
 
         //Check protocol if supported
         if (bus != null && !config.getDisplay().hasBusInterface(config.getBusInterface())) {
@@ -252,9 +246,11 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         }
     }
 
+    private void checkDeviceExistence(String device) {
+
+    }
+
     private void checkRequirements() {
-        if (_id < 0)
-            throw new GlcdDriverException("Invalid driver instance ID. Please verify that the driver initialization succeeded");
         if (!initialized)
             throw new GlcdNotInitializedException("Driver has not yet been initialized. Please remember to call initialize() in your implementing class");
     }
@@ -262,497 +258,494 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     @Override
     public void drawBox(int width, int height) {
         checkRequirements();
-        drawBox(x, y, width, height);
+        adapter.drawBox(width, height);
     }
 
     @Override
     public void drawBox(int x, int y, int width, int height) {
         checkRequirements();
-        U8g2Graphics.drawBox(_id, x, y, width, height);
+        adapter.drawBox(x, y, width, height);
     }
 
     @Override
     @Deprecated
     public void drawBitmap(int count, int height, byte[] bitmap) {
         checkRequirements();
-        drawBitmap(x, y, count, height, bitmap);
+        adapter.drawBitmap(count, height, bitmap);
     }
 
     @Override
     @Deprecated
     public void drawBitmap(int x, int y, int count, int height, byte[] bitmap) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawBitmap(_id, x, y, count, height, bitmap);
+        adapter.drawBitmap(x, y, count, height, bitmap);
     }
 
     @Override
     public void drawCircle(int radius, int options) {
         checkRequirements();
-        drawCircle(x, y, radius, options);
+        adapter.drawCircle(radius, options);
     }
 
     @Override
     public void drawCircle(int x, int y, int radius, int options) {
         checkRequirements();
-        U8g2Graphics.drawCircle(_id, x, y, radius, options);
+        adapter.drawCircle(x, y, radius, options);
     }
 
     @Override
     public void drawDisc(int radius, int options) {
-        drawDisc(x, y, radius, options);
+        checkRequirements();
+        adapter.drawDisc(radius, options);
     }
 
     @Override
     public void drawDisc(int x, int y, int radius, int options) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawDisc(_id, x, y, radius, options);
+        adapter.drawDisc(x, y, radius, options);
     }
 
     @Override
     public void drawEllipse(int rx, int ry, int options) {
-        drawEllipse(x, y, rx, ry, options);
+        checkRequirements();
+        adapter.drawEllipse(rx, ry, options);
     }
 
     @Override
     public void drawEllipse(int x, int y, int rx, int ry, int options) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawEllipse(_id, x, y, rx, ry, options);
+        adapter.drawEllipse(x, y, rx, ry, options);
     }
 
     @Override
     public void drawFilledEllipse(int rx, int ry, int options) {
-        drawFilledEllipse(x, y, rx, ry, options);
+        checkRequirements();
+        adapter.drawFilledEllipse(rx, ry, options);
     }
 
     @Override
     public void drawFilledEllipse(int x, int y, int rx, int ry, int options) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawFilledEllipse(_id, x, y, rx, ry, options);
+        adapter.drawFilledEllipse(x, y, rx, ry, options);
     }
 
     @Override
     public void drawFrame(int width, int height) {
-        drawFrame(x, y, width, height);
+        checkRequirements();
+        adapter.drawFrame(width, height);
     }
 
     @Override
     public void drawFrame(int x, int y, int width, int height) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawFrame(_id, x, y, width, height);
+        adapter.drawFrame(x, y, width, height);
     }
 
     @Override
     public void drawGlyph(short encoding) {
-        drawGlyph(x, y, encoding);
+        checkRequirements();
+        adapter.drawGlyph(encoding);
     }
 
     @Override
     public void drawGlyph(int x, int y, short encoding) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawGlyph(_id, x, y, encoding);
+        adapter.drawGlyph(x, y, encoding);
     }
 
     @Override
     public void drawHLine(int width) {
-        drawHLine(x, y, width);
+        checkRequirements();
+        adapter.drawHLine(width);
     }
 
     @Override
     public void drawHLine(int x, int y, int width) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawHLine(_id, x, y, width);
+        adapter.drawHLine(x, y, width);
     }
 
     @Override
     public void drawVLine(int length) {
-        drawVLine(x, y, length);
+        checkRequirements();
+        adapter.drawVLine(length);
     }
 
     @Override
     public void drawVLine(int x, int y, int length) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawVLine(_id, x, y, length);
+        adapter.drawVLine(x, y, length);
     }
 
     @Override
     public void drawLine(int x1, int y1) {
-        drawLine(x, y, x1, y1);
+        checkRequirements();
+        adapter.drawLine(x1, y1);
     }
 
     @Override
     public void drawLine(int x, int y, int x1, int y1) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawLine(_id, x, y, x1, y1);
+        adapter.drawLine(x, y, x1, y1);
     }
 
     @Override
     public void drawPixel() {
-        drawPixel(x, y);
+        checkRequirements();
+        adapter.drawPixel();
     }
 
     @Override
     public void drawPixel(int x, int y) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawPixel(_id, x, y);
+        adapter.drawPixel(x, y);
     }
 
     @Override
     public void drawRoundedBox(int width, int height, int radius) {
-        drawRoundedBox(x, y, width, height, radius);
+        checkRequirements();
+        adapter.drawRoundedBox(width, height, radius);
     }
 
     @Override
     public void drawRoundedBox(int x, int y, int width, int height, int radius) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawRoundedBox(_id, x, y, width, height, radius);
+        adapter.drawRoundedBox(x, y, width, height, radius);
     }
 
     @Override
     public void drawRoundedFrame(int width, int height, int radius) {
-        drawRoundedFrame(x, y, width, height, radius);
+        checkRequirements();
+        adapter.drawRoundedFrame(width, height, radius);
     }
 
     @Override
     public void drawRoundedFrame(int x, int y, int width, int height, int radius) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawRoundedFrame(_id, x, y, width, height, radius);
+        adapter.drawRoundedFrame(x, y, width, height, radius);
     }
 
     @Override
     public void drawString(String value) {
-        drawString(x, y, value);
+        checkRequirements();
+        adapter.drawString(value);
     }
 
     @Override
     public void drawString(int x, int y, String value) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawString(_id, x, y, value);
+        adapter.drawString(x, y, value);
     }
 
     @Override
     public void drawTriangle(int x1, int y1, int x2, int y2) {
-        drawTriangle(x, y, x1, y1, x2, y2);
+        checkRequirements();
+        adapter.drawTriangle(x1, y1, x2, y2);
     }
 
     @Override
     public void drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2) {
         checkRequirements();
-        setCursor(x0, y0);
-        U8g2Graphics.drawTriangle(_id, x0, y0, x1, y1, x2, y2);
+        adapter.drawTriangle(x0, y0, x1, y1, x2, y2);
     }
 
     @Override
     public void drawXBM(int width, int height, File file) {
-        drawXBM(x, y, width, height, file);
+        checkRequirements();
+        adapter.drawXBM(width, height, file);
     }
 
     @Override
     public void drawXBM(int x, int y, int width, int height, File file) {
         checkRequirements();
-        setCursor(x, y);
-        try {
-            XBMData xbmData = XBMUtils.decodeXbmFile(file);
-            assert xbmData != null;
-            drawXBM(x, y, width, height, xbmData.getData());
-        } catch (XBMDecodeException e) {
-            log.error("Could not draw the specified XBM file", e);
-        }
+        adapter.drawXBM(x, y, width, height, file);
     }
 
     @Override
     public void drawXBM(int width, int height, byte[] data) {
-        drawXBM(x, y, width, height, data);
+        checkRequirements();
+        adapter.drawXBM(width, height, data);
     }
 
     @Override
     public void drawXBM(int x, int y, int width, int height, byte[] data) {
         checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawXBM(_id, x, y, width, height, data);
+        adapter.drawXBM(x, y, width, height, data);
     }
 
     @Override
     public int drawUTF8(String value) {
-        return drawUTF8(x, y, value);
+        checkRequirements();
+        return adapter.drawUTF8(value);
     }
 
     @Override
     public int drawUTF8(int x, int y, String value) {
         checkRequirements();
-        setCursor(x, y);
-        return U8g2Graphics.drawUTF8(_id, x, y, value);
+        return adapter.drawUTF8(x, y, value);
     }
 
     @Override
     public int getUTF8Width(String text) {
         checkRequirements();
-        return U8g2Graphics.getUTF8Width(_id, text);
+        return adapter.getUTF8Width(text);
     }
 
     @Override
     public void setFont(byte[] data) {
         checkRequirements();
-        U8g2Graphics.setFont(_id, data);
+        adapter.setFont(data);
     }
 
     @Override
     public void setFont(GlcdFont font) {
         checkRequirements();
-        U8g2Graphics.setFont(_id, font.getKey());
+        adapter.setFont(font);
     }
 
     @Override
     public void setFontMode(int mode) {
         checkRequirements();
-        U8g2Graphics.setFontMode(_id, mode);
+        adapter.setFontMode(mode);
     }
 
     @Override
     public void setFontDirection(int direction) {
         checkRequirements();
-        U8g2Graphics.setFontDirection(_id, direction);
+        adapter.setFontDirection(direction);
     }
 
     @Override
     public void setFontPosBaseline() {
         checkRequirements();
-        U8g2Graphics.setFontPosBaseline(_id);
+        adapter.setFontPosBaseline();
     }
 
     @Override
     public void setFontPosBottom() {
         checkRequirements();
-        U8g2Graphics.setFontPosBottom(_id);
+        adapter.setFontPosBottom();
     }
 
     @Override
     public void setFontPosTop() {
         checkRequirements();
-        U8g2Graphics.setFontPosTop(_id);
+        adapter.setFontPosTop();
     }
 
     @Override
     public void setFontPosCenter() {
         checkRequirements();
-        U8g2Graphics.setFontPosCenter(_id);
+        adapter.setFontPosCenter();
     }
 
     @Override
     public void setFontRefHeightAll() {
         checkRequirements();
-        U8g2Graphics.setFontRefHeightAll(_id);
+        adapter.setFontRefHeightAll();
     }
 
     @Override
     public void setFontRefHeightExtendedText() {
         checkRequirements();
-        U8g2Graphics.setFontRefHeightExtendedText(_id);
+        adapter.setFontRefHeightExtendedText();
     }
 
     @Override
     public void setFontRefHeightText() {
         checkRequirements();
-        U8g2Graphics.setFontRefHeightText(_id);
+        adapter.setFontRefHeightText();
     }
 
     @Override
     public void setFlipMode(boolean enable) {
         checkRequirements();
-        U8g2Graphics.setFlipMode(_id, enable);
+        adapter.setFlipMode(enable);
     }
 
     @Override
     public void setPowerSave(boolean enable) {
         checkRequirements();
-        U8g2Graphics.setPowerSave(_id, enable);
+        adapter.setPowerSave(enable);
     }
 
     @Override
     public void setDrawColor(int color) {
         checkRequirements();
-        U8g2Graphics.setDrawColor(_id, color);
+        adapter.setDrawColor(color);
     }
 
     @Override
     public void initDisplay() {
         checkRequirements();
-        U8g2Graphics.initDisplay(_id);
+        adapter.initDisplay();
     }
 
     @Override
     public void firstPage() {
         checkRequirements();
-        U8g2Graphics.firstPage(_id);
+        adapter.firstPage();
     }
 
     @Override
     public int nextPage() {
         checkRequirements();
-        return U8g2Graphics.nextPage(_id);
+        return adapter.nextPage();
     }
 
     @Override
     public int getAscent() {
         checkRequirements();
-        return U8g2Graphics.getAscent(_id);
+        return adapter.getAscent();
     }
 
     @Override
     public int getDescent() {
         checkRequirements();
-        return U8g2Graphics.getDescent(_id);
+        return adapter.getDescent();
     }
 
     @Override
     public int getMaxCharWidth() {
         checkRequirements();
-        return U8g2Graphics.getMaxCharWidth(_id);
+        return adapter.getMaxCharWidth();
     }
 
     @Override
     public int getMaxCharHeight() {
         checkRequirements();
-        return U8g2Graphics.getMaxCharHeight(_id);
+        return adapter.getMaxCharHeight();
     }
 
     @Override
     public void sendBuffer() {
         checkRequirements();
-        U8g2Graphics.sendBuffer(_id);
+        adapter.sendBuffer();
     }
 
     @Override
     public void clearBuffer() {
         checkRequirements();
-        U8g2Graphics.clearBuffer(_id);
+        adapter.clearBuffer();
     }
 
     @Override
     public void clearDisplay() {
         checkRequirements();
-        U8g2Graphics.clearDisplay(_id);
+        adapter.clearDisplay();
     }
 
     @Override
     public void begin() {
         checkRequirements();
-        U8g2Graphics.begin(_id);
+        adapter.begin();
     }
 
     @Override
     public int getHeight() {
         checkRequirements();
-        return U8g2Graphics.getHeight(_id);
+        return adapter.getHeight();
     }
 
     @Override
     public int getWidth() {
         checkRequirements();
-        return U8g2Graphics.getWidth(_id);
+        return adapter.getWidth();
     }
 
     @Override
     public void clear() {
         checkRequirements();
-        U8g2Graphics.clear(_id);
+        adapter.clear();
     }
 
     @Override
     public void setCursor(int x, int y) {
-        this.x = x;
-        this.y = y;
+        adapter.setCursor(x, y);
     }
 
     @Override
     public int setAutoPageClear(int mode) {
         checkRequirements();
-        return U8g2Graphics.setAutoPageClear(_id, mode);
+        return adapter.setAutoPageClear(mode);
     }
 
     //TODO: Replace int parameter with an enumeration type
     @Override
     public void setBitmapMode(int mode) {
         checkRequirements();
-        U8g2Graphics.setBitmapMode(_id, mode);
+        adapter.setBitmapMode(mode);
     }
 
     @Override
     public void setContrast(int value) {
         checkRequirements();
-        U8g2Graphics.setContrast(_id, value);
+        adapter.setContrast(value);
     }
 
     @Override
     public void setDisplayRotation(GlcdRotation rotation) {
         checkRequirements();
-        setDisplayRotation(rotation.getValue());
+        adapter.setDisplayRotation(rotation);
     }
 
     @Override
     public void setDisplayRotation(int rotation) {
         checkRequirements();
-        U8g2Graphics.setDisplayRotation(_id, rotation);
+        adapter.setDisplayRotation(rotation);
     }
 
     @Override
     public byte[] getBuffer() {
         checkRequirements();
-        return U8g2Graphics.getBuffer(_id);
+        return adapter.getBuffer();
     }
 
     @Override
     public int getBufferTileWidth() {
         checkRequirements();
-        return U8g2Graphics.getBufferTileWidth(_id);
+        return adapter.getBufferTileWidth();
     }
 
     @Override
     public int getBufferTileHeight() {
         checkRequirements();
-        return U8g2Graphics.getBufferTileHeight(_id);
+        return adapter.getBufferTileHeight();
     }
 
     @Override
     public int getBufferCurrTileRow() {
         checkRequirements();
-        return U8g2Graphics.getBufferCurrTileRow(_id);
+        return adapter.getBufferCurrTileRow();
     }
 
     @Override
     public void setBufferCurrTileRow(int row) {
         checkRequirements();
-        U8g2Graphics.setBufferCurrTileRow(_id, row);
+        adapter.setBufferCurrTileRow(row);
     }
 
     @Override
     public int getStrWidth(String text) {
         checkRequirements();
-        return U8g2Graphics.getStrWidth(_id, text);
+        return adapter.getStrWidth(text);
     }
 
     @Override
     public void setClipWindow(int x0, int y0, int x1, int y1) {
         checkRequirements();
-        U8g2Graphics.setClipWindow(_id, x0, y0, x1, y1);
+        adapter.setClipWindow(x0, y0, x1, y1);
     }
 
     @Override
     public void setMaxClipWindow() {
         checkRequirements();
-        U8g2Graphics.setMaxClipWindow(_id);
+        adapter.setMaxClipWindow();
+    }
+
+    @Override
+    public final long getId() {
+        return adapter.getId();
     }
 
     @Override
@@ -765,18 +758,11 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GlcdBaseDriver that = (GlcdBaseDriver) o;
-        return _id == that._id;
+        return getId() == that.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(_id);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        U8g2EventDispatcher.removeByteListener(this);
-        U8g2EventDispatcher.removeGpioListener(this);
-        super.finalize();
+        return Objects.hash(getId());
     }
 }

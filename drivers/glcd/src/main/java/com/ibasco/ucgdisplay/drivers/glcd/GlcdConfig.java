@@ -33,9 +33,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Arrays;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configuration class to be used by the glcd native library
@@ -51,7 +52,10 @@ public class GlcdConfig {
     private GlcdRotation rotation;
     private GlcdPinMapConfig pinMap;
     private int deviceAddress = -1;
+    private int deviceSpeed = -1;
     private String setupProcedure;
+    private String transportDevice;
+    private String gpioDevice;
 
     /**
      * @return The device address if available
@@ -70,6 +74,22 @@ public class GlcdConfig {
         this.deviceAddress = deviceAddress;
     }
 
+    public String getTransportDevice() {
+        return transportDevice;
+    }
+
+    public void setTransportDevice(String transportDevice) {
+        this.transportDevice = transportDevice;
+    }
+
+    public String getGpioDevice() {
+        return gpioDevice;
+    }
+
+    public void setGpioDevice(String gpioDevice) {
+        this.gpioDevice = gpioDevice;
+    }
+
     public void setDisplay(GlcdDisplay display) {
         this.display = display;
     }
@@ -84,6 +104,14 @@ public class GlcdConfig {
 
     public void setPinMapConfig(GlcdPinMapConfig pinMap) {
         this.pinMap = pinMap;
+    }
+
+    public int getDeviceSpeed() {
+        return deviceSpeed;
+    }
+
+    public void setDeviceSpeed(int deviceSpeed) {
+        this.deviceSpeed = deviceSpeed;
     }
 
     public GlcdSize getDisplaySize() {

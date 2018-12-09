@@ -30,7 +30,7 @@
     <property name="project.target.dir.linux.amd64" value="${project.dir.target}/classes/lib/linux/amd64"/>
     <property name="project.target.dir.linux.arm" value="${project.dir.target}/classes/lib/linux/arm"/>
     <property name="project.target.dir.win.amd64" value="${project.dir.target}/classes/lib/windows/amd64"/>
-    <property name="project.target.dir.mac.amd64" value="${project.dir.target}/classes/lib/mac/amd64"/>
+    <property name="project.target.dir.mac.amd64" value="${project.dir.target}/classes/lib/mac/x86_64"/>
     <property name="cmake.module.dir" value="${project.dir.root}/native/cmake"/>
     <property name="cmake.generator.unix" value="-G 'CodeBlocks - Unix Makefiles'"/>
     <property name="cmake.generator.win" value="-G 'CodeBlocks - MinGW Makefiles'"/>
@@ -71,7 +71,7 @@
     </target>
 
     <target name="generate-native-sources-mac">
-        <mkdir dir="${project.dir.target}/classes/lib/mac/amd64"/>
+        <mkdir dir="${project.dir.target}/classes/lib/mac/x86_64"/>
     </target>
 
     <!-- Check validity of all required tools -->
@@ -164,7 +164,7 @@
     <!-- Compile for Linux - ARM (Host OS) -->
     <target name="native-build-linux-arm" depends="ucgd-build-common.os-check-linux-arm, generate-native-sources-linux-arm" if="os.linux.arm">
         <!-- Build both architectures when Cross-Compiling -->
-        <echo>[HOST=ARM] Building ARM binaries only</echo>
+        <echo>[HOST=ARM] Compiling for Linux - arm host</echo>
         <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
             <arg line="--target ${cpp.build.target}"/>
             <arg line="${cmake.generator.unix}"/>
@@ -183,7 +183,7 @@
     <!-- Compile for Windows - x86_64 (Host OS) -->
     <target name="native-build-windows-x86_64" depends="ucgd-build-common.os-check-windows-x86_64, generate-native-sources-win" if="os.windows.amd64">
         <!-- Refresh CMake cache -->
-        <echo>[HOST=AMD64] Compiling for Windows</echo>
+        <echo>[HOST=AMD64] Compiling for Windows host</echo>
         <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
             <arg line="--target ${cpp.build.target}"/>
             <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
@@ -204,17 +204,17 @@
     <!-- Compile for MacOSX - x86_64 (Host OS) -->
     <target name="native-build-macosx-x86_64" depends="ucgd-build-common.os-check-macosx-x86_64, generate-native-sources-mac" if="os.macosx.amd64">
         <!-- Refresh CMake cache -->
-        <echo>[HOST=AMD64] Invoking CMAKE Cross-compile build instructions for Mac OS
+        <echo>[HOST=AMD64] Compiling for Mac OS host
         </echo>
         <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
             <arg line="--target ${cpp.build.target}"/>
             <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
             <arg line="-H."/>
-            <arg line="-Bbuild/mac/amd64"/>
+            <arg line="-Bbuild/mac/x86_64"/>
         </exec>
         <!-- Build project -->
-        <exec executable="cmake" dir="${cpp.build.dir}/mac/amd64" failonerror="true">
-            <arg line="--build ${cpp.build.dir}/mac/amd64"/>
+        <exec executable="cmake" dir="${cpp.build.dir}/mac/x86_64" failonerror="true">
+            <arg line="--build ${cpp.build.dir}/mac/x86_64"/>
             <arg line="--target ${cpp.build.target} --"/>
             <arg line=" -j 4"/>
         </exec>
@@ -278,10 +278,10 @@
             <arg line="-DOSXCROSS_TARGET=${cpp.tools.osx.target}"/>
             <arg line="${cmake.generator.unix}"/>
             <arg line="-H."/>
-            <arg line="-Bbuild/mac/amd64"/>
+            <arg line="-Bbuild/mac/x86_64"/>
         </exec>
-        <exec executable="cmake" dir="${cpp.build.dir}/mac/amd64" failonerror="true">
-            <arg line="--build ${cpp.build.dir}/mac/amd64"/>
+        <exec executable="cmake" dir="${cpp.build.dir}/mac/x86_64" failonerror="true">
+            <arg line="--build ${cpp.build.dir}/mac/x86_64"/>
             <arg line="--target ${cpp.build.target} --"/>
             <arg line=" -j 4"/>
         </exec>
@@ -307,6 +307,6 @@
     </target>
 
     <target name="native-copy-resources-mac-x86_64">
-        <copy file="${cpp.build.dir}/mac/amd64/bin/${cpp.build.output.mac}" todir="${project.target.dir.mac.amd64}" failonerror="true"/>
+        <copy file="${cpp.build.dir}/mac/x86_64/bin/${cpp.build.output.mac}" todir="${project.target.dir.mac.amd64}" failonerror="true"/>
     </target>
 </project>

@@ -39,7 +39,7 @@ void U8gUtils_Load(JNIEnv *env);
  * @param index The pin number
  * @return Name/Description of the Pin
  */
-string u8g2util_GetPinIndexDesc(int index);
+std::string u8g2util_GetPinIndexDesc(int index);
 
 /**
  * Converts a long pointer address to a u8g2_t instance
@@ -62,20 +62,22 @@ u8g2_cb_t *u8g2util_ToRotation(int rotation);
  * @param setup_proc_name The u8g2 setup procedure
  * @param commInt
  * @param commType Communications type (e.g. COMINT_4WSPI)
- * @param address Device address
+ * @param device_address Device address
+ * @param transport_device The transport device path (e.g. /dev/i2c-1)
+ * @param gpio_device The gpio chip path
  * @param rotation Display rotation
  * @param pin_config Pin mapping configuration
  * @param virtualMode Set to true to activate emulator mode
  * @return
  */
-shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const string& setup_proc_name, int commInt, int commType, int address, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode = false);
+std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int device_address, int device_speed, const std::string &transport_device, const std::string &gpio_device, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode = false);
 
 /**
  * Retrieves the device details from the cache
  * @param addr  The pointer address to lookup
  * @return A shared_ptr of u8g2_info_t
  */
-shared_ptr<u8g2_info_t> u8g2util_GetDisplayDeviceInfo(uintptr_t addr);
+std::shared_ptr<u8g2_info_t> u8g2util_GetDisplayDeviceInfo(uintptr_t addr);
 
 uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
