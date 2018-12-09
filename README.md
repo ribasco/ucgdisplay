@@ -9,11 +9,12 @@
 ##### General features
 
 * Supports both Character and Graphics/Dot-Matrix display devices
-
+* Should work for most linux based SBCs (kernel 4.8x or higher)
+ 
 ##### Display drivers
 
 ######  Character LCD driver features
-* Pure java implementation for Hitachi HD44780 driver powered by Pi4j (Will probably add JNI/native support in the future if performance is an issue)
+* Pure java implementation for Hitachi HD44780 driver powered by Pi4j
 * Flexible configuration options for interfacing with your SBC device (e.g. GPIO expanders/I2C/SPI)
 * No fixed/mandatory pin mapping. You have the freedom to choose whatever device pins you want to use for your LCD device.
 * Available LCD adapters
@@ -50,7 +51,7 @@
 
 ---
 * Java JDK 1.8 or higher
-* [Wiring Pi](http://wiringpi.com/) library (Only required for ARM based devices)
+* [Libgpiod](https://github.com/brgl/libgpiod)  - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device
  
 ### Installation
 
@@ -65,14 +66,14 @@
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-clcd</artifactId>
-             <version>1.2.2-alpha</version>
+             <version>1.3.0-alpha</version>
          </dependency>
       
          <!-- Graphics display driver -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-glcd</artifactId>
-             <version>1.2.2-alpha</version>
+             <version>1.3.0-alpha</version>
          </dependency>
     </dependencies>
     ```
@@ -159,7 +160,7 @@ public class HD44780Example {
 
 ######  Graphic LCD Example (ST7920)
 
-Simple hello world example for ST7920 controller
+Simple hello world example for ST7920 controller. In this example, we use the Raspberry Pi SPI hardware features. Please note that in Raspberry Pi, we need to set the pin modes to ALT0 to activate the hardware features (also applicable for the I2C pins). This library does not automatically set the correct pin modes for you, so you have to explicitly set them prior to running the application.    
 
 ```java
 package com.ibasco.ucgdisplay.examples;
@@ -172,12 +173,19 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
 
 public class GlcdST7920Example {
     public static void main(String[] args) {
+        //On raspberry pi, we use the bcm pin numbering scheme (See: https://elinux.org/RPi_BCM2835_GPIOs)
         GlcdConfig config = GlcdConfigBuilder.create()
                 .rotation(GlcdRotation.ROTATION_NONE)
                 .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                 //SPI = /dev/spidev0.0 or /dev/spidev0.1
+                 //I2C = /dev/i2c-0 or /dev/i2c-1
+                .transportDevice("/dev/spidev0.0")
+                //The GPIO character device chip (Execute 'ls -l /dev/gpiochip*' to list all available chips)  
+                .gpioDevice("/dev/gpiochip0")                
                 .display(Glcd.ST7920.D_128x64)
+                //Pin mapping (alternatively, you could use #mapPin(GlcdPin, int) function) 
                 .pinMap(new GlcdPinMapConfig()
-                        .map(GlcdPin.SPI_CLOCK, 14) //Use wiring pi pin numbering scheme
+                        .map(GlcdPin.SPI_CLOCK, 14)
                         .map(GlcdPin.SPI_MOSI, 12)
                         .map(GlcdPin.CS, 10)
                 )
@@ -199,7 +207,6 @@ public class GlcdST7920Example {
 ### Limitations
 
 ---
-* Only works for Raspberry Pi at the moment. I will add support for other SBCs as soon as I am able to obtain them.  
 * The adapters for character lcd driver Mcp23008LcdAdapter and Pcf8574TLcdAdapter are not yet implemented. 
 
 ### Contribution guidelines
@@ -210,4 +217,4 @@ public class GlcdST7920Example {
 ### Related projects
 
 ---
-* [GLCD Emulator/Simulator](https://github.com/ribasco/glcd-emulator)
+* [GLCD Simulator Project](https://github.com/ribasco/glcd-emulator)
