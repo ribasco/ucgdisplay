@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GlcdConfigBuilderTest {
 
-    GlcdConfigBuilder configBuilder;
+    private GlcdConfigBuilder configBuilder;
 
     @BeforeEach
     void setUp() {
