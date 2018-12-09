@@ -41,6 +41,20 @@
 
 * A2PRINTER, HX1230, IL3820, IST3020, KS0108, LC7981, LD7032, LS013B7DH03, LS027B7DH01, MAX7219, NT7534, PCD8544, PCF8812, RA8835, SBN1661, SED1330, SED1520, SH1106, SH1107, SH1108, SH1122, SSD1305, SSD1306, SSD1309, SSD1317, SSD1322, SSD1325, SSD1326, SSD1327, SSD1329, SSD1606, SSD1607, ST75256, ST7565, ST7567, ST7586S, ST7588, ST7920, T6963, UC1601, UC1604, UC1608, UC1610, UC1611, UC1638, UC1701
 
+### Supported bus interfaces (for glcd)
+
+| Interface     | Type              | Description                                                                       | Hardware | Software |
+|---------------|-------------------|-----------------------------------------------------------------------------------|----------|----------|
+| SPI           | 4-Wire            | 4-Wire interface                                                                  | YES      | YES      |
+| SPI           | 4-Wire (ST7920)   | 4-Wire interface with no DC                                                       | YES      | YES      |
+| SPI           | 3-Wire            | 3-Wire interface                                                                  | NO       | YES      |
+| I2C           | Two-Wire          | I2C Two-Wire interface                                                            | YES      | YES      |
+| Parallel 8080 | Parallel          | Parallel 8080 (Intel)                                                             | NO       | YES      |
+| Parallel 6800 | Parallel          | Parallel 6800 (Motorola)                                                          | NO       | YES      |
+| Parallel 6800 | Parallel (KS0108) | Special KS0108 protocol. Mostly identical to 6800, but has more chip select lines | NO       | YES      |
+| SED1520       | SED1520           | Special SED1520 protocol                                                          | NO       | YES      |
+
+
 ### Project Resources
 
 ---
