@@ -87,6 +87,13 @@ void JNI_Unload(JavaVM *vm);
 /**
  * Throws a NativeLibraryException to java
  *
+ * @param msg The exception message
+ */
+void JNI_ThrowNativeLibraryException(const std::string& msg);
+
+/**
+ * Throws a NativeLibraryException to java
+ *
  * @param env JNIEnv instance
  * @param msg The exception message
  */

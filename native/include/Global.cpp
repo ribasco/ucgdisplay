@@ -71,6 +71,12 @@ void JNI_ThrowIOException(JNIEnv *env, std::string msg) {
     env->ThrowNew(clsEx, msg.c_str());
 }
 
+void JNI_ThrowNativeLibraryException(const std::string& msg) {
+    JNIEnv *env;
+    GETENV(env);
+    env->ThrowNew(clsNativeLibraryException, msg.c_str());
+}
+
 void JNI_ThrowNativeLibraryException(JNIEnv *env, std::string msg) {
     env->ThrowNew(clsNativeLibraryException, msg.c_str());
 }
