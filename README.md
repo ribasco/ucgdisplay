@@ -51,7 +51,7 @@
 
 ---
 * Java JDK 1.8 or higher
-* [Libgpiod](https://github.com/brgl/libgpiod)  - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device
+* [Libgpiod](https://github.com/brgl/libgpiod) - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device)
  
 ### Installation
 
