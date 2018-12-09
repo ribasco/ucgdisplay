@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Listening service for U8g2 byte and gpio events
+ * Listening service for U8g2 byte and gpio events. Not thread-safe.
  *
  * @author Rafael Ibasco
  */

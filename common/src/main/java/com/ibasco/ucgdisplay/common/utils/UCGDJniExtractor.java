@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Common
- * Filename: PidispJniExtractor.java
+ * Filename: UCGDJniExtractor.java
  *
  * ---------------------------------------------------------
  * %%
@@ -36,13 +36,13 @@ import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class PidispJniExtractor extends DefaultJniExtractor {
+public class UCGDJniExtractor extends DefaultJniExtractor {
 
-    public static final Logger log = getLogger(PidispJniExtractor.class);
+    public static final Logger log = getLogger(UCGDJniExtractor.class);
 
     private static File cachedFile;
 
-    PidispJniExtractor() throws IOException {
+    UCGDJniExtractor() throws IOException {
         super();
     }
 
@@ -95,7 +95,7 @@ public class PidispJniExtractor extends DefaultJniExtractor {
         if (file != null)
             return file;
         else
-            log.warn("Could not locate library '{}' from '{}'", mappedName, osPath);
+            log.error("Could not locate library '{}' from '{}'", mappedName, osPath);
         return super.extractJni("", libName);
     }
 }

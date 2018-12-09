@@ -28,7 +28,6 @@ import com.ibasco.ucgdisplay.drivers.glcd.Glcd;
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdConfig;
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdConfigBuilder;
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdDriver;
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdPinMapConfig;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
@@ -39,12 +38,12 @@ public class GlcdST7920Example {
         GlcdConfig config = GlcdConfigBuilder.create()
                 .rotation(GlcdRotation.ROTATION_NONE)
                 .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                .transportDevice("/dev/spidev0.0")
+                .gpioDevice("/dev/gpiochip0")
                 .display(Glcd.ST7920.D_128x64)
-                .pinMap(new GlcdPinMapConfig()
-                        .map(GlcdPin.SPI_CLOCK, 14)
-                        .map(GlcdPin.SPI_MOSI, 12)
-                        .map(GlcdPin.CS, 10)
-                )
+                .mapPin(GlcdPin.SPI_CLOCK, 14)
+                .mapPin(GlcdPin.SPI_MOSI, 12)
+                .mapPin(GlcdPin.CS, 10)
                 .build();
 
         GlcdDriver driver = new GlcdDriver(config);

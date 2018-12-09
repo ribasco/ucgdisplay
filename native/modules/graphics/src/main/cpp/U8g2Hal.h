@@ -35,9 +35,21 @@
 #include <map>
 #include <functional>
 #include <jni.h>
-//#include "Global.h"
 
-using namespace std;
+#if defined(__arm__) && defined(__linux__)
+
+#include <spi.h>
+#include <i2c.h>
+
+#ifndef USE_GPIOUSERSPACE
+#include <gpio.h>
+#else
+
+#include <gpiod.hpp>
+
+#endif
+
+#endif
 
 typedef struct {
     //pin configuration
@@ -61,8 +73,7 @@ typedef struct {
 
 typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;
 
-typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb,
-                           u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
+typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
 
 typedef std::map<std::string, u8g2_setup_func_t> u8g2_setup_func_map_t;
 
@@ -70,12 +81,25 @@ typedef std::map<std::string, const uint8_t *> u8g2_lookup_font_map_t;
 
 typedef struct {
     u8g2_pin_map_t pin_map;
-    shared_ptr<u8g2_t> u8g2;
-    string setup_proc_name;
+    std::shared_ptr<u8g2_t> u8g2;
+    std::string setup_proc_name;
     u8g2_setup_func_t setup_cb;
     u8g2_msg_func_t byte_cb;
     u8g2_msg_func_t gpio_cb;
     u8g2_cb_t *rotation;
+#if defined(__arm__) && defined(__linux__)
+    std::shared_ptr<spi_t> spi;
+    std::shared_ptr<i2c_t> i2c;
+    std::string transport_device;
+    std::string gpio_device;
+    int device_speed;
+#ifdef USE_GPIOUSERSPACE
+    gpiod::chip gpio_chip;
+    std::map<int, std::shared_ptr<gpiod::line>> gpio;
+#else
+    std::map<int, std::shared_ptr<gpio_t>> gpio;
+#endif
+#endif
     bool flag_font;
     bool flag_virtual;
 
@@ -86,20 +110,18 @@ typedef struct {
 
 typedef std::function<uint8_t(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
 
-extern map<int, string> msgNames;
-
 /**
- * Hardware I2C byte communication callback (Platform dependent)
+ * Hardware I2C byte communication callback (Using c-periphery)
  */
 uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
- * Hardware SPI byte communications callback (Platform dependent)
+ * Hardware SPI byte communications callback (Using c-periphery)
  */
 uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
- * GPIO and Delay callback (Platform dependent)
+ * GPIO and Delay callback (Using libgpiod/linux userspace)
  */
 uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr);
 
@@ -162,10 +184,6 @@ void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map);
 u8g2_setup_func_t u8g2hal_GetSetupProc(const std::string &function_name);
 
 uint8_t *u8g2hal_GetFontByName(const std::string &font_name);
-
-void u8g2hal_CreateMsgEvent(JNIEnv *env, jobject &obj, uint8_t msg, uint8_t type, uint8_t arg_int);
-
-void u8g2hal_EmitMsgEvent(JNIEnv *env, jobject &gpioEvent);
 
 #if !(defined(__arm__) && defined(__linux__))
 

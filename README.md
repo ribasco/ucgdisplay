@@ -9,11 +9,12 @@
 ##### General features
 
 * Supports both Character and Graphics/Dot-Matrix display devices
-
+* Should work for most linux based SBCs (kernel 4.8x or higher)
+ 
 ##### Display drivers
 
 ######  Character LCD driver features
-* Pure java implementation for Hitachi HD44780 driver powered by Pi4j (Will probably add JNI/native support in the future if performance is an issue)
+* Pure java implementation for Hitachi HD44780 driver powered by Pi4j
 * Flexible configuration options for interfacing with your SBC device (e.g. GPIO expanders/I2C/SPI)
 * No fixed/mandatory pin mapping. You have the freedom to choose whatever device pins you want to use for your LCD device.
 * Available LCD adapters
@@ -23,6 +24,7 @@
     * MCP23008 (Coming soon)
     * PCF8574 (Coming soon)
 ###### Graphic LCD driver features
+* SPI and I2C hardware capability and other software bitbanging implementations
 * Over 46+ controllers are supported. Refer to the table below for the list of supported display controllers.
 * The graphics display module wraps around the popular c/c++ [U8g2](https://github.com/olikraus/u8g2) library by Oliver. All drawing operations present in the library should be similar to the ones found in U8g2 (Refer to the official [U8g2 reference manual](https://github.com/olikraus/u8g2/wiki/u8g2reference) for more information). 
 
@@ -39,6 +41,20 @@
 
 * A2PRINTER, HX1230, IL3820, IST3020, KS0108, LC7981, LD7032, LS013B7DH03, LS027B7DH01, MAX7219, NT7534, PCD8544, PCF8812, RA8835, SBN1661, SED1330, SED1520, SH1106, SH1107, SH1108, SH1122, SSD1305, SSD1306, SSD1309, SSD1317, SSD1322, SSD1325, SSD1326, SSD1327, SSD1329, SSD1606, SSD1607, ST75256, ST7565, ST7567, ST7586S, ST7588, ST7920, T6963, UC1601, UC1604, UC1608, UC1610, UC1611, UC1638, UC1701
 
+### Supported bus interfaces (for glcd)
+
+| Interface     | Type              | Description                                                                       | Hardware | Software |
+|---------------|-------------------|-----------------------------------------------------------------------------------|----------|----------|
+| SPI           | 4-Wire            | 4-Wire interface                                                                  | YES      | YES      |
+| SPI           | 4-Wire (ST7920)   | 4-Wire interface with no DC                                                       | YES      | YES      |
+| SPI           | 3-Wire            | 3-Wire interface                                                                  | NO       | YES      |
+| I2C           | Two-Wire          | I2C Two-Wire interface                                                            | YES      | YES      |
+| Parallel 8080 | Parallel          | Parallel 8080 (Intel)                                                             | NO       | YES      |
+| Parallel 6800 | Parallel          | Parallel 6800 (Motorola)                                                          | NO       | YES      |
+| Parallel 6800 | Parallel (KS0108) | Special KS0108 protocol. Mostly identical to 6800, but has more chip select lines | NO       | YES      |
+| SED1520       | SED1520           | Special SED1520 protocol                                                          | NO       | YES      |
+
+
 ### Project Resources
 
 ---
@@ -50,7 +66,7 @@
 
 ---
 * Java JDK 1.8 or higher
-* [Wiring Pi](http://wiringpi.com/) library (Only required for ARM based devices)
+* [Libgpiod](https://github.com/brgl/libgpiod) - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device)
  
 ### Installation
 
@@ -65,14 +81,14 @@
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-clcd</artifactId>
-             <version>1.2.0-alpha</version>
+             <version>1.3.0-alpha</version>
          </dependency>
       
          <!-- Graphics display driver -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-glcd</artifactId>
-             <version>1.2.0-alpha</version>
+             <version>1.3.0-alpha</version>
          </dependency>
     </dependencies>
     ```
@@ -159,7 +175,7 @@ public class HD44780Example {
 
 ######  Graphic LCD Example (ST7920)
 
-Simple hello world example for ST7920 controller
+Simple hello world example for ST7920 controller. In this example, we use the Raspberry Pi SPI hardware features. Please note that in Raspberry Pi, we need to set the pin modes to ALT0 to activate the hardware features (also applicable for the I2C pins). This library does not automatically set the correct pin modes for you, so you have to explicitly set them prior to running the application (example below).  
 
 ```java
 package com.ibasco.ucgdisplay.examples;
@@ -172,12 +188,19 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
 
 public class GlcdST7920Example {
     public static void main(String[] args) {
+        //On raspberry pi, we use the bcm pin numbering scheme (See: https://elinux.org/RPi_BCM2835_GPIOs)
         GlcdConfig config = GlcdConfigBuilder.create()
                 .rotation(GlcdRotation.ROTATION_NONE)
                 .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                 //SPI = /dev/spidev0.0 or /dev/spidev0.1
+                 //I2C = /dev/i2c-0 or /dev/i2c-1
+                .transportDevice("/dev/spidev0.0")
+                //The GPIO character device chip (Execute 'ls -l /dev/gpiochip*' to list all available chips)  
+                .gpioDevice("/dev/gpiochip0")                
                 .display(Glcd.ST7920.D_128x64)
+                //Pin mapping (alternatively, you could use #mapPin(GlcdPin, int) function) 
                 .pinMap(new GlcdPinMapConfig()
-                        .map(GlcdPin.SPI_CLOCK, 14) //Use wiring pi pin numbering scheme
+                        .map(GlcdPin.SPI_CLOCK, 14)
                         .map(GlcdPin.SPI_MOSI, 12)
                         .map(GlcdPin.CS, 10)
                 )
@@ -196,10 +219,50 @@ public class GlcdST7920Example {
 
 ```
 
+**Setting pin mode (using wiring pi)**
+
+```
+gpio mode 12 alt0 && gpio mode 13 alt0 && gpio mode 14 alt0 && gpio mode 10 alt0 && gpio readall
+```
+
+**Verify**
+
+use `gpio readall` to verify that we have set the correct mode (ALT0) for MOSI, SCLK and CE0 (Chip-Select)
+
+```shell
+ +-----+-----+---------+------+---+---Pi 2---+---+------+---------+-----+-----+
+ | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
+ +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
+ |     |     |    3.3v |      |   |  1 || 2  |   |      | 5v      |     |     |
+ |   2 |   8 |   SDA.1 | ALT0 | 1 |  3 || 4  |   |      | 5v      |     |     |
+ |   3 |   9 |   SCL.1 | ALT0 | 1 |  5 || 6  |   |      | 0v      |     |     |
+ |   4 |   7 | GPIO. 7 |   IN | 1 |  7 || 8  | 1 | ALT0 | TxD     | 15  | 14  |
+ |     |     |      0v |      |   |  9 || 10 | 1 | ALT0 | RxD     | 16  | 15  |
+ |  17 |   0 | GPIO. 0 |   IN | 0 | 11 || 12 | 0 | IN   | GPIO. 1 | 1   | 18  |
+ |  27 |   2 | GPIO. 2 |   IN | 0 | 13 || 14 |   |      | 0v      |     |     |
+ |  22 |   3 | GPIO. 3 |   IN | 0 | 15 || 16 | 0 | IN   | GPIO. 4 | 4   | 23  |
+ |     |     |    3.3v |      |   | 17 || 18 | 1 | IN   | GPIO. 5 | 5   | 24  |
+ |  10 |  12 |    MOSI | ALT0 | 0 | 19 || 20 |   |      | 0v      |     |     |
+ |   9 |  13 |    MISO | ALT0 | 0 | 21 || 22 | 1 | OUT  | GPIO. 6 | 6   | 25  |
+ |  11 |  14 |    SCLK | ALT0 | 0 | 23 || 24 | 1 | OUT  | CE0     | 10  | 8   |
+ |     |     |      0v |      |   | 25 || 26 | 1 | OUT  | CE1     | 11  | 7   |
+ |   0 |  30 |   SDA.0 |   IN | 1 | 27 || 28 | 1 | IN   | SCL.0   | 31  | 1   |
+ |   5 |  21 | GPIO.21 |   IN | 1 | 29 || 30 |   |      | 0v      |     |     |
+ |   6 |  22 | GPIO.22 |   IN | 1 | 31 || 32 | 0 | IN   | GPIO.26 | 26  | 12  |
+ |  13 |  23 | GPIO.23 |   IN | 0 | 33 || 34 |   |      | 0v      |     |     |
+ |  19 |  24 | GPIO.24 |   IN | 0 | 35 || 36 | 0 | IN   | GPIO.27 | 27  | 16  |
+ |  26 |  25 | GPIO.25 |   IN | 0 | 37 || 38 | 0 | OUT  | GPIO.28 | 28  | 20  |
+ |     |     |      0v |      |   | 39 || 40 | 0 | IN   | GPIO.29 | 29  | 21  |
+ +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
+ | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
+ +-----+-----+---------+------+---+---Pi 2---+---+------+---------+-----+-----+
+
+```
+
 ### Limitations
 
 ---
-* Only works for Raspberry Pi at the moment. I will add support for other SBCs as soon as I am able to obtain them.  
+* Works only on linux kernel v4.8 or higher
 * The adapters for character lcd driver Mcp23008LcdAdapter and Pcf8574TLcdAdapter are not yet implemented. 
 
 ### Contribution guidelines
@@ -210,4 +273,4 @@ public class GlcdST7920Example {
 ### Related projects
 
 ---
-* [GLCD Emulator/Simulator](https://github.com/ribasco/glcd-emulator)
+* [GLCD Simulator Project](https://github.com/ribasco/glcd-emulator)

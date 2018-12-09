@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Graphics LCD driver
- * Filename: GlcdDriver.java
+ * Filename: GlcdConfigBuilderTest.java
  *
  * ---------------------------------------------------------
  * %%
@@ -25,40 +25,41 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdDriverException;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-/**
- * A basic implementation of a graphics display driver
- *
- * @author Rafael Ibasco
- */
-public class GlcdDriver extends GlcdBaseDriver {
-    /**
-     * @throws GlcdDriverException
-     *         When driver initialization fails
-     */
-    public GlcdDriver(GlcdConfig config) throws GlcdDriverException {
-        this(config, false);
+import static org.junit.jupiter.api.Assertions.*;
+
+class GlcdConfigBuilderTest {
+
+    private GlcdConfigBuilder configBuilder;
+
+    @BeforeEach
+    void setUp() {
+        configBuilder = GlcdConfigBuilder.create();
     }
 
-    /**
-     * @throws GlcdDriverException
-     *         When driver initialization fails
-     */
-    public GlcdDriver(GlcdConfig config, boolean virtual) throws GlcdDriverException {
-        this(config, virtual, null);
+    @Test
+    void testCalledMappedPinShortcut() {
+        assertNotNull(configBuilder.mapPin(GlcdPin.D0, 10));
+        GlcdConfig config = configBuilder.build();
+        assertNotNull(config);
+        assertNotNull(config.getPinMap());
     }
 
-    /**
-     * @throws GlcdDriverException
-     *         When driver initialization fails
-     */
-    public GlcdDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) throws GlcdDriverException {
-        this(config, virtual, handler, null);
+    @Test
+    void testUncalledMappedPinShortcut() {
+        GlcdConfig config = configBuilder.build();
+        assertNotNull(config);
+        assertNull(config.getPinMap());
     }
 
-    public GlcdDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler, GlcdDriverAdapter driverAdapter) {
-        super(config, virtual, handler, driverAdapter);
-        initialize();
+    @Test
+    void testDirectSetMapConfig() {
+        GlcdPinMapConfig mapConfig = new GlcdPinMapConfig();
+        GlcdConfig config = configBuilder.pinMap(mapConfig).mapPin(GlcdPin.D0, 10).build();
+        assertNotNull(config);
+        assertSame(mapConfig, config.getPinMap());
     }
 }

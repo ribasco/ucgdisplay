@@ -48,6 +48,10 @@
 
     <include file="build-common.xml"/>
 
+    <target name="skip-build">
+        <echo>Skipping build for ${os.name} - ${os.arch} - ${os.version}</echo>
+    </target>
+
     <target name="generate-native-sources-all" depends="generate-native-sources-linux-arm, generate-native-sources-linux-amd64">
         <echo>Generating native source directories to ${project.basedir}</echo>
     </target>

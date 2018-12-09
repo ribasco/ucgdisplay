@@ -1,4 +1,3 @@
-
 set(U8G2_DIR ${LIB_DIR}/u8g2)
 
 # Check if U8G2 is already on the lib directory
