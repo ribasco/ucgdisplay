@@ -139,7 +139,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     }
 
     //4. Setup and Initialize the Display
-    std::shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, transport_device_path, gpio_device_path, _rotation, *pinMap, virtualMode);
+    std::shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, device_speed, transport_device_path, gpio_device_path, _rotation, *pinMap, virtualMode);
 
     //5. Verify if display has been initialized successfully
     if (info == nullptr) {

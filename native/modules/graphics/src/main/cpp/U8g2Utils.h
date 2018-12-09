@@ -70,7 +70,7 @@ u8g2_cb_t *u8g2util_ToRotation(int rotation);
  * @param virtualMode Set to true to activate emulator mode
  * @return
  */
-std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int device_address, const std::string &transport_device, const std::string &gpio_device, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode = false);
+std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int device_address, int device_speed, const std::string &transport_device, const std::string &gpio_device, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode = false);
 
 /**
  * Retrieves the device details from the cache
