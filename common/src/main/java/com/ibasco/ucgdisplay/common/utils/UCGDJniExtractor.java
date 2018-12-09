@@ -30,10 +30,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.scijava.nativelib.DefaultJniExtractor;
 import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.IOException;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class UCGDJniExtractor extends DefaultJniExtractor {
 
@@ -73,7 +74,7 @@ public class UCGDJniExtractor extends DefaultJniExtractor {
 
         if (!StringUtils.isBlank(lPath)) {
             String fullPath = lPath + File.separator + mappedName;
-            log.info("[JNI-EXTRACT #1]: Searching in path: {}", fullPath);
+            log.debug("[JNI-EXTRACT #1]: Searching in path: {}", fullPath);
             File libFile = new File(fullPath);
             if (libFile.exists() && libFile.canRead()) {
                 return libFile;
@@ -85,11 +86,11 @@ public class UCGDJniExtractor extends DefaultJniExtractor {
         String osArch = System.getProperty("os.arch");
         String osVer = System.getProperty("os.version");
 
-        log.info("[JNI-EXTRACT] Os Name = {}, Os Arch = {}, Os version = {}", osName, osArch, osVer);
+        log.debug("[JNI-EXTRACT] Os Name = {}, Os Arch = {}, Os version = {}", osName, osArch, osVer);
         String osPath = String.format("lib/%s%s%s/", osName, File.separator, osArch).toLowerCase();
         osPath = FilenameUtils.separatorsToUnix(osPath);
 
-        log.info("[JNI-EXTRACT #2] Searching in path: {}", osPath);
+        log.debug("[JNI-EXTRACT #2] Searching in path: {}", osPath);
         File file = super.extractJni(osPath, libName.trim());
         if (file != null)
             return file;
