@@ -2,15 +2,11 @@ language: java
 
 sudo: false
 
-#jdk:
-#  - oraclejdk8
-
 cache:
   directories:
     - ${HOME}/.m2
     - ${TRAVIS_BUILD_DIR}/native/tools/rpi
     - ${TRAVIS_BUILD_DIR}/native/tools/osxcross
-#  - ${TRAVIS_BUILD_DIR}/native/modules/graphics/src/main/cpp/lib
 
 env:
   global:
@@ -49,6 +45,8 @@ before_install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CXX=g++-7; fi
   - cmake --version
   - scripts/before-install.sh
+  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export JAVA_HOME=/usr/lib/jvm/java-8-oracle; fi
+  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo echo "JAVA_HOME=${JAVA_HOME}"; fi
 
 install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-kernel.sh; fi
