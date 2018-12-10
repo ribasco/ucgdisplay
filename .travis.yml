@@ -49,6 +49,7 @@ before_install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo apt-get update -q; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo apt-get install -y oracle-java8-installer; fi
+  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo apt install oracle-java8-set-default; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CC=gcc-7; fi
