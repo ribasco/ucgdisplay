@@ -12,8 +12,8 @@ echo "######   #######  #        #######  #     #  #######      ###  #     #   #
 if [[ $TRAVIS_OS_NAME == 'linux' ]] || [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     which gcc && which g++
     gcc -v && g++ -v && cmake --version
-    ls -l /usr/bin/g*
-    ls -l /usr/bin/c*
+    #ls -l /usr/bin/g*
+    #ls -l /usr/bin/c*
 fi
 
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
@@ -26,9 +26,7 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
     sudo apt-get update -q
     echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
     sudo apt-get install -y oracle-java8-installer
-    sudo apt install oracle-java8-set-default
-    export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-    sudo echo "JAVA_HOME=${JAVA_HOME}"
+    sudo apt-get install oracle-java8-set-default
 else
     echo "Skipping gpg key import (OS = ${TRAVIS_OS_NAME})"
 fi
