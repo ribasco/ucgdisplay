@@ -2,8 +2,8 @@ language: java
 
 sudo: false
 
-jdk:
-  - oraclejdk8
+#jdk:
+#  - oraclejdk8
 
 cache:
   directories:
@@ -30,6 +30,7 @@ notifications:
 matrix:
   include:
     - os: linux
+      dist: xenial
       addons:
         apt:
           sources:
@@ -52,8 +53,8 @@ before_install:
   - scripts/before-install.sh
 
 install:
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo apt-get install -qq -y dpkg; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-kernel.sh; fi
+  #- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo apt-get install -qq -y dpkg; fi
+  #- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-kernel.sh; fi
   - scripts/install.sh
 
 script:
