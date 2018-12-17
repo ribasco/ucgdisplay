@@ -28,12 +28,9 @@ package com.ibasco.ucgdisplay.drivers.glcd;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdControllerType;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdSize;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Holds important meta data information of a Graphics display device
@@ -41,9 +38,6 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author Rafael Ibasco
  */
 public class GlcdDisplay {
-
-    public static final Logger log = getLogger(GlcdDisplay.class);
-
     private String name;
     private GlcdControllerType controller;
     private GlcdSetupInfo[] setupDetails;
@@ -108,5 +102,10 @@ public class GlcdDisplay {
 
     public GlcdSetupInfo[] getSetupDetails() {
         return setupDetails;
+    }
+
+    @Override
+    public String toString() {
+        return getController().name() + " :: " + getName();
     }
 }
