@@ -13,7 +13,7 @@ struct controller controller_list[] =
     }
   },
   {
-    "ssd1305", 	16, 	4, 	"u8g2_ll_hvline_vertical_top_lsb", "u8x8_cad_ssd13xx_i2c", "i2c", COM_I2C,
+    "ssd1305", 	16, 	4, 	"u8g2_Setup_sh1106_128x64_vcomh0_f", "u8x8_cad_ssd13xx_i2c", "i2c", COM_I2C,
     "", /* is_generate_u8g2_class= */ 1,
     {
       { "128x32_noname" },
