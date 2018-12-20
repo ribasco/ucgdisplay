@@ -156,7 +156,7 @@
             <build>
                 <plugins>
                     <!-- SOURCE Plugin -->
-                    <plugin>
+                    <!--<plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
                         <executions>
@@ -181,7 +181,7 @@
                                 <exclude>native/modules/graphics/src/main/cpp/**</exclude>
                             </excludes>
                         </configuration>
-                    </plugin>
+                    </plugin>-->
                     <!-- JAVADOC Plugin -->
                     <!--<plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -399,6 +399,34 @@
                         </excludes>
                     </configuration>
                 </plugin>
+                <!-- SOURCE Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>aggregate-sources</id>
+                            <goals>
+                                <goal>aggregate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                        <excludes>
+                            <exclude>native/modules/graphics/src/main/cpp/**</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+                <!-- JAVADOC plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
