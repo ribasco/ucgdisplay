@@ -25,6 +25,7 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBufferType;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdControllerType;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdSize;
@@ -42,10 +43,12 @@ public class GlcdDisplay {
     private GlcdControllerType controller;
     private GlcdSetupInfo[] setupDetails;
     private GlcdSize displaySize;
+    private GlcdBufferType bufferType;
 
-    GlcdDisplay(GlcdControllerType controller, String name, int tileWidth, int tileHeight, GlcdSetupInfo... setupInfo) {
+    GlcdDisplay(GlcdControllerType controller, String name, int tileWidth, int tileHeight, GlcdBufferType bufferType, GlcdSetupInfo... setupInfo) {
         this.name = name;
         this.controller = controller;
+        this.bufferType = bufferType;
         this.setupDetails = setupInfo;
         this.displaySize = GlcdSize.get(tileWidth, tileHeight);
     }
@@ -96,8 +99,18 @@ public class GlcdDisplay {
         return controller;
     }
 
+    /**
+     * @return Returns the name of the display (excluding controller name)
+     */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return Returns the buffer type/layout of the display
+     */
+    public GlcdBufferType getBufferType() {
+        return bufferType;
     }
 
     public GlcdSetupInfo[] getSetupDetails() {

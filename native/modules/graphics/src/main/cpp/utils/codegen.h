@@ -70,6 +70,7 @@ struct display_mode_info {
     string name_proper; //sanitized version
     int tileWidth;
     int tileHeight;
+    string buffer_type;
     map<string, string> modes; //mode, setup function
 };
 

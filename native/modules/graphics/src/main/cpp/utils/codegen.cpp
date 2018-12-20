@@ -266,7 +266,7 @@ void buildDisplayTree(glcd_info_tree_t &controllers) {
             if (controller_it == controllers.end()) { //If controller not yet in the map
                 //Create display_info and pre-populate
                 display_mode_info info = {controllerName, displayName, "", controller.tile_width,
-                                          controller.tile_height};
+                                          controller.tile_height, controller.ll_hvline};
                 info.name_proper = sanitizeDisplayName(info);
                 populateDisplayModes(i, id, info.modes);
                 vector<display_mode_info> displayList;
@@ -279,10 +279,9 @@ void buildDisplayTree(glcd_info_tree_t &controllers) {
                                            return i.name == displayName;
                                        });
 
-                //Check if display name exists in the lsit
+                //Check if display name exists in the list
                 if (it == displayList.end()) {
-                    display_mode_info newInfo = {controllerName, displayName, "", controller.tile_width,
-                                                 controller.tile_height};
+                    display_mode_info newInfo = {controllerName, displayName, "", controller.tile_width, controller.tile_height, controller.ll_hvline};
                     newInfo.name_proper = sanitizeDisplayName(newInfo);
                     populateDisplayModes(i, id, newInfo.modes);
                     controller_it->second.emplace_back(newInfo);
@@ -307,7 +306,7 @@ vector<string> buildCode_GetGlcdSetupInfo(display_mode_info &dInfo) {
 
     //Merge the protocol codes
     map<string, vector<string>> tmpSetup;
-    for (auto modes : dInfo.modes) {
+    for (const auto &modes : dInfo.modes) {
         string modeName = "COM_" + modes.first;
         string setupFunc = modes.second;
 
@@ -322,7 +321,7 @@ vector<string> buildCode_GetGlcdSetupInfo(display_mode_info &dInfo) {
         }
     }
 
-    for (auto it : tmpSetup) {
+    for (const auto &it : tmpSetup) {
         string setupFunc = it.first;
         vector<string> setupModes = it.second;
 
@@ -355,26 +354,35 @@ void buildCode_Glcd() {
     appendAutogenMsg(code);
 
     code << "package com.ibasco.ucgdisplay.drivers.glcd;\n\n";
+
+    code << "import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBufferType;\n";
     code << "import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdControllerType;\n";
     code << "import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.*;\n\n";
 
     code << "@SuppressWarnings(\"unused\")\n";
     code << "public interface Glcd {\n";
 
-    for (auto ctrl : controllers) {
+    for (const auto &ctrl : controllers) {
         string controllerName = ctrl.first;
         code << "\t/** Controller Name: " << controllerName << " **/" << endl;
 
         code << "\tinterface " << controllerName << " {" << endl;
         for (auto disp : ctrl.second) {
             string dName = disp.name_proper; //use sanitized version
-
             code << "\t\t" << "/** U8G2 Name: " << ctrl.first << " " << disp.name << " **/" << endl;
             code << "\t\t" << "GlcdDisplay " << dName << " = new GlcdDisplay(" << endl;
             code << "\t\t\t" << "GlcdControllerType." << controllerName << "," << endl;
             code << "\t\t\t" << "\"" << dName << "\"," << endl;
             code << "\t\t\t" << to_string(disp.tileWidth) << "," << endl;
             code << "\t\t\t" << to_string(disp.tileHeight) << "," << endl;
+            if (disp.buffer_type == "u8g2_ll_hvline_horizontal_right_lsb") {
+                code << "\t\t\t" << "GlcdBufferType.HORIZONTAL," << endl;
+            } else if (disp.buffer_type == "u8g2_ll_hvline_vertical_top_lsb") {
+                code << "\t\t\t" << "GlcdBufferType.VERTICAL," << endl;
+            } else {
+                code << "\t\t\t" << "GlcdBufferType.UNKNOWN," << endl;
+            }
+            //code << "\t\t\t" << "\"" << disp.buffer_type << "\"," << endl;
             //generate setup info code
             vector<string> setupInfoCodes = buildCode_GetGlcdSetupInfo(disp);
 
