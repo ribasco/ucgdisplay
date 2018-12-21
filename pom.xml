@@ -389,20 +389,11 @@
                         </checkModificationExcludes>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
-                    <configuration>
-                        <excludes>
-                            <exclude>native/modules/graphics/src/main/cpp/utils/build/**</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
                 <!-- SOURCE Plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -422,6 +413,7 @@
                             <include>**/*.java</include>
                         </includes>
                         <excludes>
+                            <exclude>native/modules/graphics/src/main/cpp/utils/build/**</exclude>
                             <exclude>native/modules/graphics/src/main/cpp/**</exclude>
                         </excludes>
                     </configuration>
