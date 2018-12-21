@@ -88,6 +88,5 @@ public class XBMUtils {
         } catch (FileNotFoundException e) {
             throw new XBMDecodeException("Problem encountered while trying to decode file", e);
         }
-
     }
 }
