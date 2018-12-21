@@ -31,24 +31,20 @@ import org.apache.commons.codec.binary.Hex;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 
 public class XBMUtils {
 
-    public static XBMData decodeXbmFile(File file) throws XBMDecodeException {
-
+    public static XBMData decodeXbmFile(InputStream inputStream) throws XBMDecodeException {
         try {
-            if (file == null)
-                throw new IllegalArgumentException("File cannot be null");
-            if (!file.exists())
-                throw new FileNotFoundException("Could not find file: " + file.getName());
-
             StringBuilder data = new StringBuilder();
 
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             int skipLines = 3, curLine = 1;
 
             String sCurrentLine;
@@ -78,7 +74,20 @@ public class XBMUtils {
             }
             return null;
         } catch (IOException | DecoderException e) {
+            throw new XBMDecodeException("Problem encountered while trying to decode input stream", e);
+        }
+    }
+
+    public static XBMData decodeXbmFile(File file) throws XBMDecodeException {
+        try {
+            if (file == null)
+                throw new IllegalArgumentException("File cannot be null");
+            if (!file.exists())
+                throw new FileNotFoundException("Could not find file: " + file.getName());
+            return decodeXbmFile(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
             throw new XBMDecodeException("Problem encountered while trying to decode file", e);
         }
+
     }
 }
