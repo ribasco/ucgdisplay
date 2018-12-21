@@ -524,6 +524,16 @@
 
         <!-- Parent plugins -->
         <plugins>
+            <!-- Source Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <!-- Javadoc Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
             <!-- Failsafe plugin (integration testing) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
