@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -475,8 +475,8 @@ public interface U8g2DisplayDriver extends DisplayDriver {
 
     /**
      * <p>Draw a box with round edges, starting at x/y position (upper left edge). The box/frame has width w and height
-     * h. Parts of the box can be outside of the display boundaries. Edges have radius r. It is required that w >=
-     * 2*(r+1) and h >= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than 2*(r+1).
+     * h. Parts of the box can be outside of the display boundaries. Edges have radius r. It is required that w &gt;=
+     * 2*(r+1) and h &gt;= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than 2*(r+1).
      * This procedure uses the current color index to draw the box. For a monochrome display, the color index 0 will
      * clear a pixel and the color index 1 will set a pixel.</p>
      *
@@ -491,8 +491,8 @@ public interface U8g2DisplayDriver extends DisplayDriver {
 
     /**
      * <p>Draw a box with round edges, starting at x/y position (upper left edge). The box/frame has width w and height
-     * h. Parts of the box can be outside of the display boundaries. Edges have radius r. It is required that w >=
-     * 2*(r+1) and h >= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than 2*(r+1).
+     * h. Parts of the box can be outside of the display boundaries. Edges have radius r. It is required that w &gt;=
+     * 2*(r+1) and h &gt;= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than 2*(r+1).
      * This procedure uses the current color index to draw the box. For a monochrome display, the color index 0 will
      * clear a pixel and the color index 1 will set a pixel.</p>
      *
@@ -512,7 +512,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
     /**
      * <p>Draw a frame with round edges, starting at x/y position (upper left edge). The box/frame has width w and
      * height h. Parts of the box can be outside of the display boundaries. Edges have radius r. It is required that w
-     * >= 2*(r+1) and h >= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than
+     * &gt;= 2*(r+1) and h &gt;= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than
      * 2*(r+1). This procedure uses the current color index to draw the box. For a monochrome display, the color index 0
      * will clear a pixel and the color index 1 will set a pixel.</p>
      *
@@ -528,7 +528,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
     /**
      * <p>Draw a frame with round edges, starting at x/y position (upper left edge). The box/frame has width w and
      * height h. Parts of the box can be outside of the display boundaries. Edges have radius r. It is required that w
-     * >= 2*(r+1) and h >= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than
+     * &gt;= 2*(r+1) and h &gt;= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than
      * 2*(r+1). This procedure uses the current color index to draw the box. For a monochrome display, the color index 0
      * will clear a pixel and the color index 1 will set a pixel.</p>
      *
@@ -1270,13 +1270,11 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * corner. </p>
      * <p>clear will call: </p>
      * <ol>
-     * <li><strike>{@link #home()}</strike></li>
+     * <li><strike>home()</strike></li>
      * <li>{@link #clearDisplay()}</li>
      * <li>{@link #clearBuffer()}</li>
      * </ol>
      *
-     * @see <strike>print</strike>
-     * @see #home
      * @see #clearBuffer
      */
     void clear();

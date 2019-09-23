@@ -453,10 +453,10 @@ public class U8g2Graphics {
     public static native void drawPixel(long id, int x, int y);
 
     /**
-     * <p>Draw a box with round edges, starting at x/y position (upper left edge). The box/frame has width w and height
-     * h. Parts of the box can be outside of the display boundaries. Edges have radius r. It is required that w >= 2*(r+1) and h >= 2*(r+1). This condition is not checked. Behavior is undefined if w
-     * or h is smaller than 2*(r+1). This procedure uses the current color index to draw the box. For a monochrome display, the color index 0 will clear a pixel and the color index 1 will set a
-     * pixel.</p>
+     * <p>Draw a box with round edges, starting at x/y position (upper left edge). The box/frame has width w and height h. Parts of the box can be outside of the display boundaries. Edges have radius r.
+     * It is required that w &gt;= 2*(r+1) and h &gt;= 2*(r+1). This condition is not checked. Behavior is undefined if w or h is smaller than 2*(r+1).
+     * This procedure uses the current color index to draw the box. For a monochrome display, the color index 0 will clear a pixel and the color index 1 will set a pixel.
+     * </p>
      *
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int, int, String, String, byte[], boolean)}
@@ -474,10 +474,10 @@ public class U8g2Graphics {
     public static native void drawRoundedBox(long id, int x, int y, int width, int height, int radius);
 
     /**
-     * <p>Draw a frame with round edges, starting at x/y position (upper left edge). The box/frame has width w and
-     * height h. Parts of the box can be outside of the display boundaries. Edges have radius r. It is required that w >= 2*(r+1) and h >= 2*(r+1). This condition is not checked. Behavior is undefined
-     * if w or h is smaller than 2*(r+1). This procedure uses the current color index to draw the box. For a monochrome display, the color index 0 will clear a pixel and the color index 1 will set a
-     * pixel.</p>
+     * <p>Draw a frame with round edges, starting at x/y position (upper left edge). The box/frame has width w and height h. Parts of the box can be outside of the display boundaries.
+     * Edges have radius r. It is required that w &gt;= 2*(r+1) and h &gt;= 2*(r+1).
+     * This condition is not checked. Behavior is undefined if w or h is smaller than 2*(r+1).
+     * This procedure uses the current color index to draw the box. For a monochrome display, the color index 0 will clear a pixel and the color index 1 will set a pixel.</p>
      *
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int, int, String, String, byte[], boolean)}
