@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -30,11 +30,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.scijava.nativelib.DefaultJniExtractor;
 import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.IOException;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class UCGDJniExtractor extends DefaultJniExtractor {
 
@@ -43,7 +42,7 @@ public class UCGDJniExtractor extends DefaultJniExtractor {
     private static File cachedFile;
 
     UCGDJniExtractor() throws IOException {
-        super();
+        super(null);
     }
 
     @Override

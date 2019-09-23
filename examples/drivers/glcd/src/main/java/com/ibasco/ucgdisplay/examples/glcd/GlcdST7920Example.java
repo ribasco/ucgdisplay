@@ -6,7 +6,7 @@ package com.ibasco.ucgdisplay.examples.glcd;/*-
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -47,7 +47,6 @@ public class GlcdST7920Example {
                 .build();
 
         GlcdDriver driver = new GlcdDriver(config);
-
 
         driver.setCursor(0, 10);
         driver.setFont(GlcdFont.FONT_6X12_MR);

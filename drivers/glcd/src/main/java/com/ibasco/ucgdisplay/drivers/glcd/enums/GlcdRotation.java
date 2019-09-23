@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,7 +26,6 @@
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
 import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
-
 import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.*;
 
 /**

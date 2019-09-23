@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -27,10 +27,9 @@ package com.ibasco.ucgdisplay.common.utils;
 
 import org.scijava.nativelib.NativeLoader;
 import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Utility for loading native libraries.

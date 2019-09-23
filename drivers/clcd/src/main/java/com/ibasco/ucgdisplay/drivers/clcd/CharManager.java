@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -28,14 +28,13 @@ package com.ibasco.ucgdisplay.drivers.clcd;
 import com.ibasco.ucgdisplay.drivers.clcd.util.RegexByteProcessor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class CharManager {
     private CharDisplayDriver driver;

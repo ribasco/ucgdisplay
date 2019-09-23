@@ -1,5 +1,5 @@
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Dec 20 2018 17:51:34) 
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep 23 2019 16:01:36) 
  */
 
 #include "U8g2Hal.h"

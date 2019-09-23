@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,7 +24,7 @@
  * =========================END==================================
  */
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Dec 20 2018 17:51:34)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep 23 2019 16:01:36)
  */
 
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
@@ -76,6 +76,7 @@ public enum GlcdSize {
     SIZE_96x96(12, 12);
 
     private int tileWidth;
+
     private int tileHeight;
 
     GlcdSize(int tileWidth, int tileHeight) {

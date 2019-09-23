@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -32,14 +32,7 @@ import com.ibasco.ucgdisplay.drivers.clcd.enums.LcdReadWriteState;
 import com.ibasco.ucgdisplay.drivers.clcd.enums.LcdRegisterSelectState;
 import com.ibasco.ucgdisplay.drivers.clcd.exceptions.InvalidPinMappingException;
 import com.ibasco.ucgdisplay.drivers.clcd.exceptions.LcdPinNotMappedException;
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.GpioProvider;
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.PinMode;
-import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.*;
 import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

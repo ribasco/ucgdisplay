@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -31,15 +31,14 @@ import com.ibasco.ucgdisplay.drivers.clcd.exceptions.DisplayDriverException;
 import com.pi4j.component.lcd.LCD;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.PinState;
+import static com.pi4j.wiringpi.Gpio.delay;
+import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.pi4j.wiringpi.Gpio.delay;
-import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 
 /**
  * Native implementation for HD44780 Character Display Driver. Compatible with the Pi4J {@link LCD} interface.

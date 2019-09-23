@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -37,13 +37,12 @@ import com.pi4j.gpio.extension.mcp.MCP23017Pin;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.PinState;
+import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
-
-import static com.pi4j.wiringpi.Gpio.delayMicroseconds;
 
 /**
  * LCD GPIO Adapter for the MCP23017 Port Expander.

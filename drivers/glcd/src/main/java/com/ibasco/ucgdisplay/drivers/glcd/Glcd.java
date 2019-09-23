@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,27 +24,21 @@
  * =========================END==================================
  */
 /*
- * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Dec 20 2018 17:51:34)
+ * THIS IS AN AUTO-GENERATED CODE!! PLEASE DO NOT MODIFY (Last updated: Sep 23 2019 16:01:36)
  */
 
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_3WSPI;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_4WSPI;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_6800;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_8080;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_I2C;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_KS0108;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_SED1520;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_ST7920SPI;
-import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.COM_UART;
+import static com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics.*;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBufferType;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdControllerType;
 
 @SuppressWarnings("unused")
 public interface Glcd {
+
     /** Controller Name: A2PRINTER **/
     interface A2PRINTER {
+
         /** U8G2 Name: A2PRINTER 384X240 **/
         GlcdDisplay D_384x240 = new GlcdDisplay(
                 GlcdControllerType.A2PRINTER,
@@ -58,6 +52,7 @@ public interface Glcd {
 
     /** Controller Name: HX1230 **/
     interface HX1230 {
+
         /** U8G2 Name: HX1230 96X68 **/
         GlcdDisplay D_96x72 = new GlcdDisplay(
                 GlcdControllerType.HX1230,
@@ -71,6 +66,7 @@ public interface Glcd {
 
     /** Controller Name: IL3820 **/
     interface IL3820 {
+
         /** U8G2 Name: IL3820 296X128 **/
         GlcdDisplay D_296x128 = new GlcdDisplay(
                 GlcdControllerType.IL3820,
@@ -80,6 +76,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_il3820_296x128_f", COM_3WSPI | COM_4WSPI)
         );
+
         /** U8G2 Name: IL3820 V2_296X128 **/
         GlcdDisplay D_296x128_V2 = new GlcdDisplay(
                 GlcdControllerType.IL3820,
@@ -93,6 +90,7 @@ public interface Glcd {
 
     /** Controller Name: IST3020 **/
     interface IST3020 {
+
         /** U8G2 Name: IST3020 ERC19264 **/
         GlcdDisplay D_192x64_ERC19264 = new GlcdDisplay(
                 GlcdControllerType.IST3020,
@@ -106,6 +104,7 @@ public interface Glcd {
 
     /** Controller Name: KS0108 **/
     interface KS0108 {
+
         /** U8G2 Name: KS0108 128X64 **/
         GlcdDisplay D_128x64 = new GlcdDisplay(
                 GlcdControllerType.KS0108,
@@ -115,6 +114,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_ks0108_128x64_f", COM_KS0108)
         );
+
         /** U8G2 Name: KS0108 ERM19264 **/
         GlcdDisplay D_192x64_ERM19264 = new GlcdDisplay(
                 GlcdControllerType.KS0108,
@@ -128,6 +128,7 @@ public interface Glcd {
 
     /** Controller Name: LC7981 **/
     interface LC7981 {
+
         /** U8G2 Name: LC7981 160X80 **/
         GlcdDisplay D_160x80 = new GlcdDisplay(
                 GlcdControllerType.LC7981,
@@ -137,6 +138,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_lc7981_160x80_f", COM_6800)
         );
+
         /** U8G2 Name: LC7981 160X160 **/
         GlcdDisplay D_160x160 = new GlcdDisplay(
                 GlcdControllerType.LC7981,
@@ -146,6 +148,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_lc7981_160x160_f", COM_6800)
         );
+
         /** U8G2 Name: LC7981 240X128 **/
         GlcdDisplay D_240x128 = new GlcdDisplay(
                 GlcdControllerType.LC7981,
@@ -155,6 +158,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_lc7981_240x128_f", COM_6800)
         );
+
         /** U8G2 Name: LC7981 240X64 **/
         GlcdDisplay D_240x64 = new GlcdDisplay(
                 GlcdControllerType.LC7981,
@@ -168,6 +172,7 @@ public interface Glcd {
 
     /** Controller Name: LD7032 **/
     interface LD7032 {
+
         /** U8G2 Name: LD7032 60X32 **/
         GlcdDisplay D_64x32 = new GlcdDisplay(
                 GlcdControllerType.LD7032,
@@ -182,6 +187,7 @@ public interface Glcd {
 
     /** Controller Name: LS013B7DH03 **/
     interface LS013B7DH03 {
+
         /** U8G2 Name: LS013B7DH03 128X128 **/
         GlcdDisplay D_128x128 = new GlcdDisplay(
                 GlcdControllerType.LS013B7DH03,
@@ -195,6 +201,7 @@ public interface Glcd {
 
     /** Controller Name: LS027B7DH01 **/
     interface LS027B7DH01 {
+
         /** U8G2 Name: LS027B7DH01 400X240 **/
         GlcdDisplay D_400x240 = new GlcdDisplay(
                 GlcdControllerType.LS027B7DH01,
@@ -208,6 +215,7 @@ public interface Glcd {
 
     /** Controller Name: MAX7219 **/
     interface MAX7219 {
+
         /** U8G2 Name: MAX7219 64X8 **/
         GlcdDisplay D_64x8 = new GlcdDisplay(
                 GlcdControllerType.MAX7219,
@@ -217,6 +225,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_max7219_64x8_f", COM_4WSPI)
         );
+
         /** U8G2 Name: MAX7219 32X8 **/
         GlcdDisplay D_32x8 = new GlcdDisplay(
                 GlcdControllerType.MAX7219,
@@ -226,6 +235,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_max7219_32x8_f", COM_4WSPI)
         );
+
         /** U8G2 Name: MAX7219 8X8 **/
         GlcdDisplay D_8x8 = new GlcdDisplay(
                 GlcdControllerType.MAX7219,
@@ -239,6 +249,7 @@ public interface Glcd {
 
     /** Controller Name: NT7534 **/
     interface NT7534 {
+
         /** U8G2 Name: NT7534 TG12864R **/
         GlcdDisplay D_128x64_TG12864R = new GlcdDisplay(
                 GlcdControllerType.NT7534,
@@ -252,6 +263,7 @@ public interface Glcd {
 
     /** Controller Name: PCD8544 **/
     interface PCD8544 {
+
         /** U8G2 Name: PCD8544 84X48 **/
         GlcdDisplay D_88x48 = new GlcdDisplay(
                 GlcdControllerType.PCD8544,
@@ -265,6 +277,7 @@ public interface Glcd {
 
     /** Controller Name: PCF8812 **/
     interface PCF8812 {
+
         /** U8G2 Name: PCF8812 96X65 **/
         GlcdDisplay D_96x72 = new GlcdDisplay(
                 GlcdControllerType.PCF8812,
@@ -278,6 +291,7 @@ public interface Glcd {
 
     /** Controller Name: RA8835 **/
     interface RA8835 {
+
         /** U8G2 Name: RA8835 NHD_240X128 **/
         GlcdDisplay D_240x128_NHD = new GlcdDisplay(
                 GlcdControllerType.RA8835,
@@ -287,6 +301,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_ra8835_nhd_240x128_f", COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: RA8835 320X240 **/
         GlcdDisplay D_320x240 = new GlcdDisplay(
                 GlcdControllerType.RA8835,
@@ -300,6 +315,7 @@ public interface Glcd {
 
     /** Controller Name: SBN1661 **/
     interface SBN1661 {
+
         /** U8G2 Name: SBN1661 122X32 **/
         GlcdDisplay D_128x32 = new GlcdDisplay(
                 GlcdControllerType.SBN1661,
@@ -313,6 +329,7 @@ public interface Glcd {
 
     /** Controller Name: SED1330 **/
     interface SED1330 {
+
         /** U8G2 Name: SED1330 240X128 **/
         GlcdDisplay D_240x128 = new GlcdDisplay(
                 GlcdControllerType.SED1330,
@@ -326,6 +343,7 @@ public interface Glcd {
 
     /** Controller Name: SED1520 **/
     interface SED1520 {
+
         /** U8G2 Name: SED1520 122X32 **/
         GlcdDisplay D_128x32 = new GlcdDisplay(
                 GlcdControllerType.SED1520,
@@ -339,6 +357,7 @@ public interface Glcd {
 
     /** Controller Name: SH1106 **/
     interface SH1106 {
+
         /** U8G2 Name: SH1106 128X64_NONAME **/
         GlcdDisplay D_128x64_NONAME = new GlcdDisplay(
                 GlcdControllerType.SH1106,
@@ -349,6 +368,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_sh1106_128x64_noname_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_sh1106_i2c_128x64_noname_f", COM_I2C)
         );
+
         /** U8G2 Name: SH1106 128X64_VCOMH0 **/
         GlcdDisplay D_128x64_VCOMH0 = new GlcdDisplay(
                 GlcdControllerType.SH1106,
@@ -359,6 +379,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_sh1106_128x64_vcomh0_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_sh1106_i2c_128x64_vcomh0_f", COM_I2C)
         );
+
         /** U8G2 Name: SH1106 128X64_WINSTAR **/
         GlcdDisplay D_128x64_WINSTAR = new GlcdDisplay(
                 GlcdControllerType.SH1106,
@@ -369,6 +390,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_sh1106_128x64_winstar_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_sh1106_i2c_128x64_winstar_f", COM_I2C)
         );
+
         /** U8G2 Name: SH1106 72X40_WISE **/
         GlcdDisplay D_72x40_WISE = new GlcdDisplay(
                 GlcdControllerType.SH1106,
@@ -379,6 +401,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_sh1106_72x40_wise_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_sh1106_i2c_72x40_wise_f", COM_I2C)
         );
+
         /** U8G2 Name: SH1106 64X32 **/
         GlcdDisplay D_64x32 = new GlcdDisplay(
                 GlcdControllerType.SH1106,
@@ -393,6 +416,7 @@ public interface Glcd {
 
     /** Controller Name: SH1107 **/
     interface SH1107 {
+
         /** U8G2 Name: SH1107 64X128 **/
         GlcdDisplay D_64x128 = new GlcdDisplay(
                 GlcdControllerType.SH1107,
@@ -403,6 +427,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_sh1107_64x128_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_sh1107_i2c_64x128_f", COM_I2C)
         );
+
         /** U8G2 Name: SH1107 SEEED_96X96 **/
         GlcdDisplay D_96x96_SEEED = new GlcdDisplay(
                 GlcdControllerType.SH1107,
@@ -413,6 +438,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_sh1107_i2c_seeed_96x96_f", COM_I2C),
                 new GlcdSetupInfo("u8g2_Setup_sh1107_seeed_96x96_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: SH1107 128X128 **/
         GlcdDisplay D_128x128 = new GlcdDisplay(
                 GlcdControllerType.SH1107,
@@ -427,6 +453,7 @@ public interface Glcd {
 
     /** Controller Name: SH1108 **/
     interface SH1108 {
+
         /** U8G2 Name: SH1108 160X160 **/
         GlcdDisplay D_160x160 = new GlcdDisplay(
                 GlcdControllerType.SH1108,
@@ -441,6 +468,7 @@ public interface Glcd {
 
     /** Controller Name: SH1122 **/
     interface SH1122 {
+
         /** U8G2 Name: SH1122 256X64 **/
         GlcdDisplay D_256x64 = new GlcdDisplay(
                 GlcdControllerType.SH1122,
@@ -455,6 +483,7 @@ public interface Glcd {
 
     /** Controller Name: SSD0323 **/
     interface SSD0323 {
+
         /** U8G2 Name: SSD0323 OS128064 **/
         GlcdDisplay D_128x64_OS128064 = new GlcdDisplay(
                 GlcdControllerType.SSD0323,
@@ -469,6 +498,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1305 **/
     interface SSD1305 {
+
         /** U8G2 Name: SSD1305 128X32_NONAME **/
         GlcdDisplay D_128x32_NONAME = new GlcdDisplay(
                 GlcdControllerType.SSD1305,
@@ -479,6 +509,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1305_128x32_noname_f", COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1305_i2c_128x32_noname_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1305 128X32_ADAFRUIT **/
         GlcdDisplay D_128x32_ADAFRUIT = new GlcdDisplay(
                 GlcdControllerType.SSD1305,
@@ -489,6 +520,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1305_128x32_adafruit_f", COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1305_i2c_128x32_adafruit_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1305 128X64_ADAFRUIT **/
         GlcdDisplay D_128x64_ADAFRUIT = new GlcdDisplay(
                 GlcdControllerType.SSD1305,
@@ -503,6 +535,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1306 **/
     interface SSD1306 {
+
         /** U8G2 Name: SSD1306 128X64_NONAME **/
         GlcdDisplay D_128x64_NONAME = new GlcdDisplay(
                 GlcdControllerType.SSD1306,
@@ -513,6 +546,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_128x64_noname_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_i2c_128x64_noname_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1306 128X64_VCOMH0 **/
         GlcdDisplay D_128x64_VCOMH0 = new GlcdDisplay(
                 GlcdControllerType.SSD1306,
@@ -523,6 +557,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_128x64_vcomh0_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_i2c_128x64_vcomh0_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1306 128X64_ALT0 **/
         GlcdDisplay D_128x64_ALT0 = new GlcdDisplay(
                 GlcdControllerType.SSD1306,
@@ -533,6 +568,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_128x64_alt0_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_i2c_128x64_alt0_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1306 128X32_UNIVISION **/
         GlcdDisplay D_128x32_UNIVISION = new GlcdDisplay(
                 GlcdControllerType.SSD1306,
@@ -543,6 +579,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_128x32_univision_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_i2c_128x32_univision_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1306 64X48_ER **/
         GlcdDisplay D_64x48_ER = new GlcdDisplay(
                 GlcdControllerType.SSD1306,
@@ -553,6 +590,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_64x48_er_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_i2c_64x48_er_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1306 48X64_WINSTAR **/
         GlcdDisplay D_48x64_WINSTAR = new GlcdDisplay(
                 GlcdControllerType.SSD1306,
@@ -563,6 +601,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_48x64_winstar_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_i2c_48x64_winstar_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1306 64X32_NONAME **/
         GlcdDisplay D_64x32_NONAME = new GlcdDisplay(
                 GlcdControllerType.SSD1306,
@@ -573,6 +612,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_64x32_noname_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_i2c_64x32_noname_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1306 64X32_1F **/
         GlcdDisplay D_64x32_1F = new GlcdDisplay(
                 GlcdControllerType.SSD1306,
@@ -583,6 +623,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_64x32_1f_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1306_i2c_64x32_1f_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1306 96X16_ER **/
         GlcdDisplay D_96x16_ER = new GlcdDisplay(
                 GlcdControllerType.SSD1306,
@@ -597,6 +638,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1309 **/
     interface SSD1309 {
+
         /** U8G2 Name: SSD1309 128X64_NONAME2 **/
         GlcdDisplay D_128x64_NONAME2 = new GlcdDisplay(
                 GlcdControllerType.SSD1309,
@@ -607,6 +649,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1309_128x64_noname2_f", COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1309_i2c_128x64_noname2_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1309 128X64_NONAME0 **/
         GlcdDisplay D_128x64_NONAME0 = new GlcdDisplay(
                 GlcdControllerType.SSD1309,
@@ -621,6 +664,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1317 **/
     interface SSD1317 {
+
         /** U8G2 Name: SSD1317 96X96 **/
         GlcdDisplay D_96x96 = new GlcdDisplay(
                 GlcdControllerType.SSD1317,
@@ -635,6 +679,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1322 **/
     interface SSD1322 {
+
         /** U8G2 Name: SSD1322 NHD_256X64 **/
         GlcdDisplay D_256x64_NHD = new GlcdDisplay(
                 GlcdControllerType.SSD1322,
@@ -644,6 +689,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_ssd1322_nhd_256x64_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: SSD1322 NHD_128X64 **/
         GlcdDisplay D_128x64_NHD = new GlcdDisplay(
                 GlcdControllerType.SSD1322,
@@ -657,6 +703,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1325 **/
     interface SSD1325 {
+
         /** U8G2 Name: SSD1325 NHD_128X64 **/
         GlcdDisplay D_128x64_NHD = new GlcdDisplay(
                 GlcdControllerType.SSD1325,
@@ -671,6 +718,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1326 **/
     interface SSD1326 {
+
         /** U8G2 Name: SSD1326 ER_256X32 **/
         GlcdDisplay D_256x32_ER = new GlcdDisplay(
                 GlcdControllerType.SSD1326,
@@ -685,6 +733,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1327 **/
     interface SSD1327 {
+
         /** U8G2 Name: SSD1327 SEEED_96X96 **/
         GlcdDisplay D_96x96_SEEED = new GlcdDisplay(
                 GlcdControllerType.SSD1327,
@@ -695,6 +744,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1327_i2c_seeed_96x96_f", COM_I2C),
                 new GlcdSetupInfo("u8g2_Setup_ssd1327_seeed_96x96_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: SSD1327 EA_W128128 **/
         GlcdDisplay D_128x128_EAW128128 = new GlcdDisplay(
                 GlcdControllerType.SSD1327,
@@ -705,6 +755,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_ssd1327_ea_w128128_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_ssd1327_i2c_ea_w128128_f", COM_I2C)
         );
+
         /** U8G2 Name: SSD1327 MIDAS_128X128 **/
         GlcdDisplay D_128x128_MIDAS = new GlcdDisplay(
                 GlcdControllerType.SSD1327,
@@ -719,6 +770,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1329 **/
     interface SSD1329 {
+
         /** U8G2 Name: SSD1329 128X96_NONAME **/
         GlcdDisplay D_128x96_NONAME = new GlcdDisplay(
                 GlcdControllerType.SSD1329,
@@ -732,6 +784,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1606 **/
     interface SSD1606 {
+
         /** U8G2 Name: SSD1606 172X72 **/
         GlcdDisplay D_176x72 = new GlcdDisplay(
                 GlcdControllerType.SSD1606,
@@ -745,6 +798,7 @@ public interface Glcd {
 
     /** Controller Name: SSD1607 **/
     interface SSD1607 {
+
         /** U8G2 Name: SSD1607 200X200 **/
         GlcdDisplay D_200x200 = new GlcdDisplay(
                 GlcdControllerType.SSD1607,
@@ -754,6 +808,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_ssd1607_200x200_f", COM_3WSPI | COM_4WSPI)
         );
+
         /** U8G2 Name: SSD1607 GD_200X200 **/
         GlcdDisplay D_200x200_GD = new GlcdDisplay(
                 GlcdControllerType.SSD1607,
@@ -767,6 +822,7 @@ public interface Glcd {
 
     /** Controller Name: ST75256 **/
     interface ST75256 {
+
         /** U8G2 Name: ST75256 JLX256128 **/
         GlcdDisplay D_256x128_JLX256128 = new GlcdDisplay(
                 GlcdControllerType.ST75256,
@@ -777,6 +833,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_st75256_i2c_jlx256128_f", COM_I2C),
                 new GlcdSetupInfo("u8g2_Setup_st75256_jlx256128_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST75256 JLX256160 **/
         GlcdDisplay D_256x160_JLX256160 = new GlcdDisplay(
                 GlcdControllerType.ST75256,
@@ -787,6 +844,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_st75256_i2c_jlx256160_f", COM_I2C),
                 new GlcdSetupInfo("u8g2_Setup_st75256_jlx256160_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST75256 JLX256160_ALT **/
         GlcdDisplay D_256x160_JLX256160ALT = new GlcdDisplay(
                 GlcdControllerType.ST75256,
@@ -796,6 +854,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st75256_jlx256160_alt_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST75256 JLX240160 **/
         GlcdDisplay D_240x160_JLX240160 = new GlcdDisplay(
                 GlcdControllerType.ST75256,
@@ -806,6 +865,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_st75256_i2c_jlx240160_f", COM_I2C),
                 new GlcdSetupInfo("u8g2_Setup_st75256_jlx240160_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST75256 JLX25664 **/
         GlcdDisplay D_256x64_JLX25664 = new GlcdDisplay(
                 GlcdControllerType.ST75256,
@@ -816,6 +876,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_st75256_i2c_jlx25664_f", COM_I2C),
                 new GlcdSetupInfo("u8g2_Setup_st75256_jlx25664_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST75256 JLX172104 **/
         GlcdDisplay D_176x104_JLX172104 = new GlcdDisplay(
                 GlcdControllerType.ST75256,
@@ -830,6 +891,7 @@ public interface Glcd {
 
     /** Controller Name: ST7565 **/
     interface ST7565 {
+
         /** U8G2 Name: ST7565 EA_DOGM128 **/
         GlcdDisplay D_128x64_EADOGM128 = new GlcdDisplay(
                 GlcdControllerType.ST7565,
@@ -839,6 +901,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7565_ea_dogm128_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7565 64128N **/
         GlcdDisplay D_128x64_64128N = new GlcdDisplay(
                 GlcdControllerType.ST7565,
@@ -848,6 +911,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7565_64128n_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7565 ZOLEN_128X64 **/
         GlcdDisplay D_128x64_ZOLEN = new GlcdDisplay(
                 GlcdControllerType.ST7565,
@@ -857,6 +921,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7565_zolen_128x64_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7565 LM6059 **/
         GlcdDisplay D_128x64_LM6059 = new GlcdDisplay(
                 GlcdControllerType.ST7565,
@@ -866,6 +931,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7565_lm6059_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7565 LX12864 **/
         GlcdDisplay D_128x64_LX12864 = new GlcdDisplay(
                 GlcdControllerType.ST7565,
@@ -875,6 +941,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7565_lx12864_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7565 ERC12864 **/
         GlcdDisplay D_128x64_ERC12864 = new GlcdDisplay(
                 GlcdControllerType.ST7565,
@@ -884,6 +951,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7565_erc12864_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7565 NHD_C12864 **/
         GlcdDisplay D_128x64_NHDC12864 = new GlcdDisplay(
                 GlcdControllerType.ST7565,
@@ -893,6 +961,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7565_nhd_c12864_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7565 JLX12864 **/
         GlcdDisplay D_128x64_JLX12864 = new GlcdDisplay(
                 GlcdControllerType.ST7565,
@@ -902,6 +971,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7565_jlx12864_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7565 NHD_C12832 **/
         GlcdDisplay D_128x32_NHDC12832 = new GlcdDisplay(
                 GlcdControllerType.ST7565,
@@ -911,6 +981,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7565_nhd_c12832_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7565 EA_DOGM132 **/
         GlcdDisplay D_136x32_EADOGM132 = new GlcdDisplay(
                 GlcdControllerType.ST7565,
@@ -924,6 +995,7 @@ public interface Glcd {
 
     /** Controller Name: ST7567 **/
     interface ST7567 {
+
         /** U8G2 Name: ST7567 PI_132X64 **/
         GlcdDisplay D_136x64_PI = new GlcdDisplay(
                 GlcdControllerType.ST7567,
@@ -933,6 +1005,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7567_pi_132x64_f", COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7567 JLX12864 **/
         GlcdDisplay D_128x64_JLX12864 = new GlcdDisplay(
                 GlcdControllerType.ST7567,
@@ -942,6 +1015,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7567_jlx12864_f", COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7567 ENH_DG128064 **/
         GlcdDisplay D_128x64_ENHDG128064 = new GlcdDisplay(
                 GlcdControllerType.ST7567,
@@ -951,6 +1025,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7567_enh_dg128064_f", COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7567 ENH_DG128064I **/
         GlcdDisplay D_128x64_ENHDG128064I = new GlcdDisplay(
                 GlcdControllerType.ST7567,
@@ -960,6 +1035,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_st7567_enh_dg128064i_f", COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: ST7567 64X32 **/
         GlcdDisplay D_64x32 = new GlcdDisplay(
                 GlcdControllerType.ST7567,
@@ -974,6 +1050,7 @@ public interface Glcd {
 
     /** Controller Name: ST7586S **/
     interface ST7586S {
+
         /** U8G2 Name: ST7586S S028HN118A **/
         GlcdDisplay D_384x136_S028HN118A = new GlcdDisplay(
                 GlcdControllerType.ST7586S,
@@ -983,6 +1060,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_st7586s_s028hn118a_f", COM_4WSPI)
         );
+
         /** U8G2 Name: ST7586S ERC240160 **/
         GlcdDisplay D_240x160_ERC240160 = new GlcdDisplay(
                 GlcdControllerType.ST7586S,
@@ -996,6 +1074,7 @@ public interface Glcd {
 
     /** Controller Name: ST7588 **/
     interface ST7588 {
+
         /** U8G2 Name: ST7588 JLX12864 **/
         GlcdDisplay D_128x64_JLX12864 = new GlcdDisplay(
                 GlcdControllerType.ST7588,
@@ -1010,6 +1089,7 @@ public interface Glcd {
 
     /** Controller Name: ST7920 **/
     interface ST7920 {
+
         /** U8G2 Name: ST7920 192X32 **/
         GlcdDisplay D_192x32 = new GlcdDisplay(
                 GlcdControllerType.ST7920,
@@ -1021,6 +1101,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_st7920_p_192x32_f", COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_st7920_s_192x32_f", COM_ST7920SPI)
         );
+
         /** U8G2 Name: ST7920 128X64 **/
         GlcdDisplay D_128x64 = new GlcdDisplay(
                 GlcdControllerType.ST7920,
@@ -1036,6 +1117,7 @@ public interface Glcd {
 
     /** Controller Name: T6963 **/
     interface T6963 {
+
         /** U8G2 Name: T6963 240X128 **/
         GlcdDisplay D_240x128 = new GlcdDisplay(
                 GlcdControllerType.T6963,
@@ -1045,6 +1127,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_t6963_240x128_f", COM_8080)
         );
+
         /** U8G2 Name: T6963 240X64 **/
         GlcdDisplay D_240x64 = new GlcdDisplay(
                 GlcdControllerType.T6963,
@@ -1054,6 +1137,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_t6963_240x64_f", COM_8080)
         );
+
         /** U8G2 Name: T6963 256X64 **/
         GlcdDisplay D_256x64 = new GlcdDisplay(
                 GlcdControllerType.T6963,
@@ -1063,6 +1147,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_t6963_256x64_f", COM_8080)
         );
+
         /** U8G2 Name: T6963 128X64 **/
         GlcdDisplay D_128x64 = new GlcdDisplay(
                 GlcdControllerType.T6963,
@@ -1072,6 +1157,7 @@ public interface Glcd {
                 GlcdBufferType.HORIZONTAL,
                 new GlcdSetupInfo("u8g2_Setup_t6963_128x64_f", COM_8080)
         );
+
         /** U8G2 Name: T6963 160X80 **/
         GlcdDisplay D_160x80 = new GlcdDisplay(
                 GlcdControllerType.T6963,
@@ -1085,6 +1171,7 @@ public interface Glcd {
 
     /** Controller Name: UC1601 **/
     interface UC1601 {
+
         /** U8G2 Name: UC1601 128X32 **/
         GlcdDisplay D_128x32 = new GlcdDisplay(
                 GlcdControllerType.UC1601,
@@ -1099,6 +1186,7 @@ public interface Glcd {
 
     /** Controller Name: UC1604 **/
     interface UC1604 {
+
         /** U8G2 Name: UC1604 JLX19264 **/
         GlcdDisplay D_192x64_JLX19264 = new GlcdDisplay(
                 GlcdControllerType.UC1604,
@@ -1113,6 +1201,7 @@ public interface Glcd {
 
     /** Controller Name: UC1608 **/
     interface UC1608 {
+
         /** U8G2 Name: UC1608 ERC24064 **/
         GlcdDisplay D_240x64_ERC24064 = new GlcdDisplay(
                 GlcdControllerType.UC1608,
@@ -1123,6 +1212,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_uc1608_erc24064_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_uc1608_i2c_erc24064_f", COM_I2C)
         );
+
         /** U8G2 Name: UC1608 ERC240120 **/
         GlcdDisplay D_240x120_ERC240120 = new GlcdDisplay(
                 GlcdControllerType.UC1608,
@@ -1133,6 +1223,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_uc1608_erc240120_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_uc1608_i2c_erc240120_f", COM_I2C)
         );
+
         /** U8G2 Name: UC1608 240X128 **/
         GlcdDisplay D_240x128 = new GlcdDisplay(
                 GlcdControllerType.UC1608,
@@ -1147,6 +1238,7 @@ public interface Glcd {
 
     /** Controller Name: UC1610 **/
     interface UC1610 {
+
         /** U8G2 Name: UC1610 EA_DOGXL160 **/
         GlcdDisplay D_160x104_EADOGXL160 = new GlcdDisplay(
                 GlcdControllerType.UC1610,
@@ -1161,6 +1253,7 @@ public interface Glcd {
 
     /** Controller Name: UC1611 **/
     interface UC1611 {
+
         /** U8G2 Name: UC1611 EA_DOGM240 **/
         GlcdDisplay D_240x64_EADOGM240 = new GlcdDisplay(
                 GlcdControllerType.UC1611,
@@ -1171,6 +1264,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_uc1611_ea_dogm240_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_uc1611_i2c_ea_dogm240_f", COM_I2C)
         );
+
         /** U8G2 Name: UC1611 EA_DOGXL240 **/
         GlcdDisplay D_240x128_EADOGXL240 = new GlcdDisplay(
                 GlcdControllerType.UC1611,
@@ -1181,6 +1275,7 @@ public interface Glcd {
                 new GlcdSetupInfo("u8g2_Setup_uc1611_ea_dogxl240_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080),
                 new GlcdSetupInfo("u8g2_Setup_uc1611_i2c_ea_dogxl240_f", COM_I2C)
         );
+
         /** U8G2 Name: UC1611 EW50850 **/
         GlcdDisplay D_240x160_EW50850 = new GlcdDisplay(
                 GlcdControllerType.UC1611,
@@ -1195,6 +1290,7 @@ public interface Glcd {
 
     /** Controller Name: UC1638 **/
     interface UC1638 {
+
         /** U8G2 Name: UC1638 160X128 **/
         GlcdDisplay D_160x128 = new GlcdDisplay(
                 GlcdControllerType.UC1638,
@@ -1208,6 +1304,7 @@ public interface Glcd {
 
     /** Controller Name: UC1701 **/
     interface UC1701 {
+
         /** U8G2 Name: UC1701 EA_DOGS102 **/
         GlcdDisplay D_104x64_EADOGS102 = new GlcdDisplay(
                 GlcdControllerType.UC1701,
@@ -1217,6 +1314,7 @@ public interface Glcd {
                 GlcdBufferType.VERTICAL,
                 new GlcdSetupInfo("u8g2_Setup_uc1701_ea_dogs102_f", COM_3WSPI | COM_4WSPI | COM_6800 | COM_8080)
         );
+
         /** U8G2 Name: UC1701 MINI12864 **/
         GlcdDisplay D_128x64_MINI12864 = new GlcdDisplay(
                 GlcdControllerType.UC1701,
