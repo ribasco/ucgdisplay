@@ -21,12 +21,12 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
     echo "Importing gpg secret key"
     gpg2 --batch --passphrase ${GPG_PASSPHRASE} --import scripts/travis.dec
 
-    echo "Installing Java JDK 8"
-    sudo add-apt-repository -y ppa:webupd8team/java
-    sudo apt-get update -q
-    echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
-    sudo apt-get install -y oracle-java8-installer
-    sudo apt-get install oracle-java8-set-default
+    #echo "Installing Java JDK 8"
+    #sudo add-apt-repository -y ppa:webupd8team/java
+    #sudo apt-get update -q
+    #echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
+    #sudo apt-get install -y oracle-java8-installer
+    #sudo apt-get install oracle-java8-set-default
 else
     echo "Skipping gpg key import (OS = ${TRAVIS_OS_NAME})"
 fi
