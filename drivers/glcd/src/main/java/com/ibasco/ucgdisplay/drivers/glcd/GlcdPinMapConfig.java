@@ -6,7 +6,7 @@
  *
  * ---------------------------------------------------------
  * %%
- * Copyright (C) 2018 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -49,7 +49,7 @@ public class GlcdPinMapConfig {
      * @param glcdPin
      *         A {@link GlcdPin} to be mapped
      * @param value
-     *         The pin number of the device to be mapped. Follows the wiring pi numbering scheme.
+     *         The gpio line number. (Use 'gpioinfo' utility of libgpiod to display the available gpio lines)
      *
      * @return GlcdPinMapConfig
      */
