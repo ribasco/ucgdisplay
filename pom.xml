@@ -50,7 +50,7 @@
         <mockito.version>2.23.0</mockito.version>
         <powermock.version>1.7.3</powermock.version>
         <sysoutslf4j.version>1.0.2</sysoutslf4j.version>
-        <native.lib.loader.version>2.2.0</native.lib.loader.version>
+        <native.lib.loader.version>2.3.4</native.lib.loader.version>
         <ant.version>1.10.5</ant.version>
         <ant-contrib.version>1.0b3</ant-contrib.version>
         <project.prefix>UCGDisplay ::</project.prefix>
@@ -241,11 +241,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.2</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.22.1</version>
@@ -422,7 +417,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.1.1</version>
                     <executions>
                         <execution>
                             <id>attach-javadocs</id>
