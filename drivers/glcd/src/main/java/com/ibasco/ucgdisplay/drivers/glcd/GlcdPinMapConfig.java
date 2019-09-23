@@ -49,7 +49,7 @@ public class GlcdPinMapConfig {
      * @param glcdPin
      *         A {@link GlcdPin} to be mapped
      * @param value
-     *         The gpio line number. (Use 'gpioinfo' utility of libgpiod to display the available gpio lines)
+     *         The gpio line number. Use the 'gpioinfo' utility of libgpiod to display the list of available gpio lines.
      *
      * @return GlcdPinMapConfig
      */
