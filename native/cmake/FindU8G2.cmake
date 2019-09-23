@@ -21,7 +21,7 @@ if (NOT EXISTS ${U8G2_DIR})
     execute_process(COMMAND unzip ${U8G2_ARCHIVE_FILE_PATH} WORKING_DIRECTORY ${LIB_DIR} ERROR_VARIABLE tc_unzip)
 
     if (tc_unzip)
-        message(FATAL_ERROR "[U8G2] Could not unzip contents of the downloaded toolchain (${tc_unzip})")
+        message(FATAL_ERROR "[U8G2] Could not unzip contents of the downloaded toolchain. Reason: \n${tc_unzip}")
     endif ()
 
     message(STATUS "[U8G2] Moving '${LIB_DIR}/u8g2-master/' to '${U8G2_DIR}'")
