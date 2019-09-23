@@ -208,7 +208,7 @@
             </plugin>
 
             <!-- Native Maven Plugin -->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>native-maven-plugin</artifactId>
                 <executions>
@@ -230,7 +230,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
             <!-- Source Plugin -->
             <plugin>
