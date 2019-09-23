@@ -48,7 +48,6 @@ before_install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CXX=g++-7; fi
   - cmake --version
   - scripts/before-install.sh
-  #  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export JAVA_HOME=/usr/lib/jvm/java-8-oracle; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo echo "JAVA_HOME=${JAVA_HOME}"; fi
 
 install:
