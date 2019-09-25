@@ -6,13 +6,16 @@ set(LIBNAME "gpiod")
 set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install/libgpiod)
 set(PROJ_INCLUDE_DIR "${LIB_DIR}/include")
 set(PROJ_TAG "[LIBGPIOD]")
+set(LIBGPIOD_VERSION "v1.4.1")
 
-if (NOT $ENV{TRAVIS_OS_NAME} STREQUAL "")
-    set(KERNEL_VERSION "4.15.18-041518")
-    message(STATUS "Detected travis environment. Using fixed kernel version = ${KERNEL_VERSION}")
-else ()
-    execute_process(COMMAND uname -r OUTPUT_VARIABLE KERNEL_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-endif ()
+#if (NOT $ENV{TRAVIS_OS_NAME} STREQUAL "")
+#    set(KERNEL_VERSION "4.15.18-041518")
+#    message(STATUS "Detected travis environment. Using fixed kernel version = ${KERNEL_VERSION}")
+#else ()
+#    execute_process(COMMAND uname -r OUTPUT_VARIABLE KERNEL_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+# endif ()
+
+execute_process(COMMAND uname -r OUTPUT_VARIABLE KERNEL_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 message(STATUS "${PROJ_TAG} Using kernel version = ${KERNEL_VERSION} (Travis Os Name = $ENV{TRAVIS_OS_NAME})")
 message(STATUS "${PROJ_TAG} Project Include Dir = ${PROJ_INCLUDE_DIR}")
@@ -26,7 +29,7 @@ message(STATUS "${PROJ_TAG} CFLAGS = ${CFLAGS}, LIB_DIR=${LIB_DIR}")
 ExternalProject_Add(
         libgpiod
         GIT_REPOSITORY "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
-        GIT_TAG "v1.4.1"
+        GIT_TAG ${LIBGPIOD_VERSION}
         STAMP_DIR ${PROJECT_BINARY_DIR}/stamp
         UPDATE_COMMAND ""
         CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ./autogen.sh --enable-tools=yes --enable-bindings-cxx --prefix=${CMAKE_INSTALL_PREFIX} --host=arm-linux-gnueabihf CFLAGS=${CFLAGS} ac_cv_func_malloc_0_nonnull=yes
