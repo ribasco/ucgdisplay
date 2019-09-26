@@ -16,8 +16,8 @@
 ######  Character LCD driver features
 * Pure java implementation for Hitachi HD44780 driver powered by Pi4j
 * Flexible configuration options for interfacing with your SBC device (e.g. GPIO expanders/I2C/SPI)
-* No fixed/mandatory pin mapping. You have the freedom to choose whatever device pins you want to use for your LCD device.
-* Available LCD adapters
+* Flexible pin mapping configuration
+* Supported LCD adapters
     * MCP23017
     * Shift Register (e.g. 74HC595)
     * GPIO
@@ -25,10 +25,8 @@
     * PCF8574 (Coming soon)
 ###### Graphic LCD driver features
 * SPI and I2C hardware capability and other software bitbanging implementations
-* Over 46+ controllers are supported. Refer to the table below for the list of supported display controllers.
+* Over 46+ controllers are supported. Refer to the table below for the list of supported display controllers. (note: not everything has been tested yet)
 * The graphics display module wraps around the popular c/c++ [U8g2](https://github.com/olikraus/u8g2) library by Oliver. All drawing operations present in the library should be similar to the ones found in U8g2 (Refer to the official [U8g2 reference manual](https://github.com/olikraus/u8g2/wiki/u8g2reference) for more information). 
-
-#####  Event-driven UI framework (Coming soon) 
 
 ### Supported display controllers
 
@@ -65,8 +63,10 @@
 ### Pre-requisites
 
 ---
-* Java JDK 1.8 or higher
-* [Libgpiod](https://github.com/brgl/libgpiod) - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device)
+* Java JDK (1.8 or higher)
+* [Libgpiod](https://github.com/brgl/libgpiod) (v1.4.1 or higher) - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device). 
+
+> **IMPORTANT:** Make sure the c++ bindings are included when you install from source (--enable-bindings-cxx)
  
 ### Installation
 
@@ -81,14 +81,14 @@
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-clcd</artifactId>
-             <version>1.4.1-alpha</version>
+             <version>1.4.2-alpha</version>
          </dependency>
       
          <!-- Graphics display driver -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-glcd</artifactId>
-             <version>1.4.1-alpha</version>
+             <version>1.4.2-alpha</version>
          </dependency>
     </dependencies>
     ```
