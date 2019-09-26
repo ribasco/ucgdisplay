@@ -53,10 +53,12 @@ if (CMAKE_CROSSCOMPILING)
 
     if (NOT EXISTS ${JDK_SEARCH_PATH})
         message(FATAL_ERROR "JDK SEARCH PATH NOT FOUND = ${JDK_SEARCH_PATH}")
+    else()
+        message(STATUS "Using JDK SEARCH PATH = ${JDK_SEARCH_PATH}")
     endif ()
 
     # Find JDK
-    file(GLOB files "${JDK_SEARCH_PATH}/jdk*")
+    file(GLOB files "${JDK_SEARCH_PATH}/jdk11")
     foreach (file ${files})
         set(JAVA_HOME ${file})
         break()
