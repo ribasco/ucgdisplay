@@ -26,7 +26,7 @@
 package com.ibasco.ucgdisplay.core.u8g2;
 
 import com.ibasco.ucgdisplay.common.exceptions.NativeLibraryLoaderException;
-import com.ibasco.ucgdisplay.common.utils.NativeLibraryLoader;
+import org.scijava.nativelib.NativeLoader;
 
 /**
  * <p>This is a wrapper class for the U8G2 native graphics interface. It is not advisable to use this class
@@ -34,7 +34,7 @@ import com.ibasco.ucgdisplay.common.utils.NativeLibraryLoader;
  *
  * @author Rafael Ibasco
  */
-@SuppressWarnings({"Duplicates", "WeakerAccess"})
+@SuppressWarnings("WeakerAccess")
 public class U8g2Graphics {
 
     //<editor-fold desc="Display rotation options">
@@ -158,7 +158,8 @@ public class U8g2Graphics {
 
     static {
         try {
-            NativeLibraryLoader.loadLibrary("ucgdisp");
+            //NativeLibraryLoader.loadLibrary("ucgdisp");
+            NativeLoader.loadLibrary("ucgdisp");
         } catch (Exception e) {
             throw new NativeLibraryLoaderException("Unable to load required native library", e);
         }
@@ -1096,8 +1097,6 @@ public class U8g2Graphics {
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int, int, String, String, byte[], boolean)}
      *
-     * @see <strike>print</strike>
-     * @see <strike>home</strike>
      * @see #clearBuffer
      */
     public static native void clear(long id);
