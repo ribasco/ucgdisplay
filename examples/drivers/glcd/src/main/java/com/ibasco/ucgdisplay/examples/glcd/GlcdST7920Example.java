@@ -53,5 +53,7 @@ public class GlcdST7920Example {
         driver.clearBuffer();
         driver.drawString("Hello World");
         driver.sendBuffer();
+
+        System.out.println("Done");
     }
 }
