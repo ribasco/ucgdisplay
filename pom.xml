@@ -37,7 +37,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <pi4j.version>1.2-SNAPSHOT</pi4j.version>
+        <pi4j.version>1.2</pi4j.version>
         <commons.io.version>2.6</commons.io.version>
         <commons.lang3.version>3.6</commons.lang3.version>
         <commons.text.version>1.1</commons.text.version>
