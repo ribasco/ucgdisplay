@@ -23,8 +23,11 @@ set(CMAKE_SYSROOT ${CMAKE_STAGING_PREFIX}/arm-bcm2708/arm-linux-gnueabihf/arm-li
 #https://github.com/raspberrypi/tools.git
 
 # Define the cross compiler locations
-set(CMAKE_C_COMPILER ${CMAKE_STAGING_PREFIX}/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
-set(CMAKE_CXX_COMPILER ${CMAKE_STAGING_PREFIX}/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++)
+#set(CMAKE_C_COMPILER ${CMAKE_STAGING_PREFIX}/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
+#set(CMAKE_CXX_COMPILER ${CMAKE_STAGING_PREFIX}/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++)
+
+set(CMAKE_C_COMPILER ${CMAKE_STAGING_PREFIX}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-gcc)
+set(CMAKE_CXX_COMPILER ${CMAKE_STAGING_PREFIX}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++)
 
 message(STATUS "[TOOLCHAIN] STAGING PREFIX  = ${CMAKE_STAGING_PREFIX}")
 message(STATUS "[TOOLCHAIN] MAKE            = ${CMAKE_MAKE_PROGRAM}")
