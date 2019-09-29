@@ -30,9 +30,10 @@ if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
     # Add libgpiod
     if (TARGET libgpiod AND LibGpiod_FOUND)
         add_dependencies(ucgdisp libgpiod)
+        set_property(TARGET libgpiod PROPERTY POSITION_INDEPENDENT_CODE ON)
         list(APPEND INC_DIRS ${LIBGPIOD_INCLUDE_DIR})
-        list(APPEND LINK_LIBS ${LIBGPIOD_LIB_C})
         list(APPEND LINK_LIBS ${LIBGPIOD_LIB_CXX})
+        list(APPEND LINK_LIBS ${LIBGPIOD_LIB_C})
     endif ()
 endif ()
 

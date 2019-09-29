@@ -18,7 +18,9 @@ endif ()
 message(STATUS "${PROJ_TAG} Using kernel version = ${KERNEL_VERSION} (Travis Os Name = $ENV{TRAVIS_OS_NAME})")
 message(STATUS "${PROJ_TAG} Project Include Dir = ${PROJ_INCLUDE_DIR}")
 
-set(CFLAGS "-I/usr/src/linux-headers-${KERNEL_VERSION}/include/uapi -I/usr/src/linux-headers-${KERNEL_VERSION}/include -I${PROJ_INCLUDE_DIR} -fPIC")
+set(CFLAGS "-I/usr/src/linux-headers-${KERNEL_VERSION}/include/uapi -I/usr/src/linux-headers-${KERNEL_VERSION}/include -I${PROJ_INCLUDE_DIR}")
+
+# -fPIC
 
 message(STATUS "${PROJ_TAG} CFLAGS = ${CFLAGS}, LIB_DIR=${LIB_DIR}")
 
@@ -30,7 +32,7 @@ ExternalProject_Add(
         GIT_TAG ${LIBGPIOD_VERSION}
         STAMP_DIR ${PROJECT_BINARY_DIR}/stamp
         UPDATE_COMMAND ""
-        CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ./autogen.sh --enable-tools=yes --enable-bindings-cxx --prefix=${CMAKE_INSTALL_PREFIX} --host=arm-linux-gnueabihf CFLAGS=${CFLAGS} ac_cv_func_malloc_0_nonnull=yes
+        CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ./autogen.sh --enable-tools=no --enable-bindings-cxx --prefix=${CMAKE_INSTALL_PREFIX} --host=arm-linux-gnueabihf CFLAGS=${CFLAGS} ac_cv_func_malloc_0_nonnull=yes
         SOURCE_DIR "${CMAKE_SOURCE_DIR}/lib/libgpiod"
         BINARY_DIR "${CMAKE_SOURCE_DIR}/lib/libgpiod"
         INSTALL_COMMAND make install
@@ -41,8 +43,8 @@ ExternalProject_Add(
 )
 
 set(LIBGPIOD_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
-set(LIBGPIOD_LIB_C ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}gpiod${CMAKE_SHARED_LIBRARY_SUFFIX}.2.1.1)
-set(LIBGPIOD_LIB_CXX ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}gpiodcxx${CMAKE_SHARED_LIBRARY_SUFFIX}.1.0.3)
+set(LIBGPIOD_LIB_C ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}gpiod${CMAKE_SHARED_LIBRARY_SUFFIX})
+set(LIBGPIOD_LIB_CXX ${CMAKE_INSTALL_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}gpiodcxx${CMAKE_SHARED_LIBRARY_SUFFIX})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LibGpiod FOUND_VAR LibGpiod_FOUND REQUIRED_VARS LIBGPIOD_INCLUDE_DIR LIBGPIOD_LIB_C LIBGPIOD_LIB_CXX FAIL_MESSAGE "Could not find libgpiod package")
