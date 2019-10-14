@@ -33,6 +33,10 @@
 
 #include "U8g2Utils.h"
 
+#if defined(__linux__) && defined(__arm__)
+#include <gpiod.hpp>
+#endif
+
 static std::map<uintptr_t, std::shared_ptr<u8g2_info_t>> u8g2_device_cache; // NOLINT
 static std::map<int, std::string> pinNameIndexMap; //NOLINT
 
@@ -177,19 +181,17 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
 #if defined(__arm__) && defined(__linux__)
     info->transport_device = transport_device;
     info->gpio_device = gpio_device;
-    info->spi = std::make_shared<spi_t>();
-    info->i2c = std::make_shared<i2c_t>();
+    info->spi = spi_new();
+    info->i2c = i2c_new();//std::make_shared<i2c_t>();
     info->device_speed = device_speed;
-#ifdef USE_GPIOUSERSPACE
     try {
-        info->gpio_chip = gpiod::chip(info->gpio_device);
+        info->gpio_chip = std::make_shared<gpiod::chip>(info->gpio_device);//gpiod::chip(info->gpio_device, ::gpiod::chip::OPEN_LOOKUP);
     } catch (const std::system_error &e) {
         std::stringstream ss;
         ss << "Unable to open gpio device (Device: " << info->gpio_device << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
         JNI_ThrowNativeLibraryException(env, ss.str());
         return nullptr;
     }
-#endif
 #endif
 
     //Get the setup procedure callback
@@ -214,7 +216,7 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
     }
 
     //Byte callback
-    info->byte_cb = [cb_byte, info, virtualMode, commInt, commType](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+    info->byte_cb = [cb_byte, info, virtualMode](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
         if (virtualMode) {
             JNIEnv *lenv;
             GETENV(lenv);
@@ -258,7 +260,7 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
     }
 
     //Insert device info in cache
-    auto it = u8g2_device_cache.insert(make_pair((uintptr_t) pU8g2, info));
+    u8g2_device_cache.insert(make_pair((uintptr_t) pU8g2, info));
 
     //Call the setup procedure
     info->setup_cb(pU8g2, rotation, u8g2util_SetupHelperByte, u8g2util_SetupHelperGpio);

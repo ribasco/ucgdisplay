@@ -7,6 +7,7 @@ file(GLOB PROJ_SRC_FILES "${LIB_DIR}/${PROJ_NAME}/src/*.c")
 file(GLOB PROJ_HEADER_FILES "${LIB_DIR}/${PROJ_NAME}/src/*.h")
 
 add_library(cperiphery STATIC ${PROJ_HEADER_FILES} ${PROJ_SRC_FILES})
+
 set_target_properties(cperiphery
         PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/install/${PROJ_NAME}/lib"
