@@ -30,7 +30,7 @@
     <property name="project.dir.target" value="${project.dir.base}/target"/>
     <property name="project.target.dir.linux.amd64" value="${project.dir.target}/classes/natives/linux_64"/>
     <property name="project.target.dir.linux.arm" value="${project.dir.target}/classes/natives/linux_arm"/>
-    <property name="project.target.dir.win.amd64" value="${project.dir.target}/classes/natives/windows_32"/>
+    <property name="project.target.dir.win.amd64" value="${project.dir.target}/classes/natives/windows_64"/>
     <property name="project.target.dir.mac.amd64" value="${project.dir.target}/classes/natives/osx_32"/>
     <property name="cmake.module.dir" value="${project.dir.root}/native/cmake"/>
     <property name="cmake.generator.unix" value="-G 'CodeBlocks - Unix Makefiles'"/>
