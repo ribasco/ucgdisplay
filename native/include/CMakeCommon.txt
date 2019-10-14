@@ -37,7 +37,7 @@ set(LIB_DIR "${CMAKE_SOURCE_DIR}/lib")
 
 string(TOLOWER ${CMAKE_SYSTEM_NAME} TARGET_OS)
 
-add_compile_options(-Wall -Wno-unused-parameter -Wno-error=unused-but-set-variable -Wno-error=unused-function)
+# add_compile_options(-Wall -Wno-unused-parameter -Wno-error=unused-but-set-variable -Wno-error=unused-function)
 
 # Find JAVA_HOME/INCLUDE DIR
 if (CMAKE_CROSSCOMPILING)
