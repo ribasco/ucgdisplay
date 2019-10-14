@@ -40,14 +40,7 @@
 
 #include <spi.h>
 #include <i2c.h>
-
-#ifndef USE_GPIOUSERSPACE
-#include <gpio.h>
-#else
-
 #include <gpiod.hpp>
-
-#endif
 
 #endif
 
@@ -88,17 +81,13 @@ typedef struct {
     u8g2_msg_func_t gpio_cb;
     u8g2_cb_t *rotation;
 #if defined(__arm__) && defined(__linux__)
-    std::shared_ptr<spi_t> spi;
-    std::shared_ptr<i2c_t> i2c;
+    spi_t* spi;
+    i2c_t* i2c;
     std::string transport_device;
     std::string gpio_device;
     int device_speed;
-#ifdef USE_GPIOUSERSPACE
-    gpiod::chip gpio_chip;
+    std::shared_ptr<gpiod::chip> gpio_chip;
     std::map<int, std::shared_ptr<gpiod::line>> gpio;
-#else
-    std::map<int, std::shared_ptr<gpio_t>> gpio;
-#endif
 #endif
     bool flag_font;
     bool flag_virtual;

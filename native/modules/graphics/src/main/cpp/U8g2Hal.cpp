@@ -35,7 +35,7 @@
 
 #endif
 
-static bool initialized = false;
+//static bool initialized = false;
 static u8g2_setup_func_map_t u8g2_setup_functions; //NOLINT
 static u8g2_lookup_font_map_t u8g2_font_map; //NOLINT
 
@@ -43,7 +43,7 @@ static u8g2_lookup_font_map_t u8g2_font_map; //NOLINT
 
 #define DEFAULT_SPI_SPEED 1000000
 
-std::map<int, std::string> msgNames = {
+/*std::map<int, std::string> msgNames = {
         {U8X8_MSG_GPIO_AND_DELAY_INIT, U8G2NAME(U8X8_MSG_GPIO_AND_DELAY_INIT)},
         {U8X8_MSG_DELAY_NANO,          U8G2NAME(U8X8_MSG_DELAY_NANO)},
         {U8X8_MSG_DELAY_100NANO,       U8G2NAME(U8X8_MSG_DELAY_100NANO)},
@@ -71,7 +71,7 @@ std::map<int, std::string> msgNames = {
         {U8X8_MSG_BYTE_SET_DC,         U8G2NAME(U8X8_MSG_BYTE_SET_DC)},
         {U8X8_MSG_BYTE_START_TRANSFER, U8G2NAME(U8X8_MSG_BYTE_START_TRANSFER)},
         {U8X8_MSG_BYTE_END_TRANSFER,   U8G2NAME(U8X8_MSG_BYTE_END_TRANSFER)}
-};
+};*/
 
 void u8g2hal_Init() {
     //Initialize lookup tables
@@ -108,8 +108,8 @@ uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
     switch (msg) {
         case U8X8_MSG_BYTE_SEND: {
             auto *buf = (uint8_t *) arg_ptr;
-            if (spi_transfer(info->spi.get(), buf, buf, arg_int) < 0) {
-                fprintf(stderr, "spi_transfer(): %s\n", spi_errmsg(info->spi.get()));
+            if (spi_transfer(info->spi, buf, buf, arg_int) < 0) {
+                fprintf(stderr, "spi_transfer(): %s\n", spi_errmsg(info->spi));
                 return 0;
             }
             break;
@@ -119,8 +119,8 @@ uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
             u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
 
             int speed = info->device_speed <= -1 ? DEFAULT_SPI_SPEED : info->device_speed;
-            if (spi_open(info->spi.get(), info->transport_device.c_str(), 0, speed) < 0) {
-                fprintf(stderr, "spi_open(): %s\n", spi_errmsg(info->spi.get()));
+            if (spi_open(info->spi, info->transport_device.c_str(), 0, speed) < 0) {
+                fprintf(stderr, "spi_open(): %s\n", spi_errmsg(info->spi));
                 return 0;
             }
             break;
@@ -148,7 +148,6 @@ uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
  * I2C Hardware Callback Routine (ARM)
  */
 uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
-    static int fd = -1;
     uint8_t *data;
 
     switch (msg) {
@@ -156,15 +155,15 @@ uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
             data = (uint8_t *) arg_ptr;
             __u16 addr = u8x8_GetI2CAddress(u8x8);
             struct i2c_msg i2cMsg = {.addr = addr, .flags = 0, .len = arg_int, .buf = data};
-            if (i2c_transfer(info->i2c.get(), &i2cMsg, 1) < 0) {
-                fprintf(stderr, "i2c_transfer(): %s\n", i2c_errmsg(info->i2c.get()));
+            if (i2c_transfer(info->i2c, &i2cMsg, 1) < 0) {
+                fprintf(stderr, "i2c_transfer(): %s\n", i2c_errmsg(info->i2c));
                 return 0;
             }
             break;
         }
         case U8X8_MSG_BYTE_INIT: {
-            if (i2c_open(info->i2c.get(), info->transport_device.c_str()) < 0) {
-                fprintf(stderr, "i2c_open(): %s\n", i2c_errmsg(info->i2c.get()));
+            if (i2c_open(info->i2c, info->transport_device.c_str()) < 0) {
+                fprintf(stderr, "i2c_open(): %s\n", i2c_errmsg(info->i2c));
                 return 0;
             }
             break;
@@ -181,41 +180,12 @@ uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
     return 1;
 }
 
-#ifndef USE_GPIOUSERSPACE
-
-gpio_t* get_gpio(u8g2_info_t *info, uint8_t pin) {
-    std::map<int, std::shared_ptr<gpio_t>> gpioMap = info->gpio;
-    auto res = gpioMap.find(pin);
-    if (res != gpioMap.end()) {
-        return res->second.get();
-    }
-    return nullptr;
-}
-
-void gpio_init(u8g2_info_t *info, uint8_t pin, gpio_direction_t direction) {
-    std::map<int, std::shared_ptr<gpio_t>> gpioMap = info->gpio;
-    auto res = gpioMap.find(pin);
-
-    std::shared_ptr<gpio_t> gpio;
-    if (res != gpioMap.end()) {
-        gpio = res->second;
-    } else {
-        gpio = std::make_shared<gpio_t>();
-        gpioMap.insert(make_pair(pin, gpio));
-    }
-
-    if (gpio_open(gpio.get(), pin, direction) < 0) {
-        JNIEnv *env;
-        GETENV(env);
-        std::stringstream ss;
-        ss << "Unable to open gpio pin from sysfs (Pin: " << std::to_string(pin) << ", Reason: " << gpio_errmsg(gpio.get()) << ")";
-        JNI_ThrowNativeLibraryException(env, ss.str());
-        return;
-    }
-}
-
-#else
-
+/**
+ * Retrieve a cached gpio line instance
+ * @param info The u8g2 descriptor
+ * @param pin The gpio pin/line number
+ * @return The cached gpio line instance
+ */
 std::shared_ptr<gpiod::line> get_gpio_line(u8g2_info_t *info, uint8_t pin) {
     auto res = info->gpio.find(pin);
     std::shared_ptr<gpiod::line> gpio_line = nullptr;
@@ -225,11 +195,26 @@ std::shared_ptr<gpiod::line> get_gpio_line(u8g2_info_t *info, uint8_t pin) {
     return gpio_line;
 }
 
+/**
+ * Initialize Gpio Line
+ *
+ * @param info The u8g2 descriptor
+ * @param pin The gpio line number
+ * @param direction
+ */
 void gpio_line_init(u8g2_info_t *info, uint8_t pin, int direction) {
     try {
+        if (info->gpio_chip == nullptr) {
+            JNIEnv *env;
+            GETENV(env);
+            std::stringstream ss;
+            ss << "Gpio chip not initialized";
+            JNI_ThrowNativeLibraryException(env, ss.str());
+            return;
+        }
         std::shared_ptr<gpiod::line> gpio_line = get_gpio_line(info, pin);
         if (gpio_line == nullptr) {
-            gpiod::line line = info->gpio_chip.get_line(pin);
+            gpiod::line line = info->gpio_chip->get_line(pin);
             gpio_line = std::make_shared<gpiod::line>(line);
             info->gpio.insert(make_pair(pin, gpio_line));
         }
@@ -247,10 +232,14 @@ void gpio_line_init(u8g2_info_t *info, uint8_t pin, int direction) {
     }
 }
 
-#endif
-
+/**
+ * Write to the gpio pin
+ *
+ * @param info The u8g2 descriptor
+ * @param pin The gpio pin/line number
+ * @param value The value to be written (0 or 1)
+ */
 void digital_write(u8g2_info_t *info, uint8_t pin, uint8_t value) {
-#ifdef USE_GPIOUSERSPACE
     try {
         //GPIO Userspace code
         std::shared_ptr<gpiod::line> gpio_line = get_gpio_line(info, pin);
@@ -270,16 +259,6 @@ void digital_write(u8g2_info_t *info, uint8_t pin, uint8_t value) {
         ss << "Unable to write value to gpio line (Line: " << std::to_string(pin) << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
         JNI_ThrowNativeLibraryException(env, ss.str());
     }
-#else
-    gpio_t* gpio = get_gpio(info, pin);
-    if (gpio == nullptr)
-        return;
-    /* Write output GPIO with value */
-    if (gpio_write(gpio, value) < 0) {
-        fprintf(stderr, "gpio_write(): %s\n", gpio_errmsg(gpio));
-        exit(1);
-    }
-#endif
 }
 
 /**
@@ -288,7 +267,6 @@ void digital_write(u8g2_info_t *info, uint8_t pin, uint8_t value) {
 uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
     switch (msg) {
         case U8X8_MSG_GPIO_AND_DELAY_INIT: { // called once during init phase of u8g2/u8x8, can be used to setup pins
-#ifdef USE_GPIOUSERSPACE
             //Configure pin modes
             gpio_line_init(info, info->pin_map.d0, gpiod::line_request::DIRECTION_AS_IS);
             gpio_line_init(info, info->pin_map.d1, gpiod::line_request::DIRECTION_AS_IS);
@@ -304,23 +282,6 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
             gpio_line_init(info, info->pin_map.cs, gpiod::line_request::DIRECTION_AS_IS);
             gpio_line_init(info, info->pin_map.cs1, gpiod::line_request::DIRECTION_AS_IS);
             gpio_line_init(info, info->pin_map.cs2, gpiod::line_request::DIRECTION_AS_IS);
-#else
-            //Configure pin modes
-            gpio_init(info, info->pin_map.d0, GPIO_DIR_PRESERVE);
-            gpio_init(info, info->pin_map.d1, GPIO_DIR_PRESERVE);
-            gpio_init(info, info->pin_map.sda, GPIO_DIR_PRESERVE);
-            gpio_init(info, info->pin_map.scl, GPIO_DIR_PRESERVE);
-            gpio_init(info, info->pin_map.d2, GPIO_DIR_OUT);
-            gpio_init(info, info->pin_map.d3, GPIO_DIR_OUT);
-            gpio_init(info, info->pin_map.d4, GPIO_DIR_OUT);
-            gpio_init(info, info->pin_map.d5, GPIO_DIR_OUT);
-            gpio_init(info, info->pin_map.d6, GPIO_DIR_OUT);
-            gpio_init(info, info->pin_map.d7, GPIO_DIR_OUT);
-            gpio_init(info, info->pin_map.dc, GPIO_DIR_OUT);
-            gpio_init(info, info->pin_map.cs, GPIO_DIR_PRESERVE);
-            gpio_init(info, info->pin_map.cs1, GPIO_DIR_PRESERVE);
-            gpio_init(info, info->pin_map.cs2, GPIO_DIR_PRESERVE);
-#endif
             break;
         }
         case U8X8_MSG_DELAY_NANO: { // delay arg_int * 1 nano second
