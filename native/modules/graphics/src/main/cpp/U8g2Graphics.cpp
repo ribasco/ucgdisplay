@@ -517,7 +517,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setBitmapMode(JNIEnv *env
     u8g2_SetBitmapMode(toU8g2(id), static_cast<uint8_t>(mode));
 }
 
-void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setContrast(JNIEnv *env, jclass cls, jlong id, uint8_t value) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setContrast(JNIEnv *env, jclass cls, jlong id, jint value) {
     if (!check_validity(env, id))
         return;
     u8g2_SetContrast(toU8g2(id), value);
