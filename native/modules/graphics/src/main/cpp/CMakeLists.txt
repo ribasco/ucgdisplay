@@ -29,17 +29,20 @@ if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
 
     # Add libgpiod
     if (TARGET libgpiod AND LibGpiod_FOUND)
-        add_dependencies(ucgdisp libgpiod)
-        set_property(TARGET libgpiod PROPERTY POSITION_INDEPENDENT_CODE ON)
         list(APPEND INC_DIRS ${LIBGPIOD_INCLUDE_DIR})
-        list(APPEND LINK_LIBS ${LIBGPIOD_LIB_CXX})
-        list(APPEND LINK_LIBS ${LIBGPIOD_LIB_C})
+        list(APPEND LINK_LIBS libgpiod)
     endif ()
 endif ()
 
 # Add u8g2 dependency
 if (TARGET u8g2)
+    if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
+        # Make sure libgpiod is built before u8g2
+        add_dependencies(u8g2 libgpiod)
+    endif ()
+
     add_dependencies(ucgdisp u8g2)
+
     list(APPEND INC_DIRS ${U8G2_INCLUDE_DIR})
     list(APPEND LINK_LIBS ${U8G2_LIBRARIES})
 else ()
