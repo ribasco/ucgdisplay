@@ -19,12 +19,14 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin CACHE PATH "Single 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin CACHE PATH "Single Directory for all Executables")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin CACHE PATH "Single Directory for all static libraries")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_EXECUTE_PROCESS_COMMAND_ECHO STDOUT) # to be used with CMake 3.15 and above
 set(TOOLS_DIR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tools)
 set(JDK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../include)
 
 get_filename_component(JDK_INCLUDE_DIR "" REALPATH BASE_DIR "${JDK_INCLUDE_DIR}")
 
 message(STATUS "[MAIN] -------------------------------------------------------------------------------------------------")
+message(STATUS "[MAIN] CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "[MAIN] TOOLS DIR = ${TOOLS_DIR_PATH}")
 message(STATUS "[MAIN] CURRENT LIST DIR = ${CMAKE_CURRENT_LIST_DIR}")
 message(STATUS "[MAIN] CROSS COMPILE  = ${CMAKE_CROSSCOMPILING}")
