@@ -39,7 +39,7 @@ get_filename_component(TOOLS_DIR_PATH "" REALPATH BASE_DIR "${TOOLS_DIR_PATH}")
 get_filename_component(RPI_TOOLCHAIN_PATH "" REALPATH BASE_DIR "${RPI_TOOLCHAIN_PATH}")
 
 # Cross-compiler variables
-set(CMAKE_C_COMPILER ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-gcc)
+set(CMAKE_C_COMPILER ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-gcc-4.8.3)
 set(CMAKE_CXX_COMPILER ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++)
 set(CMAKE_SYSROOT ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/arm-linux-gnueabihf/arm-linux-gnueabihf/sysroot)
 #set(CMAKE_C_COMPILER ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
@@ -104,10 +104,6 @@ if (NOT ${TOOLCHAIN_VALID})
 
     message(STATUS "[RPI-TOOLCHAIN] Moving '${TOOLS_DIR_PATH}/tools-master/' to '${RPI_TOOLCHAIN_PATH}'")
     file(RENAME ${TOOLS_DIR_PATH}/tools-master/ ${RPI_TOOLCHAIN_PATH})
-    # execute_process(COMMAND mv ${TOOLS_DIR_PATH}/tools-master/ ${RPI_TOOLCHAIN_PATH} ERROR_VARIABLE tc_move)
-    #if (tc_move)
-    #    message(FATAL_ERROR "[RPI-TOOLCHAIN] Could not perform move operation (${tc_move})")
-    #endif ()
 
     message(STATUS "[RPI-TOOLCHAIN] Removing '${OUTPUT_FILENAME}' from ${TOOLS_DIR_PATH}")
     file(REMOVE ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME})
