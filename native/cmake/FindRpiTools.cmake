@@ -1,20 +1,24 @@
 set(TOOLS_DIR_PATH ${CMAKE_CURRENT_LIST_DIR}/../tools)
 set(RPI_TOOLCHAIN_PATH "${TOOLS_DIR_PATH}/rpi" CACHE PATH "The path of the Raspberry Pi Toolchain")
 
+# Convert to real path
+get_filename_component(TOOLS_DIR_PATH "" REALPATH BASE_DIR "${TOOLS_DIR_PATH}")
+get_filename_component(RPI_TOOLCHAIN_PATH "" REALPATH BASE_DIR "${RPI_TOOLCHAIN_PATH}")
+
 message(STATUS "[FIND-TOOLCHAIN] Search Path = ${RPI_TOOLCHAIN_PATH}")
 
 function(VERIFY_TOOLCHAIN path)
-    message(STATUS "[VERIFY_TOOLCHAIN] Verifying toolchain path = ${path}")
+    message(STATUS "[VERIFY-TOOLCHAIN] Verifying toolchain path = ${path}")
     if (NOT EXISTS ${path})
-        message(STATUS "[VERIFY_TOOLCHAIN] Toolchain path ${path} does not exist")
+        message(STATUS "[VERIFY-TOOLCHAIN] Toolchain path ${path} does not exist")
         set(TOOLCHAIN_VALID false PARENT_SCOPE)
     else ()
         set(C_PATH ${RPI_TOOLCHAIN_PATH}${CMAKE_C_COMPILER})
         set(CXX_PATH ${RPI_TOOLCHAIN_PATH}${CMAKE_CXX_COMPILER})
 
-        message(STATUS "[VERIFY_TOOLCHAIN] Checking if c and c++ compiler paths are valid")
-        message(STATUS "[VERIFY_TOOLCHAIN] C_COMPILER = ${C_PATH}")
-        message(STATUS "[VERIFY_TOOLCHAIN] CXX_COMPILER = ${CXX_PATH}")
+        message(STATUS "[VERIFY-TOOLCHAIN] Checking if c and c++ compiler paths are valid")
+        message(STATUS "[VERIFY-TOOLCHAIN] C_COMPILER = ${C_PATH}")
+        message(STATUS "[VERIFY-TOOLCHAIN] CXX_COMPILER = ${CXX_PATH}")
 
         if (EXISTS ${C_PATH} AND EXISTS ${CXX_PATH})
             set(TOOLCHAIN_VALID true PARENT_SCOPE)
@@ -48,21 +52,25 @@ if (NOT ${TOOLCHAIN_VALID})
     endif ()
 
     if (UNIX)
-        message(STATUS "[FIND-TOOLCHAIN] Downloading toolchain to ${TOOLS_DIR_PATH}/toolchain.tar.gz")
-        file(DOWNLOAD https://github.com/raspberrypi/tools/archive/master.tar.gz ${TOOLS_DIR_PATH}/toolchain.tar.gz SHOW_PROGRESS)
+        set(OUTPUT_FILENAME "toolchain.tar.gz")
+        set(OUTPUT_FILEPATH "${TOOLS_DIR_PATH}/${OUTPUT_FILENAME}")
 
-        message(STATUS "[FIND-TOOLCHAIN] Unzipping '${TOOLS_DIR_PATH}/toolchain.tar.gz' to '${TOOLS_DIR_PATH}'")
-        execute_process(COMMAND tar xvzf ${TOOLS_DIR_PATH}/toolchain.tar.gz WORKING_DIRECTORY ${TOOLS_DIR_PATH} ERROR_VARIABLE tc_unzip OUTPUT_QUIET)
+        message(STATUS "[FIND-TOOLCHAIN] Downloading toolchain to ${OUTPUT_FILEPATH}")
+        file(DOWNLOAD https://github.com/raspberrypi/tools/archive/master.tar.gz ${OUTPUT_FILEPATH} SHOW_PROGRESS)
+
+        message(STATUS "[FIND-TOOLCHAIN] Unzipping '${OUTPUT_FILEPATH}' to '${TOOLS_DIR_PATH}'")
+        execute_process(COMMAND tar xvzf ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME} WORKING_DIRECTORY ${TOOLS_DIR_PATH} ERROR_VARIABLE tc_unzip OUTPUT_QUIET)
     else ()
-        message(STATUS "[FIND-TOOLCHAIN] Downloading toolchain to ${TOOLS_DIR_PATH}/toolchain.zip")
-        file(DOWNLOAD https://github.com/raspberrypi/tools/archive/master.zip ${TOOLS_DIR_PATH}/toolchain.zip SHOW_PROGRESS)
+        set(OUTPUT_FILENAME "toolchain.zip")
+        message(STATUS "[FIND-TOOLCHAIN] Downloading toolchain to ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME}")
+        file(DOWNLOAD https://github.com/raspberrypi/tools/archive/master.zip ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME} SHOW_PROGRESS)
 
-        message(STATUS "[FIND-TOOLCHAIN] Unzipping '${TOOLS_DIR_PATH}/toolchain.zip' to '${TOOLS_DIR_PATH}'")
-        execute_process(COMMAND unzip ${TOOLS_DIR_PATH}/toolchain.zip WORKING_DIRECTORY ${TOOLS_DIR_PATH} ERROR_VARIABLE tc_unzip)
+        message(STATUS "[FIND-TOOLCHAIN] Unzipping '${TOOLS_DIR_PATH}/${OUTPUT_FILENAME}' to '${TOOLS_DIR_PATH}'")
+        execute_process(COMMAND unzip ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME} WORKING_DIRECTORY ${TOOLS_DIR_PATH} ERROR_VARIABLE tc_unzip)
     endif ()
 
     if (tc_unzip)
-        message(FATAL_ERROR "[FIND-TOOLCHAIN] Could not unzip contents of the downloaded toolchain (${tc_unzip})")
+        message(FATAL_ERROR "[FIND-TOOLCHAIN] Could not unzip contents of the downloaded toolchain '${OUTPUT_FILENAME}' (${tc_unzip})")
     endif ()
 
     message(STATUS "[FIND-TOOLCHAIN] Moving '${TOOLS_DIR_PATH}/tools-master/' to '${RPI_TOOLCHAIN_PATH}'")
@@ -72,8 +80,8 @@ if (NOT ${TOOLCHAIN_VALID})
         message(FATAL_ERROR "[FIND-TOOLCHAIN] Could not perform move operation (${tc_move})")
     endif ()
 
-    message(STATUS "[FIND-TOOLCHAIN] Removing toolchain.zip from ${TOOLS_DIR_PATH}" ERROR_VARIABLE tc_remove)
-    file(REMOVE ${TOOLS_DIR_PATH}/toolchain.tar.gz)
+    message(STATUS "[FIND-TOOLCHAIN] Removing '${OUTPUT_FILENAME}' from ${TOOLS_DIR_PATH}")
+    file(REMOVE ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME})
 
     if (tc_remove)
         message(FATAL_ERROR "[FIND-TOOLCHAIN] Could not perform delete operation")

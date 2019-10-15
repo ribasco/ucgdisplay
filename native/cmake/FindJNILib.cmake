@@ -51,5 +51,8 @@ else ()
     include(FindJNI)
 endif ()
 
+get_filename_component(JNI_LIBRARIES "" REALPATH BASE_DIR "${JNI_LIBRARIES}")
+get_filename_component(JNI_INCLUDE_DIRS "" REALPATH BASE_DIR "${JNI_INCLUDE_DIRS}")
+
 message(STATUS "[FIND-JNI] JNI_LIBRARIES = ${JNI_LIBRARIES}")
 message(STATUS "[FIND-JNI] JNI_INCLUDE_DIRS = ${JNI_INCLUDE_DIRS}")
