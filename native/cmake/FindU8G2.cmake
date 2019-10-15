@@ -18,7 +18,7 @@ if (NOT EXISTS ${U8G2_DIR})
     endif ()
 
     message(STATUS "[U8G2] Unzipping '${U8G2_ARCHIVE_FILE_NAME}' to '${LIB_DIR}'")
-    execute_process(COMMAND unzip ${U8G2_ARCHIVE_FILE_PATH} WORKING_DIRECTORY ${LIB_DIR} ERROR_VARIABLE tc_unzip)
+    execute_process(COMMAND unzip ${U8G2_ARCHIVE_FILE_PATH} WORKING_DIRECTORY ${LIB_DIR} ERROR_VARIABLE tc_unzip OUTPUT_QUIET)
 
     if (tc_unzip)
         message(FATAL_ERROR "[U8G2] Could not unzip contents of the downloaded toolchain. Reason: \n${tc_unzip}")

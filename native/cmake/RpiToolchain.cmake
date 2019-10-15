@@ -87,14 +87,14 @@ if (NOT ${TOOLCHAIN_VALID})
         message(STATUS "[RPI-TOOLCHAIN] Downloading toolchain to ${OUTPUT_FILEPATH}")
         file(DOWNLOAD https://github.com/raspberrypi/tools/archive/master.tar.gz ${OUTPUT_FILEPATH} SHOW_PROGRESS)
 
-        message(STATUS "[RPI-TOOLCHAIN] Unzipping '${OUTPUT_FILEPATH}' to '${TOOLS_DIR_PATH}'")
+        message(STATUS "[RPI-TOOLCHAIN] Extracting '${OUTPUT_FILEPATH}' to '${TOOLS_DIR_PATH}'")
         execute_process(COMMAND tar xvzf ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME} WORKING_DIRECTORY ${TOOLS_DIR_PATH} ERROR_VARIABLE tc_unzip OUTPUT_QUIET)
     else ()
         set(OUTPUT_FILENAME "toolchain.zip")
         message(STATUS "[RPI-TOOLCHAIN] Downloading toolchain to ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME}")
         file(DOWNLOAD https://github.com/raspberrypi/tools/archive/master.zip ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME} SHOW_PROGRESS)
 
-        message(STATUS "[RPI-TOOLCHAIN] Unzipping '${TOOLS_DIR_PATH}/${OUTPUT_FILENAME}' to '${TOOLS_DIR_PATH}'")
+        message(STATUS "[RPI-TOOLCHAIN] Extracting '${TOOLS_DIR_PATH}/${OUTPUT_FILENAME}' to '${TOOLS_DIR_PATH}'")
         execute_process(COMMAND unzip ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME} WORKING_DIRECTORY ${TOOLS_DIR_PATH} ERROR_VARIABLE tc_unzip OUTPUT_QUIET)
     endif ()
 
@@ -119,6 +119,7 @@ if (NOT ${TOOLCHAIN_VALID})
     message(FATAL_ERROR "[RPI-TOOLCHAIN] Downloaded toolchain invalid or corrupted (${TOOLS_DIR_PATH})")
 else ()
     message(STATUS "[RPI-TOOLCHAIN] Downloaded toolchain is valid")
+    execute_process(COMMAND ls -l ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin)
 endif ()
 
 # =================================================================
