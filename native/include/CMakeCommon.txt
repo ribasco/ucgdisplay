@@ -21,19 +21,23 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin CACHE PATH "Single 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_EXECUTE_PROCESS_COMMAND_ECHO STDOUT) # to be used with CMake 3.15 and above
 set(TOOLS_DIR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tools)
-set(JDK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../include)
+get_filename_component(PROJ_INCLUDE_DIR "" REALPATH BASE_DIR "${PROJECT_SOURCE_DIR}/../../../../../include")
+set(JDK_INCLUDE_DIR ${PROJ_INCLUDE_DIR})
+
+include(${PROJ_INCLUDE_DIR}/CMakeFunctions.txt)
 
 get_filename_component(JDK_INCLUDE_DIR "" REALPATH BASE_DIR "${JDK_INCLUDE_DIR}")
 
 message(STATUS "[MAIN] -------------------------------------------------------------------------------------------------")
+message(STATUS "[MAIN] CROSS COMPILE            = ${CMAKE_CROSSCOMPILING}")
+message(STATUS "[MAIN] HOST OS                  = ${CMAKE_HOST_SYSTEM_NAME}")
+message(STATUS "[MAIN] TARGET OS                = ${CMAKE_SYSTEM_NAME}")
+message(STATUS "[MAIN] TARGET ARCH              = ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS "[MAIN] JDK INC DIR              = ${JDK_INCLUDE_DIR}")
+message(STATUS "[MAIN] PROJ INC DIR             = ${PROJ_INCLUDE_DIR}")
 message(STATUS "[MAIN] CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}")
-message(STATUS "[MAIN] TOOLS DIR = ${TOOLS_DIR_PATH}")
-message(STATUS "[MAIN] CURRENT LIST DIR = ${CMAKE_CURRENT_LIST_DIR}")
-message(STATUS "[MAIN] CROSS COMPILE  = ${CMAKE_CROSSCOMPILING}")
-message(STATUS "[MAIN] HOST OS        = ${CMAKE_HOST_SYSTEM_NAME}")
-message(STATUS "[MAIN] TARGET OS      = ${CMAKE_SYSTEM_NAME}")
-message(STATUS "[MAIN] TARGET ARCH    = ${CMAKE_SYSTEM_PROCESSOR}")
-message(STATUS "[MAIN] JDK INC DIR    = ${JDK_INCLUDE_DIR}")
+message(STATUS "[MAIN] TOOLS DIR                = ${TOOLS_DIR_PATH}")
+message(STATUS "[MAIN] CURRENT LIST DIR         = ${CMAKE_CURRENT_LIST_DIR}")
 message(STATUS "[MAIN] -------------------------------------------------------------------------------------------------")
 
 # Adhere to GNU filesystem layout conventions
@@ -42,8 +46,6 @@ include(GNUInstallDirs)
 set(LIB_DIR "${CMAKE_SOURCE_DIR}/lib")
 
 string(TOLOWER ${CMAKE_SYSTEM_NAME} TARGET_OS)
-
-# add_compile_options(-Wall -Wno-unused-parameter -Wno-error=unused-but-set-variable -Wno-error=unused-function)
 
 # Find JAVA_HOME/INCLUDE DIR
 if (CMAKE_CROSSCOMPILING)
@@ -83,61 +85,3 @@ list(APPEND LINK_LIBS "")
 if (WIN32)
     set(CMAKE_SHARED_LIBRARY_PREFIX "")
 endif ()
-
-# Download Github Project
-function(DOWNLOAD_GITPROJ project_url project_name project_tag)
-    if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-        set(ARCHIVE_URL ${project_url}/archive/${project_tag}.zip)
-        set(ARCHIVE_EXT "zip")
-    else ()
-        set(ARCHIVE_URL ${project_url}/archive/${project_tag}.tar.gz)
-        set(ARCHIVE_EXT "tar.gz")
-    endif ()
-
-    set(PROJ_NAME ${project_name})
-    string(TOUPPER "[${PROJ_NAME}]" PROJ_TAG)
-    set(PROJ_DIR "${LIB_DIR}/${project_name}")
-
-    if (NOT EXISTS ${PROJ_DIR})
-        message(STATUS "[DOWNLOAD_GITPROJ] Downloading github project archive '${ARCHIVE_URL}'")
-        set(PROJ_ARCHIVE_FILE_NAME ${PROJ_NAME}.${ARCHIVE_EXT})
-        set(PROJ_ARCHIVE_FILE_PATH ${LIB_DIR}/${PROJ_ARCHIVE_FILE_NAME})
-
-        if (NOT EXISTS ${PROJ_ARCHIVE_FILE_PATH} AND (NOT EXISTS ${LIB_DIR}/${PROJ_NAME}-master))
-            message(STATUS "${PROJ_TAG} Downloading to ${PROJ_ARCHIVE_FILE_PATH}")
-            message(STATUS "${PROJ_TAG} Not yet existing: ${PROJ_DIR}, Working directory: ${CMAKE_SOURCE_DIR}")
-            file(DOWNLOAD ${ARCHIVE_URL} ${PROJ_ARCHIVE_FILE_PATH} SHOW_PROGRESS)
-        endif ()
-
-        if (NOT EXISTS ${LIB_DIR}/${PROJ_NAME}-master)
-            message(STATUS "${PROJ_TAG} Extracting '${PROJ_ARCHIVE_FILE_NAME}' to '${LIB_DIR}' (ARCHIVE_EXT = ${ARCHIVE_EXT})")
-            if (${ARCHIVE_EXT} STREQUAL "zip")
-                execute_process(COMMAND unzip ${PROJ_ARCHIVE_FILE_PATH} WORKING_DIRECTORY ${LIB_DIR} ERROR_VARIABLE tc_unzip)
-            else ()
-                execute_process(COMMAND tar xvzf ${PROJ_ARCHIVE_FILE_PATH} WORKING_DIRECTORY ${LIB_DIR} ERROR_VARIABLE tc_unzip)
-            endif ()
-
-            if (tc_unzip)
-                message(FATAL_ERROR "${PROJ_TAG} Could not unzip contents of the downloaded archive '${PROJ_ARCHIVE_FILE_PATH}' (${tc_unzip})")
-            endif ()
-        else ()
-            message(STATUS "${PROJ_TAG} Skipping extraction. Path '${LIB_DIR}/${PROJ_NAME}-master' already exists")
-        endif ()
-
-        if (EXISTS ${LIB_DIR}/${PROJ_NAME}-master AND (NOT EXISTS ${PROJ_DIR}))
-            message(STATUS "${PROJ_TAG} Moving '${LIB_DIR}/${PROJ_NAME}-master/' to '${PROJ_DIR}'")
-            file(RENAME "${LIB_DIR}/${PROJ_NAME}-master/" "${PROJ_DIR}")
-        else ()
-            message(STATUS "${PROJ_TAG} Skipping rename operation")
-        endif ()
-
-        if (EXISTS ${PROJ_ARCHIVE_FILE_PATH})
-            message(STATUS "${PROJ_TAG} Removing ${PROJ_ARCHIVE_FILE_PATH} from ${LIB_DIR}")
-            file(REMOVE ${PROJ_ARCHIVE_FILE_PATH})
-        else ()
-            message(STATUS "${PROJ_TAG} Skipping clean-up. ${PROJ_ARCHIVE_FILE_PATH} does not exists")
-        endif ()
-    else()
-        message(STATUS "${PROJ_TAG} Skipping download. Project exists")
-    endif ()
-endfunction()

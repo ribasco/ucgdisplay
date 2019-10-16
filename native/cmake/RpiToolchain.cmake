@@ -1,23 +1,4 @@
-function(VERIFY_TOOLCHAIN path)
-    message(STATUS "[VERIFY-TOOLCHAIN] Verifying toolchain path = ${path}")
-    if (NOT EXISTS ${path})
-        message(STATUS "[VERIFY-TOOLCHAIN] Toolchain path '${path}' NOT FOUND")
-        set(TOOLCHAIN_VALID false PARENT_SCOPE)
-    else ()
-        set(C_PATH ${CMAKE_C_COMPILER})
-        set(CXX_PATH ${CMAKE_CXX_COMPILER})
-
-        message(STATUS "[VERIFY-TOOLCHAIN] Checking if c and c++ compiler paths are valid")
-        message(STATUS "[VERIFY-TOOLCHAIN] C_COMPILER = ${C_PATH}")
-        message(STATUS "[VERIFY-TOOLCHAIN] CXX_COMPILER = ${CXX_PATH}")
-
-        if (EXISTS ${C_PATH} AND EXISTS ${CXX_PATH})
-            set(TOOLCHAIN_VALID true PARENT_SCOPE)
-        else ()
-            set(TOOLCHAIN_VALID false PARENT_SCOPE)
-        endif ()
-    endif ()
-endfunction()
+include(${CMAKE_CURRENT_LIST_DIR}/../include/CMakeFunctions.txt)
 
 if (NOT UNIX)
     message(FATAL_ERROR "[RPI-TOOLCHAIN] Unsupported platform for this RPI Toolchain")
@@ -71,7 +52,7 @@ message(STATUS "[RPI-TOOLCHAIN] Found valid RPI Toolchain = ${TOOLCHAIN_VALID}")
 # Check if the path exists, if it doesn't, download a copy to the source directory
 if (NOT ${TOOLCHAIN_VALID})
     # Perform clean-up opertations
-    message(STATUS "[RPI-TOOLCHAIN] RPi tools directory exists but missing required files...Performing clean-up")
+    message(STATUS "[RPI-TOOLCHAIN] Performing clean-up operations")
     file(REMOVE_RECURSE ${RPI_TOOLCHAIN_PATH})
     if (EXISTS "${TOOLS_DIR_PATH}/toolchain.tar.gz")
         file(REMOVE ${TOOLS_DIR_PATH}/toolchain.tar.gz)
@@ -118,9 +99,9 @@ VERIFY_TOOLCHAIN(${RPI_TOOLCHAIN_PATH})
 
 if (NOT ${TOOLCHAIN_VALID})
     message(FATAL_ERROR "[RPI-TOOLCHAIN] Downloaded toolchain invalid or corrupted (${TOOLS_DIR_PATH})")
+    execute_process(COMMAND ls -l ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin)
 else ()
     message(STATUS "[RPI-TOOLCHAIN] Downloaded toolchain is valid")
-    execute_process(COMMAND ls -l ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin)
 endif ()
 
 # =================================================================
