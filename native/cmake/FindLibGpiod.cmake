@@ -8,17 +8,19 @@ set(PROJ_INCLUDE_DIR "${LIB_DIR}/include")
 set(PROJ_TAG "[LIBGPIOD]")
 set(LIBGPIOD_VERSION "v1.4.1")
 
-if (NOT $ENV{TRAVIS_OS_NAME} STREQUAL "")
+#[[if (NOT $ENV{TRAVIS_OS_NAME} STREQUAL "")
     set(KERNEL_VERSION "4.15.18-041518")
     message(STATUS "Detected travis environment. Using fixed kernel version = ${KERNEL_VERSION}")
 else ()
     execute_process(COMMAND uname -r OUTPUT_VARIABLE KERNEL_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-endif ()
+endif ()]]
 
 message(STATUS "${PROJ_TAG} Using kernel version = ${KERNEL_VERSION} (Travis Os Name = $ENV{TRAVIS_OS_NAME})")
 message(STATUS "${PROJ_TAG} Project Include Dir = ${PROJ_INCLUDE_DIR}")
+message(STATUS "${PROJ_TAG} SYSROOT = ${CMAKE_SYSROOT}")
 
-set(CFLAGS "-I/usr/src/linux-headers-${KERNEL_VERSION}/include/uapi -I/usr/src/linux-headers-${KERNEL_VERSION}/include -I${PROJ_INCLUDE_DIR}")
+#set(CFLAGS "-I/usr/src/linux-headers-${KERNEL_VERSION}/include/uapi -I/usr/src/linux-headers-${KERNEL_VERSION}/include -I${PROJ_INCLUDE_DIR}")
+set(CFLAGS "-I${CMAKE_SYSROOT}/usr/include")
 
 # -fPIC
 # ac_cv_func_realloc_0_nonnull=yes
@@ -29,7 +31,7 @@ ExternalProject_Add(
         GIT_TAG ${LIBGPIOD_VERSION}
         STAMP_DIR ${PROJECT_BINARY_DIR}/stamp
         UPDATE_COMMAND ""
-        CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ./autogen.sh --enable-tools=no --enable-bindings-cxx --prefix=${CMAKE_INSTALL_PREFIX} --host=arm-linux-gnueabihf CFLAGS=${CFLAGS} ac_cv_func_malloc_0_nonnull=yes
+        CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ./autogen.sh --enable-tools=no --enable-bindings-cxx --prefix=${CMAKE_INSTALL_PREFIX} --host=arm-linux-gnueabihf CFLAGS=-I${CMAKE_SYSROOT}/usr/include LDFLAGS=-L${SYSROOT}/usr/lib ac_cv_func_malloc_0_nonnull=yes
         SOURCE_DIR "${CMAKE_SOURCE_DIR}/lib/libgpiod"
         BUILD_IN_SOURCE 1
         INSTALL_COMMAND make install

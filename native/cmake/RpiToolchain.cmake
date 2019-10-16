@@ -66,15 +66,15 @@ if (NOT ${TOOLCHAIN_VALID})
         set(OUTPUT_FILENAME "toolchain.tar.gz")
         set(OUTPUT_FILEPATH "${TOOLS_DIR_PATH}/${OUTPUT_FILENAME}")
 
-        message(STATUS "[RPI-TOOLCHAIN] Downloading toolchain to ${OUTPUT_FILEPATH}")
-        file(DOWNLOAD https://github.com/raspberrypi/tools/archive/master.tar.gz ${OUTPUT_FILEPATH} SHOW_PROGRESS)
+        message(STATUS "[RPI-TOOLCHAIN] Downloading toolchain (https://github.com/ribasco/rpi-tools/archive/master.tar.gz) to ${OUTPUT_FILEPATH}")
+        file(DOWNLOAD https://github.com/ribasco/rpi-tools/archive/master.tar.gz ${OUTPUT_FILEPATH} SHOW_PROGRESS)
 
         message(STATUS "[RPI-TOOLCHAIN] Extracting '${OUTPUT_FILEPATH}' to '${TOOLS_DIR_PATH}'")
         execute_process(COMMAND tar xvzf ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME} WORKING_DIRECTORY ${TOOLS_DIR_PATH} ERROR_VARIABLE tc_unzip OUTPUT_QUIET)
     else ()
         set(OUTPUT_FILENAME "toolchain.zip")
         message(STATUS "[RPI-TOOLCHAIN] Downloading toolchain to ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME}")
-        file(DOWNLOAD https://github.com/raspberrypi/tools/archive/master.zip ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME} SHOW_PROGRESS)
+        file(DOWNLOAD https://github.com/ribasco/rpi-tools/archive/master.zip ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME} SHOW_PROGRESS)
 
         message(STATUS "[RPI-TOOLCHAIN] Extracting '${TOOLS_DIR_PATH}/${OUTPUT_FILENAME}' to '${TOOLS_DIR_PATH}'")
         execute_process(COMMAND unzip ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME} WORKING_DIRECTORY ${TOOLS_DIR_PATH} ERROR_VARIABLE tc_unzip OUTPUT_QUIET)
@@ -84,8 +84,8 @@ if (NOT ${TOOLCHAIN_VALID})
         message(FATAL_ERROR "[RPI-TOOLCHAIN] Could not unzip contents of the downloaded toolchain '${OUTPUT_FILENAME}' (${tc_unzip})")
     endif ()
 
-    message(STATUS "[RPI-TOOLCHAIN] Moving '${TOOLS_DIR_PATH}/tools-master/' to '${RPI_TOOLCHAIN_PATH}'")
-    file(RENAME ${TOOLS_DIR_PATH}/tools-master/ ${RPI_TOOLCHAIN_PATH})
+    message(STATUS "[RPI-TOOLCHAIN] Moving '${TOOLS_DIR_PATH}/rpi-tools-master/' to '${RPI_TOOLCHAIN_PATH}'")
+    file(RENAME ${TOOLS_DIR_PATH}/rpi-tools-master/ ${RPI_TOOLCHAIN_PATH})
 
     message(STATUS "[RPI-TOOLCHAIN] Removing '${OUTPUT_FILENAME}' from ${TOOLS_DIR_PATH}")
     file(REMOVE ${TOOLS_DIR_PATH}/${OUTPUT_FILENAME})
@@ -113,6 +113,7 @@ set(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
 
 # Use our definitions for compiler tools
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+
 # Search for libraries and headers in the target directories only
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
