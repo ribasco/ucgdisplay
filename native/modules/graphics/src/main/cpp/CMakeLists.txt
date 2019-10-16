@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.11)
 project(ucgd-mod-graphics)
 
 set(GLOBAL_INC_DIR "../../../../../include")

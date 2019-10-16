@@ -32,6 +32,7 @@ set(TOOLS_DIR_PATH ${CMAKE_CURRENT_LIST_DIR}/../tools)
 set(RPI_TOOLCHAIN_PATH "${TOOLS_DIR_PATH}/rpi" CACHE PATH "The path of the Raspberry Pi Toolchain")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../cmake") # Set module path
 set(CMAKE_SYSROOT ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/arm-linux-gnueabihf/arm-linux-gnueabihf/sysroot)
+set(CMAKE_STAGING_PREFIX ${RPI_TOOLCHAIN_PATH})
 
 # Convert to real path
 get_filename_component(CMAKE_MODULE_PATH "" REALPATH BASE_DIR "${CMAKE_MODULE_PATH}")
@@ -39,7 +40,7 @@ get_filename_component(TOOLS_DIR_PATH "" REALPATH BASE_DIR "${TOOLS_DIR_PATH}")
 get_filename_component(RPI_TOOLCHAIN_PATH "" REALPATH BASE_DIR "${RPI_TOOLCHAIN_PATH}")
 
 # Cross-compiler variables
-set(CMAKE_C_COMPILER ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-gcc-4.8.3)
+set(CMAKE_C_COMPILER ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-gcc)
 set(CMAKE_CXX_COMPILER ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++)
 set(CMAKE_SYSROOT ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/arm-linux-gnueabihf/arm-linux-gnueabihf/sysroot)
 #set(CMAKE_C_COMPILER ${RPI_TOOLCHAIN_PATH}/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc)
