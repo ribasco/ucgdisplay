@@ -59,5 +59,10 @@ script:
 before_deploy:
   - cp scripts/settings.xml $HOME/.m2/settings.xml
 
+after_failure:
+  - echo "===================================================="
+  - echo "CMake Error Log ${TRAVIS_BUILD_DIR}"
+  - echo "===================================================="
+
 after_success:
   - scripts/deploy.sh
