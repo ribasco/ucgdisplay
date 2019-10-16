@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.10)
 project(ucgd-mod-input)
 
 set(GLOBAL_INC_DIR "../../../../../include")
