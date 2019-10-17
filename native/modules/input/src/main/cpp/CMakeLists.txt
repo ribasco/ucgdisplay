@@ -6,6 +6,7 @@ if (NOT UNIX)
 endif ()
 
 set(GLOBAL_INC_DIR "../../../../../include")
+get_filename_component(GLOBAL_INC_DIR "" REALPATH BASE_DIR "${GLOBAL_INC_DIR}")
 
 include(${GLOBAL_INC_DIR}/CMakeCommon.txt)
 
