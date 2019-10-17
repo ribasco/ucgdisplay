@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 project(ucgd-mod-input)
 
+if (NOT UNIX)
+    message(FATAL_ERROR "This build only supports Unix/Linux systems")
+endif ()
+
 set(GLOBAL_INC_DIR "../../../../../include")
 
 include(${GLOBAL_INC_DIR}/CMakeCommon.txt)
-
-if (NOT UNIX)
-    message(FATAL_ERROR "Only unix/linux system builds are currently supported by this module")
-endif ()
 
 # Find Libevent Package
 if (UNIX)
