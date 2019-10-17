@@ -1,0 +1,3 @@
+[submodule "rpi"]
+	path = native/tools/rpi-tools
+	url = https://github.com/ribasco/rpi-tools
