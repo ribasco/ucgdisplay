@@ -303,14 +303,14 @@
                         <excludes>
                             <exclude>native/modules/graphics/src/main/cpp/utils/build/**</exclude>
                         </excludes>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
-                        <fork>true</fork>
+                        <fork>false</fork>
                         <verbose>false</verbose>
                         <debug>false</debug>
                         <optimize>true</optimize>
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>false</showWarnings>
+                        <source>1.8</source>
+                        <target>1.8</target>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -433,7 +433,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <source>1.8</source>
+                        <source>8</source>
                         <excludes>
                             <exclude>native/modules/graphics/src/main/cpp/utils/build/**</exclude>
                         </excludes>
@@ -454,7 +454,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-plugin</artifactId>
-                    <version>1.11.1</version>
+                    <version>1.11.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -521,6 +521,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                </configuration>
             </plugin>
             <!-- Failsafe plugin (integration testing) -->
             <plugin>
@@ -539,33 +542,33 @@
             </plugin>
 
             <!-- Generate license file -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>update-project-license</id>
-                        <goals>
-                            <goal>update-project-license</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <licenseName>lgpl_v3</licenseName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>append-license-file-headers</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <descriptionTemplate>${project.basedir}/scripts/license/template.ftl</descriptionTemplate>
-                        </configuration>
-                    </execution>
-                </executions>
-                <inherited>false</inherited>
-            </plugin>
+            <!--            <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>license-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>update-project-license</id>
+                                    <goals>
+                                        <goal>update-project-license</goal>
+                                    </goals>
+                                    <phase>process-sources</phase>
+                                    <configuration>
+                                        <licenseName>lgpl_v3</licenseName>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>append-license-file-headers</id>
+                                    <goals>
+                                        <goal>update-file-header</goal>
+                                    </goals>
+                                    <phase>process-sources</phase>
+                                    <configuration>
+                                        <descriptionTemplate>${project.basedir}/scripts/license/template.ftl</descriptionTemplate>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                            <inherited>false</inherited>
+                        </plugin>-->
             <!-- ENFORCER Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
