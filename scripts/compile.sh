@@ -15,7 +15,7 @@ echo "                                                        ▀               
 
 
 if [[ $TRAVIS_OS_NAME == 'linux' || ($(uname -s) == 'Linux' && $(uname -m) == 'x86_64') ]]; then
-    mvn clean compile -P'cross-compile,!build-linux-amd64'
+    mvn clean compile -P'cross-compile,!build-linux-x86_64'
 else
     mvn clean compile
 fi
