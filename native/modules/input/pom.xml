@@ -131,7 +131,7 @@
 
         <!-- BUILD PROFILE: Linux - arm -->
         <profile>
-            <id>build-linux-arm</id>
+            <id>build-linux-arm32</id>
             <activation>
                 <os>
                     <name>linux</name>
@@ -148,7 +148,7 @@
 
         <!-- BUILD PROFILE: Linux - arm64 -->
         <profile>
-            <id>build-linux-arm</id>
+            <id>build-linux-arm64</id>
             <activation>
                 <os>
                     <name>linux</name>
