@@ -35,8 +35,8 @@
     <!-- Project properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <pi4j.version>1.2</pi4j.version>
         <commons.io.version>2.6</commons.io.version>
         <commons.lang3.version>3.6</commons.lang3.version>
@@ -122,7 +122,7 @@
     <!-- Profiles -->
     <profiles>
         <!-- Disable doclint for java 8 -->
-        <profile>
+        <!--<profile>
             <id>disable-java8-doclint</id>
             <activation>
                 <jdk>[1.8,)</jdk>
@@ -149,7 +149,7 @@
                     </plugin>
                 </plugins>
             </reporting>
-        </profile>
+        </profile>-->
         <!-- Only activate these plugins on release (source, javadoc, gpg) -->
         <profile>
             <id>release</id>
@@ -309,8 +309,6 @@
                         <optimize>true</optimize>
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>false</showWarnings>
-                        <source>1.8</source>
-                        <target>1.8</target>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -518,13 +516,13 @@
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
             <!-- Javadoc Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                </configuration>
-            </plugin>
+            <!--            <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <configuration>
+                                <source>8</source>
+                            </configuration>
+                        </plugin>-->
             <!-- Failsafe plugin (integration testing) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

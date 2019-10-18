@@ -135,7 +135,7 @@
     <!-- =========================================================================================== -->
 
     <!-- Cross-compile for all OS/Arch (Can only be run from Linux) -->
-    <target name="native-build-cc-all" depends="ucgd-build-common.cleanup, ucgd-build-common.os-check-linux-x86_64, native-build-linux-x86_32, native-build-linux-x86_32-64bit_Host, native-build-linux-x86_64, native-build-cc-linux-arm32, native-build-cc-linux-arm64" if="os.linux.x86_64">
+    <target name="native-build-cc-all" depends="ucgd-build-common.os-check-linux-x86_64, native-build-linux-x86_32, native-build-linux-x86_32-64bit_Host, native-build-linux-x86_64, native-build-cc-linux-arm32, native-build-cc-linux-arm64" if="os.linux.x86_64">
         <echo message="============================================================================"/>
         <echo message=" "/>
         <echo>Cross-compilation complete</echo>

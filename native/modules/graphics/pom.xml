@@ -196,9 +196,9 @@
                                 <!-- Pass maven properties to ant -->
                                 <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${build-target})</echo>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <property name="root.dir" location="../../.." />
+                                <property name="root.dir" location="../../.."/>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${build-target}" />
+                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${build-target}"/>
                             </target>
                         </configuration>
                     </execution>
@@ -217,15 +217,15 @@
             </plugin>
 
             <!-- Javadoc Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>**/UpdateControllerHeader.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+            <!--            <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <configuration>
+                                <excludes>
+                                    <exclude>**/UpdateControllerHeader.java</exclude>
+                                </excludes>
+                            </configuration>
+                        </plugin>-->
 
             <!-- Clean Plugin: Remove the native build directory during clean operation -->
             <plugin>
@@ -233,6 +233,14 @@
                 <artifactId>maven-clean-plugin</artifactId>
                 <configuration>
                     <filesets>
+                        <fileset>
+                            <directory>src/main/cpp/build</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>src/main/cpp/lib</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
                         <fileset>
                             <directory>src/main/cpp/utils/build</directory>
                             <followSymlinks>false</followSymlinks>
