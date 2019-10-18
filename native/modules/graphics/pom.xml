@@ -198,8 +198,6 @@
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.." />
                                 <!--suppress UnresolvedMavenProperty -->
-                                <ant antfile="${root.dir}/scripts/build-common.xml" target="show-prop-info" />
-                                <!--suppress UnresolvedMavenProperty -->
                                 <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${build-target}" />
                             </target>
                         </configuration>
