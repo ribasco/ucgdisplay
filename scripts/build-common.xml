@@ -314,7 +314,7 @@
     </target>
 
     <target name="native-copy-resources-osx-x86_64">
-        <copy file="${cpp.build.dir}/${cpp.build.relpath.osx-x86_32}/bin/${cpp.build.output.mac}" todir="${project.target.dir.osx.x86_64}" failonerror="true"/>
+        <copy file="${cpp.build.dir}/${cpp.build.relpath.osx-x86_64}/bin/${cpp.build.output.mac}" todir="${project.target.dir.osx.x86_64}" failonerror="true"/>
     </target>
 
     <!-- =========================================================================================== -->
