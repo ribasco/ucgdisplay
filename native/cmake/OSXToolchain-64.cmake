@@ -1,0 +1,51 @@
+# OSXCross toolchain
+set(OSXCROSS_HOST "x86_64-apple-darwin15" CACHE STRING "OSXCROSS_HOST")
+set(OSXCROSS_TARGET "darwin15" CACHE STRING "OSXCROSS_TARGET")
+set(OSXCROSS_TARGET_DIR "" CACHE PATH "OSXCROSS_TARGET_DIR")
+set(OSXCROSS_SDK "" CACHE PATH "OSXCROSS_SDK")
+
+set(ENV{OSXCROSS_HOST} ${OSXCROSS_HOST})
+set(ENV{OSXCROSS_TARGET_DIR} ${OSXCROSS_TARGET_DIR})
+set(ENV{OSXCROSS_TARGET} ${OSXCROSS_TARGET})
+set(ENV{OSXCROSS_SDK} ${OSXCROSS_SDK})
+
+message(STATUS "Using OSXCROSS_HOST = ${OSXCROSS_HOST}")
+message(STATUS "Using OSXCROSS_TARGET_DIR = ${OSXCROSS_TARGET_DIR}")
+message(STATUS "Using OSXCROSS_TARGET = ${OSXCROSS_TARGET}")
+message(STATUS "Using OSXCROSS_SDK = ${OSXCROSS_SDK}")
+
+set(CMAKE_SYSTEM_NAME "Darwin")
+string(REGEX REPLACE "-.*" "" CMAKE_SYSTEM_PROCESSOR "${OSXCROSS_HOST}")
+
+# specify the cross compiler
+#[[if(CMAKE_SYSTEM_PROCESSOR MATCHES "^i.86$")
+  set(CMAKE_C_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o32-clang")
+  set(CMAKE_CXX_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o32-clang++-libc++")
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+  set(CMAKE_C_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o64-clang")
+  set(CMAKE_CXX_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o64-clang++-libc++")
+else()
+  message(FATAL_ERROR "Unrecognized target architecture")
+endif()]]
+
+set(CMAKE_C_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o64-clang")
+set(CMAKE_CXX_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o64-clang++-libc++")
+
+# where is the target environment
+set(CMAKE_FIND_ROOT_PATH
+  "${OSXCROSS_SDK}"
+  "${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local")
+
+# search for programs in the build host directories
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+# for libraries and headers in the target directories
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+
+set(CMAKE_AR "${OSXCROSS_TARGET_DIR}/bin/${OSXCROSS_HOST}-ar" CACHE FILEPATH "ar")
+set(CMAKE_RANLIB "${OSXCROSS_TARGET_DIR}/bin/${OSXCROSS_HOST}-ranlib" CACHE FILEPATH "ranlib")
+set(CMAKE_INSTALL_NAME_TOOL "${OSXCROSS_TARGET_DIR}/bin/${OSXCROSS_HOST}-install_name_tool" CACHE FILEPATH "install_name_tool")
+
+set(ENV{PKG_CONFIG_LIBDIR} "${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/lib/pkgconfig")
+set(ENV{PKG_CONFIG_SYSROOT_DIR} "${OSXCROSS_TARGET_DIR}/macports/pkgs")

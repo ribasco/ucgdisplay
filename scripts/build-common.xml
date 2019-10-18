@@ -17,6 +17,138 @@
   -->
 
 <project name="ucgd-build-common" basedir=".">
+    <!--
+        =============================================================================
+                                         REQUIREMENTS
+        =============================================================================
+        1. Host machine should be a Debian (Preferred) 64-bit OS
+        2. Java JDK 11+
+        3. Latest Apache ANT version
+        4. Latest Apache Maven version
+
+        =============================================================================
+                Note: The following properties needs to be defined externally
+        =============================================================================
+        1. root.dir           - usually passed via command line argument
+        2. project.dir.module - the module directory name that belongs to the project
+        3. cpp.build.target   - defined from the project specific ant build file
+    -->
+    <property name="root.dir" value=""/>
+
+    <!-- =========================================================================================== -->
+    <!--                            GLOBAL VALIDATION                                                -->
+    <!-- =========================================================================================== -->
+
+    <fail message="ERROR: 'root.dir' property should not be empty!!">
+        <condition>
+            <or>
+                <not>
+                    <isset property="root.dir"/>
+                </not>
+                <equals arg1="${root.dir}" arg2=""/>
+            </or>
+        </condition>
+    </fail>
+
+    <fail message="ERROR: 'project.dir.module' property should not be empty!!">
+        <condition>
+            <or>
+                <not>
+                    <isset property="project.dir.module"/>
+                </not>
+                <!--suppress AntResolveInspection -->
+                <equals arg1="${project.dir.module}" arg2=""/>
+            </or>
+        </condition>
+    </fail>
+
+    <fail message="ERROR: 'cpp.build.target' property should not be empty!!">
+        <condition>
+            <or>
+                <not>
+                    <isset property="cpp.build.target"/>
+                </not>
+                <!--suppress AntResolveInspection -->
+                <equals arg1="${cpp.build.target}" arg2=""/>
+            </or>
+        </condition>
+    </fail>
+
+    <!-- =========================================================================================== -->
+    <!--                            GLOBAL PROPERTIES                                                -->
+    <!-- =========================================================================================== -->
+
+    <!--suppress AntResolveInspection -->
+    <property name="project.dir.root" location="${root.dir}"/>
+    <!--suppress AntResolveInspection -->
+    <property name="project.dir.base" location="${project.dir.root}/native/modules/${project.dir.module}"/>
+
+    <property name="cmake.module.dir" value="${project.dir.root}/native/cmake"/>
+    <property name="cmake.generator.unix" value="-G 'CodeBlocks - Unix Makefiles'"/>
+    <property name="cmake.generator.win" value="-G 'CodeBlocks - MinGW Makefiles'"/>
+
+    <!-- Global Toolchain properties -->
+    <property name="cpp.tools.win.x86_32.toolchain" value="${cmake.module.dir}/MingWToolchain-32.cmake"/>
+    <property name="cpp.tools.win.x86_64.toolchain" value="${cmake.module.dir}/MingWToolchain-64.cmake"/>
+    <property name="cpp.tools.osx.x86_32.toolchain" value="${cmake.module.dir}/OSXToolchain-32.cmake"/>
+    <property name="cpp.tools.osx.x86_64.toolchain" value="${cmake.module.dir}/OSXToolchain-64.cmake"/>
+
+    <property name="cpp.tools.dir" value="${project.dir.root}/native/tools"/>
+    <property name="cpp.tools.rpi.dir" value="${cpp.tools.dir}/rpi-tools"/>
+    <property name="cpp.tools.rpi.arm32.toolchain" value="${cmake.module.dir}/RpiToolchain-linux-32.cmake"/>
+    <property name="cpp.tools.rpi.arm64.toolchain" value="${cmake.module.dir}/RpiToolchain-linux-64.cmake"/>
+
+    <property name="cpp.tools.osx.dir" value="${cpp.tools.dir}/osxcross"/>
+    <property name="cpp.tools.osx.archive" value="osx-tools.tar.gz"/>
+    <property name="cpp.tools.osx.sdk" value="${cpp.tools.osx.dir}/SDK/MacOSX10.11.sdk"/>
+    <property name="cpp.tools.osx.target" value="darwin15"/>
+    <property name="cpp.tools.osx.host" value="x86_64-apple-${cpp.tools.osx.target}"/>
+
+    <property name="project.dir.target" value="${project.dir.base}/target"/>
+    <property name="project.target.dir.linux.x86_32" value="${project.dir.target}/classes/natives/linux_32"/>
+    <property name="project.target.dir.linux.x86_64" value="${project.dir.target}/classes/natives/linux_64"/>
+    <property name="project.target.dir.linux.arm32" value="${project.dir.target}/classes/natives/linux_arm"/>
+    <property name="project.target.dir.linux.arm64" value="${project.dir.target}/classes/natives/linux_arm64"/>
+    <property name="project.target.dir.win.x86_32" value="${project.dir.target}/classes/natives/windows_32"/>
+    <property name="project.target.dir.win.x86_64" value="${project.dir.target}/classes/natives/windows_64"/>
+    <property name="project.target.dir.osx.x86_32" value="${project.dir.target}/classes/natives/osx_32"/>
+    <property name="project.target.dir.osx.x86_64" value="${project.dir.target}/classes/natives/osx_64"/>
+
+    <property name="cpp.proj.dir" value="${project.dir.base}/src/main/cpp"/>
+    <property name="cmake.module.dir" value="${project.dir.root}/native/cmake"/>
+
+    <property name="cpp.build.type" value="Release"/>
+    <property name="cpp.build.dir" value="${cpp.proj.dir}/build"/>
+    <property name="cpp.lib.dir" value="${cpp.proj.dir}/lib"/>
+
+    <!-- OS specific build relative paths -->
+    <property name="cpp.build.relpath.linux-x86_32" value="linux/x86_32"/>
+    <property name="cpp.build.relpath.linux-x86_64" value="linux/x86_64"/>
+    <property name="cpp.build.relpath.linux-arm32" value="linux/arm_32"/>
+    <property name="cpp.build.relpath.linux-arm64" value="linux/arm_64"/>
+    <property name="cpp.build.relpath.windows-x86_32" value="windows/x86_32"/>
+    <property name="cpp.build.relpath.windows-x86_64" value="windows/x86_64"/>
+    <property name="cpp.build.relpath.osx-x86_32" value="osx/x86_32"/>
+    <property name="cpp.build.relpath.osx-x86_64" value="osx/x86_64"/>
+
+    <!--suppress AntResolveInspection -->
+    <property name="cpp.build.output.linux" value="lib${cpp.build.target}.so"/>
+    <!--suppress AntResolveInspection -->
+    <property name="cpp.build.output.mac" value="lib${cpp.build.target}.dylib"/>
+    <!--suppress AntResolveInspection -->
+    <property name="cpp.build.output.win" value="${cpp.build.target}.dll"/>
+
+    <!-- =========================================================================================== -->
+    <!--                            MISC                                                             -->
+    <!-- =========================================================================================== -->
+    <!-- Cleanup operations -->
+    <target name="cleanup">
+        <echo message="Cleaning up build, lib and target directories"/>
+        <delete dir="${cpp.build.dir}"/>
+        <delete dir="${cpp.lib.dir}"/>
+        <delete dir="${project.dir.target}"/>
+    </target>
+
     <target name="show-prop-info">
         <echo message="=============================================================="/>
         <echo message="Build Properties"/>
@@ -25,7 +157,7 @@
         <echo message="OS Architecture: ${os.arch}"/>
         <echo message="OS Version     : ${os.version}"/>
         <echo message=" "/>
-        <echoproperties>
+        <echoproperties format="text">
             <propertyset>
                 <propertyref prefix="root."/>
                 <propertyref prefix="main."/>
@@ -37,26 +169,226 @@
         <echo message="=============================================================="/>
     </target>
 
-    <target name="os-check-windows-x86_64">
-        <condition property="os.windows.amd64">
-            <os family="windows" arch="amd64"/>
+    <!-- =========================================================================================== -->
+    <!--                            GENERATE SOURCES                                                 -->
+    <!-- =========================================================================================== -->
+
+    <target name="generate-native-sources-all" depends="generate-native-sources-win, generate-native-sources-osx, generate-native-sources-linux-arm, generate-native-sources-linux-x86">
+        <echo>Generating native source directories to ${project.basedir}</echo>
+    </target>
+
+    <!-- Generate windows sources -->
+    <target name="generate-native-sources-win">
+        <mkdir dir="${project.target.dir.win.x86_32}"/>
+        <mkdir dir="${project.target.dir.win.x86_64}"/>
+    </target>
+
+    <!-- Generate linux arm sources -->
+    <target name="generate-native-sources-linux-arm">
+        <mkdir dir="${project.target.dir.linux.arm32}"/>
+        <mkdir dir="${project.target.dir.linux.arm64}"/>
+    </target>
+
+    <!-- Generate native linux sources -->
+    <target name="generate-native-sources-linux-x86">
+        <mkdir dir="${project.target.dir.linux.x86_32}"/>
+        <mkdir dir="${project.target.dir.linux.x86_64}"/>
+    </target>
+
+    <!-- Generate native osx sources -->
+    <target name="generate-native-sources-osx">
+        <mkdir dir="${project.target.dir.osx.x86_32}"/>
+        <mkdir dir="${project.target.dir.osx.x86_64}"/>
+    </target>
+
+    <!-- =========================================================================================== -->
+    <!--                            VALIDATE TOOLCHAINS                                              -->
+    <!-- =========================================================================================== -->
+
+    <!-- Check validity of all required tools -->
+    <target name="tools-check-all" depends="tools-check-osxcross, tools-check-rpi">
+        <echo>Checking validity of all required tools for native library build</echo>
+    </target>
+
+    <!-- Check if the OSX toolchain directory is valid (contains the required files) -->
+    <target name="tools-check-osxcross">
+        <condition property="osx.tools.dir.valid">
+            <and>
+                <available file="${cpp.tools.osx.dir}" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/bin" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/SDK" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/SDK/MacOSX10.11.sdk" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/bin/x86_64-apple-darwin15-wrapper" type="file"/>
+            </and>
+        </condition>
+    </target>
+
+    <!-- Check if RPI Tools is valid -->
+    <target name="tools-check-rpi">
+        <condition property="rpi.tools.dir.valid">
+            <and>
+                <available file="${cpp.tools.rpi.dir}" type="dir"/>
+                <available file="${cpp.tools.rpi.dir}/gcc-linaro-arm-linux-gnueabihf-raspbian" type="dir"/>
+                <available file="${cpp.tools.rpi.dir}/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-rpi-linux-gnueabihf-gcc" type="file"/>
+                <available file="${cpp.tools.rpi.dir}/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-rpi-linux-gnueabihf-g++" type="file"/>
+                <available file="${cpp.tools.rpi.dir}/gcc-linaro-arm-linux-gnueabihf-raspbian-x64" type="dir"/>
+                <available file="${cpp.tools.rpi.dir}/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/aarch64-rpi-linux-gnu-gcc" type="file"/>
+                <available file="${cpp.tools.rpi.dir}/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/aarch64-rpi-linux-gnu-g++" type="file"/>
+            </and>
+        </condition>
+    </target>
+
+    <!-- =========================================================================================== -->
+    <!--                            INITIALIZE TOOLCHAINS                                            -->
+    <!-- =========================================================================================== -->
+
+    <!-- Initialize all toolchains -->
+    <target name="init-native-tools-all" depends="init-native-tools-rpi, init-native-tools-osx">
+        <echo>Initializing native tools (ALL)</echo>
+    </target>
+
+    <!-- Initialize osxcross toolchain -->
+    <target name="init-native-tools-osx" depends="tools-check-osxcross" unless="osx.tools.dir.valid">
+        <echo>Initializing OSXCross toolchain</echo>
+        <echo>Deleting existing OSX toolchain directory (if applicable)</echo>
+        <delete dir="${cpp.tools.osx.dir}" failonerror="false"/>
+        <echo>Extracting toolchain contents from the archive</echo>
+        <exec executable="tar" dir="${cpp.tools.dir}" failonerror="true">
+            <arg line="xzf"/>
+            <arg line="${cpp.tools.osx.archive}"/>
+        </exec>
+        <echo>Moving extracted contents to ${cpp.tools.osx.dir}</echo>
+        <move file="${cpp.tools.dir}/target" tofile="${cpp.tools.osx.dir}"/>
+    </target>
+
+    <!-- Initialize RPi/ARM toolchain -->
+    <target name="init-native-tools-rpi" depends="tools-check-rpi" unless="rpi.tools.dir.valid">
+        <echo>Deleting Raspberry Pi tools directory</echo>
+        <delete dir="${cpp.tools.rpi.dir}" failonerror="false"/>
+    </target>
+
+    <!-- =========================================================================================== -->
+    <!--                            COPY RESOURCES                                                   -->
+    <!-- =========================================================================================== -->
+
+    <!-- Copy all resources -->
+    <target name="native-copy-resources-all" depends="
+    native-copy-resources-linux-x86_32,
+    native-copy-resources-linux-x86_64,
+    native-copy-resources-linux-arm32,
+    native-copy-resources-linux-arm64,
+    native-copy-resources-win-x86_32,
+    native-copy-resources-win-x86_64,
+    native-copy-resources-osx-x86_32,
+    native-copy-resources-osx-x86_64">
+        <echo>Copying ALL native output to target resource folders</echo>
+    </target>
+
+    <!-- Copies the cmake output binaries to their respective target resource location -->
+    <target name="native-copy-resources-linux-x86_32">
+        <copy file="${cpp.build.dir}/${cpp.build.relpath.linux-x86_32}/bin/${cpp.build.output.linux}" todir="${project.target.dir.linux.x86_32}" failonerror="true"/>
+    </target>
+
+    <target name="native-copy-resources-linux-x86_64">
+        <copy file="${cpp.build.dir}/${cpp.build.relpath.linux-x86_64}/bin/${cpp.build.output.linux}" todir="${project.target.dir.linux.x86_64}" failonerror="true"/>
+    </target>
+
+    <target name="native-copy-resources-linux-arm32">
+        <copy file="${cpp.build.dir}/${cpp.build.relpath.linux-arm32}/bin/${cpp.build.output.linux}" todir="${project.target.dir.linux.arm32}" failonerror="true"/>
+    </target>
+
+    <target name="native-copy-resources-linux-arm64">
+        <copy file="${cpp.build.dir}/${cpp.build.relpath.linux-arm64}/bin/${cpp.build.output.linux}" todir="${project.target.dir.linux.arm64}" failonerror="true"/>
+    </target>
+
+    <target name="native-copy-resources-win-x86_32">
+        <copy file="${cpp.build.dir}/${cpp.build.relpath.windows-x86_32}/bin/${cpp.build.output.win}" todir="${project.target.dir.win.x86_32}" failonerror="true"/>
+    </target>
+
+    <target name="native-copy-resources-win-x86_64">
+        <copy file="${cpp.build.dir}/${cpp.build.relpath.windows-x86_64}/bin/${cpp.build.output.win}" todir="${project.target.dir.win.x86_64}" failonerror="true"/>
+    </target>
+
+    <target name="native-copy-resources-osx-x86_32">
+        <copy file="${cpp.build.dir}/${cpp.build.relpath.osx-x86_32}/bin/${cpp.build.output.mac}" todir="${project.target.dir.osx.x86_32}" failonerror="true"/>
+    </target>
+
+    <target name="native-copy-resources-osx-x86_64">
+        <copy file="${cpp.build.dir}/${cpp.build.relpath.osx-x86_32}/bin/${cpp.build.output.mac}" todir="${project.target.dir.osx.x86_64}" failonerror="true"/>
+    </target>
+
+    <!-- =========================================================================================== -->
+    <!--                            OS CHECKS                                                        -->
+    <!-- =========================================================================================== -->
+
+    <!-- Targets for checking os family only -->
+    <target name="os-check-linux">
+        <condition property="os.linux">
+            <os family="unix" name="Linux"/>
+        </condition>
+    </target>
+
+    <target name="os-check-osx">
+        <condition property="os.osx">
+            <os family="unix" name="Mac OS X"/>
+        </condition>
+    </target>
+
+    <target name="os-check-windows">
+        <condition property="os.windows">
+            <os family="windows"/>
+        </condition>
+    </target>
+
+    <!-- Targets for checking os family + arch -->
+    <target name="os-check-linux-x86_32">
+        <condition property="os.linux.x86_32">
+            <os family="unix" arch="x86" name="Linux"/>
         </condition>
     </target>
 
     <target name="os-check-linux-x86_64">
-        <condition property="os.linux.amd64">
+        <condition property="os.linux.x86_64">
             <os family="unix" arch="amd64" name="Linux"/>
         </condition>
     </target>
 
-    <target name="os-check-linux-arm">
-        <condition property="os.linux.arm">
+    <target name="os-check-linux-x86">
+        <condition property="os.linux.x86">
+            <os family="unix" arch="x86" name="Linux"/>
+        </condition>
+    </target>
+
+    <target name="os-check-windows-x86_64">
+        <condition property="os.windows.x86_64">
+            <os family="windows" arch="amd64"/>
+        </condition>
+    </target>
+
+    <!-- 32bit ARM - Linux -->
+    <target name="os-check-linux-arm32">
+        <condition property="os.linux.arm32">
             <os family="unix" arch="arm" name="Linux"/>
         </condition>
     </target>
 
-    <target name="os-check-macosx-x86_64">
-        <condition property="os.macosx.amd64">
+    <!-- 64bit ARM - Linux -->
+    <target name="os-check-linux-arm64">
+        <condition property="os.linux.arm64">
+            <os family="unix" arch="aarch64" name="Linux"/>
+        </condition>
+    </target>
+
+    <!-- 32bit x86 - OSX -->
+    <target name="os-check-osx-x86_32">
+        <condition property="os.macosx.x86_32">
+            <os family="unix" arch="x86" name="Mac OS X"/>
+        </condition>
+    </target>
+
+    <!-- 64bit x86 - OSX -->
+    <target name="os-check-osx-x86_64">
+        <condition property="os.osx.x86_64">
             <os family="unix" arch="x86_64" name="Mac OS X"/>
         </condition>
     </target>

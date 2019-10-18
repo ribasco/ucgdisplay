@@ -9,11 +9,23 @@ Refer to the links under References for more information about these packages
 - OSXCROSS Toolchain (For cross compiling mac osx binaries)
 - Mingw 64 (For cross compiling linux binaries)
 - Raspberry Pi Toolchain (For cross compiling arm binaries for the Pi)
+- Packages: gcc-multilib, g++-multilib, mingw-w64, g++-7, gcc-7
 
 ### Method #1: Apache ANT
 
+> Note: Build files are located under root 'scripts' directory 
+
+Build Graphics Module
+
 ```
-ant -Droot.dir=<project root directory> native-build-cc-all
+cd scripts
+ant -file build-graphics.xml -Droot.dir=<project root directory> native-build-cc-all
+```
+
+Build Input Module
+```
+cd scripts
+ant -file build-input.xml -Droot.dir=<project root directory> native-build-cc-all
 ```
 
 ### Method #2: CMake (v3.10 above)

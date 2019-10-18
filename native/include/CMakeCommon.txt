@@ -38,6 +38,8 @@ message(STATUS "[MAIN] PROJ INC DIR             = ${PROJ_INCLUDE_DIR}")
 message(STATUS "[MAIN] CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "[MAIN] TOOLS DIR                = ${TOOLS_DIR_PATH}")
 message(STATUS "[MAIN] CURRENT LIST DIR         = ${CMAKE_CURRENT_LIST_DIR}")
+message(STATUS "[MAIN] CMAKE_C_FLAGS            = ${CMAKE_C_FLAGS}")
+message(STATUS "[MAIN] CMAKE_CXX_FLAGS          = ${CMAKE_CXX_FLAGS}")
 message(STATUS "[MAIN] -------------------------------------------------------------------------------------------------")
 
 # Adhere to GNU filesystem layout conventions
