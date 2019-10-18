@@ -212,14 +212,14 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <!-- Pass maven properties to ant -->
                                 <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${build-target}</echo>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.." />
                                 <!--suppress UnresolvedMavenProperty -->
                                 <ant antfile="${root.dir}/scripts/build-input.xml" target="${build-target}" />
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
