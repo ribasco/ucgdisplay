@@ -214,7 +214,7 @@
                         <configuration>
                             <target>
                                 <!-- Pass maven properties to ant -->
-                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${build-target}</echo>
+                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${build-target})</echo>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.." />
                                 <!--suppress UnresolvedMavenProperty -->
