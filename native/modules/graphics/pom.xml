@@ -233,14 +233,6 @@
                 <artifactId>maven-clean-plugin</artifactId>
                 <configuration>
                     <filesets>
-                        <!--<fileset>
-                            <directory>src/main/cpp/build</directory>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
-                        <fileset>
-                            <directory>src/main/cpp/lib</directory>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>-->
                         <fileset>
                             <directory>src/main/cpp/utils/build</directory>
                             <followSymlinks>false</followSymlinks>
