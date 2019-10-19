@@ -1,0 +1,4 @@
+Troubleshooting
+
+1. Demangle symbols
+    nm -uD libucgdisp.so  | grep _ZN5gpiod4chipC1ERKSsi | c++filt -n

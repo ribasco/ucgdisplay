@@ -12,7 +12,7 @@ ExternalProject_Add(
         BUILD_IN_SOURCE 1
         INSTALL_COMMAND ""
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND make
+        BUILD_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} make
 )
 
 ExternalProject_Get_Property(project_cperiphery INSTALL_DIR SOURCE_DIR)
@@ -20,8 +20,9 @@ ExternalProject_Get_Property(project_cperiphery INSTALL_DIR SOURCE_DIR)
 # Hack (See: https://stackoverflow.com/questions/45516209/cmake-how-to-use-interface-include-directories-with-externalproject)
 file(MAKE_DIRECTORY ${SOURCE_DIR}/src)
 
-add_library(cperiphery STATIC IMPORTED GLOBAL)
+add_library(cperiphery STATIC IMPORTED)
 set_target_properties(cperiphery PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${SOURCE_DIR}/src)
-set_target_properties(cperiphery PROPERTIES IMPORTED_LOCATION ${SOURCE_DIR}/periphery${CMAKE_STATIC_LIBRARY_SUFFIX})
+set_target_properties(cperiphery PROPERTIES IMPORTED_LOCATION ${SOURCE_DIR}/periphery.a)
+set_target_properties(cperiphery PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 add_dependencies(cperiphery project_cperiphery)

@@ -61,3 +61,4 @@ before_deploy:
 
 after_success:
   - scripts/deploy.sh
+  - scripts/verify-builds.sh

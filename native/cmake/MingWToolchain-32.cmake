@@ -17,10 +17,7 @@ set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++)
 set(CMAKE_RC_COMPILER ${TOOLCHAIN_PREFIX}-windres)
 
 message(STATUS "FIND ROOT PATH:: /usr/${TOOLCHAIN_PREFIX}")
-
 set(CMAKE_FIND_ROOT_PATH "/usr/${TOOLCHAIN_PREFIX}/")
-
-# set(CMAKE_CXX_FLAGS -m32)
 
 # target environment on the build host system
 #   set 1st to dir with the cross compiler's C/C++ headers/libs

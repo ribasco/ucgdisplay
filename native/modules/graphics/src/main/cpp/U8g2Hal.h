@@ -30,7 +30,11 @@
 #include <iostream>
 #include <cstring>
 #include <sstream>
+
+extern "C" {
 #include <u8g2.h>
+}
+
 #include <memory>
 #include <map>
 #include <functional>
@@ -81,8 +85,8 @@ typedef struct {
     u8g2_msg_func_t gpio_cb;
     u8g2_cb_t *rotation;
 #if defined(__arm__) && defined(__linux__)
-    spi_t* spi;
-    i2c_t* i2c;
+    std::shared_ptr<spi_t> spi;
+    std::shared_ptr<i2c_t> i2c;
     std::string transport_device;
     std::string gpio_device;
     int device_speed;

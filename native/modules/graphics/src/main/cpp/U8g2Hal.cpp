@@ -43,36 +43,6 @@ static u8g2_lookup_font_map_t u8g2_font_map; //NOLINT
 
 #define DEFAULT_SPI_SPEED 1000000
 
-/*std::map<int, std::string> msgNames = {
-        {U8X8_MSG_GPIO_AND_DELAY_INIT, U8G2NAME(U8X8_MSG_GPIO_AND_DELAY_INIT)},
-        {U8X8_MSG_DELAY_NANO,          U8G2NAME(U8X8_MSG_DELAY_NANO)},
-        {U8X8_MSG_DELAY_100NANO,       U8G2NAME(U8X8_MSG_DELAY_100NANO)},
-        {U8X8_MSG_DELAY_10MICRO,       U8G2NAME(U8X8_MSG_DELAY_10MICRO)},
-        {U8X8_MSG_DELAY_MILLI,         U8G2NAME(U8X8_MSG_DELAY_MILLI)},
-        {U8X8_MSG_DELAY_I2C,           U8G2NAME(U8X8_MSG_DELAY_I2C)},
-        {U8X8_MSG_GPIO_D0,             U8G2NAME(U8X8_MSG_GPIO_D0)},
-        {U8X8_MSG_GPIO_D1,             U8G2NAME(U8X8_MSG_GPIO_D1)},
-        {U8X8_MSG_GPIO_D2,             U8G2NAME(U8X8_MSG_GPIO_D2)},
-        {U8X8_MSG_GPIO_D3,             U8G2NAME(U8X8_MSG_GPIO_D3)},
-        {U8X8_MSG_GPIO_D4,             U8G2NAME(U8X8_MSG_GPIO_D4)},
-        {U8X8_MSG_GPIO_D5,             U8G2NAME(U8X8_MSG_GPIO_D5)},
-        {U8X8_MSG_GPIO_D6,             U8G2NAME(U8X8_MSG_GPIO_D6)},
-        {U8X8_MSG_GPIO_D7,             U8G2NAME(U8X8_MSG_GPIO_D7)},
-        {U8X8_MSG_GPIO_E,              U8G2NAME(U8X8_MSG_GPIO_E)},
-        {U8X8_MSG_GPIO_CS,             U8G2NAME(U8X8_MSG_GPIO_CS)},
-        {U8X8_MSG_GPIO_DC,             U8G2NAME(U8X8_MSG_GPIO_DC)},
-        {U8X8_MSG_GPIO_RESET,          U8G2NAME(U8X8_MSG_GPIO_RESET)},
-        {U8X8_MSG_GPIO_CS1,            U8G2NAME(U8X8_MSG_GPIO_CS1)},
-        {U8X8_MSG_GPIO_CS2,            U8G2NAME(U8X8_MSG_GPIO_CS2)},
-        {U8X8_MSG_GPIO_I2C_CLOCK,      U8G2NAME(U8X8_MSG_GPIO_I2C_CLOCK)},
-        {U8X8_MSG_GPIO_I2C_DATA,       U8G2NAME(U8X8_MSG_GPIO_I2C_DATA)},
-        {U8X8_MSG_BYTE_SEND,           U8G2NAME(U8X8_MSG_BYTE_SEND)},
-        {U8X8_MSG_BYTE_INIT,           U8G2NAME(U8X8_MSG_BYTE_INIT)},
-        {U8X8_MSG_BYTE_SET_DC,         U8G2NAME(U8X8_MSG_BYTE_SET_DC)},
-        {U8X8_MSG_BYTE_START_TRANSFER, U8G2NAME(U8X8_MSG_BYTE_START_TRANSFER)},
-        {U8X8_MSG_BYTE_END_TRANSFER,   U8G2NAME(U8X8_MSG_BYTE_END_TRANSFER)}
-};*/
-
 void u8g2hal_Init() {
     //Initialize lookup tables
     u8g2hal_InitSetupFunctions(u8g2_setup_functions);
@@ -108,8 +78,8 @@ uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
     switch (msg) {
         case U8X8_MSG_BYTE_SEND: {
             auto *buf = (uint8_t *) arg_ptr;
-            if (spi_transfer(info->spi, buf, buf, arg_int) < 0) {
-                fprintf(stderr, "spi_transfer(): %s\n", spi_errmsg(info->spi));
+            if (spi_transfer(info->spi.get(), buf, buf, arg_int) < 0) {
+                fprintf(stderr, "spi_transfer(): %s\n", spi_errmsg(info->spi.get()));
                 return 0;
             }
             break;
@@ -119,8 +89,8 @@ uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
             u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
 
             int speed = info->device_speed <= -1 ? DEFAULT_SPI_SPEED : info->device_speed;
-            if (spi_open(info->spi, info->transport_device.c_str(), 0, speed) < 0) {
-                fprintf(stderr, "spi_open(): %s\n", spi_errmsg(info->spi));
+            if (spi_open(info->spi.get(), info->transport_device.c_str(), 0, speed) < 0) {
+                fprintf(stderr, "spi_open(): %s\n", spi_errmsg(info->spi.get()));
                 return 0;
             }
             break;
@@ -155,15 +125,15 @@ uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
             data = (uint8_t *) arg_ptr;
             __u16 addr = u8x8_GetI2CAddress(u8x8);
             struct i2c_msg i2cMsg = {.addr = addr, .flags = 0, .len = arg_int, .buf = data};
-            if (i2c_transfer(info->i2c, &i2cMsg, 1) < 0) {
-                fprintf(stderr, "i2c_transfer(): %s\n", i2c_errmsg(info->i2c));
+            if (i2c_transfer(info->i2c.get(), &i2cMsg, 1) < 0) {
+                fprintf(stderr, "i2c_transfer(): %s\n", i2c_errmsg(info->i2c.get()));
                 return 0;
             }
             break;
         }
         case U8X8_MSG_BYTE_INIT: {
-            if (i2c_open(info->i2c, info->transport_device.c_str()) < 0) {
-                fprintf(stderr, "i2c_open(): %s\n", i2c_errmsg(info->i2c));
+            if (i2c_open(info->i2c.get(), info->transport_device.c_str()) < 0) {
+                fprintf(stderr, "i2c_open(): %s\n", i2c_errmsg(info->i2c.get()));
                 return 0;
             }
             break;

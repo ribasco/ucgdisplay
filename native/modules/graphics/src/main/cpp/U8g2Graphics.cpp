@@ -60,7 +60,7 @@ void set_font_flag(JNIEnv *env, jlong id, bool value) {
         JNI_ThrowNativeLibraryException(env, "Unable to set font flag. Device Info for address does not exist");
         return;
     }
-    info.get()->flag_font = value;
+    info->flag_font = value;
 }
 
 bool get_font_flag(JNIEnv *env, jlong id) {
@@ -69,7 +69,7 @@ bool get_font_flag(JNIEnv *env, jlong id) {
         JNI_ThrowNativeLibraryException(env, "Unable to set font flag. Device Info for address does not exist");
         return false;
     }
-    return info.get()->flag_font;
+    return info->flag_font;
 }
 
 bool check_validity(JNIEnv *env, jlong id) {
@@ -155,7 +155,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
 void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawBox(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height) {
     if (!check_validity(env, id))
         return;
-    u8g2_DrawBox(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width), static_cast<u8g2_uint_t>(height));
+    u8g2_DrawBox(toU8g2(id), static_cast <u8g2_uint_t>(x), static_cast <u8g2_uint_t>(y), static_cast <u8g2_uint_t>(width), static_cast <u8g2_uint_t>(height)) ;
 }
 
 //long id, int x, int y, int count, int height, byte[] bitmap

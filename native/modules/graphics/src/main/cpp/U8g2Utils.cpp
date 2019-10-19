@@ -181,11 +181,11 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
 #if defined(__arm__) && defined(__linux__)
     info->transport_device = transport_device;
     info->gpio_device = gpio_device;
-    info->spi = spi_new();
-    info->i2c = i2c_new();//std::make_shared<i2c_t>();
     info->device_speed = device_speed;
+    info->spi = std::make_shared<spi_t>();
+    info->i2c = std::make_shared<i2c_t>();
     try {
-        info->gpio_chip = std::make_shared<gpiod::chip>(info->gpio_device);//gpiod::chip(info->gpio_device, ::gpiod::chip::OPEN_LOOKUP);
+        info->gpio_chip = std::make_shared<gpiod::chip>(info->gpio_device);
     } catch (const std::system_error &e) {
         std::stringstream ss;
         ss << "Unable to open gpio device (Device: " << info->gpio_device << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
