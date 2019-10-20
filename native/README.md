@@ -1,17 +1,35 @@
-# Cross-compiling
+# Guide to cross-compiling from an x86_64 (64bit) Linux OS
 
 ### Prerequisites
 
 Refer to the links under References for more information about these packages
 
-- Debian Linux OS (Ubuntu preferred)
+- Debian x86_64 (64bit)  Linux OS. This is the host OS where the compilation will take place.
+- GCC v7.4 above
 - CMake 3.10+
-- OSXCROSS Toolchain (For cross compiling mac osx binaries)
-- Mingw 64 (For cross compiling linux binaries)
-- Raspberry Pi Toolchain (For cross compiling arm binaries for the Pi)
-- Packages: gcc-multilib, g++-multilib, mingw-w64, g++-7, gcc-7
+- [OSXCROSS Toolchain](https://github.com/tpoechtrager/osxcross) (For cross compiling mac osx binaries from a Linux x86_64 machine). Provided by the project.
+- [Raspberry Pi Toolchain](https://github.com/ribasco/rpi-tools)  (For cross compiling arm binaries frpom a Linux x86_64 machine). Provided by the project.
+- [MingW-w64 Toolchain](http://mingw-w64.org/doku.php) (For cross compiling windows binaries from a Linux x86_64 machine).
+- **Required Linux Packages:**
+	- gcc-multilib
+	- g++-multilib
+	- mingw-w64
+	- g++-7
+	- gcc-7
 
-### Method #1: Apache ANT
+> Note: multilib packages are required to compile 32-bit binaries from a 64bit host machine
+
+### Package installation
+
+```
+sudo apt updatee
+```
+
+```
+sudo apt install gcc-multilib g++-multilib mingw-w64, g++-7 gcc-7
+```
+
+### Method #1: Apache ANT (Easy Method)
 
 > Note: Build files are located under root 'scripts' directory 
 
@@ -30,35 +48,76 @@ ant -file build-input.xml -Droot.dir=<project root directory> native-build-cc-al
 
 ### Method #2: CMake (v3.10 above)
 
-CMake v3.10+ is required
+**Legend:**
+
+- **project root dir** = The root project directory (e.g. /home/user/projects/ucgdisplay)
+
+**CMake build process:**
+
+1. Run cmake build to generate the necessary build files
+2. Run make to proceed with the compilation
 
 #### Linux - ARM 32bit
 
 CMake arguments:
 ```
--DCMAKE_TOOLCHAIN_FILE=<native directory path>/cmake/RpiToolchain.cmake
+cmake -DCMAKE_BUILD_TYPE=Release 
+      -DCMAKE_TOOLCHAIN_FILE=<project root dir>/native/cmake/RpiToolchain-linux-32.cmake 
+      -G "CodeBlocks - Unix Makefiles" 
+       <project root dir>/native/modules/graphics/src/main/cpp
+
+```
+#### Linux - ARM 64bit
+
+CMake arguments:
+```
+cmake -DCMAKE_BUILD_TYPE=Release 
+      -DCMAKE_TOOLCHAIN_FILE=<project root dir>/native/cmake/RpiToolchain-linux-64.cmake 
+      -G "CodeBlocks - Unix Makefiles" 
+       <project root dir>/native/modules/graphics/src/main/cpp
+```
+
+#### Windows - 32bit
+CMake arguments:
+```
+-DCMAKE_TOOLCHAIN_FILE=<native directory path>/cmake/MingWToolchain-32.cmake
 ```
 
 #### Windows - 64bit
 CMake arguments:
+
 ```
--DCMAKE_TOOLCHAIN_FILE=<native directory path>/cmake/MingWToolchain.cmake
+-DCMAKE_TOOLCHAIN_FILE=<native directory path>/cmake/MingWToolchain-64.cmake
 ```
 
 #### Mac OSX - 64bit
-CMake arguments:
 ```
--DCMAKE_TOOLCHAIN_FILE=<native directory path>/cmake/OSXToolchain.cmake
--DCMAKE_BUILD_TYPE=Release
--DOSXCROSS_HOST=x86_64-apple-darwin15
--DOSXCROSS_TARGET_DIR=<tools dir path>/osxcross
--DOSXCROSS_SDK=<tools dir path>/osxcross/SDK/MacOSX10.11.sdk
--DOSXCROSS_TARGET=darwin15
+cmake -DCMAKE_BUILD_TYPE=Release 
+      -DCMAKE_TOOLCHAIN_FILE=<project root dir>/native/cmake/OSXToolchain-32.cmake -DOSXCROSS_HOST=x86_64-apple-darwin15 
+      -DOSXCROSS_TARGET_DIR=<project root dir>/native/tools/osxcross 
+      -DOSXCROSS_SDK=<project root dir>/native/tools/osxcross/SDK/MacOSX10.11.sdk 
+      -DOSXCROSS_TARGET=darwin15 
+      -DCMAKE_SHARED_LINKER_FLAGS=-v 
+      -G "CodeBlocks - Unix Makefiles" <project root dir>/native/modules/graphics/src/main/cpp
 ```
 
-### Building cross-compiler with crosstool-ng
+## Configuring Development Environment
 
-Coming soon
+
+**CLion IDE**
+
+- Environment Settings (File -> Settings)
+	- Coming soon 
+
+
+**Eclipse CDT (Coming soon)**
+
+- Environment Settings
+	- Coming soon 
+
+### Building your own cross-compiler toolchain (using crosstools-ng)
+
+- Coming soon
 
 # References
 - [Ubuntu Kernel headers/images (all platforms)](https://kernel.ubuntu.com/~kernel-ppa/mainline/)
