@@ -28,7 +28,6 @@
 #include <iomanip>
 #include <Global.h>
 #include "U8g2Hal.h"
-#include <Log.h>
 
 #if defined(__linux__) && defined(__arm__)
 
