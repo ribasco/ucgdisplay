@@ -35,6 +35,10 @@
 #include "U8g2Hal.h"
 #include "U8g2Utils.h"
 
+#ifdef USE_PIGPIO
+#include <pigpiod_if2.h>
+#endif
+
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     //Load global references
     JNI_Load(jvm);
@@ -81,7 +85,8 @@ bool check_validity(JNIEnv *env, jlong id) {
     return true;
 }
 
-jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jint device_speed, jstring transport_device, jstring gpio_device, jbyteArray pin_config, jboolean virtualMode) {
+jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jint device_speed,
+                                                              jstring transport_device, jstring gpio_device, jbyteArray pin_config, jboolean virtualMode) {
     std::string setup_proc_name;
 
     if (setupProc != nullptr) {
@@ -99,7 +104,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
 
     //2. Verify pin mapping
     if (pin_config == nullptr) {
-        JNI_ThrowNativeLibraryException(env, "Pin map argument cannot be null");
+        JNI_ThrowNativeLibraryException(env, "Pin map not specified");
         return -1;
     }
 
@@ -108,12 +113,17 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
         JNI_ThrowNativeLibraryException(env, std::string("Pin map array should be exactly 16 of length (Actual: ") + std::to_string(len) + std::string(")"));
         return -1;
     }
+/*
+#ifdef USE_PIGPIO
+    //Use pigpio interface to set mode
+    //set_mode();
+#endif*/
 
     uint8_t tmp[len];
     JNI_CopyJByteArray(env, pin_config, tmp, len);
 
     //convert to struct
-    auto *pinMap = reinterpret_cast<u8g2_pin_map_t*>(tmp);
+    auto *pinMap = reinterpret_cast<u8g2_pin_map_t *>(tmp);
 
     //3. Verify that the rotation number is within the allowed range
     if (rotation < 0 || rotation > 4)
@@ -140,7 +150,8 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     }
 
     //4. Setup and Initialize the Display
-    std::shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, device_speed, transport_device_path, gpio_device_path, _rotation, *pinMap, virtualMode);
+    std::shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, device_speed, transport_device_path, gpio_device_path, _rotation, *pinMap,
+                                                                     virtualMode);
 
     //5. Verify if display has been initialized successfully
     if (info == nullptr) {
@@ -156,7 +167,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
 void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawBox(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height) {
     if (!check_validity(env, id))
         return;
-    u8g2_DrawBox(toU8g2(id), static_cast <u8g2_uint_t>(x), static_cast <u8g2_uint_t>(y), static_cast <u8g2_uint_t>(width), static_cast <u8g2_uint_t>(height)) ;
+    u8g2_DrawBox(toU8g2(id), static_cast <u8g2_uint_t>(x), static_cast <u8g2_uint_t>(y), static_cast <u8g2_uint_t>(width), static_cast <u8g2_uint_t>(height));
 }
 
 //long id, int x, int y, int count, int height, byte[] bitmap
