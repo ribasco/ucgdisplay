@@ -17,7 +17,7 @@ message(STATUS "Using OSXCROSS_SDK = ${OSXCROSS_SDK}")
 set(CMAKE_SYSTEM_NAME "Darwin")
 string(REGEX REPLACE "-.*" "" CMAKE_SYSTEM_PROCESSOR "${OSXCROSS_HOST}")
 
-message(STATUS "[OSXToolchain-32] Target Architecture = ${CMAKE_SYSTEM_PROCESSOR}")
+set(TOOLCHAIN_DESC "OSXCoss Toolchain 32bit (${CMAKE_SYSTEM_NAME} - ${CMAKE_SYSTEM_PROCESSOR})")
 
 # specify the cross compiler
 #[[if(CMAKE_SYSTEM_PROCESSOR MATCHES "^i.86$")

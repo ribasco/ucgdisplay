@@ -47,12 +47,12 @@ if (CMAKE_CROSSCOMPILING)
     set(JNI_FOUND true)
 else ()
     # Use default find jni package if we are not cross-compiling
-    message(STATUS "[FIND-JNI] Using default FindJNI package")
+    # message(STATUS "[FIND-JNI] Using default FindJNI package")
     include(FindJNI)
 endif ()
 
 get_filename_component(JNI_LIBRARIES "" REALPATH BASE_DIR "${JNI_LIBRARIES}")
 get_filename_component(JNI_INCLUDE_DIRS "" REALPATH BASE_DIR "${JNI_INCLUDE_DIRS}")
 
-message(STATUS "[FIND-JNI] JNI_LIBRARIES = ${JNI_LIBRARIES}")
-message(STATUS "[FIND-JNI] JNI_INCLUDE_DIRS = ${JNI_INCLUDE_DIRS}")
+# message(STATUS "[FIND-JNI] JNI_LIBRARIES = ${JNI_LIBRARIES}")
+# message(STATUS "[FIND-JNI] JNI_INCLUDE_DIRS = ${JNI_INCLUDE_DIRS}")

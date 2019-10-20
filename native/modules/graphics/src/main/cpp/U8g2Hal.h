@@ -91,7 +91,7 @@ typedef struct {
     std::string gpio_device;
     int device_speed;
     std::shared_ptr<gpiod::chip> gpio_chip;
-    std::map<int, std::shared_ptr<gpiod::line>> gpio;
+    std::map<uint8_t , std::shared_ptr<gpiod::line>> gpio;
 #endif
     bool flag_font;
     bool flag_virtual;

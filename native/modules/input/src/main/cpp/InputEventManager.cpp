@@ -24,6 +24,7 @@
  * =========================END==================================
  */
 
+#include "UcgiConfig.h"
 #include "InputEventManager.h"
 
 InputEventManager::InputEventManager(device_input_event_cb eventCallback, device_filter_cb filter) {

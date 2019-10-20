@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(ucgd-mod-input)
 
-# set(CMAKE_DEBUG_TARGET_PROPERTIES INCLUDE_DIRECTORIES)
+# The version number
+set (UCGI_VERSION_MAJOR 1)
+set (UCGI_VERSION_MINOR 4)
 
 if (NOT UNIX)
     message(FATAL_ERROR "This module only supports Unix/Linux system")
@@ -9,6 +11,16 @@ endif ()
 
 set(GLOBAL_INC_DIR "../../../../../include")
 include(${GLOBAL_INC_DIR}/CMakeCommon.txt)
+
+# configure a header file to pass some of the CMake settings
+# to the source code
+configure_file (
+        "${PROJECT_SOURCE_DIR}/UcgiConfig.h.in"
+        "${PROJECT_BINARY_DIR}/UcgiConfig.h"
+)
+
+# Ucgi Options here
+option(USE_UDEV "Use UDev for Device Status monitoring instead of INotify" OFF)
 
 # Libevent Package
 find_package(Threads REQUIRED)

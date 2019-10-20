@@ -8,7 +8,7 @@ jdk:
 cache:
   directories:
     - ${HOME}/.m2
-    - ${TRAVIS_BUILD_DIR}/native/tools/rpi
+    - ${TRAVIS_BUILD_DIR}/native/tools/rpi-tools
     - ${TRAVIS_BUILD_DIR}/native/tools/osxcross
 
 env:
@@ -54,6 +54,7 @@ install:
   - scripts/install.sh
 
 script:
+  - scripts/verify-builds.sh
   - mvn test && mvn verify
 
 before_deploy:
@@ -61,4 +62,3 @@ before_deploy:
 
 after_success:
   - scripts/deploy.sh
-  - scripts/verify-builds.sh

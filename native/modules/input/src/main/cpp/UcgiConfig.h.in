@@ -1,0 +1,5 @@
+// the configured options and settings for UCGDisplay
+#define UCGI_VERSION_MAJOR @UCGI_VERSION_MAJOR@
+#define UCGI_VERSION_MINOR @UCGI_VERSION_MINOR@
+
+#cmakedefine USE_UDEV

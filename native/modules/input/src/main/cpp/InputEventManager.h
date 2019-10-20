@@ -94,11 +94,11 @@ public:
 
     void remove(int fd);
 
-    void invalidate(device_entry* entry);
+    static void invalidate(device_entry* entry);
 
     bool isValid(const string &device);
 
-    bool isValid(device_entry* entry);
+    static bool isValid(device_entry* entry);
 
     void clear();
 

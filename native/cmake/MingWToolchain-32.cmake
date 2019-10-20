@@ -10,6 +10,7 @@ message(STATUS "MingW Toolchain Loaded")
 set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 set(TOOLCHAIN_PREFIX i686-w64-mingw32)
+set(TOOLCHAIN_DESC "MingW-w64 Toolchain 32bit (${CMAKE_SYSTEM_NAME} - ${CMAKE_SYSTEM_PROCESSOR})")
 
 # cross compilers to use for C and C++
 set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)

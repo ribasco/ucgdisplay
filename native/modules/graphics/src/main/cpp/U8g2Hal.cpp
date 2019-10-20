@@ -28,6 +28,7 @@
 #include <iomanip>
 #include <Global.h>
 #include "U8g2Hal.h"
+#include <Log.h>
 
 #if defined(__linux__) && defined(__arm__)
 
@@ -35,11 +36,8 @@
 
 #endif
 
-//static bool initialized = false;
 static u8g2_setup_func_map_t u8g2_setup_functions; //NOLINT
 static u8g2_lookup_font_map_t u8g2_font_map; //NOLINT
-
-#define U8G2NAME(n) #n
 
 #define DEFAULT_SPI_SPEED 1000000
 
@@ -87,7 +85,6 @@ uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
         case U8X8_MSG_BYTE_INIT: {
             //disable chip-select
             u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
-
             int speed = info->device_speed <= -1 ? DEFAULT_SPI_SPEED : info->device_speed;
             if (spi_open(info->spi.get(), info->transport_device.c_str(), 0, speed) < 0) {
                 fprintf(stderr, "spi_open(): %s\n", spi_errmsg(info->spi.get()));
@@ -178,15 +175,16 @@ void gpio_line_init(u8g2_info_t *info, uint8_t pin, int direction) {
             JNIEnv *env;
             GETENV(env);
             std::stringstream ss;
-            ss << "Gpio chip not initialized";
+            ss << "GPIO chip has not yet been initialized";
             JNI_ThrowNativeLibraryException(env, ss.str());
             return;
         }
+
         std::shared_ptr<gpiod::line> gpio_line = get_gpio_line(info, pin);
         if (gpio_line == nullptr) {
             gpiod::line line = info->gpio_chip->get_line(pin);
             gpio_line = std::make_shared<gpiod::line>(line);
-            info->gpio.insert(make_pair(pin, gpio_line));
+            info->gpio.insert(std::make_pair(pin, gpio_line));
         }
         //Release if used
         if (gpio_line->is_used()) {
@@ -197,7 +195,7 @@ void gpio_line_init(u8g2_info_t *info, uint8_t pin, int direction) {
         JNIEnv *env;
         GETENV(env);
         std::stringstream ss;
-        ss << "Unable to init gpio line (Line: " << std::to_string(pin) << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
+        ss << "GPIO line initialization failed (Line: " << std::to_string(pin) << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
         JNI_ThrowNativeLibraryException(env, ss.str());
     }
 }

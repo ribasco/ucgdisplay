@@ -30,6 +30,7 @@
 #include <iomanip>
 #include <Global.h>
 
+#include "UcgdConfig.h"
 #include "U8g2Graphics.h"
 #include "U8g2Hal.h"
 #include "U8g2Utils.h"

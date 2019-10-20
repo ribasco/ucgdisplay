@@ -29,14 +29,9 @@
 #include <dirent.h>
 #include <queue>
 #include <Global.h>
+#include "UcgiConfig.h"
 
-#define USE_UDEV false
-
-#if defined(__linux__)
-
-#endif
-
-#if USE_UDEV
+#if defined(USE_UDEV) && defined(_LIBUDEV_H_)
 #include <libudev.h>
 #else
 #include <sys/inotify.h>
@@ -562,7 +557,7 @@ void invokeDeviceStateCallback(JNIEnv *env, const string &device, const string &
     env->DeleteLocalRef(jDevEvent);
 }
 
-#ifdef _LIBUDEV_H_
+#if defined(USE_UDEV) && defined(_LIBUDEV_H_)
 void processDeviceStateChange(JNIEnv *env, struct udev_device *dev) {
     const char *a = udev_device_get_action(dev);
     if (!a)
