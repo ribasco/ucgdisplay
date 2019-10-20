@@ -19,7 +19,7 @@ configure_file(
 )
 
 # Project Specific Options
-option(USE_PIGPIO "Use pigpio library for gpio, spi and i2c peripherals" ON)
+option(USE_PIGPIO "Use pigpio library for gpio, spi and i2c peripherals" OFF)
 
 list(APPEND UCGDISP_HDR "${GLOBAL_INC_DIR}/Global.h" "U8g2Utils.h" "U8g2Graphics.h" "U8g2Hal.h")
 list(APPEND UCGDISP_SRC "${GLOBAL_INC_DIR}/Global.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
