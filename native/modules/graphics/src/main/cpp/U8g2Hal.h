@@ -40,32 +40,31 @@ extern "C" {
 #include <functional>
 #include <jni.h>
 
-#if defined(__arm__) && defined(__linux__)
-
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+#include "UcgGpio.h"
 #include <spi.h>
 #include <i2c.h>
 #include <gpiod.hpp>
-
 #endif
 
 typedef struct {
     //pin configuration
-    uint8_t d0; //spi-clock
-    uint8_t d1; //spi-data
-    uint8_t d2;
-    uint8_t d3;
-    uint8_t d4;
-    uint8_t d5;
-    uint8_t d6;
-    uint8_t d7;
-    uint8_t en;
-    uint8_t cs;
-    uint8_t dc;
-    uint8_t reset;
-    uint8_t scl;
-    uint8_t sda;
-    uint8_t cs1;
-    uint8_t cs2;
+    int d0; //spi-clock
+    int d1; //spi-data
+    int d2;
+    int d3;
+    int d4;
+    int d5;
+    int d6;
+    int d7;
+    int en;
+    int cs;
+    int dc;
+    int reset;
+    int scl;
+    int sda;
+    int cs1;
+    int cs2;
 } u8g2_pin_map_t;
 
 typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;
@@ -76,7 +75,11 @@ typedef std::map<std::string, u8g2_setup_func_t> u8g2_setup_func_map_t;
 
 typedef std::map<std::string, const uint8_t *> u8g2_lookup_font_map_t;
 
-typedef struct {
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+class UcgGpio;
+#endif
+
+struct u8g2_info_t {
     u8g2_pin_map_t pin_map;
     std::shared_ptr<u8g2_t> u8g2;
     std::string setup_proc_name;
@@ -84,14 +87,15 @@ typedef struct {
     u8g2_msg_func_t byte_cb;
     u8g2_msg_func_t gpio_cb;
     u8g2_cb_t *rotation;
-#if defined(__arm__) && defined(__linux__)
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
     std::shared_ptr<spi_t> spi;
     std::shared_ptr<i2c_t> i2c;
     std::string transport_device;
     std::string gpio_device;
     int device_speed;
     std::shared_ptr<gpiod::chip> gpio_chip;
-    std::map<uint8_t , std::shared_ptr<gpiod::line>> gpio;
+    std::map<int , gpiod::line> gpio;
+    std::shared_ptr<UcgGpio> gpio_int;
 #endif
     bool flag_font;
     bool flag_virtual;
@@ -99,59 +103,59 @@ typedef struct {
     uintptr_t address() {
         return (uintptr_t) u8g2.get();
     }
-} u8g2_info_t;
+};
 
-typedef std::function<uint8_t(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
+typedef std::function<uint8_t(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
 
 /**
  * Hardware I2C byte communication callback (Using c-periphery)
  */
-uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_i2c_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Hardware SPI byte communications callback (Using c-periphery)
  */
-uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_spi_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * GPIO and Delay callback (Using libgpiod/linux userspace)
  */
-uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr);
+uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_sw_i2c (Software Bit-bang implementation)
 */
-uint8_t cb_byte_sw_i2c(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_sw_i2c(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_4wire_sw_spi (Software Bit-bang implementation)
  */
-uint8_t cb_byte_4wire_sw_spi(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_4wire_sw_spi(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_3wire_sw_spi (Software Bit-bang implementation)
  */
-uint8_t cb_byte_3wire_sw_spi(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_3wire_sw_spi(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_8bit_6800mode (Software Bit-bang implementation)
  */
-uint8_t cb_byte_8bit_6800mode(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_8bit_6800mode(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_8bit_8080mode (Software Bit-bang implementation)
  */
-uint8_t cb_byte_8bit_8080mode(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_8bit_8080mode(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_ks0108 (Software Bit-bang implementation)
  */
-uint8_t cb_byte_ks0108(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_ks0108(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_sed1520 (Software Bit-bang implementation)
  */
-uint8_t cb_byte_sed1520(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_sed1520(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Initialize the lookup t ables. This shuld be called prior to calling the other methods found in this file
@@ -178,7 +182,9 @@ u8g2_setup_func_t u8g2hal_GetSetupProc(const std::string &function_name);
 
 uint8_t *u8g2hal_GetFontByName(const std::string &font_name);
 
-#if !(defined(__arm__) && defined(__linux__))
+#if !((defined(__arm__) || defined(__aarch64__)) && defined(__linux__))
+
+//Note: The following i2c_* code snippets was copied from the U8G2 source. Credits to olikarus for this.
 
 static void i2c_delay(u8x8_t *u8x8) U8X8_NOINLINE;
 

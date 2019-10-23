@@ -24,10 +24,10 @@
  * =========================END==================================
  */
 #include <map>
-#include <memory>
 #include <iostream>
 #include <cstring>
 #include <iomanip>
+#include <memory>
 #include <Global.h>
 
 #include "UcgdConfig.h"
@@ -113,11 +113,6 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
         JNI_ThrowNativeLibraryException(env, std::string("Pin map array should be exactly 16 of length (Actual: ") + std::to_string(len) + std::string(")"));
         return -1;
     }
-/*
-#ifdef USE_PIGPIO
-    //Use pigpio interface to set mode
-    //set_mode();
-#endif*/
 
     uint8_t tmp[len];
     JNI_CopyJByteArray(env, pin_config, tmp, len);

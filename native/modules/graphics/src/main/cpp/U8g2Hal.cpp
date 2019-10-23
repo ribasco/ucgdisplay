@@ -29,7 +29,7 @@
 #include <Global.h>
 #include "U8g2Hal.h"
 
-#if defined(__linux__) && defined(__arm__)
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
 
 #include <system_error>
 
@@ -66,12 +66,12 @@ uint8_t *u8g2hal_GetFontByName(const std::string &font_name) {
     return nullptr;
 }
 
-#if defined(__arm__) && defined(__linux__)
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
 
 /**
  * 4-wire SPI Hardware Callback Routine (ARM)
  */
-uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_spi_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     switch (msg) {
         case U8X8_MSG_BYTE_SEND: {
             auto *buf = (uint8_t *) arg_ptr;
@@ -113,7 +113,7 @@ uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
 /**
  * I2C Hardware Callback Routine (ARM)
  */
-uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_i2c_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     uint8_t *data;
 
     switch (msg) {
@@ -147,108 +147,30 @@ uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg
 }
 
 /**
- * Retrieve a cached gpio line instance
- * @param info The u8g2 descriptor
- * @param pin The gpio pin/line number
- * @return The cached gpio line instance
- */
-std::shared_ptr<gpiod::line> get_gpio_line(u8g2_info_t *info, uint8_t pin) {
-    auto res = info->gpio.find(pin);
-    std::shared_ptr<gpiod::line> gpio_line = nullptr;
-    if (res != info->gpio.end()) {
-        gpio_line = res->second;
-    }
-    return gpio_line;
-}
-
-/**
- * Initialize Gpio Line
- *
- * @param info The u8g2 descriptor
- * @param pin The gpio line number
- * @param direction
- */
-void gpio_line_init(u8g2_info_t *info, uint8_t pin, int direction) {
-    try {
-        if (info->gpio_chip == nullptr) {
-            JNIEnv *env;
-            GETENV(env);
-            std::stringstream ss;
-            ss << "GPIO chip has not yet been initialized";
-            JNI_ThrowNativeLibraryException(env, ss.str());
-            return;
-        }
-
-        std::shared_ptr<gpiod::line> gpio_line = get_gpio_line(info, pin);
-        if (gpio_line == nullptr) {
-            gpiod::line line = info->gpio_chip->get_line(pin);
-            gpio_line = std::make_shared<gpiod::line>(line);
-            info->gpio.insert(std::make_pair(pin, gpio_line));
-        }
-        //Release if used
-        if (gpio_line->is_used()) {
-            gpio_line->release();
-        }
-        gpio_line->request({GPIOUS_CONSUMER, direction, 0});
-    } catch (const std::system_error &e) {
-        JNIEnv *env;
-        GETENV(env);
-        std::stringstream ss;
-        ss << "GPIO line initialization failed (Line: " << std::to_string(pin) << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
-        JNI_ThrowNativeLibraryException(env, ss.str());
-    }
-}
-
-/**
- * Write to the gpio pin
- *
- * @param info The u8g2 descriptor
- * @param pin The gpio pin/line number
- * @param value The value to be written (0 or 1)
- */
-void digital_write(u8g2_info_t *info, uint8_t pin, uint8_t value) {
-    try {
-        //GPIO Userspace code
-        std::shared_ptr<gpiod::line> gpio_line = get_gpio_line(info, pin);
-        if (gpio_line == nullptr) {
-            JNIEnv *env;
-            GETENV(env);
-            std::stringstream ss;
-            ss << "digital_write(): Could not obtain line reference for line offset: " << pin;
-            JNI_ThrowNativeLibraryException(env, ss.str());
-            return;
-        }
-        gpio_line->set_value(value);
-    } catch (const std::system_error &e) {
-        JNIEnv *env;
-        GETENV(env);
-        std::stringstream ss;
-        ss << "Unable to write value to gpio line (Line: " << std::to_string(pin) << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
-        JNI_ThrowNativeLibraryException(env, ss.str());
-    }
-}
-
-/**
  * GPIO and Delay Procedure Routine (ARM)
 */
-uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
+uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
+    std::shared_ptr<UcgGpio> gpio = info->gpio_int;
+
     switch (msg) {
         case U8X8_MSG_GPIO_AND_DELAY_INIT: { // called once during init phase of u8g2/u8x8, can be used to setup pins
+            gpio->gpioLineInit(info->pin_map.d0, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->gpioLineInit(info->pin_map.d1, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->gpioLineInit(info->pin_map.sda, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->gpioLineInit(info->pin_map.scl, UcgGpio::GpioDirection::DIR_ASIS);
+
             //Configure pin modes
-            gpio_line_init(info, info->pin_map.d0, gpiod::line_request::DIRECTION_AS_IS);
-            gpio_line_init(info, info->pin_map.d1, gpiod::line_request::DIRECTION_AS_IS);
-            gpio_line_init(info, info->pin_map.sda, gpiod::line_request::DIRECTION_AS_IS);
-            gpio_line_init(info, info->pin_map.scl, gpiod::line_request::DIRECTION_AS_IS);
-            gpio_line_init(info, info->pin_map.d2, gpiod::line_request::DIRECTION_OUTPUT);
-            gpio_line_init(info, info->pin_map.d3, gpiod::line_request::DIRECTION_OUTPUT);
-            gpio_line_init(info, info->pin_map.d4, gpiod::line_request::DIRECTION_OUTPUT);
-            gpio_line_init(info, info->pin_map.d5, gpiod::line_request::DIRECTION_OUTPUT);
-            gpio_line_init(info, info->pin_map.d6, gpiod::line_request::DIRECTION_OUTPUT);
-            gpio_line_init(info, info->pin_map.d7, gpiod::line_request::DIRECTION_OUTPUT);
-            gpio_line_init(info, info->pin_map.dc, gpiod::line_request::DIRECTION_OUTPUT);
-            gpio_line_init(info, info->pin_map.cs, gpiod::line_request::DIRECTION_AS_IS);
-            gpio_line_init(info, info->pin_map.cs1, gpiod::line_request::DIRECTION_AS_IS);
-            gpio_line_init(info, info->pin_map.cs2, gpiod::line_request::DIRECTION_AS_IS);
+            gpio->gpioLineInit(info->pin_map.d2, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->gpioLineInit(info->pin_map.d3, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->gpioLineInit(info->pin_map.d4, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->gpioLineInit(info->pin_map.d5, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->gpioLineInit(info->pin_map.d6, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->gpioLineInit(info->pin_map.d7, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->gpioLineInit(info->pin_map.dc, UcgGpio::GpioDirection::DIR_OUTPUT);
+
+            gpio->gpioLineInit(info->pin_map.cs, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->gpioLineInit(info->pin_map.cs1, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->gpioLineInit(info->pin_map.cs2, UcgGpio::GpioDirection::DIR_ASIS);
             break;
         }
         case U8X8_MSG_DELAY_NANO: { // delay arg_int * 1 nano second
@@ -261,11 +183,11 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
             break;
         }
         case U8X8_MSG_DELAY_10MICRO: {       // delay arg_int * 10 micro seconds
-            usleep(arg_int);
+            usleep(arg_int * 10);
             break;
         }
         case U8X8_MSG_DELAY_MILLI: {           // delay arg_int * 1 milli second
-            usleep(static_cast<__useconds_t>(arg_int * 1000));
+            usleep(arg_int * 1000);
             break;
         }
         case U8X8_MSG_DELAY_I2C: {               // arg_int is the I2C speed in 100KHz, e.g. 4 = 400 KHz
@@ -273,67 +195,67 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
             break;
         }
         case U8X8_MSG_GPIO_D0: {                // D0 or SPI clock pin: Output level in arg_int (U8X8_MSG_GPIO_SPI_CLOCK)
-            digital_write(info, info->pin_map.d0, arg_int);
+            gpio->digitalWrite(info->pin_map.d0, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_D1: {                // D1 or SPI data pin: Output level in arg_int (U8X8_MSG_GPIO_SPI_DATA)
-            digital_write(info, info->pin_map.d1, arg_int);
+            gpio->digitalWrite(info->pin_map.d1, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_D2: {                // D2 pin: Output level in arg_int
-            digital_write(info, info->pin_map.d2, arg_int);
+            gpio->digitalWrite(info->pin_map.d2, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_D3: {                // D3 pin: Output level in arg_int
-            digital_write(info, info->pin_map.d3, arg_int);
+            gpio->digitalWrite(info->pin_map.d3, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_D4: {                // D4 pin: Output level in arg_int
-            digital_write(info, info->pin_map.d4, arg_int);
+            gpio->digitalWrite(info->pin_map.d4, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_D5: {                // D5 pin: Output level in arg_int
-            digital_write(info, info->pin_map.d5, arg_int);
+            gpio->digitalWrite(info->pin_map.d5, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_D6: {                // D6 pin: Output level in arg_int
-            digital_write(info, info->pin_map.d6, arg_int);
+            gpio->digitalWrite(info->pin_map.d6, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_D7: {                // D7 pin: Output level in arg_int
-            digital_write(info, info->pin_map.d7, arg_int);
+            gpio->digitalWrite(info->pin_map.d7, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_E: {               // E/WR pin: Output level in arg_int
-            digital_write(info, info->pin_map.en, arg_int);
+            gpio->digitalWrite(info->pin_map.en, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_CS: {                // CS (chip select) pin: Output level in arg_int
-            digital_write(info, info->pin_map.cs, arg_int);
+            gpio->digitalWrite(info->pin_map.cs, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_DC: {                // DC (data/cmd, A0, register select) pin: Output level in arg_int
-            digital_write(info, info->pin_map.dc, arg_int);
+            gpio->digitalWrite(info->pin_map.dc, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_RESET: {            // Reset pin: Output level in arg_int
-            digital_write(info, info->pin_map.reset, arg_int);
+            gpio->digitalWrite(info->pin_map.reset, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_CS1: {                // CS1 (chip select) pin: Output level in arg_int
-            digital_write(info, info->pin_map.cs1, arg_int);
+            gpio->digitalWrite(info->pin_map.cs1, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_CS2: {                // CS2 (chip select) pin: Output level in arg_int
-            digital_write(info, info->pin_map.cs2, arg_int);
+            gpio->digitalWrite(info->pin_map.cs2, arg_int);
             break;
         }
         case U8X8_MSG_GPIO_I2C_CLOCK: {        // arg_int=0: Output low at I2C clock pin
-            digital_write(info, info->pin_map.scl, arg_int);
+            gpio->digitalWrite(info->pin_map.scl, arg_int);
             break;                            // arg_int=1: Input dir with pullup high for I2C clock pin
         }
         case U8X8_MSG_GPIO_I2C_DATA: {           // arg_int=0: Output low at I2C data pin
-            digital_write(info, info->pin_map.sda, arg_int);
+            gpio->digitalWrite(info->pin_map.sda, arg_int);
             break;                            // arg_int=1: Input dir with pullup high for I2C data pin
         }
         default: {
@@ -349,21 +271,21 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
 /**
  * SPI Callback Routine (virtual mode)
  */
-uint8_t cb_byte_spi_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_spi_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return cb_byte_4wire_sw_spi(info, u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * HW I2C Wrapper. Uses software bit-bang implementation (virtual mode)
  */
-uint8_t cb_byte_i2c_hw(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_i2c_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return cb_byte_sw_i2c(info, u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * GPIO and Delay Routine (virtual mode)
  */
-uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
+uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
     switch (msg) {
         case U8X8_MSG_GPIO_AND_DELAY_INIT: { // called once during init phase of u8g2/u8x8, can be used to setup pins
             //cout << "U8X8_MSG_GPIO_AND_DELAY_INIT" << endl;
@@ -475,48 +397,48 @@ uint8_t cb_gpio_delay(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_
 /**
  * Wrapper for 'u8x8_byte_sw_i2c'
  */
-uint8_t cb_byte_sw_i2c(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_sw_i2c(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_sw_i2c(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_4wire_sw_spi'
  */
-uint8_t cb_byte_4wire_sw_spi(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_4wire_sw_spi(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_4wire_sw_spi(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_3wire_sw_spi'
  */
-uint8_t cb_byte_3wire_sw_spi(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_3wire_sw_spi(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_3wire_sw_spi(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_8bit_6800mode'
  */
-uint8_t cb_byte_8bit_6800mode(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_8bit_6800mode(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_8bit_6800mode(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_8bit_8080mode'
  */
-uint8_t cb_byte_8bit_8080mode(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_8bit_8080mode(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_8bit_8080mode(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_ks0108'
  */
-uint8_t cb_byte_ks0108(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_ks0108(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_ks0108(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_sed1520'
  */
-uint8_t cb_byte_sed1520(u8g2_info_t *info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_sed1520(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_sed1520(u8x8, msg, arg_int, arg_ptr);
 }

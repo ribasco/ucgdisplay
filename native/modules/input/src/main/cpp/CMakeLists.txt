@@ -40,4 +40,5 @@ target_compile_options(ucginput PRIVATE -Wno-write-strings)
 
 # Input Test App
 add_executable(ucginput-test "InputDevHelper.h" "InputEventManager.h" "InputDevHelper.cpp" "InputEventManager.cpp" "InputDeviceTest.cpp")
-target_link_libraries(ucginput-test ${LINK_LIBS})
+target_link_libraries(ucginput-test PRIVATE ${LINK_LIBS} libevent)
+target_include_directories(ucginput-test PRIVATE "${GLOBAL_INC_DIR}" "${JNI_INCLUDE_DIRS}")

@@ -25,14 +25,11 @@ list(APPEND UCGDISP_HDR "${GLOBAL_INC_DIR}/Global.h" "U8g2Utils.h" "U8g2Graphics
 list(APPEND UCGDISP_SRC "${GLOBAL_INC_DIR}/Global.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
 
 add_library(ucgdisp SHARED ${UCGDISP_HDR} ${UCGDISP_SRC})
-target_sources(ucgdisp PRIVATE ${UCGDISP_HDR} ${UCGDISP_SRC})
-target_include_directories(ucgdisp PRIVATE "${GLOBAL_INC_DIR}" "${JNI_INCLUDE_DIRS}")
-target_compile_options(ucgdisp PRIVATE -Wno-write-strings)
-
-add_subdirectory(utils)
 
 # Add C-periphery and Libgpiod packages (ARM only)
 if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
+    list(APPEND UCGDISP_HDR "UcgGpio.h" "UcgGpioLibgpio.h" "UcgGpioPigpio.h")
+    list(APPEND UCGDISP_SRC "UcgGpio.cpp" "UcgGpioLibgpio.cpp" "UcgGpioPigpio.cpp")
 
     # Add c-periphery
     include(external/c-periphery)
@@ -61,6 +58,13 @@ include(external/u8g2)
 if (TARGET u8g2)
     target_link_libraries(ucgdisp u8g2)
 endif ()
+
+target_sources(ucgdisp PRIVATE ${UCGDISP_HDR} ${UCGDISP_SRC})
+target_include_directories(ucgdisp PRIVATE "${GLOBAL_INC_DIR}" "${JNI_INCLUDE_DIRS}")
+target_compile_options(ucgdisp PRIVATE -Wno-write-strings)
+
+add_subdirectory(test)
+add_subdirectory(utils)
 
 if (WIN32)
     message(STATUS "[target_link_libraries] Setting MINGW dependencies static")

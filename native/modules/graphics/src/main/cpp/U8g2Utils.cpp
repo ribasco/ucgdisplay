@@ -33,7 +33,8 @@
 
 #include "U8g2Utils.h"
 
-#if defined(__linux__) && defined(__arm__)
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+#include "UcgGpioLibgpio.h"
 #include <gpiod.hpp>
 #endif
 
@@ -178,12 +179,13 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
     info->rotation = const_cast<u8g2_cb_t *>(rotation);
     info->flag_virtual = virtualMode;
 
-#if defined(__arm__) && defined(__linux__)
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
     info->transport_device = transport_device;
     info->gpio_device = gpio_device;
     info->device_speed = device_speed;
     info->spi = std::make_shared<spi_t>();
     info->i2c = std::make_shared<i2c_t>();
+    info->gpio_int = std::make_shared<UcgGpioLibgpio>(info);
     try {
         info->gpio_chip = std::make_shared<gpiod::chip>(info->gpio_device);
     } catch (const std::system_error &e) {
@@ -237,7 +239,7 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
             }
             return 1;
         }
-        return cb_byte(info.get(), u8x8, msg, arg_int, arg_ptr);
+        return cb_byte(info, u8x8, msg, arg_int, arg_ptr);
     };
 
     //Gpio callback
@@ -248,7 +250,7 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
             JNI_FireGpioEvent(lenv, info->address(), msg, arg_int);
             return 1;
         }
-        return cb_gpio_delay(info.get(), u8x8, msg, arg_int, arg_ptr);
+        return cb_gpio_delay(info, u8x8, msg, arg_int, arg_ptr);
     };
 
     //Obtain the raw pointer
