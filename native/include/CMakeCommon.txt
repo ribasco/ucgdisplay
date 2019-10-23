@@ -20,6 +20,10 @@ set(TOOLS_DIR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tools)
 get_filename_component(PROJ_INCLUDE_DIR "" REALPATH BASE_DIR "${PROJECT_SOURCE_DIR}/../../../../../include")
 set(JDK_INCLUDE_DIR ${PROJ_INCLUDE_DIR})
 
+# Fix link errors when compiling executable binaries
+set(CMAKE_INSTALL_RPATH "$ORIGIN")
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+
 include(${PROJ_INCLUDE_DIR}/CMakeFunctions.txt)
 
 get_filename_component(CMAKE_MODULE_PATH "" REALPATH BASE_DIR "${CMAKE_MODULE_PATH}")
@@ -128,4 +132,5 @@ message(STATUS "[MAIN] JNI_INCLUDE_DIRS                      = ${JNI_INCLUDE_DIR
 message(STATUS "[MAIN] JNI_LIBRARIES                         = ${JNI_LIBRARIES}")
 message(STATUS "[MAIN] PROJECT_SOURCE_DIR                    = ${PROJECT_SOURCE_DIR}")
 message(STATUS "[MAIN] PROJECT_BINARY_DIR                    = ${PROJECT_BINARY_DIR}")
+message(STATUS "[MAIN] CMAKE_EXE_LINKER_FLAGS                = ${CMAKE_EXE_LINKER_FLAGS}")
 message(STATUS "[MAIN] ----------------------------------------------------------------------------------------------------------")
