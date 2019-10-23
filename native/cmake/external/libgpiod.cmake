@@ -18,16 +18,11 @@ ExternalProject_Add(
         GIT_REPOSITORY "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
         GIT_TAG ${LIBGPIOD_VERSION}
         PREFIX ${PROJ_PREFIX}
-        INSTALL_DIR ${PROJ_PREFIX}
-        DOWNLOAD_DIR ${PROJ_PREFIX}/src
-        SOURCE_DIR ${PROJ_PREFIX}/src/libgpiod
-        BINARY_DIR ${PROJ_PREFIX}/src/libgpiod
-        TMP_DIR ${PROJ_PREFIX}/tmp
-        STAMP_DIR ${PROJ_PREFIX}/stamp
+        BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ./autogen.sh --enable-tools=no --enable-bindings-cxx --prefix=<INSTALL_DIR> --host=arm-linux-gnueabihf CFLAGS=-I${CMAKE_SYSROOT}/usr/include LDFLAGS=-L${SYSROOT}/usr/lib ac_cv_func_malloc_0_nonnull=yes
         UPDATE_COMMAND ""
-        INSTALL_COMMAND make install
-        BUILD_COMMAND make
+        INSTALL_COMMAND $(MAKE) install
+        BUILD_COMMAND $(MAKE)
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
 )
 
