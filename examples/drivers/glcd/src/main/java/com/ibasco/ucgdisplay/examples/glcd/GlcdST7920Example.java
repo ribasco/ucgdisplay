@@ -34,25 +34,31 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
 
 public class GlcdST7920Example {
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception {
+        //SPI HW 4-Wire config for ST7920 (No pin mapping required)
         GlcdConfig config = GlcdConfigBuilder.create()
                 .rotation(GlcdRotation.ROTATION_NONE)
                 .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
                 .transportDevice("/dev/spidev0.0")
                 .gpioDevice("/dev/gpiochip0")
                 .display(Glcd.ST7920.D_128x64)
-                .mapPin(GlcdPin.SPI_CLOCK, 14)
-                .mapPin(GlcdPin.SPI_MOSI, 12)
-                .mapPin(GlcdPin.CS, 10)
                 .build();
 
         GlcdDriver driver = new GlcdDriver(config);
 
-        driver.setCursor(0, 10);
         driver.setFont(GlcdFont.FONT_6X12_MR);
-        driver.clearBuffer();
-        driver.drawString("Hello World");
-        driver.sendBuffer();
+        int maxHeight = driver.getMaxCharHeight();
+
+        for (int i = 60; i >= 0; i--) {
+            driver.clearBuffer();
+            driver.drawString(0, maxHeight, "ucgdisplay");
+            driver.drawString(0, maxHeight * 2, "powered by");
+            driver.drawString(0, maxHeight * 3, "u8g2");
+            driver.drawString(0, maxHeight * 5, "Shutting down in " + i + "s");
+            driver.sendBuffer();
+            Thread.sleep(1000);
+        }
 
         System.out.println("Done");
     }
