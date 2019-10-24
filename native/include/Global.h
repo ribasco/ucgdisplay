@@ -130,6 +130,8 @@ void JNI_MakeGlobal(JNIEnv *env, const char *name, jclass &cls);
  */
 void JNI_CopyJByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length);
 
+void JNI_CopyJIntArray(JNIEnv *env, jintArray arr, int *buffer, int length);
+
 void InputDevManager_Load(JNIEnv *env);
 
 void InputDevManager_UnLoad(JNIEnv *env);

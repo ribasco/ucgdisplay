@@ -83,11 +83,11 @@ void JNI_ThrowNativeLibraryException(JNIEnv *env, std::string msg) {
 
 void JNI_CopyJByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length) {
     if (length <= 0) {
-        JNI_ThrowNativeLibraryException(env, "Invalid array length");
+        JNI_ThrowNativeLibraryException(env, "JNI_CopyJByteArray: Invalid array length");
         return;
     }
     if (buffer == nullptr) {
-        JNI_ThrowNativeLibraryException(env, "Buffer is null");
+        JNI_ThrowNativeLibraryException(env, "JNI_CopyJByteArray: Buffer is null");
         return;
     }
     jbyte *body = env->GetByteArrayElements(arr, nullptr);
@@ -95,4 +95,20 @@ void JNI_CopyJByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length
         buffer[i] = static_cast<uint8_t>(body[i]);
     }
     env->ReleaseByteArrayElements(arr, body, 0);
+}
+
+void JNI_CopyJIntArray(JNIEnv *env, jintArray arr, int* buffer, int length) {
+    if (length <= 0) {
+        JNI_ThrowNativeLibraryException(env, "JNI_CopyJIntArray: Invalid array length");
+        return;
+    }
+    if (buffer == nullptr) {
+        JNI_ThrowNativeLibraryException(env, "JNI_CopyJIntArray: Buffer is null");
+        return;
+    }
+    jint* body = env->GetIntArrayElements(arr, nullptr);
+    for (int i = 0; i < length; i++) {
+        buffer[i] = static_cast<int>(body[i]);
+    }
+    env->ReleaseIntArrayElements(arr, body, 0);
 }
