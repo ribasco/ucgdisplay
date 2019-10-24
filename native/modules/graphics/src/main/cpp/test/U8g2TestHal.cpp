@@ -62,6 +62,8 @@ void gpio_line_init(const std::shared_ptr<u8g2_info_t> &info, int pin, int direc
 
 void digital_write(const std::shared_ptr<u8g2_info_t> &info, int pin, uint8_t value, const std::string& tag = "") {
     try {
+        if (pin <= -1)
+            return;
         gpiod::line* line = get_gpio_line_ex(info, pin);
         if (line == nullptr) {
             std::cerr << "GPIO Line not initialized: " << std::to_string(pin) << "(" << tag << ")" << std::endl;

@@ -1,3 +1,28 @@
+/*-
+ * ========================START=================================
+ * Organization: Universal Character/Graphics display library
+ * Project: UCGDisplay :: Native :: Graphics
+ * Filename: UcgGpioLibgpio.cpp
+ * 
+ * ---------------------------------------------------------
+ * %%
+ * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/lgpl-3.0.html>.
+ * =========================END==================================
+ */
 #include "UcgGpioLibgpio.h"
 
 #include <gpiod.hpp>
@@ -5,8 +30,16 @@
 
 UcgGpioLibgpio::UcgGpioLibgpio(const std::shared_ptr<u8g2_info_t> &info) : UcgGpio(info) {}
 
-void UcgGpioLibgpio::gpioLineInit(int pin, GpioDirection direction) {
+void UcgGpioLibgpio::initLine(int pin, GpioDirection direction) {
     try {
+        //Do not process unassinged
+        if (pin <= -1) {
+            //std::cout << "> Skipping line initialization" << std::endl;
+            return;
+        }
+
+        std::cout << "> Initializing pin: " << std::to_string(pin) << std::endl;
+
         if (info->gpio_chip == nullptr) {
             JNIEnv *env;
             GETENV(env);
@@ -16,7 +49,7 @@ void UcgGpioLibgpio::gpioLineInit(int pin, GpioDirection direction) {
             return;
         }
 
-        gpiod::line* gpio_line = get_gpio_line(pin);
+        gpiod::line *gpio_line = get_gpio_line(pin);
         if (gpio_line == nullptr) {
             auto it = info->gpio.insert(std::make_pair(pin, info->gpio_chip->get_line(pin)));
             gpio_line = &it.first->second;
@@ -33,6 +66,8 @@ void UcgGpioLibgpio::gpioLineInit(int pin, GpioDirection direction) {
         int dir = convert_dir(direction);
 
         gpio_line->request({GPIOUS_CONSUMER, dir, 0});
+
+        std::cout << "> Successfully Initialized pin: " << std::to_string(pin) << std::endl;
     } catch (const std::system_error &e) {
         JNIEnv *env;
         GETENV(env);
@@ -44,8 +79,11 @@ void UcgGpioLibgpio::gpioLineInit(int pin, GpioDirection direction) {
 
 void UcgGpioLibgpio::digitalWrite(int pin, uint8_t value) {
     try {
+        //Ignore pins < 0
+        if (pin <= -1)
+            return;
         //GPIO Userspace code
-        gpiod::line* gpio_line = get_gpio_line(pin);
+        gpiod::line *gpio_line = get_gpio_line(pin);
         if (gpio_line == nullptr) {
             JNIEnv *env;
             GETENV(env);
@@ -66,7 +104,7 @@ void UcgGpioLibgpio::digitalWrite(int pin, uint8_t value) {
 
 gpiod::line *UcgGpioLibgpio::get_gpio_line(int pin) {
     auto res = info->gpio.find(pin);
-    gpiod::line* gpio_line = nullptr;
+    gpiod::line *gpio_line = nullptr;
     if (res != info->gpio.end()) {
         gpio_line = &res->second;
     }

@@ -28,6 +28,7 @@ package com.ibasco.ucgdisplay.drivers.glcd;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdPinMappingException;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,10 +84,30 @@ public class GlcdPinMapConfig {
      * <p>Converts the internal pin map configuration to a primitive byte array which will
      * later be used by the native driver. Each index represents a known device pin.</p>
      *
-     * @return A primitive byte array contating
+     * @return A primitive byte array containing the pin mapping information to be used by the low level driver
      */
     byte[] toByteArray() {
         byte[] data = new byte[16];
+        if (!pinMap.isEmpty()) {
+            for (Map.Entry<GlcdPin, Byte> entry : pinMap.entrySet()) {
+                GlcdPin pin = entry.getKey();
+                Byte pNum = entry.getValue();
+                data[pin.getIndex()] = pNum;
+            }
+        }
+        return data;
+    }
+
+    /**
+     * <p>Converts the internal pin map configuration to a primitive int array which will
+     * later be used by the native driver. Each index represents a known device pin.</p>
+     *
+     * @return A primitive byte array containing the pin mapping information to be used by the low level driver
+     */
+    int[] toIntArray() {
+        int[] data = new int[16];
+        Arrays.fill(data, -1);
+
         if (!pinMap.isEmpty()) {
             for (Map.Entry<GlcdPin, Byte> entry : pinMap.entrySet()) {
                 GlcdPin pin = entry.getKey();

@@ -235,8 +235,10 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
             throw new GlcdConfigException("No display specified", config);
 
         //Check pin mapping
-        if (!virtual && (config.getPinMap() == null || config.getPinMap().isEmpty())) {
-            throw new GlcdConfigException("Missing pin map configuration", config);
+        if (!virtual) {
+            //Make pin mapping mandatory for bit-bang implementations (software bus type)
+            if (config.getBusInterface().getBusType() == GlcdBusType.SOFTWARE && (config.getPinMap() == null || config.getPinMap().isEmpty()))
+                throw new GlcdConfigException("Missing pin map configuration", config);
         }
 
         //Check if rotation was specified, otherwise assign default

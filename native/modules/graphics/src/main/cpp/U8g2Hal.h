@@ -49,22 +49,22 @@ extern "C" {
 
 typedef struct {
     //pin configuration
-    int d0; //spi-clock
-    int d1; //spi-data
-    int d2;
-    int d3;
-    int d4;
-    int d5;
-    int d6;
-    int d7;
-    int en;
-    int cs;
-    int dc;
-    int reset;
-    int scl;
-    int sda;
-    int cs1;
-    int cs2;
+    int d0 = -1; //spi-clock
+    int d1 = -1; //spi-data
+    int d2 = -1;
+    int d3 = -1;
+    int d4 = -1;
+    int d5 = -1;
+    int d6 = -1;
+    int d7 = -1;
+    int en = -1;
+    int cs = -1;
+    int dc = -1;
+    int reset = -1;
+    int scl = -1;
+    int sda = -1;
+    int cs1 = -1;
+    int cs2 = -1;
 } u8g2_pin_map_t;
 
 typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;

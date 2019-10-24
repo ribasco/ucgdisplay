@@ -124,7 +124,7 @@ int runDisplayTest() {
     //gpioInitialise();
 
     u8g2_pin_map_t pin_config;
-    pin_config.cs = 8;
+    //pin_config.cs = 8;
     /*pin_config.d0 = 11; //spi clock
     pin_config.d1 = 10; //spi data*/
 

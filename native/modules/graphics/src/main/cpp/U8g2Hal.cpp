@@ -154,23 +154,23 @@ uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, ui
 
     switch (msg) {
         case U8X8_MSG_GPIO_AND_DELAY_INIT: { // called once during init phase of u8g2/u8x8, can be used to setup pins
-            gpio->gpioLineInit(info->pin_map.d0, UcgGpio::GpioDirection::DIR_ASIS);
-            gpio->gpioLineInit(info->pin_map.d1, UcgGpio::GpioDirection::DIR_ASIS);
-            gpio->gpioLineInit(info->pin_map.sda, UcgGpio::GpioDirection::DIR_ASIS);
-            gpio->gpioLineInit(info->pin_map.scl, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->initLine(info->pin_map.d0, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->initLine(info->pin_map.d1, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->initLine(info->pin_map.sda, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->initLine(info->pin_map.scl, UcgGpio::GpioDirection::DIR_ASIS);
 
             //Configure pin modes
-            gpio->gpioLineInit(info->pin_map.d2, UcgGpio::GpioDirection::DIR_OUTPUT);
-            gpio->gpioLineInit(info->pin_map.d3, UcgGpio::GpioDirection::DIR_OUTPUT);
-            gpio->gpioLineInit(info->pin_map.d4, UcgGpio::GpioDirection::DIR_OUTPUT);
-            gpio->gpioLineInit(info->pin_map.d5, UcgGpio::GpioDirection::DIR_OUTPUT);
-            gpio->gpioLineInit(info->pin_map.d6, UcgGpio::GpioDirection::DIR_OUTPUT);
-            gpio->gpioLineInit(info->pin_map.d7, UcgGpio::GpioDirection::DIR_OUTPUT);
-            gpio->gpioLineInit(info->pin_map.dc, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->initLine(info->pin_map.d2, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->initLine(info->pin_map.d3, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->initLine(info->pin_map.d4, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->initLine(info->pin_map.d5, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->initLine(info->pin_map.d6, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->initLine(info->pin_map.d7, UcgGpio::GpioDirection::DIR_OUTPUT);
+            gpio->initLine(info->pin_map.dc, UcgGpio::GpioDirection::DIR_OUTPUT);
 
-            gpio->gpioLineInit(info->pin_map.cs, UcgGpio::GpioDirection::DIR_ASIS);
-            gpio->gpioLineInit(info->pin_map.cs1, UcgGpio::GpioDirection::DIR_ASIS);
-            gpio->gpioLineInit(info->pin_map.cs2, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->initLine(info->pin_map.cs, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->initLine(info->pin_map.cs1, UcgGpio::GpioDirection::DIR_ASIS);
+            gpio->initLine(info->pin_map.cs2, UcgGpio::GpioDirection::DIR_ASIS);
             break;
         }
         case U8X8_MSG_DELAY_NANO: { // delay arg_int * 1 nano second

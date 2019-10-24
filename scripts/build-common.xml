@@ -21,7 +21,7 @@
         =============================================================================
                                          REQUIREMENTS
         =============================================================================
-        1. Host machine should be a Debian (Preferred) 64-bit OS
+        1. Host machine should be a Linux 64-bit OS (Debian preferred)
         2. Java JDK 11+
         3. Latest Apache ANT version
         4. Latest Apache Maven version
@@ -263,8 +263,10 @@
 
     <!-- Initialize RPi/ARM toolchain -->
     <target name="init-native-tools-rpi" depends="tools-check-rpi" unless="rpi.tools.dir.valid">
-        <echo>Deleting Raspberry Pi tools directory</echo>
-        <delete dir="${cpp.tools.rpi.dir}" failonerror="false"/>
+        <echo>Updating git submodules</echo>
+        <exec executable="git" dir="${root.dir}" failonerror="false">
+            <arg line="submodule update --recursive --remote"/>
+        </exec>
     </target>
 
     <!-- =========================================================================================== -->

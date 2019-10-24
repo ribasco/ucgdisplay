@@ -86,4 +86,27 @@ class GlcdPinMapConfigTest {
         mapConfig.map(GlcdPin.D0, 0);
         assertFalse(mapConfig.isEmpty());
     }
+
+    @Test
+    void toIntArray() {
+        mapConfig.map(GlcdPin.D0, 0);
+        mapConfig.map(GlcdPin.D1, 1);
+        mapConfig.map(GlcdPin.D2, 2);
+        mapConfig.map(GlcdPin.D3, 3);
+        mapConfig.map(GlcdPin.D4, 4);
+        mapConfig.map(GlcdPin.D5, 5);
+        mapConfig.map(GlcdPin.D6, 6);
+        mapConfig.map(GlcdPin.D7, 7);
+        int[] pinData = mapConfig.toIntArray();
+        assertEquals(0, pinData[0]);
+        assertEquals(1, pinData[1]);
+        assertEquals(2, pinData[2]);
+        assertEquals(3, pinData[3]);
+        assertEquals(4, pinData[4]);
+        assertEquals(5, pinData[5]);
+        assertEquals(6, pinData[6]);
+        assertEquals(7, pinData[7]);
+        for (int i = 8; i < 15; i++)
+            assertEquals(-1, pinData[i]);
+    }
 }
