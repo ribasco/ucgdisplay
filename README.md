@@ -10,12 +10,13 @@
 
 * Supports both Character and Graphics/Dot-Matrix display devices
 * Should work for most linux based SBCs (kernel 4.8x or higher)
- 
+* New in 1.5.x - Multiple gpio/peripheral providers support (libgpiod, pigpio or c-periphery)
+
 ##### Display drivers
 
-######  Character LCD driver features
+######  Character LCD driver features (Work in Progress)
 * Pure java implementation for Hitachi HD44780 driver powered by Pi4j
-* Flexible configuration options for interfacing with your SBC device (e.g. GPIO expanders/I2C/SPI)
+* Flexible configuration options for interfacing with your SoC device (e.g. GPIO expanders/I2C/SPI)
 * Flexible pin mapping configuration
 * Supported LCD adapters
     * MCP23017
@@ -23,7 +24,7 @@
     * GPIO
     * MCP23008 (Coming soon)
     * PCF8574 (Coming soon)
-###### Graphic LCD driver features
+###### Graphic LCD driver features (Work in Progress)
 * SPI and I2C hardware capability and other software bitbanging implementations
 * Over 46+ controllers are supported. Refer to the table below for the list of supported display controllers. (note: not everything has been tested yet)
 * The graphics display module wraps around the popular c/c++ [U8g2](https://github.com/olikraus/u8g2) library by Oliver. All drawing operations present in the library should be similar to the ones found in U8g2 (Refer to the official [U8g2 reference manual](https://github.com/olikraus/u8g2/wiki/u8g2reference) for more information). 
@@ -64,9 +65,9 @@
 
 ---
 * Java JDK (1.8 or higher)
-* [Libgpiod](https://github.com/brgl/libgpiod) (v1.4.1 or higher) - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device). 
+* [Libgpiod](https://github.com/brgl/libgpiod) (v1.4.1 or higher) - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device).
 
-> **IMPORTANT:** Make sure the c++ bindings are included when you install from source (--enable-bindings-cxx)
+> **IMPORTANT:** For libgpiod, make sure the c++ bindings are included when you install from source (--enable-bindings-cxx)
  
 ### Installation
 
@@ -81,14 +82,14 @@
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-clcd</artifactId>
-             <version>1.4.2-alpha</version>
+             <version>1.5.0-alpha</version>
          </dependency>
       
          <!-- Graphics display driver -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-glcd</artifactId>
-             <version>1.4.2-alpha</version>
+             <version>1.5.0-alpha</version>
          </dependency>
     </dependencies>
     ```
@@ -98,8 +99,8 @@
     Clone from github
 
     ```bash
-    git clone https://github.com/ribasco/ucgdisplay.git
-    ```        
+    git clone https://github.com/ribasco/ucgdisplay.git --recurse-submodules --remote-submodules
+    ```
 
     Switch to the project directory
 
@@ -175,7 +176,9 @@ public class HD44780Example {
 
 ######  Graphic LCD Example (ST7920)
 
-Simple hello world example for ST7920 controller. In this example, we use the Raspberry Pi SPI hardware features. Please note that in Raspberry Pi, we need to set the pin modes to ALT0 to activate the hardware features (also applicable for the I2C pins). This library does not automatically set the correct pin modes for you, so you have to explicitly set them prior to running the application (example below).  
+Simple hello world example for ST7920 controller. In this example, we use the Raspberry Pi SPI hardware capability. Remember to set the pin modes to ALT0 to activate the hardware features (also applicable for the I2C pins). This library does not automatically set the correct pin modes for you, so you have to explicitly set them prior to running the application (example below).
+
+>  **Note:** For SPI hardware capability, there is no need to map the pins. Doing so might result into 'operation is not permitted' errors.  
 
 ```java
 package com.ibasco.ucgdisplay.examples;
@@ -199,11 +202,12 @@ public class GlcdST7920Example {
                 .gpioDevice("/dev/gpiochip0")                
                 .display(Glcd.ST7920.D_128x64)
                 //Pin mapping (alternatively, you could use #mapPin(GlcdPin, int) function) 
-                .pinMap(new GlcdPinMapConfig()
+                //Note: This is not needed if the bus type is HARDWARE
+                /*.pinMap(new GlcdPinMapConfig()
                         .map(GlcdPin.SPI_CLOCK, 14)
                         .map(GlcdPin.SPI_MOSI, 12)
                         .map(GlcdPin.CS, 10)
-                )
+                )*/
                 .build();
 
         GlcdDriver driver = new GlcdDriver(config);
