@@ -25,7 +25,7 @@
  */
 package com.ibasco.ucgdisplay.core.input;
 
-import com.ibasco.ucgdisplay.common.utils.NativeLibraryLoader;
+import org.scijava.nativelib.NativeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +74,7 @@ public class InputDeviceManager {
 
     static {
         try {
-            NativeLibraryLoader.loadLibrary("ucginput");
+            NativeLoader.loadLibrary("ucginput");
         } catch (Exception e) {
             log.error("Unable to load required native library", e);
         }
