@@ -21,10 +21,12 @@ get_filename_component(CMAKE_MODULE_PATH "" REALPATH BASE_DIR "${CMAKE_MODULE_PA
 get_filename_component(TOOLS_DIR_PATH "" REALPATH BASE_DIR "${TOOLS_DIR_PATH}")
 get_filename_component(RPI_TOOLCHAIN_PATH "" REALPATH BASE_DIR "${RPI_TOOLCHAIN_PATH}")
 
+set(TC_PREFIX "gcc7-linaro-arm-linux-gnueabi-raspbian-x64")
+
 # Cross-compiler variables
-set(CMAKE_C_COMPILER ${RPI_TOOLCHAIN_PATH}/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/aarch64-rpi-linux-gnu-gcc)
-set(CMAKE_CXX_COMPILER ${RPI_TOOLCHAIN_PATH}/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/aarch64-rpi-linux-gnu-g++)
-set(CMAKE_SYSROOT ${RPI_TOOLCHAIN_PATH}/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/aarch64-rpi-linux-gnu/sysroot)
+set(CMAKE_C_COMPILER ${RPI_TOOLCHAIN_PATH}/${TC_PREFIX}/bin/aarch64-rpi-linux-gnu-gcc)
+set(CMAKE_CXX_COMPILER ${RPI_TOOLCHAIN_PATH}/${TC_PREFIX}/bin/aarch64-rpi-linux-gnu-g++)
+set(CMAKE_SYSROOT ${RPI_TOOLCHAIN_PATH}/${TC_PREFIX}/aarch64-rpi-linux-gnu/sysroot)
 
 # =================================================================
 # Configure Toolchain
