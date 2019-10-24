@@ -2,6 +2,9 @@ include(ExternalProject)
 
 set(PROJ_PREFIX "u8g2")
 
+#1: https://github.com/olikraus/u8g2.git
+#2: http://dev.servebeer.com/ribasco/u8g2.git
+
 ExternalProject_Add(
         project_u8g2
         GIT_REPOSITORY "https://github.com/olikraus/u8g2.git"

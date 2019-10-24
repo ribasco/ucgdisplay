@@ -12,7 +12,7 @@ ExternalProject_Add(
         BUILD_IN_SOURCE 1
         INSTALL_COMMAND ""
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} make
+        BUILD_COMMAND CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} $(MAKE)
 )
 
 ExternalProject_Get_Property(project_cperiphery INSTALL_DIR SOURCE_DIR)
