@@ -540,33 +540,33 @@
             </plugin>
 
             <!-- Generate license file -->
-            <!--            <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>license-maven-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>update-project-license</id>
-                                    <goals>
-                                        <goal>update-project-license</goal>
-                                    </goals>
-                                    <phase>process-sources</phase>
-                                    <configuration>
-                                        <licenseName>lgpl_v3</licenseName>
-                                    </configuration>
-                                </execution>
-                                <execution>
-                                    <id>append-license-file-headers</id>
-                                    <goals>
-                                        <goal>update-file-header</goal>
-                                    </goals>
-                                    <phase>process-sources</phase>
-                                    <configuration>
-                                        <descriptionTemplate>${project.basedir}/scripts/license/template.ftl</descriptionTemplate>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                            <inherited>false</inherited>
-                        </plugin>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>update-project-license</id>
+                        <goals>
+                            <goal>update-project-license</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <licenseName>lgpl_v3</licenseName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>append-license-file-headers</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <descriptionTemplate>${project.basedir}/scripts/license/template.ftl</descriptionTemplate>
+                        </configuration>
+                    </execution>
+                </executions>
+                <inherited>false</inherited>
+            </plugin>
             <!-- ENFORCER Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
