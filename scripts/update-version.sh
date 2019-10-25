@@ -7,4 +7,6 @@ then
     exit 1
 fi
 
+cd ..
+
 mvn versions:set -DnewVersion=$1
