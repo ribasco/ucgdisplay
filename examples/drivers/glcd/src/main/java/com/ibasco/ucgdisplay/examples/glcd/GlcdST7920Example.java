@@ -30,7 +30,6 @@ import com.ibasco.ucgdisplay.drivers.glcd.GlcdConfigBuilder;
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdDriver;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
 
 public class GlcdST7920Example {
