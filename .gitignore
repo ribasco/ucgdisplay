@@ -79,7 +79,6 @@ hs_err_pid*
 /native/modules/input/src/main/cpp/build/
 /native/modules/input/src/main/cpp/lib/
 /native/modules/input/src/main/cpp/.idea/
-# /native/tools/
 /native/modules/graphics/src/main/cpp/utils/build/
 /native/tools/osxcross/
 /native/tools/rpi-tools/

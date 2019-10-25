@@ -7,21 +7,27 @@ Refer to the links under References for more information about these packages
 - Debian x86_64 (64bit)  Linux OS. This is the host OS where the compilation will take place.
 - GCC v7.4 above
 - CMake 3.10+
+- CLang (LLVM Based)
+- GCC/G++ Multilib
+- Autoconf/Automake
 - Latest Apache Maven version
 - Latest Apache Ant version
 - [OSXCROSS Toolchain](https://github.com/tpoechtrager/osxcross) (For cross compiling mac osx binaries from a Linux x86_64 machine). Provided by the project.
 - [Raspberry Pi Toolchain](https://github.com/ribasco/rpi-tools)  (For cross compiling arm binaries frpom a Linux x86_64 machine). Provided by the project.
 - [MingW-w64 Toolchain](http://mingw-w64.org/doku.php) (For cross compiling windows binaries from a Linux x86_64 machine).
-- **Required Linux Packages:**
+
+### 2. Package installation
+
+##### Required Linux Packages (Debian)
+    - autoconf
+    - autoconf-archive
+    - automake
+    - cmake (v3.10+)
 	- gcc-multilib
 	- g++-multilib
 	- mingw-w64
-	- g++-7
-	- gcc-7
-
-> Note: multilib packages are required to compile 32-bit binaries from a 64bit host machine
-
-### 2. Package installation
+	- clang
+	- build-essential
 
 Install the required packages for cross-compilation 
 
@@ -30,17 +36,21 @@ sudo apt update
 ```
 
 ```
-sudo apt install gcc-multilib g++-multilib mingw-w64 build-essential
+sudo apt install autoconf autoconf-archive automake cmake gcc-multilib g++-multilib mingw-w64 clang build-essential
 ```
 
-### 3. Clone the source from the repository
+### 3. Environment Settings
+
+- Make sure JAVA_HOME is set to your current JDK
+
+### 4. Clone the source from the repository
 Pick a working directory for your build and clone the project source including it's required submodules (e.g. rpi toolchain).
 
 ```
 git clone https://github.com/ribasco/ucgdisplay.git --recurse-submodules --remote-submodules
 ```
 
-### 4. Building the project 
+### 5. Building the project 
 
 #### Cross-compiling via Maven (All-in-one)
 
