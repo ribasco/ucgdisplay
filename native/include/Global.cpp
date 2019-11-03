@@ -32,7 +32,7 @@ JavaVM *cachedJVM;
 
 jclass clsNativeLibraryException;
 
-static std::vector<jclass> globalRefClasses;
+static std::vector<jobject> globalReferences;
 
 void JNI_Load(JavaVM *jvm) {
     cachedJVM = jvm;
@@ -44,10 +44,10 @@ void JNI_Load(JavaVM *jvm) {
 void JNI_Unload(JavaVM *vm) {
     JNIEnv *env;
     vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
-    for (auto it : globalRefClasses) {
+    for (auto it : globalReferences) {
         env->DeleteGlobalRef(it);
     }
-    globalRefClasses.clear();
+    globalReferences.clear();
 }
 
 void JNI_GetEnv(JNIEnv *env) {
@@ -62,11 +62,16 @@ void JNI_MakeGlobal(JNIEnv *env, const char *name, jclass &cls) {
     jclass tmp;
     tmp = env->FindClass(name);
     cls = (jclass) env->NewGlobalRef(tmp);
-    globalRefClasses.emplace_back(cls);
+    globalReferences.emplace_back(cls);
     env->DeleteLocalRef(tmp);
 }
 
-void JNI_ThrowIOException(JNIEnv *env, std::string msg) {
+void JNI_MakeGlobal(JNIEnv *env, jobject& localObj, jobject &globalObj) {
+    globalObj = env->NewGlobalRef(localObj);
+    globalReferences.emplace_back(globalObj);
+}
+
+void JNI_ThrowIOException(JNIEnv *env, const std::string& msg) {
     jclass clsEx = env->FindClass(CLS_IOEXCEPTION);
     env->ThrowNew(clsEx, msg.c_str());
 }
@@ -77,7 +82,7 @@ void JNI_ThrowNativeLibraryException(const std::string& msg) {
     env->ThrowNew(clsNativeLibraryException, msg.c_str());
 }
 
-void JNI_ThrowNativeLibraryException(JNIEnv *env, std::string msg) {
+void JNI_ThrowNativeLibraryException(JNIEnv *env, const std::string& msg) {
     env->ThrowNew(clsNativeLibraryException, msg.c_str());
 }
 

@@ -28,13 +28,9 @@
 
 #include <jni.h>
 #include <string>
+#include <map>
 
-//Comment USE_GPIOUSERSPACE to use the gpio sysfs version
-#define USE_GPIOUSERSPACE
-
-#ifdef USE_GPIOUSERSPACE
 #define GPIOUS_CONSUMER "ucgdisplay"
-#endif
 
 // Global class/method signatures
 #define CLS_IOEXCEPTION "java/io/IOException"
@@ -42,6 +38,12 @@
 #define CLS_HASHMAP  "java/util/HashMap"
 #define CLS_INTEGER "java/lang/Integer"
 #define CLS_THREADGROUP "java/lang/ThreadGroup"
+#define CLS_SET "java/util/Set"
+#define CLS_ITERATOR "java/util/Iterator"
+#define CLS_MAP_ENTRY "java/util/Map$Entry"
+#define CLS_STRING "java/lang/String"
+
+#define CLS_NativeUtils "com/ibasco/ucgdisplay/core/u8g2/utils/NativeUtils"
 #define CLS_NativeLibraryException "com/ibasco/ucgdisplay/common/exceptions/NativeLibraryException"
 #define CLS_U8g2EventDispatcher "com/ibasco/ucgdisplay/core/u8g2/U8g2EventDispatcher"
 #define CLS_U8g2GpioEvent "com/ibasco/ucgdisplay/core/u8g2/U8g2GpioEvent"
@@ -65,7 +67,7 @@
 #define MIDSIG_HASHMAP_CTR "()V"
 #define MIDSIG_DEVSTATEVT_CTR "(Lcom/ibasco/ucgdisplay/core/input/InputDevice;Ljava/lang/String;)V"
 
-#define JNI_VERSION JNI_VERSION_1_8
+#define JNI_VERSION JNI_VERSION_10
 
 #define GETENV(e) cachedJVM->GetEnv((void **) &e, JNI_VERSION);
 
@@ -97,14 +99,14 @@ void JNI_ThrowNativeLibraryException(const std::string& msg);
  * @param env JNIEnv instance
  * @param msg The exception message
  */
-void JNI_ThrowNativeLibraryException(JNIEnv *env, std::string msg);
+void JNI_ThrowNativeLibraryException(JNIEnv *env, const std::string& msg);
 
 /**
  * Throws an IOException to java
  * @param env JNIEnv instance
  * @param msg The exception message
  */
-void JNI_ThrowIOException(JNIEnv *env, std::string msg);
+void JNI_ThrowIOException(JNIEnv *env, const std::string& msg);
 
 /**
  * Creates a JNIEnv instance from the cached JVM
@@ -120,6 +122,8 @@ void JNI_GetEnv(JNIEnv *env);
  */
 void JNI_MakeGlobal(JNIEnv *env, const char *name, jclass &cls);
 
+void JNI_MakeGlobal(JNIEnv *env, jobject& localObj, jobject& globalObj);
+
 /**
  * Copy jByteArray to a byte buffer
  *
@@ -130,6 +134,14 @@ void JNI_MakeGlobal(JNIEnv *env, const char *name, jclass &cls);
  */
 void JNI_CopyJByteArray(JNIEnv *env, jbyteArray arr, uint8_t *buffer, int length);
 
+/**
+ * Copy jintArray to a byte buffer
+ *
+ * @param env JNIEnv instance
+ * @param arr  The source jintArray
+ * @param buffer  The destination buffer
+ * @param length The number of bytes to copy
+ */
 void JNI_CopyJIntArray(JNIEnv *env, jintArray arr, int *buffer, int length);
 
 void InputDevManager_Load(JNIEnv *env);
