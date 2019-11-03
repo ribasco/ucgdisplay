@@ -17,7 +17,8 @@
   ~ <http://www.gnu.org/licenses/lgpl-3.0.html>.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ucg-display</artifactId>
         <groupId>com.ibasco.ucgdisplay</groupId>
@@ -179,6 +180,20 @@
 
     <build>
         <plugins>
+            <!-- Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-h</arg>
+                        <arg>target/headers</arg>
+                    </compilerArgs>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+
             <!-- Ant-Run Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -194,7 +209,9 @@
                         <configuration>
                             <target>
                                 <!-- Pass maven properties to ant -->
-                                <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${build-target})</echo>
+                                <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch},
+                                    TARGET: ${build-target})
+                                </echo>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.."/>
                                 <!--suppress UnresolvedMavenProperty -->
@@ -217,15 +234,15 @@
             </plugin>
 
             <!-- Javadoc Plugin -->
-            <!--            <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <configuration>
-                                <excludes>
-                                    <exclude>**/UpdateControllerHeader.java</exclude>
-                                </excludes>
-                            </configuration>
-                        </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/UpdateControllerHeader.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
 
             <!-- Clean Plugin: Remove the native build directory during clean operation -->
             <plugin>
@@ -235,10 +252,6 @@
                     <filesets>
                         <fileset>
                             <directory>src/main/cpp/build</directory>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
-                        <fileset>
-                            <directory>src/main/cpp/lib</directory>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
                         <fileset>
