@@ -1,3 +1,6 @@
 [submodule "rpi"]
 	path = native/tools/rpi-tools
 	url = https://github.com/ribasco/rpi-tools
+[submodule "native/tools/osxcross"]
+	path = native/tools/osxcross
+	url = https://github.com/ribasco/osx-sdk.git
