@@ -271,7 +271,7 @@
     <!-- Initialize osxcross toolchain -->
     <target name="init-native-tools-osx" depends="tools-check-osxcross" unless="osx.tools.dir.valid">
         <echo>Initializing OSXCross toolchain</echo>
-        <echo>Deleting existing OSX toolchain directory (if applicable)</echo>
+        <!--<echo>Deleting existing OSX toolchain directory (if applicable)</echo>
         <delete dir="${cpp.tools.osx.dir}" failonerror="false"/>
         <echo>Extracting toolchain contents from the archive</echo>
         <exec executable="tar" dir="${cpp.tools.dir}" failonerror="true">
@@ -279,7 +279,7 @@
             <arg line="${cpp.tools.osx.archive}"/>
         </exec>
         <echo>Moving extracted contents to ${cpp.tools.osx.dir}</echo>
-        <move file="${cpp.tools.dir}/target" tofile="${cpp.tools.osx.dir}"/>
+        <move file="${cpp.tools.dir}/target" tofile="${cpp.tools.osx.dir}"/>-->
     </target>
 
     <!-- Initialize RPi/ARM toolchain -->
