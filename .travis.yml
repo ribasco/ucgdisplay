@@ -31,15 +31,21 @@ matrix:
       dist: bionic
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
-            - gcc-7
-            - g++-7
-            - mingw-w64
-            - autoconf-archive
-            - gcc-multilib
-            - g++-multilib
+            - clang-9
+      packages:
+        - gcc-7
+        - g++-7
+        - mingw-w64
+        - autoconf-archive
+        - gcc-multilib
+        - g++-multilib
     - os: osx
-      osx_image: xcode9.3
+      osx_image: xcode9.4
 
 before_install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc; fi
