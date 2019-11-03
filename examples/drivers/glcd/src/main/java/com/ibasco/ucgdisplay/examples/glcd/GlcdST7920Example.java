@@ -26,14 +26,11 @@ package com.ibasco.ucgdisplay.examples.glcd;/*-
 
 import com.ibasco.ucgdisplay.drivers.glcd.*;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
-import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdDriverException;
-import com.ibasco.ucgdisplay.drivers.glcd.exceptions.XBMDecodeException;
 import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMData;
 import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.time.Duration;
 import java.util.Objects;
 
