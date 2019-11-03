@@ -31,7 +31,7 @@ class GlcdDriverIT {
     @Test
     @DisplayName("Test basic virtual driver construction with no args")
     void testBasicVirtualDriverNoArgs() {
-        GlcdConfig config = GlcdConfigBuilder.create().build();
+        GlcdConfig config = GlcdConfigBuilder.create(null, null).build();
         assertThrows(GlcdConfigException.class, createVirtualDriverExecutable(config));
     }
 
@@ -39,9 +39,7 @@ class GlcdDriverIT {
     @DisplayName("Test basic construction of virtual glcd driver")
     void testBasicVirtualDriverConstruction() {
         GlcdConfig config = GlcdConfigBuilder
-                .create()
-                .display(Glcd.ST7920.D_128x64)
-                .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
                 .build();
 
         assertDoesNotThrow(createVirtualDriverExecutable(config));
@@ -60,9 +58,7 @@ class GlcdDriverIT {
     @Test
     @DisplayName("Test driver construction with a non-supported bus interface")
     void testNonSupportedProtocol() {
-        GlcdConfig config = GlcdConfigBuilder.create()
-                .display(Glcd.ST7920.D_128x64)
-                .busInterface(GlcdBusInterface.I2C_HW)
+        GlcdConfig config = GlcdConfigBuilder.create(Glcd.ST7920.D_128x64, GlcdBusInterface.I2C_HW)
                 .build();
 
         assertThrows(GlcdConfigException.class, createVirtualDriverExecutable(config));
@@ -72,9 +68,7 @@ class GlcdDriverIT {
     @DisplayName("Test construction of virtual driver with invalid configuration")
     void testInvalidConfigVirtualDriver() {
         GlcdConfig config = GlcdConfigBuilder
-                .create()
-                .display(Glcd.ST7920.D_128x64)
-                .busInterface(GlcdBusInterface.SPI_SW_4WIRE)
+                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_SW_4WIRE)
                 .build();
         assertThrows(GlcdConfigException.class, createVirtualDriverExecutable(config));
     }
@@ -83,9 +77,7 @@ class GlcdDriverIT {
     @Test
     void testDrawString() {
         GlcdConfig config = GlcdConfigBuilder
-                .create()
-                .display(Glcd.ST7920.D_128x64)
-                .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
                 .build();
 
         CountDownLatch latch = new CountDownLatch(1);
@@ -109,9 +101,7 @@ class GlcdDriverIT {
     @Test
     void testDrawString_NoFont() {
         GlcdConfig config = GlcdConfigBuilder
-                .create()
-                .display(Glcd.ST7920.D_128x64)
-                .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
                 .build();
 
         driver = new GlcdDriver(config, true);
