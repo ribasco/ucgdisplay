@@ -135,5 +135,3 @@ target_include_directories(u8g2 PUBLIC "${SOURCE_DIR}/csrc")
 # - Ref 1: https://cmake.org/cmake/help/v3.12/prop_sf/GENERATED.html
 # - Ref 2: https://stackoverflow.com/questions/47812230/cmake-make-add-library-depend-on-externalproject-add
 set_source_files_properties(${U8G2_SRC} PROPERTIES GENERATED TRUE)
-
-message(STATUS "INCLUDE DIR = ${SOURCE_DIR}/csrc}")
