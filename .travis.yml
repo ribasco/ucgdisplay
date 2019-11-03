@@ -38,12 +38,12 @@ matrix:
           packages:
             - clang-9
       packages:
-        - gcc-7
-        - g++-7
         - mingw-w64
         - autoconf-archive
         - gcc-multilib
         - g++-multilib
+        #- gcc-7
+        #- g++-7
     - os: osx
       osx_image: xcode9.4
 
