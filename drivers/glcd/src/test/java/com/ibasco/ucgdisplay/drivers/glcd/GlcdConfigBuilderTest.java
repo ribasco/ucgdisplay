@@ -25,18 +25,30 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+import java.util.HashMap;
+import java.util.Map;
 
 class GlcdConfigBuilderTest {
 
     private GlcdConfigBuilder configBuilder;
 
+    @Mock
+    private GlcdDisplay display;
+
+    @Mock
+    private GlcdBusInterface busInterface;
+
     @BeforeEach
     void setUp() {
-        configBuilder = GlcdConfigBuilder.create();
+        configBuilder = GlcdConfigBuilder.create(display, busInterface);
     }
 
     @Test
@@ -60,5 +72,28 @@ class GlcdConfigBuilderTest {
         GlcdConfig config = configBuilder.pinMap(mapConfig).mapPin(GlcdPin.D0, 10).build();
         assertNotNull(config);
         assertSame(mapConfig, config.getPinMap());
+    }
+
+    @Test
+    void testCopyOptions() {
+        Map<GlcdOption<?>, Object> newOptions = new HashMap<>();
+        newOptions.put(GlcdOption.ROTATION, GlcdRotation.ROTATION_180);
+        newOptions.put(GlcdOption.PROVIDER, Provider.PIGPIO);
+        newOptions.put(GlcdOption.PIGPIO_MODE, PigpioMode.STANDALONE);
+        newOptions.put(GlcdOption.SPI_FLAGS, 10);
+
+        //Existing entries
+        configBuilder
+                .option(GlcdOption.SPI_BITS_PER_WORD, 8)
+                .option(GlcdOption.SPI_PERIPHERAL, SpiPeripheral.MAIN)
+                .option(GlcdOption.SPI_FLAGS, 5);
+
+        configBuilder.options(newOptions);
+
+        GlcdConfig config = configBuilder.build();
+        int spiFlags = config.getOption(GlcdOption.SPI_FLAGS);
+
+        assertEquals(6, config.getOptions().size());
+        assertEquals(10, spiFlags);
     }
 }

@@ -52,7 +52,7 @@ class GlcdPinMapConfigTest {
         mapConfig.map(GlcdPin.D5, 5);
         mapConfig.map(GlcdPin.D6, 6);
         mapConfig.map(GlcdPin.D7, 7);
-        byte[] pinData = mapConfig.toByteArray();
+        int[] pinData = mapConfig.toIntArray();
         assertEquals(0, pinData[0]);
         assertEquals(1, pinData[1]);
         assertEquals(2, pinData[2]);

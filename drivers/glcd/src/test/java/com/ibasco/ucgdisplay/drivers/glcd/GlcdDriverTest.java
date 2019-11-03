@@ -867,8 +867,8 @@ class GlcdDriverTest {
 
     private void updateValidConfig(GlcdConfig config) {
         config.setDisplay(Glcd.ST7920.D_128x64);
-        config.setRotation(GlcdRotation.ROTATION_NONE);
         config.setBusInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920);
         config.setPinMapConfig(new GlcdPinMapConfig());
+        config.setOption(GlcdOption.ROTATION, GlcdRotation.ROTATION_NONE);
     }
 }
