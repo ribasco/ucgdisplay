@@ -16,5 +16,5 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]] && [[ ${TRAVIS_PULL_REQUEST} == 'false' ]] &
     echo " |_____/  |______| |_|      |______|  \____/     |_|   "
     echo "                                                       "
 
-    mvn deploy -DskipTests --settings scripts/settings.xml
+    mvn deploy -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
 fi

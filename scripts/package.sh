@@ -10,7 +10,7 @@ echo " |_| /_/    \_\_____|_|\_\/_/    \_\_____|______|"
 echo "                                                 "
 
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
-    mvn package -P'cross-compile,!build-linux-x86_64' -DskipTests=true -Dgpg.skip
+    mvn package -P'cross-compile,!build-linux-x86_64' -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip
 else
     mvn package -DskipTests=true -Dgpg.skip
 fi
