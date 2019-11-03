@@ -24,41 +24,130 @@ package com.ibasco.ucgdisplay.examples.glcd;/*-
  * =========================END==================================
  */
 
-import com.ibasco.ucgdisplay.drivers.glcd.Glcd;
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdConfig;
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdConfigBuilder;
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdDriver;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
+import com.ibasco.ucgdisplay.drivers.glcd.*;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
+import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdDriverException;
+import com.ibasco.ucgdisplay.drivers.glcd.exceptions.XBMDecodeException;
+import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMData;
+import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.time.Duration;
+import java.util.Objects;
+
+/**
+ * ST7920 Example
+ */
 public class GlcdST7920Example {
 
+    private static final Logger log = LoggerFactory.getLogger(GlcdST7920Example.class);
+
     public static void main(String[] args) throws Exception {
-        //SPI HW 4-Wire config for ST7920 (No pin mapping required)
-        GlcdConfig config = GlcdConfigBuilder.create()
-                .rotation(GlcdRotation.ROTATION_NONE)
-                .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
-                .transportDevice("/dev/spidev0.0")
-                .gpioDevice("/dev/gpiochip0")
-                .display(Glcd.ST7920.D_128x64)
+        new GlcdST7920Example().run();
+    }
+
+    private void drawU8G2Logo(int offset, GlcdDriver driver) {
+        //driver.clearBuffer();
+        driver.setFontMode(1);
+
+        driver.setFontDirection(0);
+        driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
+        driver.drawString(offset, 22, "U");
+
+        driver.setFontDirection(1);
+        driver.setFont(GlcdFont.FONT_INB19_MN); //u8g2_font_inb19_mn
+        driver.drawString(offset + 14, 8, "8");
+
+        driver.setFontDirection(0);
+        driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
+        driver.drawString(offset + 36, 22, "g");
+        driver.drawString(offset + 48, 22, "2");
+
+        driver.drawHLine(offset + 2, 25, 34);
+        driver.drawHLine(offset + 3, 26, 34);
+        driver.drawVLine(offset + 32, 22, 12);
+        driver.drawVLine(offset + 33, 23, 12);
+        //driver.sendBuffer();
+    }
+
+    private void run() throws Exception {
+        //SPI HW 4-Wire config for ST7920
+        //Note: Since we are using the Raspberry Pi SPI hardware features, no pin mapping is needed.
+
+        //Pin Mapping (Main SPI Peripheral)
+        // - MOSI = 10
+        // - SCLK = 11
+        // - CE1 = 7
+
+        GlcdConfig config = GlcdConfigBuilder
+                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
+                .option(GlcdOption.PROVIDER, Provider.SYSTEM)
+                //.option(GlcdOption.PIGPIO_MODE, PigpioMode.DAEMON)
+                .option(GlcdOption.DEVICE_SPEED, 800000)
+                .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
+                /*.option(GlcdOption.DEVICE_GPIO_PATH, "/dev/gpiochip0")
+                .option(GlcdOption.DEVICE_SPI_PATH, "/dev/spidev0.0")
+                .option(GlcdOption.DEVICE_I2C_PATH, "/dev/i2c-1")
+                .option(GlcdOption.I2C_BUS, 1)
+                .option(GlcdOption.SPI_PERIPHERAL, SpiPeripheral.MAIN)
+                .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
+                .option(GlcdOption.SPI_MODE, SpiMode.MODE_0)
+                .option(GlcdOption.SPI_BIT_ORDER, SpiBitOrder.MSB_FIRST)
+                .option(GlcdOption.SPI_BITS_PER_WORD, 8)
+                .option(GlcdOption.I2C_FLAGS, 0)
+                .option(GlcdOption.SPI_FLAGS, 0)
+                .option(GlcdOption.I2C_DEVICE_ADDRESS, 0)
+                .option(GlcdOption.PIGPIO_ADDRESS, null)
+                .option(GlcdOption.PIGPIO_PORT, null)*/
                 .build();
 
         GlcdDriver driver = new GlcdDriver(config);
 
+        //Set the Font (This is required for drawing strings)
         driver.setFont(GlcdFont.FONT_6X12_MR);
+
+        //Get the maximum character height
         int maxHeight = driver.getMaxCharHeight();
 
-        for (int i = 60; i >= 0; i--) {
+        long startMillis = System.currentTimeMillis();
+
+        log.debug("Starting display loop");
+
+        XBMData xbmData = XBMUtils.decodeXbmFile(getClass().getResourceAsStream("/ironman.xbm"));
+
+        int offset = 50;
+
+        for (int i = 1000; i >= 0; i--) {
+            //Clear the GLCD buffer
             driver.clearBuffer();
-            driver.drawString(0, maxHeight, "ucgdisplay");
-            driver.drawString(0, maxHeight * 2, "powered by");
-            driver.drawString(0, maxHeight * 3, "u8g2");
-            driver.drawString(0, maxHeight * 5, "Shutting down in " + i + "s");
+
+            if (offset >= 128) {
+                offset = 0;
+            }
+
+            drawU8G2Logo(offset++, driver);
+
+            driver.drawXBM(0, 0, 45, 64, Objects.requireNonNull(xbmData).getData());
+
+            //Write Operations to the GLCD buffer
+            driver.setFont(GlcdFont.FONT_6X12_MR);
+            driver.drawString(55, maxHeight * 3, "ucgdisplay");
+            driver.drawString(55, maxHeight * 4, "1.5.0-alpha");
+            driver.drawString(100, maxHeight * 5, String.valueOf(i));
+
+            //Send all buffered data to the display
             driver.sendBuffer();
-            Thread.sleep(1000);
+
+            Thread.sleep(1);
         }
 
-        System.out.println("Done");
+        //Clear the display
+        driver.clearDisplay();
+        long endTime = System.currentTimeMillis() - startMillis;
+
+        log.info("Done in {} seconds", Duration.ofMillis(endTime).toSeconds());
     }
 }
