@@ -1,4 +1,55 @@
-# Guide to cross-compiling from an x86_64 (64bit) Linux OS
+# Guide to cross-compiling the native project
+
+### Native project directory structure
+
+```
+./native
+├── cmake
+│   └── external
+├── include
+│   └── jdk
+│       ├── darwin
+│       │   ├── i386
+│       │   │   └── jdk11
+│       │   └── x86_64
+│       │       ├── jdk11
+│       │       └── jdk1.8.0_191
+│       ├── linux
+│       │   └── arm
+│       │       ├── jdk11
+│       │       └── jdk1.8.0_191
+│       └── windows
+│           └── x86_64
+│               ├── jdk11
+│               └── jdk1.8.0_191
+├── modules
+│   ├── graphics
+│   │   ├── src
+│   │   │   └── main
+│   │   │       ├── cpp (Main c++ project for the graphics native library) 
+│   │   │       └── java (Main java project for the graphics native library)
+│   └── input
+│       ├── src
+│       │   └── main
+│       │       ├── cpp
+│       │       └── java
+└── tools
+    ├── osxcross (Mac OSX Cross-compile toolchain built by osxcross)
+    │   ├── bin
+    │   ├── SDK (contains all the packaged sdks for this project)
+    │   │   ├── MacOSX10.13.sdk  (Packaged from XCode 9.4.1  Mac OS 10.13 SDK)
+    │   │   ├── MacOSX10.14.sdk  (Packaged from XCode 10.1   Mac OS 10.14 SDK)
+    │   │   └── MacOSX10.15.sdk  (Packaged from XCode 11.1   Mac OS 10.15 SDK)
+    └── rpi-tools (Raspberry Pi toolchain built by crosstools-ng)
+        ├── configs
+        ├── gcc10-linaro-arm-linux-gnueabihf-raspbian
+        ├── gcc10-linaro-arm-linux-gnueabi-raspbian-x64
+        ├── gcc7-linaro-arm-linux-gnueabihf-raspbian
+        ├── gcc7-linaro-arm-linux-gnueabihf-raspbian-ns
+        ├── gcc7-linaro-arm-linux-gnueabi-raspbian-x64
+        └── gcc7-linaro-arm-linux-gnueabi-raspbian-x64-ns
+
+```
 
 ### 1. Prerequisites
 
@@ -23,47 +74,46 @@ Refer to the links under References for more information about these packages
     - autoconf-archive
     - automake
     - cmake (v3.10+)
-	- gcc-multilib
-	- g++-multilib
-	- mingw-w64
-	- clang
-	- build-essential
+    - gcc-multilib
+    - g++-multilib
+    - mingw-w64
+    - clang
+    - build-essential
 
 Install the required packages for cross-compilation 
 
-```
+```bash
 sudo apt update
 ```
 
-```
+```bash
 sudo apt install autoconf autoconf-archive automake cmake gcc-multilib g++-multilib mingw-w64 clang build-essential
 ```
 
 ### 3. Environment Settings
 
-- Make sure JAVA_HOME is set to your current JDK
+- Make sure `JAVA_HOME` is set to your current JDK
 
 ### 4. Clone the source from the repository
 Pick a working directory for your build and clone the project source including it's required submodules (e.g. rpi toolchain).
 
-```
+```bash
 git clone https://github.com/ribasco/ucgdisplay.git --recurse-submodules --remote-submodules
 ```
 
 ### 5. Building the project 
 
-#### Cross-compiling via Maven (All-in-one)
+#### Cross-compiling with Maven (All-in-on)
 
+If you compile with maven, you will compile all Java sources including the native libraries for all supported platforms. Take note that we added `build-linux-x86_64` as an exclusion. This is needed to avoid building for the same target twice. 
 
-If you compile with maven, you will compile all java sources including the c++ libraries for all supported platforms. Take note that we added `build-linux-x86_64` as an exclusion. This is needed to avoid building for the same target twice.  
+If no profiles are provided, no cross-compilation will take place. Only the Host specific natives will be built.
 
-If no profiles are provided, no cross-compilation will take place. Only the libraries for the Host system will be built.
-
-```
+```bash
 mvn clean install -P'cross-compile,!build-linux-x86_64' -DskipTests=true -Dgpg.skip
-``` 
+```
 
-#### Cross-compining via Apache ANT
+#### Cross-compiling with Apache ANT
 
 With ant, you can select a specific c++ module to cross-compile. 
 
@@ -71,35 +121,64 @@ With ant, you can select a specific c++ module to cross-compile.
 
 Building only the C++ graphics library for all supported platforms
 
-```
+```bash
 cd scripts
 ant -file build-graphics.xml -Droot.dir=<project root directory> native-build-cc-all
 ```
 
 Building only the C++ input library for all supported platforms
-```
+```bash
 cd scripts
 ant -file build-input.xml -Droot.dir=<project root directory> native-build-cc-all
 ```
 
-The output files are located at `<proj root>/native/modules/graphics/target/classes/natives/` directory
+Building for a specific platform/architecture
 
-#### Cross-compiling via CMake
+```bash
+cd scripts
+ant -file build-graphics.xml -Droot.dir=<project root directory> native-build-linux-arm32
+```
 
-**Properties:**
+All generated binaries are located at `<proj root>/native/modules/graphics/target/classes/natives/` directory
 
-- **project root dir** = The root project directory (e.g. /home/user/projects/ucgdisplay)
+##### List of available ANT Build Targets
+
+All targets with the **-cc** suffix needs to be executed from a 64 bit Linux operating system.
+
+| Ant Target                     | Module   | Description                                                 |
+| ------------------------------ | -------- | ----------------------------------------------------------- |
+| native-build-cc-all            | Graphics | Cross-compile everything                                    |
+| native-build-cc-linux-arm32    | Graphics | Cross-compile for Linux ARM 32 bit                          |
+| native-build-cc-linux-arm64    | Graphics | Cross-compile for Linux ARM 64 bit                          |
+| native-build-cc-osx-x86_32     | Graphics | Cross-compile for OSX x86 32 bit                            |
+| native-build-cc-osx-x86_64     | Graphics | Cross-compile for OSX x86 64 bit                            |
+| native-build-cc-windows-x86_32 | Graphics | Cross-compile for Windows x86 32 bit                        |
+| native-build-cc-windows-x86_64 | Graphics | Cross-compile for Windows x86 64 bit                        |
+| native-build-linux-arm32       | Graphics | Compile for ARM 32 (Needs an ARM 32/64 bit host)            |
+| native-build-linux-x86_32      | Graphics | Compile for Linux 32 bit (Needs a Linux x86 32/64 bit host) |
+| native-build-linux-x86_64      | Graphics | Compile for Linux 64 bit (Needs a Linux x86 64 bit host)    |
+| native-build-macosx-x86_64     | Graphics | Compile for OSX 64 bit (Needs an OSX 64 bit host)           |
+| native-build-windows-x86_32    | Graphics | Compile for Windows 32 bit (Needs a Windows 32/64 bit host) |
+| native-build-windows-x86_64    | Graphics | Compile for Windows 64 bit (Needs a Windows 64 bit host)    |
+
+#### Cross-compiling with CMake
+
+**Properties**
+
+| Property                       | Description                | Example                        |
+| ------------------------------ | -------------------------- | ------------------------------ |
+| project root dir               | The root project directory | /home/user/projects/ucgdisplay |
 
 **CMake build process:**
 
 > Note: Set working directory to <project root>/native/modules/graphics/src/main/cpp
 
 1. Refresh/generate the necessary build files
-2. Make build process
+2. Start make build process
 
-##### Linux - ARM 32bit
+##### Linux - ARM 32 bit
 
-```
+```bash
 cmake --target ucgdisp
       -DCMAKE_TOOLCHAIN_FILE=<project root dir>/native/cmake/RpiToolchain-linux-32.cmake
       -DCMAKE_BUILD_TYPE=Release
@@ -108,13 +187,13 @@ cmake --target ucgdisp
       -Bbuild/linux/arm_32
 ```
 
-```
+```bash
 cmake --build <arm32 build dir path>/linux/arm_32 --target ucgdisp -- -j 4
 ```
 
-##### Linux - ARM 64bit
+##### Linux - ARM 64 bit
 
-```
+```bash
 cmake --target ucgdisp
       -DCMAKE_TOOLCHAIN_FILE=<project root dir>/native/cmake/RpiToolchain-linux-64.cmake
       -DCMAKE_BUILD_TYPE=Release
@@ -123,13 +202,13 @@ cmake --target ucgdisp
       -Bbuild/linux/arm_64
 ```
 
-```
+```bash
 cmake --build <arm64 build dir path>/linux/arm_64 --target ucgdisp -- -j 4
 ```
 
 ##### Linux - x86_32 (32 bit / Virtual Mode)
 
-```
+```bash
 cmake --target ucgdisp
       -DCMAKE_BUILD_TYPE=Release 
       -DCMAKE_C_FLAGS=-m32 
@@ -140,13 +219,13 @@ cmake --target ucgdisp
       -Bbuild/linux/x86_32
 ```
 
-```
+```bash
 cmake --build <x86_32 build dir path>/linux/x86_32 --target ucgdisp -- -j 4
 ```
 
 ##### Linux - x86_64 (64 bit / Virtual Mode)
 
-```
+```bash
 cmake --target ucgdisp
       -DCMAKE_BUILD_TYPE=Release
       -G 'CodeBlocks - Unix Makefiles'
@@ -154,13 +233,13 @@ cmake --target ucgdisp
       -Bbuild/linux/x86_64
 ```
 
-```
+```bash
 cmake --build <x86_64 build dir path>/linux/x86_64 --target ucgdisp -- -j 4
 ```
 
-##### Windows - 32bit (Virtual Mode)
+##### Windows - x86_32 (32 bit / Virtual Mode)
 
-```
+```bash
 cmake --target ucgdisp 
        -DCMAKE_TOOLCHAIN_FILE=<native directory path>/cmake/MingWToolchain-32.cmake
        -DCMAKE_BUILD_TYPE=Release
@@ -169,13 +248,13 @@ cmake --target ucgdisp
        -Bbuild/windows/x86_32
 ```
 
-```
+```bash
 cmake --build <win32 build dir path>/windows/x86_32 --target ucgdisp -- -j 4
 ```
 
-##### Windows - 64bit (Virtual Mode)
+##### Windows - x86_64 (64 bit / Virtual Mode)
 
-```
+```bash
 cmake --target ucgdisp 
        -DCMAKE_TOOLCHAIN_FILE=<native directory path>/cmake/MingWToolchain-64.cmake
        -DCMAKE_BUILD_TYPE=Release
@@ -184,12 +263,12 @@ cmake --target ucgdisp
        -Bbuild/windows/x86_64
 ```
 
-```
-cmake --build <win32 build dir path>/windows/x86_64 --target ucgdisp -- -j 4
+```bash
+cmake --build <win64 build dir path>/windows/x86_64 --target ucgdisp -- -j 4
 ```
 
-##### Mac OSX - 32bit (Virtual Mode)
-```
+##### Mac OS X - x86_32 (32 bit / Virtual Mode)
+```bash
 cmake --target ucgdisp
       -DCMAKE_BUILD_TYPE=Release 
       -DCMAKE_TOOLCHAIN_FILE=<project root dir>/native/cmake/OSXToolchain-32.cmake 
@@ -203,12 +282,12 @@ cmake --target ucgdisp
       -Bbuild/osx/x86_32
 ```
 
-```
+```bash
 cmake --build <osx32 build dir path>/osx/x86_32 --target ucgdisp -- -j 4
 ```
 
-##### Mac OSX - 64bit (Virtual Mode)
-```
+##### Mac OS X x86_64 (64 bit / Virtual Mode)
+```bash
 cmake --target ucgdisp
       -DCMAKE_BUILD_TYPE=Release 
       -DCMAKE_TOOLCHAIN_FILE=<project root dir>/native/cmake/OSXToolchain-64.cmake 
@@ -222,27 +301,26 @@ cmake --target ucgdisp
       -Bbuild/osx/x86_64
 ```
 
-```
+```bash
 cmake --build <osx64 build dir path>/osx/x86_64 --target ucgdisp -- -j 4
 ```
 
-## Configuring Development Environment
+## Configuring Development **Environment**
 
-
-**CLion IDE**
+**CLion IDE (Coming soon)**
 
 - Environment Settings (File -> Settings)
 	- Coming soon 
-
 
 **Eclipse CDT (Coming soon)**
 
 - Environment Settings
 	- Coming soon 
 
-### Building your own cross-compiler toolchain (using crosstools-ng)
+### Building your own cross-compiler tool-chain
 
-- Coming soon
+- Crosstools-NG
+- OSX Cross
 
 # Credits
 
