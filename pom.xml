@@ -17,7 +17,8 @@
   ~ <http://www.gnu.org/licenses/lgpl-3.0.html>.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ibasco.ucgdisplay</groupId>
@@ -463,47 +464,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>license-maven-plugin</artifactId>
-                    <version>1.20</version>
-                    <executions>
-                        <execution>
-                            <id>append-license-file-headers</id>
-                            <goals>
-                                <goal>update-file-header</goal>
-                            </goals>
-                            <phase>process-sources</phase>
-                            <configuration>
-                                <licenseName>lgpl_v3</licenseName>
-                                <descriptionTemplate>${main.basedir}/scripts/license/template.ftl
-                                </descriptionTemplate>
-                                <canUpdateCopyright>true</canUpdateCopyright>
-                                <canUpdateDescription>true</canUpdateDescription>
-                                <canUpdateLicense>true</canUpdateLicense>
-                                <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-                                <processStartTag>========================START=================================
-                                </processStartTag>
-                                <processEndTag>=========================END==================================
-                                </processEndTag>
-                                <excludes>
-                                    <exclude>*.sh</exclude>
-                                    <exclude>src/main/cpp/lib/**</exclude>
-                                    <exclude>src/main/cpp/include/**</exclude>
-                                    <exclude>U8g2LookupFonts.cpp</exclude>
-                                    <exclude>U8g2LookupSetup.cpp</exclude>
-                                    <exclude>controllers.h</exclude>
-                                </excludes>
-                                <includes>
-                                    <include>**/*.java</include>
-                                    <include>*.cpp</include>
-                                    <include>*.h</include>
-                                </includes>
-                                <roots>
-                                    <root>src/main/java</root>
-                                    <root>src/test</root>
-                                    <root>src/main/cpp</root>
-                                </roots>
-                            </configuration>
-                        </execution>
-                    </executions>
+                    <version>2.0.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -516,13 +477,13 @@
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
             <!-- Javadoc Plugin -->
-            <!--            <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <configuration>
-                                <source>8</source>
-                            </configuration>
-                        </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                </configuration>
+            </plugin>
             <!-- Failsafe plugin (integration testing) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -545,6 +506,43 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>append-license-file-headers</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <licenseName>lgpl_v3</licenseName>
+                            <descriptionTemplate>${main.basedir}/scripts/license/template.ftl</descriptionTemplate>
+                            <canUpdateCopyright>true</canUpdateCopyright>
+                            <canUpdateDescription>true</canUpdateDescription>
+                            <canUpdateLicense>true</canUpdateLicense>
+                            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                            <processStartTag>========================START=================================</processStartTag>
+                            <processEndTag>=========================END==================================</processEndTag>
+                            <excludes>
+                                <exclude>*.sh</exclude>
+                                <exclude>src/main/cpp/lib/**</exclude>
+                                <exclude>src/main/cpp/include/**</exclude>
+                                <exclude>U8g2LookupFonts.cpp</exclude>
+                                <exclude>U8g2LookupSetup.cpp</exclude>
+                                <exclude>controllers.h</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/*.java</include>
+                                <include>*.cpp</include>
+                                <include>*.h</include>
+                            </includes>
+                            <roots>
+                                <root>src/main/java</root>
+                                <root>src/test</root>
+                                <root>src/main/cpp</root>
+                            </roots>
+                        </configuration>
+                    </execution>
+                </executions>
+                <!--<executions>
+                    <execution>
                         <id>update-project-license</id>
                         <goals>
                             <goal>update-project-license</goal>
@@ -565,7 +563,7 @@
                         </configuration>
                     </execution>
                 </executions>
-                <inherited>false</inherited>
+                <inherited>false</inherited>-->
             </plugin>
             <!-- ENFORCER Plugin -->
             <plugin>
@@ -784,6 +782,11 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
