@@ -165,7 +165,7 @@
     <!--                            CROSS COMPILE DEFINITIONS                                        -->
     <!-- =========================================================================================== -->
 
-    <!-- Cross-compile for all OS/Arch (Can only be run from a Linux machine) -->
+    <!-- Cross-compile for all OS/Arch (Can only be run from a 64-bit Linux machine) -->
     <target name="native-build-cc-all" depends="ucgd-build-common.os-check-linux-x86_64,
             native-build-linux-x86_32,
             native-build-linux-x86_64,
@@ -183,8 +183,7 @@
         <echo message="============================================================================"/>
     </target>
 
-    <!-- TODO: Do we have to check the OS arch? -->
-    <!-- Cross-compile for Linux - ARM 32bit (Should only be run from a Linux machine) -->
+    <!-- Cross-compile for Linux - ARM 32bit (Should only be run from a 64-bit Linux machine) -->
     <target name="native-build-cc-linux-arm32" depends="ucgd-build-common.os-check-linux-x86_64, ucgd-build-common.init-native-tools-rpi, ucgd-build-common.generate-native-sources-linux-arm" if="os.linux.x86_64">
         <!-- Build Linux/ARM -->
         <echo>[HOST=LINUX-x86_64] Cross-compiling Linux for ARM 32bit binaries</echo>
@@ -205,7 +204,7 @@
         <antcall target="ucgd-build-common.native-copy-resources-linux-arm32"/>
     </target>
 
-    <!-- Cross-compile for Linux - ARM 64bit aarch64 (Should only be run from a Linux machine) -->
+    <!-- Cross-compile for Linux - ARM 64bit aarch64 (Should only be run from a 64-bit Linux machine) -->
     <target name="native-build-cc-linux-arm64" depends="ucgd-build-common.os-check-linux-x86_64, ucgd-build-common.init-native-tools-rpi, ucgd-build-common.generate-native-sources-linux-arm" if="os.linux.x86_64">
         <!-- Build Linux/ARM -->
         <echo>[HOST=LINUX-x86_64] Cross-compiling Linux for ARM 64bit binaries</echo>
@@ -226,7 +225,7 @@
         <antcall target="ucgd-build-common.native-copy-resources-linux-arm64"/>
     </target>
 
-    <!-- Cross compile for Windows - 32bit x86_32 (Should only be run from a Linux machine) -->
+    <!-- Cross compile for Windows - 32bit x86_32 (Should only be run from a 64-bit Linux machine) -->
     <target name="native-build-cc-windows-x86_32" depends="ucgd-build-common.os-check-linux-x86_64, ucgd-build-common.generate-native-sources-win" if="os.linux.x86_64">
         <!-- Build Windows/x86 -->
         <echo>[HOST=LINUX-x86_64] Cross-compiling for Windows 32bit binaries</echo>
@@ -247,7 +246,7 @@
         <antcall target="ucgd-build-common.native-copy-resources-win-x86_32"/>
     </target>
 
-    <!-- Cross compile for Windows - 64bit x86_64 (Should only be run from a Linux machine) -->
+    <!-- Cross compile for Windows - 64bit x86_64 (Should only be run from a 64-bitLinux machine) -->
     <target name="native-build-cc-windows-x86_64" depends="ucgd-build-common.os-check-linux-x86_64, ucgd-build-common.generate-native-sources-win" if="os.linux.x86_64">
         <!-- Build Windows/x86_64 -->
         <echo>[HOST=LINUX-x86_64] Cross-compiling for Windows 64bit binaries</echo>
@@ -268,7 +267,7 @@
         <antcall target="ucgd-build-common.native-copy-resources-win-x86_64"/>
     </target>
 
-    <!-- Cross compile for Mac OSX - 32bit x86_32 (Should only be run from a Linux machine) -->
+    <!-- Cross compile for Mac OSX - 32bit x86_32 (Should only be run from a 64-bit Linux machine) -->
     <target name="native-build-cc-osx-x86_32" depends="ucgd-build-common.os-check-linux-x86_64, ucgd-build-common.init-native-tools-osx, ucgd-build-common.generate-native-sources-osx" if="os.linux.x86_64">
         <!-- Build Mac/x86 -->
         <echo>[HOST=LINUX-x86_64] Cross-compiling for Mac - x86_32</echo>
@@ -276,10 +275,10 @@
             <arg line="--target ${cpp.build.target}"/>
             <arg line="-DCMAKE_TOOLCHAIN_FILE=${cpp.tools.osx.x86_32.toolchain}"/>
             <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
-            <arg line="-DOSXCROSS_HOST=${cpp.tools.osx.host}"/>
+            <!--<arg line="-DOSXCROSS_HOST=${cpp.tools.osx32.host}"/>-->
             <arg line="-DOSXCROSS_TARGET_DIR=${cpp.tools.osx.dir}"/>
-            <arg line="-DOSXCROSS_SDK=${cpp.tools.osx.sdk}"/>
-            <arg line="-DOSXCROSS_TARGET=${cpp.tools.osx.target}"/>
+            <!--<arg line="-DOSXCROSS_SDK=${cpp.tools.osx32.sdk}"/>-->
+            <!--<arg line="-DOSXCROSS_TARGET=${cpp.tools.osx32.target}"/>-->
             <arg line="${cmake.generator.unix}"/>
             <arg line="-H."/>
             <arg line="-Bbuild/${cpp.build.relpath.osx-x86_32}"/>
@@ -293,7 +292,7 @@
         <antcall target="ucgd-build-common.native-copy-resources-osx-x86_32"/>
     </target>
 
-    <!-- Cross compile for Mac OSX - 64bit x86_64 (Should only be run from a Linux machine) -->
+    <!-- Cross compile for Mac OSX - 64bit x86_64 (Should only be run from a 64-bit Linux machine) -->
     <target name="native-build-cc-osx-x86_64" depends="ucgd-build-common.os-check-linux-x86_64, ucgd-build-common.init-native-tools-osx, ucgd-build-common.generate-native-sources-osx" if="os.linux.x86_64">
         <!-- Build Mac/x86_64 -->
         <echo>[HOST=LINUX-X86_64] Cross-compiling for Mac - x86_64</echo>
@@ -301,10 +300,10 @@
             <arg line="--target ${cpp.build.target}"/>
             <arg line="-DCMAKE_TOOLCHAIN_FILE=${cpp.tools.osx.x86_64.toolchain}"/>
             <arg line="-DCMAKE_BUILD_TYPE=${cpp.build.type}"/>
-            <arg line="-DOSXCROSS_HOST=${cpp.tools.osx.host}"/>
+            <!--<arg line="-DOSXCROSS_HOST=${cpp.tools.osx64.host}"/>-->
             <arg line="-DOSXCROSS_TARGET_DIR=${cpp.tools.osx.dir}"/>
-            <arg line="-DOSXCROSS_SDK=${cpp.tools.osx.sdk}"/>
-            <arg line="-DOSXCROSS_TARGET=${cpp.tools.osx.target}"/>
+            <!--<arg line="-DOSXCROSS_SDK=${cpp.tools.osx64.sdk}"/>-->
+            <!--<arg line="-DOSXCROSS_TARGET=${cpp.tools.osx64.target}"/>-->
             <arg line="${cmake.generator.unix}"/>
             <arg line="-H."/>
             <arg line="-Bbuild/${cpp.build.relpath.osx-x86_64}"/>

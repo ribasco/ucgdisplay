@@ -100,10 +100,18 @@
 
     <property name="cpp.tools.osx.dir" value="${cpp.tools.dir}/osxcross"/>
     <property name="cpp.tools.osx.archive" value="osx-tools.tar.gz"/>
-    <property name="cpp.tools.osx.sdk" value="${cpp.tools.osx.dir}/SDK/MacOSX10.11.sdk"/>
-    <property name="cpp.tools.osx.target" value="darwin15"/>
-    <property name="cpp.tools.osx.host" value="x86_64-apple-${cpp.tools.osx.target}"/>
 
+    <!-- OSX 32-bit -->
+    <property name="cpp.tools.osx32.sdk" value="${cpp.tools.osx.dir}/SDK/MacOSX10.13.sdk"/>
+    <property name="cpp.tools.osx32.target" value="darwin17"/>
+    <property name="cpp.tools.osx32.host" value="i386-apple-${cpp.tools.osx32.target}"/>
+
+    <!-- OSX 64-bit -->
+    <property name="cpp.tools.osx64.sdk" value="${cpp.tools.osx.dir}/SDK/MacOSX10.15.sdk"/>
+    <property name="cpp.tools.osx64.target" value="darwin19"/>
+    <property name="cpp.tools.osx64.host" value="x86_64-apple-${cpp.tools.osx64.target}"/>
+
+    <!-- Target directory properties for native binaries -->
     <property name="project.dir.target" value="${project.dir.base}/target"/>
     <property name="project.target.dir.linux.x86_32" value="${project.dir.target}/classes/natives/linux_32"/>
     <property name="project.target.dir.linux.x86_64" value="${project.dir.target}/classes/natives/linux_64"/>
@@ -147,6 +155,14 @@
         <delete dir="${cpp.build.dir}"/>
         <delete dir="${cpp.lib.dir}"/>
         <delete dir="${project.dir.target}"/>
+    </target>
+
+    <target name="cmake-clean">
+        <exec executable="cmake" dir="${cpp.proj.dir}" failonerror="true">
+            <arg line="--build ${cpp.proj.dir}/build/${relpath}"/>
+            <arg line="--target clean --"/>
+            <arg line=" -j 4"/>
+        </exec>
     </target>
 
     <target name="show-prop-info">
@@ -217,8 +233,13 @@
                 <available file="${cpp.tools.osx.dir}" type="dir"/>
                 <available file="${cpp.tools.osx.dir}/bin" type="dir"/>
                 <available file="${cpp.tools.osx.dir}/SDK" type="dir"/>
-                <available file="${cpp.tools.osx.dir}/SDK/MacOSX10.11.sdk" type="dir"/>
-                <available file="${cpp.tools.osx.dir}/bin/x86_64-apple-darwin15-wrapper" type="file"/>
+                <available file="${cpp.tools.osx.dir}/SDK/MacOSX10.13.sdk" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/SDK/MacOSX10.14.sdk" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/SDK/MacOSX10.15.sdk" type="dir"/>
+                <available file="${cpp.tools.osx.dir}/bin/o32-clang" type="file"/>
+                <available file="${cpp.tools.osx.dir}/bin/o32-clang++" type="file"/>
+                <available file="${cpp.tools.osx.dir}/bin/o64-clang" type="file"/>
+                <available file="${cpp.tools.osx.dir}/bin/o64-clang++" type="file"/>
             </and>
         </condition>
     </target>
