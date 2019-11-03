@@ -37,9 +37,11 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Driver adapter using JNI and U8g2
+ * Driver adapter using JNI and U8g2. Please note that this class is NOT thread-safe.
  *
  * @author Rafael Ibasco
  */
@@ -57,15 +59,14 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     @Override
     public void initialize(GlcdConfig config, boolean virtual) {
         String setupProcedure = config.getSetupProcedure();
-        int rotation = config.getRotation().getValue();
         int commInt = config.getBusInterface().getValue();
         int commType = config.getBusInterface().getBusType().getValue();
-        int address = config.getDeviceAddress();
-        String transportDevice = config.getTransportDevice();
-        String gpioDevice = config.getGpioDevice();
-        int speed = config.getDeviceSpeed();
         int[] pinConfig = ObjectUtils.defaultIfNull(config.getPinMap(), new GlcdPinMapConfig()).toIntArray();
-        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, address, speed, transportDevice, gpioDevice, pinConfig, virtual);
+        int rotation = GlcdRotation.ROTATION_NONE.toValueInt();
+        if (config.getOption(GlcdOption.ROTATION) != null) {
+            rotation = config.getOption(GlcdOption.ROTATION);
+        }
+        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, pinConfig, config.getOptions(), virtual);
     }
 
     @Override
@@ -507,7 +508,7 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     @Override
     public void setDisplayRotation(GlcdRotation rotation) {
         checkRequirements();
-        setDisplayRotation(rotation.getValue());
+        setDisplayRotation(rotation.toValueInt());
     }
 
     @Override
@@ -572,12 +573,5 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     @Override
     public long getId() {
         return _id;
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        U8g2EventDispatcher.removeByteListener(this);
-        U8g2EventDispatcher.removeGpioListener(this);
-        super.finalize();
     }
 }

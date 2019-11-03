@@ -591,7 +591,7 @@ void buildCode_updateCppLookupSetupFunctions() {
     code << "#include \"U8g2Hal.h\"\n";
     code << "#include <iostream>\n\n";
 
-    code << "void u8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {\n";
+    code << "void U8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {\n";
     code << "\tsetup_map.clear();\n";
 
     for (const auto &setup : setupfunctions) {
@@ -617,7 +617,7 @@ void buildCode_updateCppLookupFonts() {
     code << "#include \"U8g2Hal.h\"\n";
     code << "#include <iostream>\n\n";
 
-    code << "void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {\n";
+    code << "void U8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {\n";
     code << "\tfont_map.clear();\n";
 
     for (const auto &fontName : fontFiles) {

@@ -2,8 +2,8 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Graphics LCD driver
- * Filename: GlcdRotation.java
- *
+ * Filename: Provider.java
+ * 
  * ---------------------------------------------------------
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
@@ -12,12 +12,12 @@
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -25,44 +25,42 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueInt;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueString;
 
 /**
- * Enumeration for the available rotation modes for the display controller
+ * The enumeration for all available I/O providers supported by the library
  *
  * @author Rafael Ibasco
  */
-public enum GlcdRotation implements GlcdOptionValueInt {
+public enum Provider implements GlcdOptionValueString {
     /**
-     * No rotation
+     * A GPIO library which makes use of the linux character device (replacement of sysfs). SPI and I2C not supported.
+     *
+     * @see <a href="https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/">Libgpiod website</a>
      */
-    ROTATION_NONE(U8g2Graphics.ROTATION_R0),
+    LIBGPIOD("libgpiod"),
     /**
-     * 90 Degrees clockwise rotation
+     * Uses the third-party pigpiod library. Requires the pigpio daemon to be installed and running on the target system. Supports I2C/GPIO and SPI interfaces.
+     *
+     * @see <a href="https://github.com/joan2937/pigpio">Pigpio Website</a>
      */
-    ROTATION_90(U8g2Graphics.ROTATION_R1),
+    PIGPIO("pigpio"),
     /**
-     * 180 Degrees clockwise rotation
+     * Makes use of built-in peripheral I/O interfaces provided by the linux kernel. No external dependencies/packages are required to be installed on the SoC.
+     * Fully Supports I2C, GPIO (character device & sysfs) and SPI.
+     *
+     * @see <a href="https://github.com/vsergeev/c-periphery">C-periphery website</a>
      */
-    ROTATION_180(U8g2Graphics.ROTATION_R2),
-    /**
-     * 270 Degrees clockwise rotation
-     */
-    ROTATION_270(U8g2Graphics.ROTATION_R3),
-    /**
-     * No rotation. Landscape, display content is mirrored
-     */
-    ROTATION_MIRROR(U8g2Graphics.ROTATION_MIRROR);
+    SYSTEM("cperiphery");
 
-    private int value;
+    private String value;
 
-    GlcdRotation(int value) {
+    Provider(String value) {
         this.value = value;
     }
 
     @Override
-    public int toValueInt() {
-        return value;
+    public String toValueString() {
+        return this.value;
     }
 }

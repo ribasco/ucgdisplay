@@ -24,35 +24,27 @@
  * =========================END==================================
  */
 
-#include <sstream>
 #include <memory>
 #include <iomanip>
 #include <iostream>
 #include <system_error>
 #include <Global.h>
+#include <Common.h>
 
+#include "UcgdConfig.h"
+#include "U8g2Hal.h"
 #include "U8g2Utils.h"
 
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
-#include "UcgGpioLibgpio.h"
-#include <gpiod.hpp>
+
+#include <UcgLibgpiodProvider.h>
+#include <UcgPigpioProvider.h>
+#include <UcgCperipheryProvider.h>
+
 #endif
 
-static std::map<uintptr_t, std::shared_ptr<u8g2_info_t>> u8g2_device_cache; // NOLINT
-static std::map<int, std::string> pinNameIndexMap; //NOLINT
-
-#define COMINT_4WSPI 0x0001
-#define COMINT_3WSPI 0x0002
-#define COMINT_6800  0x0004
-#define COMINT_8080 0x0008
-#define COMINT_I2C  0x0010
-#define COMINT_ST7920SPI 0x0020     /* mostly identical to COM_4WSPI, but does not use DC */
-#define COMINT_UART 0x0040
-#define COMINT_KS0108  0x0080        /* mostly identical to 6800 mode, but has more chip select lines */
-#define COMINT_SED1520  0x0100
-
-#define COMTYPE_HW 0
-#define COMTYPE_SW 1
+std::map<uintptr_t, std::shared_ptr<u8g2_info_t>> deviceMap; // NOLINT
+std::map<int, std::string> pinNameIndexMap; //NOLINT
 
 static bool _pins_initialized = false;
 
@@ -80,7 +72,7 @@ void JNI_FireByteEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value) {
     env->CallStaticVoidMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_onByteEvent, (jlong) id, msg, value);
 }
 
-u8g2_cb_t *u8g2util_ToRotation(int rotation) {
+u8g2_cb_t *U8g2util_ToRotation(int rotation) {
     switch (rotation) {
         case 0: {
             return const_cast<u8g2_cb_t *>(U8G2_R0);
@@ -103,7 +95,7 @@ u8g2_cb_t *u8g2util_ToRotation(int rotation) {
     return nullptr;
 }
 
-u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
+u8g2_msg_func_info_t U8g2Util_GetByteCb(int commInt, int commType) {
     switch (commInt) {
         case COMINT_3WSPI: {
             if (commType == COMTYPE_HW) {
@@ -144,7 +136,6 @@ u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
             return cb_byte_8bit_8080mode;
         }
         case COMINT_UART: {
-            //TODO: Not yet sure how to implement this
             //SEE: u8g2_Setup_a2printer_384x240_f()
             return nullptr;
         }
@@ -167,37 +158,58 @@ u8g2_msg_func_info_t u8g2util_GetByteCb(int commInt, int commType) {
     return nullptr;
 }
 
-std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int device_address, int device_speed, const std::string &transport_device, const std::string &gpio_device, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode) {
+std::shared_ptr<u8g2_info_t> U8g2Util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, option_map_t &options, std::shared_ptr<Log> &logger, bool virtualMode) {
     JNIEnv *env;
     GETENV(env);
 
     std::shared_ptr<u8g2_info_t> info = std::make_shared<u8g2_info_t>();
+    info->log = logger;
+
+    //read this: https://floating.io/2017/07/lambda-shared_ptr-memory-leak/
+    std::weak_ptr<u8g2_info_t> weak_info(info);
 
     //Initialize device info details
-    info->u8g2 = std::make_shared<u8g2_t>();
+    info->u8g2 = std::make_unique<u8g2_t>();
     info->pin_map = pin_config;
     info->rotation = const_cast<u8g2_cb_t *>(rotation);
     info->flag_virtual = virtualMode;
+    info->comm_int = commInt;
+    info->comm_type = commType;
 
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
-    info->transport_device = transport_device;
-    info->gpio_device = gpio_device;
-    info->device_speed = device_speed;
-    info->spi = std::make_shared<spi_t>();
-    info->i2c = std::make_shared<i2c_t>();
-    info->gpio_int = std::make_shared<UcgGpioLibgpio>(info);
-    try {
-        info->gpio_chip = std::make_shared<gpiod::chip>(info->gpio_device);
-    } catch (const std::system_error &e) {
-        std::stringstream ss;
-        ss << "Unable to open gpio device (Device: " << info->gpio_device << ", Code: " << e.code() << ", Reason: " << e.what() << ")";
-        JNI_ThrowNativeLibraryException(env, ss.str());
-        return nullptr;
+    //Copy options data
+    info->options = std::map(options);
+
+    //Initialize all providers
+    U8g2Util_InitializeProviders(info);
+
+    //Make sure the provider supports the current configuration setup
+    //e.g. SPI & I2C capability
+    if (commType == COMTYPE_HW) {
+        if ((commInt == COMINT_4WSPI || commInt == COMINT_3WSPI || commInt == COMINT_ST7920SPI) && !info->provider->supportsSPI()) {
+            throw std::runtime_error(std::string("Your current setup is configured for Hardware SPI but the provider you selected '") + info->provider->getName() + std::string("' does not have hardware SPI capability"));
+        } else if ((commInt == COMINT_I2C) && !info->provider->supportsI2C()) {
+            throw std::runtime_error(std::string("Your current setup is configured for Hardware I2C but the provider you selected '") + info->provider->getName() + std::string("' does not have hardware I2C capability"));
+        }
+    } else if (commType == COMTYPE_SW) {
+        //make sure the current provider supports GPIO for bit-bang implementations
+        if (!info->provider->supportsGpio()) {
+            throw std::runtime_error(std::string("Your current setup is configured for software bit-bang implementation but the provider you selected does '") + info->provider->getName() + std::string("' not have GPIO capability"));
+        }
+    }
+
+    //Assign the i2c addres if applicable
+    if (commType == COMINT_I2C) {
+        std::any addr = info->options[OPT_I2C_ADDRESS];
+        if (addr.has_value()) {
+            int intVal = std::any_cast<int>(addr);
+            u8g2_SetI2CAddress(info->u8g2.get(), intVal);
+        }
     }
 #endif
 
     //Get the setup procedure callback
-    u8g2_setup_func_t setup_proc_callback = u8g2hal_GetSetupProc(setup_proc_name);
+    u8g2_setup_func_t setup_proc_callback = U8g2hal_GetSetupProc(setup_proc_name);
 
     //Verify that we have found a callback
     if (setup_proc_callback == nullptr) {
@@ -211,18 +223,19 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
     info->setup_cb = setup_proc_callback;
 
     //Retrieve the byte callback function based on the commInt and commType arguments
-    u8g2_msg_func_info_t cb_byte = u8g2util_GetByteCb(commInt, commType);
+    u8g2_msg_func_info_t cb_byte = U8g2Util_GetByteCb(commInt, commType);
+
     if (cb_byte == nullptr) {
         JNI_ThrowNativeLibraryException(env, std::string("No available byte callback procedures for CommInt = ") + std::to_string(commInt) + std::string(", CommType = ") + std::to_string(commType));
         return nullptr;
     }
 
     //Byte callback
-    info->byte_cb = [cb_byte, info, virtualMode](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+    info->byte_cb = [cb_byte, weak_info, virtualMode](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+        auto info = weak_info.lock();
         if (virtualMode) {
             JNIEnv *lenv;
             GETENV(lenv);
-
             if (msg == U8X8_MSG_BYTE_SEND) {
                 uint8_t value;
                 uint8_t size = arg_int;
@@ -239,33 +252,48 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
             }
             return 1;
         }
-        return cb_byte(info, u8x8, msg, arg_int, arg_ptr);
+        try {
+            return cb_byte(info, u8x8, msg, arg_int, arg_ptr);
+        } catch (std::exception &e) {
+            JNIEnv *lenv;
+            GETENV(lenv);
+            std::stringstream ss;
+            ss << "byte_cb() : " << std::string(e.what()) << std::endl;
+            JNI_ThrowNativeLibraryException(lenv, ss.str());
+            return 0;
+        }
     };
 
     //Gpio callback
-    info->gpio_cb = [virtualMode, info](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+    info->gpio_cb = [virtualMode, weak_info](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+        auto info = weak_info.lock();
         if (virtualMode) {
             JNIEnv *lenv;
             GETENV(lenv);
             JNI_FireGpioEvent(lenv, info->address(), msg, arg_int);
             return 1;
         }
-        return cb_gpio_delay(info, u8x8, msg, arg_int, arg_ptr);
+        try {
+            uint8_t retval = cb_gpio_delay(info, u8x8, msg, arg_int, arg_ptr);
+            return retval;
+        } catch (std::exception &e) {
+            JNIEnv *lenv;
+            GETENV(lenv);
+            std::stringstream ss;
+            ss << "gpio_cb() : " << std::string(e.what()) << std::endl;
+            JNI_ThrowNativeLibraryException(lenv, ss.str());
+            return 0;
+        }
     };
 
     //Obtain the raw pointer
     u8g2_t *pU8g2 = info->u8g2.get();
 
-    //Assign the i2c addres if applicable
-    if (commType == COMINT_I2C) {
-        u8g2_SetI2CAddress(pU8g2, device_address);
-    }
-
     //Insert device info in cache
-    u8g2_device_cache.insert(make_pair((uintptr_t) pU8g2, info));
+    deviceMap.insert(make_pair((uintptr_t) pU8g2, info));
 
     //Call the setup procedure
-    info->setup_cb(pU8g2, rotation, u8g2util_SetupHelperByte, u8g2util_SetupHelperGpio);
+    info->setup_cb(pU8g2, rotation, U8g2Util_ByteCallbackWrapper, U8g2Util_GpioCallbackWrapper);
 
     //Initialize the display
     u8g2_InitDisplay(pU8g2);
@@ -275,16 +303,53 @@ std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &set
     return info;
 }
 
-std::shared_ptr<u8g2_info_t> u8g2util_GetDisplayDeviceInfo(uintptr_t addr) {
-    auto it = u8g2_device_cache.find(addr);
-    if (it != u8g2_device_cache.end())
+std::shared_ptr<u8g2_info_t> U8g2Util_GetDisplayDeviceInfo(uintptr_t addr) {
+    auto it = deviceMap.find(addr);
+    if (it != deviceMap.end())
         return it->second;
     return nullptr;
 }
 
-uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+
+void U8g2Util_InitializeProviders(const std::shared_ptr<u8g2_info_t> &info) {
+    info->log->debug("init_providers() : Initializing providers");
+
+    try {
+        //Initialize all available providers
+        auto pigpio_it = info->providers.insert(make_pair(PROVIDER_PIGPIO, std::make_shared<UcgPigpioProvider>(info)));
+        auto libgpiod_it = info->providers.insert(make_pair(PROVIDER_LIBGPIOD, std::make_shared<UcgLibgpiodProvider>(info)));
+        auto cper_it = info->providers.insert(make_pair(PROVIDER_CPERIPHERY, std::make_shared<UcgCperipheryProvider>(info)));
+
+        //Retrieve the default provider
+        std::string defaultProvider = info->getOptionString(OPT_PROVIDER);
+        info->log->debug("init_providers() : Found default provider = {}", defaultProvider);
+
+        if (defaultProvider.empty()) {
+            info->log->warn("init_providers() : No default provider was specified. Defaulting to SYSTEM (c-periphery) provider");
+            defaultProvider = PROVIDER_CPERIPHERY;
+        }
+
+        if (defaultProvider == PROVIDER_PIGPIO) {
+            info->provider = pigpio_it.first->second;
+        } else if (defaultProvider == PROVIDER_LIBGPIOD) {
+            info->provider = libgpiod_it.first->second;
+        } else if (defaultProvider == PROVIDER_CPERIPHERY) {
+            info->provider = cper_it.first->second;
+        } else {
+            throw std::runtime_error(std::string("Provider '") + defaultProvider + std::string("' not supported"));
+        }
+    } catch (OptionNotFoundException &e) {
+        info->log->debug("init_providers() : No default provider found");
+        throw e;
+    }
+}
+
+#endif
+
+uint8_t U8g2Util_ByteCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    std::shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(addr);
+    std::shared_ptr<u8g2_info_t> info = U8g2Util_GetDisplayDeviceInfo(addr);
     if (info == nullptr) {
         JNIEnv *env;
         GETENV(env);
@@ -295,9 +360,9 @@ uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, voi
     return info->byte_cb(u8x8, msg, arg_int, arg_ptr);
 }
 
-uint8_t u8g2util_SetupHelperGpio(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t U8g2Util_GpioCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    std::shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(addr);
+    std::shared_ptr<u8g2_info_t> info = U8g2Util_GetDisplayDeviceInfo(addr);
     if (info == nullptr) {
         JNIEnv *env;
         GETENV(env);
@@ -308,7 +373,7 @@ uint8_t u8g2util_SetupHelperGpio(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, voi
     return info->gpio_cb(u8x8, msg, arg_int, arg_ptr);
 }
 
-std::string u8g2util_GetPinIndexDesc(int index) {
+std::string U8g2Util_GetPinIndexDesc(int index) {
     if (!_pins_initialized) {
         if (!pinNameIndexMap.empty())
             pinNameIndexMap.clear();

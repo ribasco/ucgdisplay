@@ -5,7 +5,7 @@
 #include "U8g2Hal.h"
 #include <iostream>
 
-void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
+void U8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map) {
 	font_map.clear();
 	font_map["u8g2_font_open_iconic_mime_2x_t"] = u8g2_font_open_iconic_mime_2x_t;
 	font_map["u8g2_font_crox3c_tn"] = u8g2_font_crox3c_tn;

@@ -54,7 +54,7 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
 
     private static final Logger log = LoggerFactory.getLogger(GlcdBaseDriver.class);
 
-    private static final GlcdRotation DEFAULT_ROTATION = GlcdRotation.ROTATION_90;
+    private static final GlcdRotation DEFAULT_ROTATION = GlcdRotation.ROTATION_NONE;
 
     private GlcdConfig config;
 
@@ -206,14 +206,6 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         if (!virtual) {
             if (bus == null)
                 throw new GlcdConfigException("Bus interface not specified", config);
-
-            if (GlcdBusType.HARDWARE.equals(bus.getBusType())) {
-                if (StringUtils.isBlank(config.getTransportDevice()))
-                    throw new GlcdConfigException("Transport device not specified or invalid", config);
-            }
-
-            if (StringUtils.isBlank(config.getGpioDevice()))
-                throw new GlcdConfigException("GPIO device not specified or invalid", config);
         }
 
         //Check protocol if supported
@@ -226,8 +218,11 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         }
 
         //If I2C is selected, make sure device address is not empty
-        if (((config.getBusInterface() == GlcdBusInterface.I2C_HW) || (config.getBusInterface() == GlcdBusInterface.I2C_SW)) && config.getDeviceAddress() == -1) {
-            throw new GlcdConfigException("You must specify a device address for I2C comm interface", config);
+        if ((config.getBusInterface() == GlcdBusInterface.I2C_HW) || (config.getBusInterface() == GlcdBusInterface.I2C_SW)) {
+            int address = config.getOption(GlcdOption.I2C_DEVICE_ADDRESS, -1);
+            if (address == -1) {
+                throw new GlcdConfigException("You must specify a device address for I2C comm interface", config);
+            }
         }
 
         //Check display
@@ -238,13 +233,13 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         if (!virtual) {
             //Make pin mapping mandatory for bit-bang implementations (software bus type)
             if (config.getBusInterface().getBusType() == GlcdBusType.SOFTWARE && (config.getPinMap() == null || config.getPinMap().isEmpty()))
-                throw new GlcdConfigException("Missing pin map configuration", config);
+                throw new GlcdConfigException("Missing pin map configuration. You chose bit-bang implementation, but did not map any gpio pins", config);
         }
 
         //Check if rotation was specified, otherwise assign default
-        if (config.getRotation() == null) {
+        if (config.getOption(GlcdOption.ROTATION) == null) {
             log.warn("No rotation specified. Using default = {}", DEFAULT_ROTATION);
-            config.setRotation(DEFAULT_ROTATION);
+            config.setOption(GlcdOption.ROTATION.getName(), DEFAULT_ROTATION.toValueInt());
         }
     }
 

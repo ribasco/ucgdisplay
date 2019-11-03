@@ -23,89 +23,36 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-
 #ifndef UCGDISP_U8G2CALLBACKS_H
 #define UCGDISP_U8G2CALLBACKS_H
 
 #include <iostream>
 #include <cstring>
 #include <sstream>
+#include <memory>
+#include <map>
+#include <functional>
+#include <jni.h>
+#include "UcgdTypes.h"
 
 extern "C" {
 #include <u8g2.h>
 }
 
-#include <memory>
-#include <map>
-#include <functional>
-#include <jni.h>
+class SetupProcNotFoundException : public std::runtime_error {
+public:
+    explicit SetupProcNotFoundException(const std::string &arg) : runtime_error(arg) {}
 
-#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
-#include "UcgGpio.h"
-#include <spi.h>
-#include <i2c.h>
-#include <gpiod.hpp>
-#endif
+    explicit SetupProcNotFoundException(const char *string) : runtime_error(string) {}
 
-typedef struct {
-    //pin configuration
-    int d0 = -1; //spi-clock
-    int d1 = -1; //spi-data
-    int d2 = -1;
-    int d3 = -1;
-    int d4 = -1;
-    int d5 = -1;
-    int d6 = -1;
-    int d7 = -1;
-    int en = -1;
-    int cs = -1;
-    int dc = -1;
-    int reset = -1;
-    int scl = -1;
-    int sda = -1;
-    int cs1 = -1;
-    int cs2 = -1;
-} u8g2_pin_map_t;
-
-typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;
-
-typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
-
-typedef std::map<std::string, u8g2_setup_func_t> u8g2_setup_func_map_t;
-
-typedef std::map<std::string, const uint8_t *> u8g2_lookup_font_map_t;
-
-#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
-class UcgGpio;
-#endif
-
-struct u8g2_info_t {
-    u8g2_pin_map_t pin_map;
-    std::shared_ptr<u8g2_t> u8g2;
-    std::string setup_proc_name;
-    u8g2_setup_func_t setup_cb;
-    u8g2_msg_func_t byte_cb;
-    u8g2_msg_func_t gpio_cb;
-    u8g2_cb_t *rotation;
-#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
-    std::shared_ptr<spi_t> spi;
-    std::shared_ptr<i2c_t> i2c;
-    std::string transport_device;
-    std::string gpio_device;
-    int device_speed;
-    std::shared_ptr<gpiod::chip> gpio_chip;
-    std::map<int , gpiod::line> gpio;
-    std::shared_ptr<UcgGpio> gpio_int;
-#endif
-    bool flag_font;
-    bool flag_virtual;
-
-    uintptr_t address() {
-        return (uintptr_t) u8g2.get();
-    }
+    explicit SetupProcNotFoundException(const runtime_error &error) : runtime_error(error) {}
 };
 
-typedef std::function<uint8_t(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+
+#include "UcgIOProvider.h"
+
+#endif
 
 /**
  * Hardware I2C byte communication callback (Using c-periphery)
@@ -160,27 +107,33 @@ uint8_t cb_byte_sed1520(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, 
 /**
  * Initialize the lookup t ables. This shuld be called prior to calling the other methods found in this file
  */
-void u8g2hal_Init();
+void U8g2hal_Init();
 
 /**
  * Initialize u8g2 setup lookup table
  */
-void u8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map);
+void U8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map);
 
 /**
  * Initialize u8g2 font lookup table
  */
-void u8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map);
+void U8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map);
 
 /**
  * Helper utility function to obtain the u8g2 setup callback by name
  *
  * @param function_name The u8g2 setup procedure name
  * @return The function callback if found, otherwise null if not found
+ * @throws SetupProcNotFoundException if procedure is not found
  */
-u8g2_setup_func_t u8g2hal_GetSetupProc(const std::string &function_name);
+u8g2_setup_func_t& U8g2hal_GetSetupProc(const std::string &function_name);
 
-uint8_t *u8g2hal_GetFontByName(const std::string &font_name);
+/**
+ * Retrieve font data by name
+ * @param font_name The name of the u8g2 font
+ * @return Buffer containing the font data
+ */
+uint8_t *U8g2hal_GetFontByName(const std::string &font_name);
 
 #if !((defined(__arm__) || defined(__aarch64__)) && defined(__linux__))
 

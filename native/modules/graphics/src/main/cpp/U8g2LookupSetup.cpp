@@ -5,7 +5,7 @@
 #include "U8g2Hal.h"
 #include <iostream>
 
-void u8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
+void U8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
 	setup_map.clear();
 	setup_map["u8g2_Setup_a2printer_384x240_f"] = u8g2_Setup_a2printer_384x240_f;
 	setup_map["u8g2_Setup_hx1230_96x68_f"] = u8g2_Setup_hx1230_96x68_f;

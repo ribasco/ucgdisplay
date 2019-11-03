@@ -27,11 +27,24 @@
 #ifndef UCGDISP_U8G2UTILS_H
 #define UCGDISP_U8G2UTILS_H
 
-#include "U8g2Hal.h"
+#include <UcgdTypes.h>
 
 #define U8G2_BYTE_SEND_INIT 28
 
+/**
+ * Load the Utils Module
+ * @param env
+ */
 void U8gUtils_Load(JNIEnv *env);
+
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+/**
+ * Initialize all supported providers
+ *
+ * @param info The project descriptor
+ */
+void U8g2Util_InitializeProviders(const std::shared_ptr<u8g2_info_t>& info);
+#endif
 
 /**
  * Retrieves the name/description of the Pin Number
@@ -39,7 +52,7 @@ void U8gUtils_Load(JNIEnv *env);
  * @param index The pin number
  * @return Name/Description of the Pin
  */
-std::string u8g2util_GetPinIndexDesc(int index);
+std::string U8g2Util_GetPinIndexDesc(int index);
 
 /**
  * Converts a long pointer address to a u8g2_t instance
@@ -54,7 +67,7 @@ u8g2_t *toU8g2(jlong address);
  * @param rotation The rotation index
  * @return Pointer to u8g2_cb_t struct
  */
-u8g2_cb_t *u8g2util_ToRotation(int rotation);
+u8g2_cb_t *U8g2util_ToRotation(int rotation);
 
 /**
  * Setup and initialize the display. This method must be called first before calling any other U8G2 methods.
@@ -70,18 +83,24 @@ u8g2_cb_t *u8g2util_ToRotation(int rotation);
  * @param virtualMode Set to true to activate emulator mode
  * @return
  */
-std::shared_ptr<u8g2_info_t> u8g2util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, int device_address, int device_speed, const std::string &transport_device, const std::string &gpio_device, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, bool virtualMode = false);
+std::shared_ptr<u8g2_info_t> U8g2Util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, option_map_t& options, std::shared_ptr<Log>& logger, bool virtualMode = false);
 
 /**
  * Retrieves the device details from the cache
  * @param addr  The pointer address to lookup
  * @return A shared_ptr of u8g2_info_t
  */
-std::shared_ptr<u8g2_info_t> u8g2util_GetDisplayDeviceInfo(uintptr_t addr);
+std::shared_ptr<u8g2_info_t> U8g2Util_GetDisplayDeviceInfo(uintptr_t addr);
 
-uint8_t u8g2util_SetupHelperByte(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+/**
+ * Byte callback wrapper for u8g2 setup procedures
+ */
+uint8_t U8g2Util_ByteCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
-uint8_t u8g2util_SetupHelperGpio(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+/**
+ * Gpio callback wrapper for u8g2 setup procedures
+ */
+uint8_t U8g2Util_GpioCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Fires a GpioEvent to the attached listeners

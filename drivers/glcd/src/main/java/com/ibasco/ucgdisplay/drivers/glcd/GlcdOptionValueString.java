@@ -1,8 +1,8 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Native :: Graphics
- * Filename: UcgGpio.cpp
+ * Project: UCGDisplay :: Graphics LCD driver
+ * Filename: GlcdOptionValueString.java
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,8 +23,8 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-//
-// Created by raffy on 22/10/2019.
-//
+package com.ibasco.ucgdisplay.drivers.glcd;
 
-#include "UcgGpio.h"
+public interface GlcdOptionValueString extends GlcdOptionValue {
+    String toValueString();
+}

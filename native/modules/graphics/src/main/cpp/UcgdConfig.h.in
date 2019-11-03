@@ -3,3 +3,5 @@
 #define UCGD_VERSION_MINOR @UCGD_VERSION_MINOR@
 
 #cmakedefine USE_PIGPIO
+#cmakedefine USE_LIBGPIOD
+#cmakedefine USE_CPERIPHERY

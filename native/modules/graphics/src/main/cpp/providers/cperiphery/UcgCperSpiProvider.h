@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Native :: Graphics
- * Filename: UcgGpioPigpio.h
+ * Filename: UcgCperSpiProvider.h
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,21 +23,33 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-//
-// Created by raffy on 22/10/2019.
-//
+#ifndef UCGD_MOD_GRAPHICS_UCGCPERSPIPROVIDER_H
+#define UCGD_MOD_GRAPHICS_UCGCPERSPIPROVIDER_H
 
-#ifndef UCGD_MOD_GRAPHICS_UCGGPIOPIGPIO_H
-#define UCGD_MOD_GRAPHICS_UCGGPIOPIGPIO_H
+#include <UcgSpiProvider.h>
+#include <UcgCperipheryProvider.h>
+#include <spi.h>
 
-#include "UcgGpio.h"
+#define DEFAULT_SPI_SPEED 1000000
 
-class UcgGpioPigpio : public UcgGpio {
+class UcgCperSpiProvider : public UcgSpiProvider {
 public:
-    void initLine(int pin, GpioDirection direction) override;
+    explicit UcgCperSpiProvider(UcgIOProvider *provider);
 
-    void digitalWrite(int pin, uint8_t value) override;
+    ~UcgCperSpiProvider() override;
+
+    void open() override;
+
+    int write(uint8_t *buffer, int count) override;
+
+    void close() override;
+
+    UcgCperipheryProvider *getProvider() override;
+
+private:
+    std::unique_ptr<cp_spi_t>  m_SPI;
+
+    void _close();
 };
 
-
-#endif //UCGD_MOD_GRAPHICS_UCGGPIOPIGPIO_H
+#endif //UCGD_MOD_GRAPHICS_UCGCPERSPIPROVIDER_H

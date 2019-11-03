@@ -46,11 +46,11 @@ import java.util.List;
  *      U8X8_PIN_D6 6
  *      U8X8_PIN_D7 7
  *      U8X8_PIN_E 8
- *      U8X8_PIN_CS 9			//parallel, SPI
- *      U8X8_PIN_DC 10            // parallel, SPI
- *      U8X8_PIN_RESET 11        // parallel, SPI, I2C
- *      U8X8_PIN_I2C_CLOCK 12    // 1 = Input/high impedance, 0 = drive low
- *      U8X8_PIN_I2C_DATA 13    // 1 = Input/high impedance, 0 = drive low
+ *      U8X8_PIN_CS 9              //parallel, SPI
+ *      U8X8_PIN_DC 10             // parallel, SPI
+ *      U8X8_PIN_RESET 11          // parallel, SPI, I2C
+ *      U8X8_PIN_I2C_CLOCK 12      // 1 = Input/high impedance, 0 = drive low
+ *      U8X8_PIN_I2C_DATA 13       // 1 = Input/high impedance, 0 = drive low
  *      U8X8_PIN_CS1 14            // KS0108 extra chip select
  *      U8X8_PIN_CS2 15            //KS0108 extra chip select
  * </pre>

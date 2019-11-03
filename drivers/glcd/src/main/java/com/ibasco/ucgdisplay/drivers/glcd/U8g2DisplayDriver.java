@@ -1280,12 +1280,6 @@ public interface U8g2DisplayDriver extends DisplayDriver {
     void clear();
 
     /**
-     * <p>Activates UTF8 support for the Arduino print function. When activated, unicode symbols are allowed for
-     * strings passed to the print function. Usually this function is called after begin():</p>
-     */
-    //void enableUTF8Print();
-
-    /**
      * <p>Enables (mode=1) or disables (mode=0) automatic clearing of the pixel buffer by the {@link #firstPage()} and
      * {@link #nextPage()} procedures. By default this is enabled and in most situation it is not required to disable
      * this. If disabled, the user is responsible to set ALL pixel of the current pixel buffer to some suitable state.

@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Graphics LCD driver
- * Filename: GlcdRotation.java
+ * Filename: PigpioMode.java
  *
  * ---------------------------------------------------------
  * %%
@@ -25,44 +25,39 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueInt;
 
 /**
- * Enumeration for the available rotation modes for the display controller
+ * Enumeration for available Pigpio modes
  *
  * @author Rafael Ibasco
  */
-public enum GlcdRotation implements GlcdOptionValueInt {
+public enum PigpioMode implements GlcdOptionValueInt {
     /**
-     * No rotation
+     * Allows pigpio to communicate directly to the I/O peripheral devices.
+     * No daemon service on the background is required.
+     * <blockquote>
+     * IMPORTANT: When choosing this mode, remember to run your program as ROOT
+     * and make sure that the pigpio daemon is not running, otherwise the program would fail.
+     * </blockquote>
      */
-    ROTATION_NONE(U8g2Graphics.ROTATION_R0),
-    /**
-     * 90 Degrees clockwise rotation
-     */
-    ROTATION_90(U8g2Graphics.ROTATION_R1),
-    /**
-     * 180 Degrees clockwise rotation
-     */
-    ROTATION_180(U8g2Graphics.ROTATION_R2),
-    /**
-     * 270 Degrees clockwise rotation
-     */
-    ROTATION_270(U8g2Graphics.ROTATION_R3),
-    /**
-     * No rotation. Landscape, display content is mirrored
-     */
-    ROTATION_MIRROR(U8g2Graphics.ROTATION_MIRROR);
+    STANDALONE(0),
 
-    private int value;
+    /**
+     * Allows pigpio to communicate to the daemon via socket interface.
+     * This is slower than standalone version but many programs can run at any
+     * point in time when talking to the pigpio daemon.
+     */
+    DAEMON(1);
 
-    GlcdRotation(int value) {
-        this.value = value;
+    private int mode;
+
+    PigpioMode(int mode) {
+        this.mode = mode;
     }
 
     @Override
     public int toValueInt() {
-        return value;
+        return mode;
     }
 }

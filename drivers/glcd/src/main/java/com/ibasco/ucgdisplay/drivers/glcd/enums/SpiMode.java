@@ -2,8 +2,8 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Graphics LCD driver
- * Filename: GlcdRotation.java
- *
+ * Filename: SpiMode.java
+ * 
  * ---------------------------------------------------------
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
@@ -12,12 +12,12 @@
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -25,44 +25,44 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueInt;
 
 /**
- * Enumeration for the available rotation modes for the display controller
+ * Enumeration for all available SPI modes
  *
  * @author Rafael Ibasco
+ * @see <a href="https://www.allaboutcircuits.com/technical-articles/spi-serial-peripheral-interface/">Serial Peripheral Interface</a>
  */
-public enum GlcdRotation implements GlcdOptionValueInt {
+public enum SpiMode implements GlcdOptionValueInt {
     /**
-     * No rotation
+     * Clock phase is configured such that data is sampled on the rising edge of the clock pulse and shifted out on
+     * the falling edge of the clock pulse. Note that data must be available before the first rising edge of the clock.
      */
-    ROTATION_NONE(U8g2Graphics.ROTATION_R0),
+    MODE_0(0),
     /**
-     * 90 Degrees clockwise rotation
+     * Clock phase is configured such that data is sampled on the falling edge of the clock pulse and shifted out on
+     * the rising edge of the clock pulse.
      */
-    ROTATION_90(U8g2Graphics.ROTATION_R1),
+    MODE_1(1),
     /**
-     * 180 Degrees clockwise rotation
+     * Clock phase is configured such that data is sampled on the falling edge of the clock pulse and shifted out on
+     * the rising edge of the clock pulse. Note that data must be available before the first falling edge of the clock.
      */
-    ROTATION_180(U8g2Graphics.ROTATION_R2),
+    MODE_2(2),
     /**
-     * 270 Degrees clockwise rotation
+     * Clock phase is configured such that data is sampled on the rising edge of the clock pulse and shifted out on
+     * the falling edge of the clock pulse.
      */
-    ROTATION_270(U8g2Graphics.ROTATION_R3),
-    /**
-     * No rotation. Landscape, display content is mirrored
-     */
-    ROTATION_MIRROR(U8g2Graphics.ROTATION_MIRROR);
+    MODE_3(3);
 
-    private int value;
+    private int mode;
 
-    GlcdRotation(int value) {
-        this.value = value;
+    SpiMode(int mode) {
+        this.mode = mode;
     }
 
     @Override
     public int toValueInt() {
-        return value;
+        return mode;
     }
 }

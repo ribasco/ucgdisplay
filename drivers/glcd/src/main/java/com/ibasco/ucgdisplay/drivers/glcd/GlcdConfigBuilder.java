@@ -27,7 +27,11 @@ package com.ibasco.ucgdisplay.drivers.glcd;
 
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * Utility class for building {@link GlcdConfig} instances
@@ -35,33 +39,132 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
  * @author Rafael Ibasco
  */
 public class GlcdConfigBuilder {
+    private static final Logger log = LoggerFactory.getLogger(GlcdConfigBuilder.class);
+
     private GlcdConfig config;
 
     private GlcdPinMapConfig pinMapConfig;
 
+    /**
+     * Create a new {@link GlcdConfigBuilder} instance. The internal {@link GlcdConfig} will be initialized in this constructor.
+     */
     private GlcdConfigBuilder() {
         config = new GlcdConfig();
     }
 
-    public static GlcdConfigBuilder create() {
-        return new GlcdConfigBuilder();
+    /**
+     * Factory method for creating a new instance of this class together with it's required parameters.
+     *
+     * @param display
+     *         The matching {@link GlcdDisplay} of your display device.
+     * @param busInterface
+     *         The bus interface to be used for communication for your display device.
+     *
+     * @return A new instance of {@link GlcdConfigBuilder}
+     */
+    public static GlcdConfigBuilder create(GlcdDisplay display, GlcdBusInterface busInterface) {
+        GlcdConfigBuilder configBuilder = new GlcdConfigBuilder();
+        configBuilder.config.setDisplay(display);
+        configBuilder.config.setBusInterface(busInterface);
+        return configBuilder;
     }
 
-    public GlcdConfigBuilder display(GlcdDisplay display) {
-        config.setDisplay(display);
+    /**
+     * Adds a new configuration option for the display controller. Existing option entries are replaced.
+     *
+     * @param option
+     *         The display configuration option.
+     * @param value
+     *         The value of the configuration option. If null is provided, the option would be deleted from the underlying map.
+     * @param <T>
+     *         Capture of the {@link GlcdOption} type.
+     *
+     * @return This instance
+     *
+     * @see GlcdOption
+     */
+    public <T> GlcdConfigBuilder option(GlcdOption<T> option, T value) {
+        processOption(option, value);
         return this;
     }
 
-    public GlcdConfigBuilder busInterface(GlcdBusInterface protocol) {
-        config.setBusInterface(protocol);
+    /**
+     * Copies the provided map to this instance. Existing entries are retained but duplicate entries would be overwritten.
+     *
+     * @param options
+     *         The options map to copy
+     *
+     * @return This instance
+     */
+    public GlcdConfigBuilder options(Map<GlcdOption<?>, Object> options) {
+        return this.options(options, false);
+    }
+
+    /**
+     * Copies the provided map to this instance.
+     *
+     * @param options
+     *         The options map to copy
+     * @param clearEntries
+     *         Clears the map and overwrites all existing entries
+     *
+     * @return This instance
+     */
+    public GlcdConfigBuilder options(Map<GlcdOption<?>, Object> options, boolean clearEntries) {
+        if (clearEntries)
+            config.getOptions().clear();
+        options.forEach(this::processOption);
         return this;
     }
 
+    /**
+     * Adds a new configuration option for the display controller. This is similar to {@link #option(GlcdOption, Object)}
+     * but this accepts a String value as key, allowing you to provide other values.
+     *
+     * @param option
+     *         The name/key of the configuration option.
+     * @param value
+     *         The value of the configuration option.
+     * @param <T>
+     *         The captured type of the configuration option value
+     *
+     * @return This instance
+     *
+     * @see GlcdOption
+     */
+    public <T> GlcdConfigBuilder option(String option, T value) {
+        config.getOptions().put(option, value);
+        return this;
+    }
+
+    /**
+     * Set a pin map configuration to be used by the display controller.
+     *
+     * @param pinmap
+     *         The pin map configuration
+     *
+     * @return This instance
+     *
+     * @see GlcdPin
+     */
     public GlcdConfigBuilder pinMap(GlcdPinMapConfig pinmap) {
         config.setPinMapConfig(pinmap);
         return this;
     }
 
+    /**
+     * Maps a {@link GlcdPin} to a numeric pin of the SoC. For Raspberry Pi devices, the pin numbering follows the BCM pinout (0 - 53).
+     * This is just a shortcut for {@link #pinMap(GlcdPinMapConfig)}
+     *
+     * @param glcdPin
+     *         The {@link GlcdPin} enumeration
+     * @param value
+     *         The GPIO pin number on your SoC device.
+     *
+     * @return This instance
+     *
+     * @see #pinMap(GlcdPinMapConfig)
+     */
     public GlcdConfigBuilder mapPin(GlcdPin glcdPin, int value) {
         if (this.pinMapConfig == null)
             this.pinMapConfig = new GlcdPinMapConfig();
@@ -69,34 +172,39 @@ public class GlcdConfigBuilder {
         return this;
     }
 
-    public GlcdConfigBuilder deviceSpeed(int speed) {
-        config.setDeviceSpeed(speed);
-        return this;
-    }
-
-    public GlcdConfigBuilder rotation(GlcdRotation rotation) {
-        config.setRotation(rotation);
-        return this;
-    }
-
-    public GlcdConfigBuilder transportDevice(String path) {
-        config.setTransportDevice(path);
-        return this;
-    }
-
-    public GlcdConfigBuilder gpioDevice(String path) {
-        config.setGpioDevice(path);
-        return this;
-    }
-
-    public GlcdConfigBuilder deviceAddress(int address) {
-        config.setDeviceAddress(address);
-        return this;
-    }
-
+    /**
+     * Builds a {@link GlcdConfig} instance containing all the provided configuration options.
+     *
+     * @return The {@link GlcdConfig} to be used by U8g2
+     */
     public GlcdConfig build() {
         if (config.getPinMap() == null && this.pinMapConfig != null)
             config.setPinMapConfig(this.pinMapConfig);
         return config;
+    }
+
+    private void processOption(GlcdOption<?> option, Object value) {
+        if (value == null) {
+            config.getOptions().remove(option.getName());
+        } else {
+            if (GlcdOptionValue.class.isAssignableFrom(value.getClass())) {
+                //Process special enum types
+                if (value instanceof GlcdOptionValueString) {
+                    log.debug("option() : Found GlcdOptionValueString type for key '{}'. Converting to reference type", option.getName());
+                    config.getOptions().put(option.getName(), ((GlcdOptionValueString) value).toValueString());
+                } else if (value instanceof GlcdOptionValueInt) {
+                    log.debug("option() : Found GlcdOptionValueInt type for key '{}'. Converting to reference type.", option.getName());
+                    config.getOptions().put(option.getName(), ((GlcdOptionValueInt) value).toValueInt());
+                }
+            } else if (Enum.class.isAssignableFrom(value.getClass())) {
+                log.warn("option() : The enum value for '{}' does not derive from the GlcdOptionValue interface. This could not be interpreted correctly by the native interface.", option.getName());
+            } else {
+                if (!(value instanceof String) && !(value instanceof Integer)) {
+                    log.warn("option() : Only string and integer types are supported by the option map");
+                }
+                log.info("option() : Adding option {} = {}", option.getName(), value);
+                config.getOptions().put(option.getName(), value);
+            }
+        }
     }
 }

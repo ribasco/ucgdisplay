@@ -2,8 +2,8 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Graphics LCD driver
- * Filename: GlcdRotation.java
- *
+ * Filename: GlcdOptionValueInt.java
+ * 
  * ---------------------------------------------------------
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
@@ -12,57 +12,19 @@
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-package com.ibasco.ucgdisplay.drivers.glcd.enums;
+package com.ibasco.ucgdisplay.drivers.glcd;
 
-import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueInt;
-
-/**
- * Enumeration for the available rotation modes for the display controller
- *
- * @author Rafael Ibasco
- */
-public enum GlcdRotation implements GlcdOptionValueInt {
-    /**
-     * No rotation
-     */
-    ROTATION_NONE(U8g2Graphics.ROTATION_R0),
-    /**
-     * 90 Degrees clockwise rotation
-     */
-    ROTATION_90(U8g2Graphics.ROTATION_R1),
-    /**
-     * 180 Degrees clockwise rotation
-     */
-    ROTATION_180(U8g2Graphics.ROTATION_R2),
-    /**
-     * 270 Degrees clockwise rotation
-     */
-    ROTATION_270(U8g2Graphics.ROTATION_R3),
-    /**
-     * No rotation. Landscape, display content is mirrored
-     */
-    ROTATION_MIRROR(U8g2Graphics.ROTATION_MIRROR);
-
-    private int value;
-
-    GlcdRotation(int value) {
-        this.value = value;
-    }
-
-    @Override
-    public int toValueInt() {
-        return value;
-    }
+public interface GlcdOptionValueInt extends GlcdOptionValue {
+    int toValueInt();
 }

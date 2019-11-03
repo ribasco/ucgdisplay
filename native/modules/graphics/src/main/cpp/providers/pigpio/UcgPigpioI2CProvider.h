@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Native :: Graphics
- * Filename: UcgGpioLibgpio.h
+ * Filename: UcgPigpioI2CProvider.h
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,23 +23,32 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-#ifndef UCGD_MOD_GRAPHICS_UCGGPIOLIBGPIO_H
-#define UCGD_MOD_GRAPHICS_UCGGPIOLIBGPIO_H
+#ifndef UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H
+#define UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H
 
-#include "UcgGpio.h"
+#include <UcgI2CProvider.h>
+#include <UcgPigpioProvider.h>
 
-class UcgGpioLibgpio : public UcgGpio {
+class UcgPigpioI2CProvider : public UcgI2CProvider {
 public:
-    explicit UcgGpioLibgpio(const std::shared_ptr<u8g2_info_t> &info);
+    explicit UcgPigpioI2CProvider(UcgIOProvider *provider);
 
-    void initLine(int pin, GpioDirection direction) override;
+    ~UcgPigpioI2CProvider() override;
 
-    void digitalWrite(int pin, uint8_t value) override;
+    int open() override;
+
+    int close() override;
+
+    int write(unsigned short address, const uint8_t *buffer, unsigned short length) override;
+
+    UcgPigpioProvider *getProvider() override;
 
 private:
-    gpiod::line* get_gpio_line(int pin);
-    static int convert_dir(GpioDirection direction);
+    int m_PigpioHandle;
+    int m_Handle;
+    int _close();
+    std::string _get_errmsg(int val);
 };
 
 
-#endif //UCGD_MOD_GRAPHICS_UCGGPIOLIBGPIO_H
+#endif //UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H

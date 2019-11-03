@@ -28,16 +28,18 @@
 #include <cstring>
 #include <iomanip>
 #include <memory>
+
 #include <Global.h>
+#include <Common.h>
 
 #include "UcgdConfig.h"
 #include "U8g2Graphics.h"
 #include "U8g2Hal.h"
 #include "U8g2Utils.h"
 
-#ifdef USE_PIGPIO
-#include <pigpiod_if2.h>
-#endif
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     //Load global references
@@ -50,7 +52,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     U8gUtils_Load(env);
 
     //Initialize HAL
-    u8g2hal_Init();
+    U8g2hal_Init();
 
     return JNI_VERSION;
 }
@@ -60,7 +62,7 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
 
 void set_font_flag(JNIEnv *env, jlong id, bool value) {
-    std::shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
+    std::shared_ptr<u8g2_info_t> info = U8g2Util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
     if (info == nullptr) {
         JNI_ThrowNativeLibraryException(env, "Unable to set font flag. Device Info for address does not exist");
         return;
@@ -69,7 +71,7 @@ void set_font_flag(JNIEnv *env, jlong id, bool value) {
 }
 
 bool get_font_flag(JNIEnv *env, jlong id) {
-    std::shared_ptr<u8g2_info_t> info = u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
+    std::shared_ptr<u8g2_info_t> info = U8g2Util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
     if (info == nullptr) {
         JNI_ThrowNativeLibraryException(env, "Unable to set font flag. Device Info for address does not exist");
         return false;
@@ -78,15 +80,101 @@ bool get_font_flag(JNIEnv *env, jlong id) {
 }
 
 bool check_validity(JNIEnv *env, jlong id) {
-    if (u8g2util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id)) == nullptr) {
+    if (U8g2Util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id)) == nullptr) {
         JNI_ThrowNativeLibraryException(env, std::string("Invalid Id specified (") + std::to_string(id) + std::string(")"));
         return false;
     }
     return true;
 }
 
-jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jint address, jint device_speed,
-                                                              jstring transport_device, jstring gpio_device, jintArray pin_config, jboolean virtualMode) {
+void updateKeyValueStore(JNIEnv *env, std::string key, jobject& value, option_map_t &map) {
+    jclass clsString = env->FindClass(CLS_STRING);
+    jclass clsObj = env->GetObjectClass(value);
+    jclass clsInteger = env->FindClass(CLS_INTEGER);
+    jclass clsNativeUtils = env->FindClass(CLS_NativeUtils);
+    jmethodID midToInteger = env->GetStaticMethodID(clsNativeUtils, "toInteger", "(Ljava/lang/Object;)I");
+    jmethodID midToString = env->GetMethodID(clsString, "toString", "()Ljava/lang/String;");
+
+    if (clsObj == nullptr) {
+        map.insert(std::make_pair(key, nullptr));
+    } else if (env->IsInstanceOf(value, clsString)) {
+        jstring strValue = (jstring) env->CallObjectMethod(value, midToString);
+        map.insert(std::make_pair(key, std::string(env->GetStringUTFChars(strValue, 0))));
+    } else if (env->IsInstanceOf(value, clsInteger)) {
+        jint intValue = env->CallStaticIntMethod(clsNativeUtils, midToInteger, value);
+        map.insert(std::make_pair(key, intValue));
+    } else {
+        throw std::runtime_error(std::string("Unsupported value type for key: \"") + key + std::string("\""));
+    }
+}
+
+void process_options(JNIEnv *env, jobject options, option_map_t &map, std::shared_ptr<Log>& log) {
+    jclass clsMap = env->GetObjectClass(options);
+    jmethodID midEntrySet = env->GetMethodID(clsMap, "entrySet", "()Ljava/util/Set;");
+
+    jclass clsEntrySet = env->FindClass(CLS_SET);
+    jmethodID midIterator = env->GetMethodID(clsEntrySet, "iterator", "()Ljava/util/Iterator;");
+
+    jclass clsIterator = env->FindClass(CLS_ITERATOR);
+    jmethodID midHasNext = env->GetMethodID(clsIterator, "hasNext", "()Z");
+    jmethodID midNext = env->GetMethodID(clsIterator, "next", "()Ljava/lang/Object;");
+
+    jclass clsEntry = env->FindClass(CLS_MAP_ENTRY);
+    jmethodID midGetKey = env->GetMethodID(clsEntry, "getKey", "()Ljava/lang/Object;");
+    jmethodID midGetValue = env->GetMethodID(clsEntry, "getValue", "()Ljava/lang/Object;");
+
+    jclass clsString = env->FindClass(CLS_STRING);
+    jmethodID midToString = env->GetMethodID(clsString, "toString", "()Ljava/lang/String;");
+
+    jobject objEntrySet = env->CallObjectMethod(options, midEntrySet);
+    jobject objIterator = env->CallObjectMethod(objEntrySet, midIterator);
+
+    bool hasNext = (bool) env->CallBooleanMethod(objIterator, midHasNext);
+
+    log->debug("process_options() : Extracting all available options from the map");
+
+    int ctr = 1;
+    while (hasNext) {
+        jobject objEntry = env->CallObjectMethod(objIterator, midNext);
+
+        //Get key and value
+        jobject objKey = env->CallObjectMethod(objEntry, midGetKey);
+        jobject objValue = env->CallObjectMethod(objEntry, midGetValue);
+
+        //convert key and value to strings
+        jstring jstrKey = (jstring) env->CallObjectMethod(objKey, midToString);
+        jstring jstrValue = (jstring) env->CallObjectMethod(objValue, midToString);
+
+        const char *strKey = env->GetStringUTFChars(jstrKey, 0);
+        const char *strValue = env->GetStringUTFChars(jstrValue, 0);
+
+        log->debug("process_options() : {}) Key = {}, Value = {}", ctr++, std::string(strKey), std::string(strValue));
+
+        updateKeyValueStore(env, std::string(strKey), objValue, map);
+        hasNext = (bool) env->CallBooleanMethod(objIterator, midHasNext);
+    }
+
+    log->debug("process_options() : Processed a total of {} option entries", map.size());
+}
+
+jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jintArray pin_config, jobject options, jboolean virtualMode, jobject logger) {
+    jobject globalLogger;
+    JNI_MakeGlobal(env, logger, globalLogger);
+    std::shared_ptr<Log> log = std::make_shared<Log>(globalLogger);
+
+    log->debug("=========================================================================================================");
+    log->debug(" ");
+    log->debug("██╗   ██╗ ██████╗ ██████╗ ██████╗ ██╗███████╗██████╗ ██╗      █████╗ ██╗   ██╗");
+    log->debug("██║   ██║██╔════╝██╔════╝ ██╔══██╗██║██╔════╝██╔══██╗██║     ██╔══██╗╚██╗ ██╔╝");
+    log->debug("██║   ██║██║     ██║  ███╗██║  ██║██║███████╗██████╔╝██║     ███████║ ╚████╔╝");
+    log->debug("██║   ██║██║     ██║   ██║██║  ██║██║╚════██║██╔═══╝ ██║     ██╔══██║  ╚██╔╝");
+    log->debug("╚██████╔╝╚██████╗╚██████╔╝██████╔╝██║███████║██║     ███████╗██║  ██║   ██║");
+    log->debug(" ╚═════╝  ╚═════╝ ╚═════╝ ╚═════╝ ╚═╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝");
+    log->debug(" ");
+    log->debug("=========================================================================================================");
+    log->debug("Native Library - Version 1.5.0-alpha");
+    log->debug("=========================================================================================================");
+
     std::string setup_proc_name;
 
     if (setupProc != nullptr) {
@@ -108,6 +196,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
         return -1;
     }
 
+    //3. Verify pin config array length (should be 16)
     jsize len = env->GetArrayLength(pin_config);
     if (len != 16) {
         JNI_ThrowNativeLibraryException(env, std::string("Pin map array should be exactly 16 of length (Actual: ") + std::to_string(len) + std::string(")"));
@@ -120,41 +209,38 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     //convert to struct
     auto *pinMap = reinterpret_cast<u8g2_pin_map_t *>(tmp);
 
-    //3. Verify that the rotation number is within the allowed range
-    if (rotation < 0 || rotation > 4)
-        JNI_ThrowNativeLibraryException(env, std::string("Invalid rotation (") + std::to_string(rotation) + ")");
-
-    //Get actual rotation value
-    const u8g2_cb_t *_rotation = u8g2util_ToRotation(rotation);
-
-    std::string transport_device_path;
-    std::string gpio_device_path;
-
-    //Get device path (applicable only in non-virtual mode)
-    if (!virtualMode) {
-        if (transport_device == nullptr) {
-            JNI_ThrowNativeLibraryException(env, std::string("Transport device not specified"));
-            return -1;
-        }
-        if (gpio_device == nullptr) {
-            JNI_ThrowNativeLibraryException(env, std::string("GPIO device not specified"));
-            return -1;
-        }
-        transport_device_path = std::string(env->GetStringUTFChars(transport_device, nullptr));
-        gpio_device_path = std::string(env->GetStringUTFChars(gpio_device, nullptr));
-    }
-
-    //4. Setup and Initialize the Display
-    std::shared_ptr<u8g2_info_t> info = u8g2util_SetupAndInitDisplay(setup_proc_name, commInt, commType, address, device_speed, transport_device_path, gpio_device_path, _rotation, *pinMap, virtualMode);
-
-    //5. Verify if display has been initialized successfully
-    if (info == nullptr) {
-        JNI_ThrowNativeLibraryException(env, std::string("Unable to initialize the display device. Please re-visit your configuration parameters and verify that they are correct"));
+    //5. Make sure options is not null
+    if (options == nullptr) {
+        JNI_ThrowNativeLibraryException(env, "Missing options");
         return -1;
     }
 
-    //6. Return the pointer address
-    return info->address();
+    //6. Iterate all available properties in options map and store it into a temporary std::map
+    option_map_t mapOptions;
+    process_options(env, options, mapOptions, log);
+
+    //4. Verify that the rotation number is within the allowed range
+    if (rotation < 0 || rotation > 4) {
+        JNI_ThrowNativeLibraryException(env, std::string("Invalid rotation (") + std::to_string(rotation) + ")");
+        return -1;
+    }
+
+    //Get actual rotation value
+    const u8g2_cb_t *_rotation = U8g2util_ToRotation(rotation);
+
+    //7. Setup and Initialize the Display
+    try {
+        std::shared_ptr<u8g2_info_t> info = U8g2Util_SetupAndInitDisplay(setup_proc_name, commInt, commType, _rotation, *pinMap, mapOptions, log, virtualMode);
+        if (info == nullptr) {
+            JNI_ThrowNativeLibraryException(env, std::string("Failed to initialize the display device. Reason: Unknown"));
+            return -1;
+        }
+        return info->address();
+    } catch (std::exception& e) {
+        JNI_ThrowNativeLibraryException(env, std::string("Failed to initialize the display device. Reason: \"") + std::string(e.what()) + std::string("\""));
+    }
+
+    return -1;
 }
 
 //long id, int x, int y, int width, int height
@@ -337,7 +423,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setFont__JLjava_lang_Stri
         return;
     }
     std::string font = std::string(env->GetStringUTFChars(fontName, nullptr));
-    uint8_t *fontData = u8g2hal_GetFontByName(font);
+    uint8_t *fontData = U8g2hal_GetFontByName(font);
     if (fontData == nullptr) {
         JNI_ThrowNativeLibraryException(env, std::string("Unable to retrieve font data for: ") + font);
         return;
@@ -514,7 +600,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_clear(JNIEnv *env, jclass
 jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setAutoPageClear(JNIEnv *env, jclass cls, jlong id, jint clear) {
     if (!check_validity(env, id))
         return -1;
-    return u8g2_SetAutoPageClear(toU8g2(id), clear);;
+    return u8g2_SetAutoPageClear(toU8g2(id), clear);
 }
 
 void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setBitmapMode(JNIEnv *env, jclass cls, jlong id, jint mode) {
@@ -532,7 +618,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setContrast(JNIEnv *env, 
 void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setDisplayRotation(JNIEnv *env, jclass cls, jlong id, jint rotation) {
     if (!check_validity(env, id))
         return;
-    u8g2_cb_t *_rotation = u8g2util_ToRotation(rotation);
+    u8g2_cb_t *_rotation = U8g2util_ToRotation(rotation);
     if (_rotation == nullptr)
         return;
     u8g2_SetDisplayRotation(toU8g2(id), _rotation);
@@ -595,3 +681,5 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setMaxClipWindow(JNIEnv *
         return;
     u8g2_SetMaxClipWindow(toU8g2(id));
 }
+
+#pragma clang diagnostic pop

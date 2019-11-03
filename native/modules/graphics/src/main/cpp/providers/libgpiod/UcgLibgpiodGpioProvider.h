@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Native :: Graphics
- * Filename: UcgGpioPigpio.cpp
+ * Filename: UcgLibgpiodGpioProvider.h
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,16 +23,38 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-//
-// Created by raffy on 22/10/2019.
-//
+#ifndef UCGD_MOD_GRAPHICS_UCGLIBGPIODGPIOPROVIDER_H
+#define UCGD_MOD_GRAPHICS_UCGLIBGPIODGPIOPROVIDER_H
 
-#include "UcgGpioPigpio.h"
+#include <UcgGpioProvider.h>
+#include <UcgLibgpiodProvider.h>
+#include <gpiod.hpp>
+#include <map>
 
-void UcgGpioPigpio::initLine(int pin, UcgGpio::GpioDirection direction) {
+class UcgLibgpiodGpioProvider : public UcgGpioProvider {
+public:
+    explicit UcgLibgpiodGpioProvider(UcgIOProvider *provider);
 
-}
+    ~UcgLibgpiodGpioProvider() override;
 
-void UcgGpioPigpio::digitalWrite(int pin, uint8_t value) {
+    void init(int pin, GpioMode direction) override;
 
-}
+    void write(int pin, uint8_t value) override;
+
+    void close() override;
+
+    UcgLibgpiodProvider *getProvider() override {
+        return dynamic_cast<UcgLibgpiodProvider *>(UcgProviderBase::getProvider());
+    }
+
+protected:
+    bool isModeSupported(const GpioMode &mode) override;
+
+private:
+    std::map<int, gpiod::line> m_LineMap;
+    gpiod::line* findGpioLine(int pin);
+    static int dirToInt(GpioMode direction);
+};
+
+
+#endif //UCGD_MOD_GRAPHICS_UCGLIBGPIODGPIOPROVIDER_H

@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Native :: Graphics
- * Filename: UcgGpio.h
+ * Filename: UcgCperipheryProvider.cpp
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,41 +23,14 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-//
-// Created by raffy on 22/10/2019.
-//
+#include <UcgCperipheryProvider.h>
+#include <UcgCperSpiProvider.h>
+#include <UcgCperI2CProvider.h>
+#include <UcgCperGpioProvider.h>
 
-#ifndef UCGD_MOD_GRAPHICS_UCGGPIO_H
-#define UCGD_MOD_GRAPHICS_UCGGPIO_H
-
-#include <utility>
-#include "U8g2Hal.h"
-
-class GpioException: public std::exception
-{
-    virtual const char* what() const noexcept
-    {
-        return "GPIO line init exception";
-    }
-};
-
-struct u8g2_info_t;
-
-class UcgGpio {
-
-public:
-    enum GpioDirection : int {
-        DIR_INPUT = 0,
-        DIR_OUTPUT = 1,
-        DIR_ASIS = 2
-    };
-
-    UcgGpio(std::shared_ptr<u8g2_info_t> info) : info(std::move(info)) { }
-    virtual void initLine(int pin, GpioDirection direction) = 0;
-    virtual void digitalWrite(int pin, uint8_t value) = 0;
-
-protected:
-    std::shared_ptr<u8g2_info_t> info;
-};
-
-#endif //UCGD_MOD_GRAPHICS_UCGGPIO_H
+UcgCperipheryProvider::UcgCperipheryProvider(const std::shared_ptr<u8g2_info_t> &info) : UcgIOProvider(info, PROVIDER_CPERIPHERY) {
+    info->log->debug("init_provider() : [C-PERIPHERY] Initializing provider");
+    setSPIProvider(std::make_shared<UcgCperSpiProvider>(this));
+    setI2CProvider(std::make_shared<UcgCperI2CProvider>(this));
+    setGPIOProvider(std::make_shared<UcgCperGpioProvider>(this));
+}

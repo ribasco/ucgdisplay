@@ -26,113 +26,110 @@
 package com.ibasco.ucgdisplay.drivers.glcd;
 
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdSize;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdConfigException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Configuration class to be used by the glcd native library
+ * Configuration class to be used for the display controller. This is an immutable class and should only be
+ * created using {@link GlcdConfigBuilder}
  *
  * @author Rafael Ibasco
  */
 public class GlcdConfig {
 
-    public static final Logger log = getLogger(GlcdConfig.class);
+    private static final Logger log = getLogger(GlcdConfig.class);
 
     private GlcdDisplay display;
     private GlcdBusInterface busInterface;
-    private GlcdRotation rotation;
     private GlcdPinMapConfig pinMap;
-    private int deviceAddress = -1;
-    private int deviceSpeed = -1;
     private String setupProcedure;
-    private String transportDevice;
-    private String gpioDevice;
+    private Map<String, Object> options = new HashMap<>();
 
     /**
-     * @return The device address if available
+     * @return The screen size of the selected display controller
      */
-    public int getDeviceAddress() {
-        return deviceAddress;
-    }
-
-    /**
-     * Sets the device address of the display. This is typically used for I2C communication.
-     *
-     * @param deviceAddress
-     *         The device address of the display
-     */
-    public void setDeviceAddress(int deviceAddress) {
-        this.deviceAddress = deviceAddress;
-    }
-
-    public String getTransportDevice() {
-        return transportDevice;
-    }
-
-    public void setTransportDevice(String transportDevice) {
-        this.transportDevice = transportDevice;
-    }
-
-    public String getGpioDevice() {
-        return gpioDevice;
-    }
-
-    public void setGpioDevice(String gpioDevice) {
-        this.gpioDevice = gpioDevice;
-    }
-
-    public void setDisplay(GlcdDisplay display) {
-        this.display = display;
-    }
-
-    public void setBusInterface(GlcdBusInterface busInterface) {
-        this.busInterface = busInterface;
-    }
-
-    public void setRotation(GlcdRotation rotation) {
-        this.rotation = rotation;
-    }
-
-    public void setPinMapConfig(GlcdPinMapConfig pinMap) {
-        this.pinMap = pinMap;
-    }
-
-    public int getDeviceSpeed() {
-        return deviceSpeed;
-    }
-
-    public void setDeviceSpeed(int deviceSpeed) {
-        this.deviceSpeed = deviceSpeed;
-    }
-
     public GlcdSize getDisplaySize() {
         return display.getDisplaySize();
     }
 
+    /**
+     * @return The current bus interface for the selected display controller
+     */
     public GlcdBusInterface getBusInterface() {
         return busInterface;
     }
 
+    /**
+     * @return The current pin map configuration for the selected display controller
+     */
     public GlcdPinMapConfig getPinMap() {
         return pinMap;
     }
 
+    /**
+     * @return The selected display controller
+     */
     public GlcdDisplay getDisplay() {
         return display;
     }
 
-    public GlcdRotation getRotation() {
-        return rotation;
+    /**
+     * @return A map containing all the provided configuration options of the selected display controller
+     */
+    Map<String, Object> getOptions() {
+        return options;
     }
 
+    /**
+     * Retrieve a configuration option value
+     *
+     * @param option
+     *         The configuration option
+     * @param <T>
+     *         The captured type of the return value
+     *
+     * @return The value of the configuration option or null if the option does not exist.
+     */
+    public <T> T getOption(GlcdOption<?> option) {
+        //noinspection unchecked
+        return (T) options.getOrDefault(option.getName(), null);
+    }
+
+    /**
+     * Retrieve a configuration option value
+     *
+     * @param option
+     *         The configuration option
+     * @param defaultVal
+     *         The default value to return in case the option does not exist
+     * @param <T>
+     *         The captured type of the return value
+     *
+     * @return The value of the configuration option or null if the option does not exist.
+     */
+    public <T> T getOption(GlcdOption<T> option, T defaultVal) {
+        //noinspection unchecked
+        return (T) options.getOrDefault(option.getName(), defaultVal);
+    }
+
+    public Object getOption(String option) {
+        return options.get(option);
+    }
+
+    /**
+     * @return The u8g2 setup procedure that is going to be used by native library
+     */
     public String getSetupProcedure() {
         if (StringUtils.isBlank(setupProcedure)) {
             setupProcedure = lookupSetupInfo().getFunction();
@@ -140,6 +137,15 @@ public class GlcdConfig {
         return setupProcedure;
     }
 
+    /**
+     * Finds the suitable u8g2 setup procedure based on the selected display controller and bus interface
+     *
+     * @return The display setup information
+     *
+     * @throws GlcdConfigException
+     *         If any of the required parameters are missing or if no suitable setup procedure was found
+     * @see GlcdSetupInfo
+     */
     private GlcdSetupInfo lookupSetupInfo() {
         if (display == null) {
             throw new GlcdConfigException("Display has not been set", this);
@@ -159,6 +165,26 @@ public class GlcdConfig {
         log.debug("Using display setup procedure (Display: {}, Protocol: {}, Setup Proc: {}))", display.getName(), busInterface.name(), setupInfo.getFunction());
 
         return setupInfo;
+    }
+
+    <T> void setOption(GlcdOption<T> option, T value) {
+        options.put(option.getName(), value);
+    }
+
+    void setOption(String option, Object value) {
+        options.put(option, value);
+    }
+
+    void setDisplay(GlcdDisplay display) {
+        this.display = display;
+    }
+
+    void setBusInterface(GlcdBusInterface busInterface) {
+        this.busInterface = busInterface;
+    }
+
+    void setPinMapConfig(GlcdPinMapConfig pinMap) {
+        this.pinMap = pinMap;
     }
 
     @Override
