@@ -1,52 +1,44 @@
-# OSXCross toolchain
-set(OSXCROSS_HOST "x86_64-apple-darwin15" CACHE STRING "OSXCROSS_HOST")
-set(OSXCROSS_TARGET "darwin15" CACHE STRING "OSXCROSS_TARGET")
-set(OSXCROSS_TARGET_DIR "" CACHE PATH "OSXCROSS_TARGET_DIR")
-set(OSXCROSS_SDK "" CACHE PATH "OSXCROSS_SDK")
+macro(OSXCROSS_GETCONF VAR DEFAULT_VAL)
+    if (NOT ${VAR})
+        set(${VAR} "$ENV{${VAR}}")
+        if (${VAR})
+            set(${VAR} "${${VAR}}" CACHE STRING "${VAR}")
+            message(STATUS "[OSXCROSS] Using provided ${VAR}: ${${VAR}}")
+        else ()
+            set(${VAR} "${DEFAULT_VAL}" CACHE STRING "${VAR}")
+            message(STATUS "[OSXCROSS] Using default value for ${VAR} = ${DEFAULT_VAL}")
+        endif ()
+    endif ()
+endmacro()
 
-set(ENV{OSXCROSS_HOST} ${OSXCROSS_HOST})
-set(ENV{OSXCROSS_TARGET_DIR} ${OSXCROSS_TARGET_DIR})
-set(ENV{OSXCROSS_TARGET} ${OSXCROSS_TARGET})
-set(ENV{OSXCROSS_SDK} ${OSXCROSS_SDK})
-
-message(STATUS "Using OSXCROSS_HOST = ${OSXCROSS_HOST}")
-message(STATUS "Using OSXCROSS_TARGET_DIR = ${OSXCROSS_TARGET_DIR}")
-message(STATUS "Using OSXCROSS_TARGET = ${OSXCROSS_TARGET}")
-message(STATUS "Using OSXCROSS_SDK = ${OSXCROSS_SDK}")
+OSXCROSS_GETCONF(OSXCROSS_TARGET_DIR "")
+OSXCROSS_GETCONF(OSXCROSS_TARGET "darwin19")
+OSXCROSS_GETCONF(OSXCROSS_HOST "x86_64-apple-${OSXCROSS_TARGET}")
+OSXCROSS_GETCONF(OSXCROSS_SDK "${OSXCROSS_TARGET_DIR}/SDK/MacOSX10.15.sdk")
 
 set(CMAKE_SYSTEM_NAME "Darwin")
 string(REGEX REPLACE "-.*" "" CMAKE_SYSTEM_PROCESSOR "${OSXCROSS_HOST}")
 
 set(TOOLCHAIN_DESC "OSXCoss Toolchain 64bit (${CMAKE_SYSTEM_NAME} - ${CMAKE_SYSTEM_PROCESSOR})")
 
-# specify the cross compiler
-#[[if(CMAKE_SYSTEM_PROCESSOR MATCHES "^i.86$")
-  set(CMAKE_C_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o32-clang")
-  set(CMAKE_CXX_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o32-clang++-libc++")
-elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-  set(CMAKE_C_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o64-clang")
-  set(CMAKE_CXX_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o64-clang++-libc++")
-else()
-  message(FATAL_ERROR "Unrecognized target architecture")
-endif()]]
-
 set(CMAKE_C_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o64-clang")
 set(CMAKE_CXX_COMPILER "${OSXCROSS_TARGET_DIR}/bin/o64-clang++-libc++")
 
 # where is the target environment
 set(CMAKE_FIND_ROOT_PATH
-  "${OSXCROSS_SDK}"
-  "${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local")
+        "${OSXCROSS_SDK}"
+        "${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local")
 
 # search for programs in the build host directories
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-# for libraries and headers in the target directories
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
-set(CMAKE_AR "${OSXCROSS_TARGET_DIR}/bin/${OSXCROSS_HOST}-ar" CACHE FILEPATH "ar")
-set(CMAKE_RANLIB "${OSXCROSS_TARGET_DIR}/bin/${OSXCROSS_HOST}-ranlib" CACHE FILEPATH "ranlib")
+# for libraries and headers in the target directories
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
+
+set(CMAKE_AR "${OSXCROSS_TARGET_DIR}/bin/${OSXCROSS_HOST}-ar" CACHE FILEPATH "ar64")
+set(CMAKE_RANLIB "${OSXCROSS_TARGET_DIR}/bin/${OSXCROSS_HOST}-ranlib" CACHE FILEPATH "ranlib64")
 set(CMAKE_INSTALL_NAME_TOOL "${OSXCROSS_TARGET_DIR}/bin/${OSXCROSS_HOST}-install_name_tool" CACHE FILEPATH "install_name_tool")
 
 set(ENV{PKG_CONFIG_LIBDIR} "${OSXCROSS_TARGET_DIR}/macports/pkgs/opt/local/lib/pkgconfig")

@@ -4,10 +4,13 @@ set(PROJ_NAME c-periphery)
 set(PROJ_PATH ${LIB_DIR}/${PROJ_NAME})
 set(PROJ_PREFIX "cperiphery")
 
+# https://github.com/vsergeev/c-periphery.git
+# v1.1.3
+
 ExternalProject_Add(
         project_cperiphery
-        GIT_REPOSITORY "https://github.com/vsergeev/c-periphery.git"
-        GIT_TAG "v1.1.3"
+        GIT_REPOSITORY "https://github.com/ribasco/c-periphery.git"
+        GIT_TAG "master"
         PREFIX ${PROJ_PREFIX}
         BUILD_IN_SOURCE 1
         INSTALL_COMMAND ""

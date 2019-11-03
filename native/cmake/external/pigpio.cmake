@@ -23,11 +23,14 @@ ExternalProject_Get_Property(project_${LIBNAME} SOURCE_DIR INSTALL_DIR)
 # Hack (See: https://stackoverflow.com/questions/45516209/cmake-how-to-use-interface-include-directories-with-externalproject)
 file(MAKE_DIRECTORY ${INSTALL_DIR}/usr/local/include)
 
-add_library(${LIBNAME} SHARED IMPORTED)
+add_library(pigpio SHARED IMPORTED)
+add_library(pigpiod_if2 SHARED IMPORTED)
 
-set_target_properties(${LIBNAME} PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${INSTALL_DIR}/usr/local/include)
-set_target_properties(${LIBNAME} PROPERTIES IMPORTED_LOCATION "${INSTALL_DIR}/usr/local/lib/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBNAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-set_target_properties(${LIBNAME} PROPERTIES IMPORTED_LOCATION "${INSTALL_DIR}/usr/local/lib/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBNAME}d_if${CMAKE_SHARED_LIBRARY_SUFFIX}")
-set_target_properties(${LIBNAME} PROPERTIES IMPORTED_LOCATION "${INSTALL_DIR}/usr/local/lib/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBNAME}d_if2${CMAKE_SHARED_LIBRARY_SUFFIX}")
+set_target_properties(pigpio PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${INSTALL_DIR}/usr/local/include)
+set_target_properties(pigpiod_if2 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${INSTALL_DIR}/usr/local/include)
 
-add_dependencies(${LIBNAME}  project_${LIBNAME})
+set_target_properties(pigpio PROPERTIES IMPORTED_LOCATION "${INSTALL_DIR}/usr/local/lib/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBNAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+set_target_properties(pigpiod_if2 PROPERTIES IMPORTED_LOCATION "${INSTALL_DIR}/usr/local/lib/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBNAME}d_if2${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
+add_dependencies(pigpio project_${LIBNAME})
+add_dependencies(pigpiod_if2 project_${LIBNAME})
