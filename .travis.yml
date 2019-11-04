@@ -31,21 +31,20 @@ matrix:
       dist: bionic
       addons:
         apt:
-          sources:
-            #- sourceline: "ppa:ubuntu-toolchain-r/test"
-            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
-              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
             - mingw-w64
             - autoconf-archive
+            - llvm-9
             - clang-9
             - gcc-7
             - g++-7
             - gcc-multilib
             - g++-multilib
-        #packages:
-        #- gcc-7
-        #- g++-7
+          sources:
+            - sourceline: "ppa:ubuntu-toolchain-r/test"
+            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+
     - os: osx
       osx_image: xcode9.4
 
