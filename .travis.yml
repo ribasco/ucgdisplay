@@ -46,7 +46,7 @@ matrix:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
             - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
-      env: LLVM_CONFIG='/usr/bin/llvm-config-9'
+      env: CC="/usr/bin/clang-9" CXX="/usr/bin/clang++-9"
     - os: osx
       osx_image: xcode9.4
 
@@ -55,7 +55,8 @@ before_install:
   #- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++; fi
   #- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CC=gcc-7; fi
   #- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CXX=g++-7; fi
-  - cmake --version
+  - echo "CC = $CC"
+  - echo "CXX = $CXX"
   - ls -l /usr/bin
   - scripts/before-install.sh
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo echo "JAVA_HOME=${JAVA_HOME}"; fi
