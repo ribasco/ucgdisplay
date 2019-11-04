@@ -46,7 +46,7 @@ matrix:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
             - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
-      env: PATH="/usr/bin:/usr/local/bin:${PATH}"
+      env: PATH="/usr/bin:/usr/local/bin:${PATH}" LD_LIBRARY_PATH="/usr/lib/llvm-9/lib"
     - os: osx
       osx_image: xcode9.4
 

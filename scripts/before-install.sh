@@ -27,7 +27,7 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
     echo "Displaying /usr/local/lib"
     ls -l /usr/local/lib
     echo ${PATH}
-    sudo find /usr -name "libLTO.so*"
+    sudo find /usr/lib -name "libLTO.so*"
 else
     echo "Skipping gpg key import (OS = ${TRAVIS_OS_NAME})"
 fi
