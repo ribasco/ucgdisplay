@@ -11,7 +11,7 @@ echo '                                                 '
 
 # Only cross-compile on linux (x86_64/amd64) environment
 
-if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
+if [[ ${TRAVIS_OS_NAME} == 'linux' ]]; then
     mvn --settings scripts/settings.xml install -P'cross-compile,!build-linux-x86_64' -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 else
     mvn --settings scripts/settings.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V

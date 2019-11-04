@@ -2,52 +2,58 @@
 
 ### Native project directory structure
 
-```
-./native
-├── cmake
-│   └── external
-├── include
-│   └── jdk
-│       ├── darwin
-│       │   ├── i386
-│       │   │   └── jdk11
-│       │   └── x86_64
-│       │       ├── jdk11
-│       │       └── jdk1.8.0_191
-│       ├── linux
-│       │   └── arm
-│       │       ├── jdk11
-│       │       └── jdk1.8.0_191
-│       └── windows
-│           └── x86_64
-│               ├── jdk11
-│               └── jdk1.8.0_191
-├── modules
-│   ├── graphics
-│   │   ├── src
-│   │   │   └── main
-│   │   │       ├── cpp (Main c++ project for the graphics native library) 
-│   │   │       └── java (Main java project for the graphics native library)
-│   └── input
-│       ├── src
-│       │   └── main
-│       │       ├── cpp
-│       │       └── java
-└── tools
-    ├── osxcross (Mac OSX Cross-compile toolchain built by osxcross)
-    │   ├── bin
-    │   ├── SDK (contains all the packaged sdks for this project)
-    │   │   ├── MacOSX10.13.sdk  (Packaged from XCode 9.4.1  Mac OS 10.13 SDK)
-    │   │   ├── MacOSX10.14.sdk  (Packaged from XCode 10.1   Mac OS 10.14 SDK)
-    │   │   └── MacOSX10.15.sdk  (Packaged from XCode 11.1   Mac OS 10.15 SDK)
-    └── rpi-tools (Raspberry Pi toolchain built by crosstools-ng)
-        ├── configs
-        ├── gcc10-linaro-arm-linux-gnueabihf-raspbian
-        ├── gcc10-linaro-arm-linux-gnueabi-raspbian-x64
-        ├── gcc7-linaro-arm-linux-gnueabihf-raspbian
-        ├── gcc7-linaro-arm-linux-gnueabihf-raspbian-ns
-        ├── gcc7-linaro-arm-linux-gnueabi-raspbian-x64
-        └── gcc7-linaro-arm-linux-gnueabi-raspbian-x64-ns
+```bash
+├── native
+│   ├── cmake (Cmake Modules)
+│   │   └── external (Third-party libraries)
+│   ├── include
+│   │   └── jdk (JDK Include Files)
+│   ├── modules
+│   │   ├── graphics (Graphics Module)
+│   │   │   └── src
+│   │   │       └── main
+│   │   │           ├── cpp (Graphics C++ Project)
+│   │   │           │   ├── providers (All the supported providers)
+│   │   │           │   │   ├── cperiphery
+│   │   │           │   │   ├── libgpiod
+│   │   │           │   │   └── pigpio
+│   │   │           │   ├── test
+│   │   │           │   └── utils
+│   │   │           └── java (Graphics Java Project)
+│   │   │               └── com
+│   │   │                   └── ibasco
+│   │   │                       └── ucgdisplay
+│   │   │                           ├── core
+│   │   │                           │   └── u8g2
+│   │   │                           │       ├── exceptions
+│   │   │                           │       └── utils
+│   │   │                           └── utils
+│   │   │                               └── codegen
+│   │   └── input (Input Module)
+│   │       └── src
+│   │           └── main
+│   │               ├── cpp
+│   │               └── java
+│   │                   └── com
+│   │                       └── ibasco
+│   │                           └── ucgdisplay
+│   │                               └── core
+│   │                                   └── input
+│   └── tools
+         ├── osxcross (Mac OSX Cross-compile toolchain built by osxcross)
+         │   ├── bin
+         │   ├── SDK (contains all the packaged sdks for this project)
+         │   │   ├── MacOSX10.13.sdk  (Packaged from XCode 9.4.1  Mac OS 10.13 SDK)
+         │   │   ├── MacOSX10.14.sdk  (Packaged from XCode 10.1   Mac OS 10.14 SDK)
+         │   │   └── MacOSX10.15.sdk  (Packaged from XCode 11.1   Mac OS 10.15 SDK)
+         └── rpi-tools (Raspberry Pi toolchain built by crosstools-ng)
+             ├── configs
+             ├── gcc10-linaro-arm-linux-gnueabihf-raspbian
+             ├── gcc10-linaro-arm-linux-gnueabi-raspbian-x64
+             ├── gcc7-linaro-arm-linux-gnueabihf-raspbian
+             ├── gcc7-linaro-arm-linux-gnueabihf-raspbian-ns
+             ├── gcc7-linaro-arm-linux-gnueabi-raspbian-x64
+             └── gcc7-linaro-arm-linux-gnueabi-raspbian-x64-ns
 
 ```
 
@@ -103,14 +109,14 @@ git clone https://github.com/ribasco/ucgdisplay.git --recurse-submodules --remot
 
 ### 5. Building the project 
 
-#### Cross-compiling with Maven (All-in-on)
+#### Cross-compiling with Maven (All-in-one)
 
-If you compile with maven, you will compile all Java sources including the native libraries for all supported platforms. Take note that we added `build-linux-x86_64` as an exclusion. This is needed to avoid building for the same target twice. 
+If you compile with maven, you will compile all Java sources including the native libraries for all supported platforms. Take note that we added `build-linux-x86_64` as an exclusion. This is needed to avoid building for the same target twice. For the `buildType` parameter, the possible values are Debug, Release, RelWithDebInfo and MinSizeRel.
 
 If no profiles are provided, no cross-compilation will take place. Only the Host specific natives will be built.
 
 ```bash
-mvn clean install -P'cross-compile,!build-linux-x86_64' -DskipTests=true -Dgpg.skip
+mvn clean install -P'cross-compile,!build-linux-x86_64' -DbuildType=Debug -DskipTests=true -Dgpg.skip
 ```
 
 #### Cross-compiling with Apache ANT
@@ -123,20 +129,20 @@ Building only the C++ graphics library for all supported platforms
 
 ```bash
 cd scripts
-ant -file build-graphics.xml -Droot.dir=<project root directory> native-build-cc-all
+ant -file build-graphics.xml -Droot.dir=<project root directory> -Dcpp.build.type=Debug native-build-cc-all
 ```
 
 Building only the C++ input library for all supported platforms
 ```bash
 cd scripts
-ant -file build-input.xml -Droot.dir=<project root directory> native-build-cc-all
+ant -file build-input.xml -Droot.dir=<project root directory> -Dcpp.build.type=Debug native-build-cc-all
 ```
 
 Building for a specific platform/architecture
 
 ```bash
 cd scripts
-ant -file build-graphics.xml -Droot.dir=<project root directory> native-build-linux-arm32
+ant -file build-graphics.xml -Droot.dir=<project root directory> -Dcpp.build.type=Debug native-build-linux-arm32
 ```
 
 All generated binaries are located at `<proj root>/native/modules/graphics/target/classes/natives/` directory

@@ -33,6 +33,7 @@ list(APPEND UCGINPUT_SRC "${GLOBAL_INC_DIR}/Global.cpp" "InputDevHelper.cpp" "In
 
 # UCGInput Library
 add_library(ucginput SHARED ${UCGINPUT_HDR} ${UCGINPUT_SRC})
+set_target_properties(ucginput PROPERTIES LINK_FLAGS_RELEASE -s)
 target_sources(ucginput PRIVATE "${UCGINPUT_HDR}" "${UCGINPUT_SRC}")
 target_link_libraries(ucginput PRIVATE ${LINK_LIBS} libevent)
 target_include_directories(ucginput PRIVATE "${GLOBAL_INC_DIR}" "${JNI_INCLUDE_DIRS}")

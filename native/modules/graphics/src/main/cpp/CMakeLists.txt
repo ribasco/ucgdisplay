@@ -22,6 +22,7 @@ list(APPEND UCGDISP_HDR "${GLOBAL_INC_DIR}/Global.h" "${GLOBAL_INC_DIR}/Common.h
 list(APPEND UCGDISP_SRC "${GLOBAL_INC_DIR}/Global.cpp" "${GLOBAL_INC_DIR}/Common.cpp" "${GLOBAL_INC_DIR}/Log.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
 
 add_library(ucgdisp SHARED ${UCGDISP_HDR} ${UCGDISP_SRC})
+set_target_properties(ucgdisp PROPERTIES LINK_FLAGS_RELEASE -s)
 
 set(PROVIDER_DIR_PATH "${ucgd-mod-graphics_SOURCE_DIR}/providers")
 set(PROVIDER_CPERIPHERY_DIR_PATH "${PROVIDER_DIR_PATH}/cperiphery")

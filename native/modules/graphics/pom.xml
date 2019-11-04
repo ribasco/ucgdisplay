@@ -33,6 +33,7 @@
 
     <properties>
         <main.basedir>${project.parent.basedir}</main.basedir>
+        <buildType>Debug</buildType>
     </properties>
 
     <dependencies>
@@ -209,11 +210,13 @@
                         <configuration>
                             <target>
                                 <!-- Pass maven properties to ant -->
-                                <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${graphics-build-target})</echo>
+                                <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${graphics-build-target}, BUILD TYPE: ${buildType})</echo>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.."/>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${graphics-build-target}"/>
+                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${graphics-build-target}">
+                                    <property name="cpp.build.type" value="${buildType}"/>
+                                </ant>
                             </target>
                         </configuration>
                     </execution>

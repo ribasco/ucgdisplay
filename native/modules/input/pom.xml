@@ -34,6 +34,7 @@
         <lib-output-filename>libucginput.so</lib-output-filename>
         <cmake-generator-arg>-G 'CodeBlocks - Unix Makefiles'</cmake-generator-arg>
         <cmake.module.path>${project.basedir}/../../cmake</cmake.module.path>
+        <buildType>Debug</buildType>
     </properties>
 
     <dependencies>
@@ -214,11 +215,13 @@
                         <configuration>
                             <target>
                                 <!-- Pass maven properties to ant -->
-                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${input-build-target})</echo>
+                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${input-build-target}, BUILD TYPE: ${buildType}})</echo>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.." />
                                 <!--suppress UnresolvedMavenProperty -->
-                                <ant antfile="${root.dir}/scripts/build-input.xml" target="${input-build-target}" />
+                                <ant antfile="${root.dir}/scripts/build-input.xml" target="${input-build-target}">
+                                    <property name="cpp.build.type" value="${buildType}" />
+                                </ant>
                             </target>
                         </configuration>
                     </execution>
