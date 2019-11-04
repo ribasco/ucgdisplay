@@ -57,6 +57,8 @@ before_install:
   #- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CXX=g++-7; fi
   - echo "CC = $CC"
   - echo "CXX = $CXX"
+  - clang -v
+  - which clang
   - ls -l /usr/bin
   - scripts/before-install.sh
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo echo "JAVA_HOME=${JAVA_HOME}"; fi
