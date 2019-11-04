@@ -36,6 +36,7 @@ matrix:
             - mingw-w64
             - autoconf-archive
             - llvm-9
+            - llvm-9-dev
             - clang-9
             - gcc-7
             - g++-7

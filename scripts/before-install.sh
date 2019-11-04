@@ -29,6 +29,8 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
     which clang++
     ls -l /usr/local/clang-7.0.0/bin/
     ls -l /usr/bin
+    ls -l /usr/local
+    ls -l /usr/local/lib
     echo ${PATH}
 else
     echo "Skipping gpg key import (OS = ${TRAVIS_OS_NAME})"
