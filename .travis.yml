@@ -8,8 +8,8 @@ jdk:
 cache:
   directories:
     - ${HOME}/.m2
-    - ${TRAVIS_BUILD_DIR}/native/tools/rpi-tools
-    - ${TRAVIS_BUILD_DIR}/native/tools/osxcross
+    #- ${TRAVIS_BUILD_DIR}/native/tools/rpi-tools
+    #- ${TRAVIS_BUILD_DIR}/native/tools/osxcross
 
 env:
   global:
