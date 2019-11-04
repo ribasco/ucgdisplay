@@ -58,10 +58,15 @@ before_install:
   - echo "CC = $CC"
   - echo "CXX = $CXX"
   - clang -v
+  - clang++ -v
   - which clang
+  - which clang++
+  - ls -l /usr/local/clang-7.0.0/bin/
   - ls -l /usr/bin
   - scripts/before-install.sh
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo echo "JAVA_HOME=${JAVA_HOME}"; fi
+  - echo ${PATH}
+  - sudo apt remove clang
 
 install:
   - scripts/install.sh
