@@ -37,9 +37,7 @@
 #include <experimental/any>
 typedef std::map<std::string, std::experimental::any> option_map_t;
 #else
-
 #include <any>
-
 typedef std::map<std::string, std::any> option_map_t;
 #endif
 
