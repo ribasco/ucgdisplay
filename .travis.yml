@@ -65,7 +65,7 @@ install:
   #- scripts/install.sh
 
 script:
-  - echo "Script"
+  - cd scripts && ./build-native.sh native-build-cc-osx-x86_32
   #- scripts/verify-builds.sh
   #- mvn test && mvn verify
 
