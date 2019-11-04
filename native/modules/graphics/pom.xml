@@ -78,7 +78,7 @@
                 <current-os>linux</current-os>
                 <current-arch>amd64</current-arch>
                 <crossCompile>true</crossCompile>
-                <build-target>native-build-cc-all</build-target>
+                <graphics-build-target>native-build-cc-all</graphics-build-target>
             </properties>
             <build>
                 <plugins>
@@ -123,7 +123,7 @@
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>amd64</current-arch>
-                <build-target>native-build-linux-x86_64</build-target>
+                <graphics-build-target>native-build-linux-x86_64</graphics-build-target>
             </properties>
         </profile>
 
@@ -140,7 +140,7 @@
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>arm</current-arch>
-                <build-target>native-build-linux-arm32</build-target>
+                <graphics-build-target>native-build-linux-arm32</graphics-build-target>
             </properties>
         </profile>
 
@@ -156,7 +156,7 @@
             <properties>
                 <current-os>windows</current-os>
                 <current-arch>amd64</current-arch>
-                <build-target>native-build-windows-x86_64</build-target>
+                <graphics-build-target>native-build-windows-x86_64</graphics-build-target>
             </properties>
         </profile>
 
@@ -173,7 +173,7 @@
             <properties>
                 <current-os>macosx</current-os>
                 <current-arch>amd64</current-arch>
-                <build-target>native-build-macosx-x86_64</build-target>
+                <graphics-build-target>native-build-macosx-x86_64</graphics-build-target>
             </properties>
         </profile>
     </profiles>
@@ -209,13 +209,11 @@
                         <configuration>
                             <target>
                                 <!-- Pass maven properties to ant -->
-                                <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch},
-                                    TARGET: ${build-target})
-                                </echo>
+                                <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${graphics-build-target})</echo>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.."/>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${build-target}"/>
+                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${graphics-build-target}"/>
                             </target>
                         </configuration>
                     </execution>
@@ -234,7 +232,7 @@
             </plugin>
 
             <!-- Javadoc Plugin -->
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
@@ -242,7 +240,7 @@
                         <exclude>**/UpdateControllerHeader.java</exclude>
                     </excludes>
                 </configuration>
-            </plugin>
+            </plugin>-->
 
             <!-- Clean Plugin: Remove the native build directory during clean operation -->
             <plugin>

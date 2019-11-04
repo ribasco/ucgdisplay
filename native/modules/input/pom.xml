@@ -80,7 +80,7 @@
                 <current-os>linux</current-os>
                 <current-arch>amd64</current-arch>
                 <crossCompile>true</crossCompile>
-                <build-target>native-build-cc-all</build-target>
+                <input-build-target>native-build-cc-all</input-build-target>
             </properties>
             <build>
                 <plugins>
@@ -125,7 +125,7 @@
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>amd64</current-arch>
-                <build-target>native-build-linux-x86_64</build-target>
+                <input-build-target>native-build-linux-x86_64</input-build-target>
             </properties>
         </profile>
 
@@ -142,7 +142,7 @@
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>arm</current-arch>
-                <build-target>native-build-linux-arm32</build-target>
+                <input-build-target>native-build-linux-arm32</input-build-target>
             </properties>
         </profile>
 
@@ -159,7 +159,7 @@
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>aarch64</current-arch>
-                <build-target>native-build-linux-arm64</build-target>
+                <input-build-target>native-build-linux-arm64</input-build-target>
             </properties>
         </profile>
 
@@ -175,7 +175,7 @@
             <properties>
                 <current-os>windows</current-os>
                 <current-arch>amd64</current-arch>
-                <build-target>skip-build</build-target>
+                <input-build-target>skip-build</input-build-target>
             </properties>
         </profile>
 
@@ -192,7 +192,7 @@
             <properties>
                 <current-os>macosx</current-os>
                 <current-arch>amd64</current-arch>
-                <build-target>skip-build</build-target>
+                <input-build-target>skip-build</input-build-target>
             </properties>
         </profile>
     </profiles>
@@ -214,11 +214,11 @@
                         <configuration>
                             <target>
                                 <!-- Pass maven properties to ant -->
-                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${build-target})</echo>
+                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${input-build-target})</echo>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.." />
                                 <!--suppress UnresolvedMavenProperty -->
-                                <ant antfile="${root.dir}/scripts/build-input.xml" target="${build-target}" />
+                                <ant antfile="${root.dir}/scripts/build-input.xml" target="${input-build-target}" />
                             </target>
                         </configuration>
                     </execution>
