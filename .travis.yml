@@ -54,23 +54,19 @@ matrix:
 before_install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++; fi
-  - scripts/before-install.sh
+  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-deps.sh; fi
+  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/import-gpg.sh; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo echo "JAVA_HOME=${JAVA_HOME}"; fi
 
 install:
-  - echo "Install"
-  - scripts/install-deps.sh
-  #- scripts/install.sh
+  - scripts/install.sh
 
 script:
-  - cd scripts && ./build-native.sh native-build-cc-osx-x86_32
-  #- scripts/verify-builds.sh
-  #- mvn test && mvn verify
+  - scripts/verify-builds.sh
+  - mvn test && mvn verify
 
 before_deploy:
-  - echo "Before deploy"
-  # - cp scripts/settings.xml $HOME/.m2/settings.xml
+  - cp scripts/settings.xml $HOME/.m2/settings.xml
 
 after_success:
-  - echo "After success"
-  #- scripts/deploy.sh
+  - scripts/deploy.sh

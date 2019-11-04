@@ -2,10 +2,6 @@
 
 set -e
 
-if [[ ! $TRAVIS_OS_NAME == 'linux' ]]; then
-    exit 0;
-fi
-
 echo "======================================================"
 echo "Installing xar from source"
 echo "======================================================"
@@ -41,3 +37,6 @@ sudo ./install.sh
 # ./configure
 # make
 # sudo make install
+
+# From: https://github.com/tpoechtrager/cctools-port/blob/master/.travis.yml
+# mkdir -p tmp && TMP=$PWD/tmp && git clone https://github.com/tpoechtrager/apple-libtapi.git && cd apple-libtapi && INSTALLPREFIX=$TMP ./build.sh && ./install.sh && cd .. && cd cctools && ./configure --with-libtapi=$TMP && make
