@@ -42,6 +42,7 @@ matrix:
             - g++-7
             - gcc-multilib
             - g++-multilib
+            - libssl1.0-dev
           sources:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
             - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
@@ -53,15 +54,12 @@ matrix:
 before_install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++; fi
-  #- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc; fi
-  #- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++; fi
-  #- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CC=gcc-7; fi
-  #- if [[ $TRAVIS_OS_NAME == 'linux' ]]; then export CXX=g++-7; fi
   - scripts/before-install.sh
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo echo "JAVA_HOME=${JAVA_HOME}"; fi
 
 install:
   - echo "Install"
+  - scripts/install-deps.sh
   #- scripts/install.sh
 
 script:
