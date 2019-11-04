@@ -61,14 +61,18 @@ before_install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo echo "JAVA_HOME=${JAVA_HOME}"; fi
 
 install:
-  - scripts/install.sh
+  - echo "Install"
+  #- scripts/install.sh
 
 script:
-  - scripts/verify-builds.sh
-  - mvn test && mvn verify
+  - echo "Script"
+  #- scripts/verify-builds.sh
+  #- mvn test && mvn verify
 
 before_deploy:
-  - cp scripts/settings.xml $HOME/.m2/settings.xml
+  - echo "Before deploy"
+  # - cp scripts/settings.xml $HOME/.m2/settings.xml
 
 after_success:
-  - scripts/deploy.sh
+  - echo "After success"
+  #- scripts/deploy.sh

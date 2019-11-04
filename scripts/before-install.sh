@@ -25,11 +25,7 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
     echo "CXX = ${CXX}"
     clang -v
     clang++ -v
-    which clang
-    which clang++
-    ls -l /usr/local/clang-7.0.0/bin/
-    ls -l /usr/bin
-    ls -l /usr/local
+    echo "Displaying /usr/local/lib"
     ls -l /usr/local/lib
     echo ${PATH}
 else
