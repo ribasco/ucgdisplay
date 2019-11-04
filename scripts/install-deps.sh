@@ -30,14 +30,14 @@ cd apple-libtapi
 ./build.sh
 sudo ./install.sh
 
-cd ..
-
-echo "======================================================"
-echo "Installing cctools from source"
-echo "======================================================"
-
-git clone https://github.com/tpoechtrager/cctools-port.git
-cd cctools-port/cctools
-./configure
-make
-sudo make install
+# cd ..
+#
+# echo "======================================================"
+# echo "Installing cctools from source"
+# echo "======================================================"
+#
+# git clone https://github.com/tpoechtrager/cctools-port.git
+# cd cctools-port/cctools
+# ./configure
+# make
+# sudo make install
