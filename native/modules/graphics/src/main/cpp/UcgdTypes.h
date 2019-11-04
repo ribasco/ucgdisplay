@@ -32,8 +32,12 @@
 #include <iostream>
 #include <Log.h>
 
+#if defined(__APPLE__)  && !defined(__AVAILABILITY__)
+#include <Availability.h>
+#endif
+
 //The <any> header for Mac OSX i386 is only available from the experimental namespace
-#if defined(__APPLE__) && defined(__MAC_10_13_4) && !defined(__MAC_10_15)
+#if defined(__APPLE__) && defined(__MAC_10_13) && !defined(__MAC_10_15)
 #include <experimental/any>
 typedef std::map<std::string, std::experimental::any> option_map_t;
 #else
