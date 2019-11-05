@@ -2,3 +2,17 @@ Troubleshooting
 
 1. Demangle symbols
     nm -uD libucgdisp.so  | grep _ZN5gpiod4chipC1ERKSsi | c++filt -n
+
+
+2. Undefined symbol?
+    Make sure the correct compilers are used and points to the right location.
+    Some could be mixed and point to /usr/local/* directory. If this is the case, You can either manually fix the symbolic links
+    or just clean /usr/local as a last resort.
+
+    The command below cleans all the files/symbolic links under /usr/local* recursively. Folder structure is retained.
+
+    # clean files
+    sudo find /usr/local -type f -delete
+
+    # clean symbolic links
+    sudo find /usr/local -type f -xtype l
