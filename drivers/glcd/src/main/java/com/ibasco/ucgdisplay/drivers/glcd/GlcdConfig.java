@@ -41,8 +41,7 @@ import java.util.Map;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Configuration class to be used for the display controller. This is an immutable class and should only be
- * created using {@link GlcdConfigBuilder}
+ * Configuration class to be used for the display controller. Use {@link GlcdConfigBuilder} to setup your configuration.
  *
  * @author Rafael Ibasco
  */
@@ -55,6 +54,10 @@ public class GlcdConfig {
     private GlcdPinMapConfig pinMap;
     private String setupProcedure;
     private Map<String, Object> options = new HashMap<>();
+
+    GlcdConfig() {
+        //package-private
+    }
 
     /**
      * @return The screen size of the selected display controller
