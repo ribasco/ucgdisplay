@@ -33,7 +33,7 @@ echo "[INSTALL] Build Type = ${BUILD_TYPE}, Cross Compile = ${CROSS_COMPILE}, Pr
 
 # Only cross-compile on linux (x86_64/amd64) environment
 if [[ ${CROSS_COMPILE} == 'yes' ]]; then
-    mvn --settings scripts/settings.xml install -P'cross-compile,!build-linux-x86_64' ${MVN_PROPS}
+    mvn --settings scripts/settings.xml install -P'cross-compile' ${MVN_PROPS}
 else
     mvn --settings scripts/settings.xml install ${MVN_PROPS}
 fi

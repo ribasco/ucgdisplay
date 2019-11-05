@@ -34,6 +34,7 @@
     <properties>
         <main.basedir>${project.parent.basedir}</main.basedir>
         <buildType>Debug</buildType>
+        <crossCompile>false</crossCompile>
     </properties>
 
     <dependencies>
@@ -72,7 +73,7 @@
     </dependencies>
 
     <profiles>
-        <!-- Cross-compile profile (can only be ran under linux os) -->
+        <!-- Cross-compile profile (can only run under 64 bit linux os) -->
         <profile>
             <id>cross-compile</id>
             <properties>
@@ -120,6 +121,11 @@
                     <family>unix</family>
                     <arch>amd64</arch>
                 </os>
+                <property>
+                    <!-- activate only if crossCompile is false, otherwise a duplicate build step will take place -->
+                    <name>crossCompile</name>
+                    <value>false</value>
+                </property>
             </activation>
             <properties>
                 <current-os>linux</current-os>
