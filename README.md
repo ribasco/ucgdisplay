@@ -1,6 +1,21 @@
+>  **WARNING:** This project is currently on ALPHA stage. Features may be added or removed at any point in time. Backwards compatibility between development versions are not guaranteed.
+
 ### Universal Character/Graphics LCD Library for Java
 
 [![Build Status](https://travis-ci.org/ribasco/ucgdisplay.svg?branch=master)](https://travis-ci.org/ribasco/ucgdisplay) [![Maven Central](https://img.shields.io/maven-central/v/com.ibasco.ucgdisplay/ucg-display.svg?label=Maven%20Central)](https://search.maven.org/search?q=com.ibasco.ucgdisplay) [![Join the chat at https://gitter.im/ucgdisplay/Lobby](https://badges.gitter.im/ucgdisplay/Lobby.svg)](https://gitter.im/ucgdisplay/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4209cfcd33eb4f98a6e1d16414804d45)](https://app.codacy.com/app/ribasco/ucgdisplay?utm_source=github.com&utm_medium=referral&utm_content=ribasco/ucgdisplay&utm_campaign=Badge_Grade_Dashboard) [![Javadocs](https://www.javadoc.io/badge/com.ibasco.ucgdisplay/ucg-display.svg)](https://www.javadoc.io/doc/com.ibasco.ucgdisplay/ucg-display)
+
+### Change Log
+
+**1.5.0-alpha**
+
+- Migrated to JDK 11
+- Fixed 'symbol lookup error' (Issue: #22)
+- Added support for multiple I/O peripheral providers ([libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/), [pigpiod](https://github.com/joan2937/pigpio), [c-periphery](https://github.com/vsergeev/c-periphery)) (Issue #24)
+- 32 bit and 64 bit architectures are now fully supported for ARM and x86. Note that 32 bit support for OSX platform may be removed in the future versions.
+- Added native logging capability for improved traceability (native routes to SLF4J)
+- On Raspberry Pi platforms, GPIO pins are now automatically configured internally by the native library.
+- Added more options for different I/O peripheral providers
+- Introduced API changes for [GlcdConfigBuilder](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/GlcdConfigBuilder.java). 
 
 ### Features
 
@@ -8,9 +23,15 @@
 
 ##### General features
 
+* Easy to use API
 * Supports both Character and Graphics/Dot-Matrix display devices
-* Should work for most linux based SBCs (kernel 4.8x or higher)
-* New in 1.5.x - Multiple gpio/peripheral providers support (libgpiod, pigpio or c-periphery)
+* Support for multiple I/O peripheral providers
+  * [Libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/)
+  * [Pigpio](https://github.com/joan2937/pigpio) (Daemon or Standalone)
+  * [C-Periphery](https://github.com/vsergeev/c-periphery) (Based on the linux kernel)
+* JDK 11 Compatible (Available for both 32 and 64 bit architectures)
+* Provides native bindings via JNI to the popular U8g2 library for graphics displays.
+* Introspection capability
 
 ##### Display drivers
 
@@ -25,7 +46,7 @@
     * MCP23008 (Coming soon)
     * PCF8574 (Coming soon)
 ###### Graphic LCD driver features (Work in Progress)
-* SPI and I2C hardware capability and other software bitbanging implementations
+* SPI and I2C hardware capability and other software bit-banging implementations
 * Over 46+ controllers are supported. Refer to the table below for the list of supported display controllers. (note: not everything has been tested yet)
 * The graphics display module wraps around the popular c/c++ [U8g2](https://github.com/olikraus/u8g2) library by Oliver. All drawing operations present in the library should be similar to the ones found in U8g2 (Refer to the official [U8g2 reference manual](https://github.com/olikraus/u8g2/wiki/u8g2reference) for more information). 
 
@@ -35,12 +56,12 @@
 ###### Character LCD
 
 * Hitachi HD44780
-    
+  
 ###### Graphic/Dot-Matrix LCD
 
 * A2PRINTER, HX1230, IL3820, IST3020, KS0108, LC7981, LD7032, LS013B7DH03, LS027B7DH01, MAX7219, NT7534, PCD8544, PCF8812, RA8835, SBN1661, SED1330, SED1520, SH1106, SH1107, SH1108, SH1122, SSD1305, SSD1306, SSD1309, SSD1317, SSD1322, SSD1325, SSD1326, SSD1327, SSD1329, SSD1606, SSD1607, ST75256, ST7565, ST7567, ST7586S, ST7588, ST7920, T6963, UC1601, UC1604, UC1608, UC1610, UC1611, UC1638, UC1701
 
-### Supported bus interfaces (for glcd)
+### Supported bus interfaces (GLCD)
 
 | Interface     | Type              | Description                                                                       | Hardware | Software |
 |---------------|-------------------|-----------------------------------------------------------------------------------|----------|----------|
@@ -64,11 +85,12 @@
 ### Pre-requisites
 
 ---
-* Java JDK (1.8 or higher)
-* [Libgpiod](https://github.com/brgl/libgpiod) (v1.4.1 or higher) - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device).
+* Java JDK 11 (See [AdoptOpenJDK](https://adoptopenjdk.net/))
+* (Optional) [Libgpiod](https://github.com/brgl/libgpiod) (v1.4.1 or higher) - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device).
+* (Optional) [Pigpio](https://github.com/joan2937/pigpio) (v71 above) - pigpio is a C library for the Raspberry which allows control of the General Purpose Input Outputs (GPIO). 
 
 > **IMPORTANT:** For libgpiod, make sure the c++ bindings are included when you install from source (--enable-bindings-cxx)
- 
+
 ### Installation
 
 ---
@@ -96,10 +118,10 @@
     
 2. From source
 
-    Clone from github
+    Clone from Github
 
     ```bash
-    git clone https://github.com/ribasco/ucgdisplay.git --recurse-submodules --remote-submodules
+    git clone --recurse-submodules -j4 https://github.com/ribasco/ucgdisplay.git
     ```
 
     Switch to the project directory
@@ -113,6 +135,8 @@
     ```bash
     mvn install
     ```
+    
+    > **Note:** To cross compile native library please check out the project [cross-compilation guide](https://github.com/ribasco/ucgdisplay/tree/master/native)
 
 ### Usage examples
 
@@ -176,64 +200,122 @@ public class HD44780Example {
 
 ######  Graphic LCD Example (ST7920)
 
-Simple hello world example for ST7920 controller. In this example, we use the Raspberry Pi SPI hardware capability. Remember to set the pin modes to ALT0 to activate the hardware features (also applicable for the I2C pins). This library does not automatically set the correct pin modes for you, so you have to explicitly set them prior to running the application (example below).
+Simple hello world example for `ST7920` display controller using RPi's SPI Hardware capability.
 
->  **Note:** For SPI hardware capability, there is no need to map the pins. Doing so might result into 'operation is not permitted' errors.  
+>  **Note:** For I2C/SPI hardware capability, there is no need to map the pins. Doing so might result into 'operation is not permitted' errors.  
+
+
+
+See [ST7920 Example Code](https://github.com/ribasco/ucgdisplay/blob/master/examples/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/examples/glcd/GlcdST7920Example.java)
+
 
 ```java
 package com.ibasco.ucgdisplay.examples;
 
 import com.ibasco.ucgdisplay.drivers.glcd.*;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
+import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMData;
+import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+import java.util.Objects;
 
 public class GlcdST7920Example {
-    public static void main(String[] args) {
-        //On raspberry pi, we use the bcm pin numbering scheme (See: https://elinux.org/RPi_BCM2835_GPIOs)
-        GlcdConfig config = GlcdConfigBuilder.create()
-                .rotation(GlcdRotation.ROTATION_NONE)
-                .busInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920)
-                 //SPI = /dev/spidev0.0 or /dev/spidev0.1
-                 //I2C = /dev/i2c-0 or /dev/i2c-1
-                .transportDevice("/dev/spidev0.0")
-                //The GPIO character device chip (Execute 'ls -l /dev/gpiochip*' to list all available chips)  
-                .gpioDevice("/dev/gpiochip0")                
-                .display(Glcd.ST7920.D_128x64)
-                //Pin mapping (alternatively, you could use #mapPin(GlcdPin, int) function) 
-                //Note: This is not needed if the bus type is HARDWARE
-                /*.pinMap(new GlcdPinMapConfig()
-                        .map(GlcdPin.SPI_CLOCK, 14)
-                        .map(GlcdPin.SPI_MOSI, 12)
-                        .map(GlcdPin.CS, 10)
-                )*/
-                .build();
+    public static void main(String[] args) throws Exception {
+        new GlcdST7920Example().run();
+    }
+    
+    private void run() throws Exception {
+        //SPI HW 4-Wire config for ST7920
+        
+        //NOTE: On Raspberry Pi systems, you do not need 
+        //to explicitly map the pins when hardware capability is 
+        //activated for SPI, I2C or UART peripherals. 
+        //Pins are automatically configured internally for these interfaces.
 
+        //Pinout for Main SPI Peripheral (Raspberry Pi / J8 Header)
+        // - MOSI = 10
+        // - SCLK = 11
+        // - CE1 = 7
+
+        GlcdConfig config = GlcdConfigBuilder
+            	//Use ST7920 - 128 x 64 display, SPI 4-wire Hardware
+                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+            	//Set to 180 rotation
+                .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
+            	//Using system/c-periphery provider
+                .option(GlcdOption.PROVIDER, Provider.SYSTEM)
+            	//Set to 800,000 bits per second
+                .option(GlcdOption.DEVICE_SPEED, 800000)
+            	//Use CE1 or Chip Select 1 on Main SPI peripheral
+                .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
+                .build();       
+        
         GlcdDriver driver = new GlcdDriver(config);
 
-
-        driver.setCursor(0, 10);
+        //Set the Font (This is required for drawing strings)
         driver.setFont(GlcdFont.FONT_6X12_MR);
-        driver.clearBuffer();
-        driver.drawString("Hello World");
-        driver.sendBuffer();
+
+        //Get the maximum character height
+        int maxHeight = driver.getMaxCharHeight();
+
+        long startMillis = System.currentTimeMillis();
+
+        log.debug("Starting display loop");
+
+        XBMData xbmData = XBMUtils.decodeXbmFile(getClass().getResourceAsStream("/ironman.xbm"));
+
+        int offset = 50;
+        
+        for (int i = 1000; i >= 0; i--) {
+            //Clear the GLCD buffer
+            driver.clearBuffer();
+
+            if (offset >= 128) {
+                offset = 0;
+            }
+
+            drawU8G2Logo(offset++, driver);
+
+            driver.drawXBM(0, 0, 45, 64, Objects.requireNonNull(xbmData).getData());
+
+            //Write Operations to the GLCD buffer
+            driver.setFont(GlcdFont.FONT_6X12_MR);
+            driver.drawString(55, maxHeight * 3, "ucgdisplay");
+            driver.drawString(55, maxHeight * 4, "1.5.0-alpha");
+            driver.drawString(100, maxHeight * 5, String.valueOf(i));
+
+            //Send all buffered data to the display
+            driver.sendBuffer();
+
+            Thread.sleep(1);
+        }
+
+        //Clear the display
+        driver.clearDisplay();
+        long endTime = System.currentTimeMillis() - startMillis;
+
+        log.info("Done in {} seconds", Duration.ofMillis(endTime).toSeconds());        
     }
 }
 
 ```
 
-**Setting pin mode (using wiring pi)**
+**Manually Setting pin mode with wiring pi**
 
-```
+This is no longer needed in version 1.5.x  or above.
+
+```bash
 gpio mode 12 alt0 && gpio mode 13 alt0 && gpio mode 14 alt0 && gpio mode 10 alt0 && gpio readall
 ```
 
 **Verify**
 
-use `gpio readall` to verify that we have set the correct mode (ALT0) for MOSI, SCLK and CE0 (Chip-Select)
+use `gpio readall` to verify that we have set the correct mode (`ALT0`) for `MOSI`, `SCLK` and `CE1` (Chip-Select)
 
-```shell
+```bash
  +-----+-----+---------+------+---+---Pi 2---+---+------+---------+-----+-----+
  | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
  +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
@@ -260,19 +342,33 @@ use `gpio readall` to verify that we have set the correct mode (ALT0) for MOSI, 
  +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
  | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
  +-----+-----+---------+------+---+---Pi 2---+---+------+---------+-----+-----+
-
 ```
 
 ### Limitations
 
 ---
 * Works only on linux kernel v4.8 or higher
-* The adapters for character lcd driver Mcp23008LcdAdapter and Pcf8574TLcdAdapter are not yet implemented. 
+* The adapters for character lcd driver `Mcp23008LcdAdapter` and `Pcf8574TLcdAdapter` are not yet implemented. 
+* Due to lack of hardware availability, I am currently unable to test the SPI, I2C and Software Bit-bang interfaces for the other display controllers. Do know that the code implementation for these interfaces are complete, so In theory, they should work but not guaranteed. I am going to rely on your feedback for this and I will do my best to support any issues you may encounter.
+* As of JDK 11, javadocs won't be available for the meantime due to issues encountered during the build process. Still working into resolving this issue, but for now it remains disabled.
 
-### Contribution guidelines
+### Contribution
 
 ---
-* Build instructions (Coming soon)
+Feel free to contribute to the project. For starters, checkout the guide to setting up your dev/build environment for more information. 
+
+* [Cross-compilation guide](https://github.com/ribasco/ucgdisplay/blob/master/native/README.md) 
+
+### Planned Features
+
+- For the Character LCD library, I plan to move away from Pi4J (v1.2 still using Wiring Pi which is now deprecated) and use the native layer instead for device communication. This will allow us to use different peripheral providers of our choice. 
+
+### Credits
+
+- [olikraus](https://github.com/olikraus) - Project maintainer of [u8g2](https://github.com/olikraus/u8g2)
+- [vsergeev](https://github.com/vsergeev) - Project maintainer of [c-periphery](https://github.com/vsergeev/c-periphery)
+- [joan2937](https://github.com/joan2937) - Project maintainer of [pigpio](https://github.com/joan2937/pigpio)
+- [brgl](https://github.com/brgl) - Project maintainer of [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/)
 
 ### Related projects
 

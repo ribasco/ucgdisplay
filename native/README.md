@@ -12,28 +12,28 @@
 │   │   ├── graphics (Graphics Module)
 │   │   │   └── src
 │   │   │       └── main
-│   │   │           ├── cpp (Graphics C++ Project)
-│   │   │           │   ├── providers (All the supported providers)
+│   │   │           ├── cpp                        (Graphics C++/CMake Project)
+│   │   │           │   ├── providers              (All the supported providers)
 │   │   │           │   │   ├── cperiphery
 │   │   │           │   │   ├── libgpiod
 │   │   │           │   │   └── pigpio
-│   │   │           │   ├── test
-│   │   │           │   └── utils
+│   │   │           │   ├── test                   (A C++ test executable project)
+│   │   │           │   └── utils (Util project for code-generation / C++ version)
 │   │   │           └── java (Graphics Java Project)
 │   │   │               └── com
 │   │   │                   └── ibasco
 │   │   │                       └── ucgdisplay
-│   │   │                           ├── core
+│   │   │                           ├── core        (The core u8g2 java bindings)
 │   │   │                           │   └── u8g2
 │   │   │                           │       ├── exceptions
 │   │   │                           │       └── utils
-│   │   │                           └── utils
+│   │   │                           └── utils      (Code-generation / Java Version)
 │   │   │                               └── codegen
 │   │   └── input (Input Module)
 │   │       └── src
 │   │           └── main
-│   │               ├── cpp
-│   │               └── java
+│   │               ├── cpp                        (Input C++/CMake Project)
+│   │               └── java                       (Input Java Project)
 │   │                   └── com
 │   │                       └── ibasco
 │   │                           └── ucgdisplay
@@ -61,10 +61,10 @@
 
 Refer to the links under References for more information about these packages
 
-- Debian x86_64 (64bit)  Linux OS. This is the host OS where the compilation will take place.
+- Debian x86_64 (64bit)  Linux OS. This is the host OS where the compilation will take place. (Ubuntu 18.04 recommended)
 - GCC v7.4 above
 - CMake 3.10+
-- CLang (LLVM Based)
+- CLang v9 (LLVM Based)
 - GCC/G++ Multilib
 - Autoconf/Automake
 - Latest Apache Maven version
@@ -75,7 +75,33 @@ Refer to the links under References for more information about these packages
 
 ### 2. Package installation
 
+##### Package sources
+
+<u>Ubuntu Toolchain</u>
+
+```
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+```
+
+<u>LLVM/Clang 9</u>
+
+Add gpg key.
+
+```bash
+wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
+```
+
+Add  sources. Create a file at `/etc/apt/sources.list.d/llvm.list`and paste the line below. 
+
+>  Note: This is for Ubuntu 18.04, if you have a different version please check out [LLVM.org](https://apt.llvm.org/)
+
+```bash
+deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main
+```
+
 ##### Required Linux Packages (Debian)
+
+    - build-essential
     - autoconf
     - autoconf-archive
     - automake
@@ -83,8 +109,9 @@ Refer to the links under References for more information about these packages
     - gcc-multilib
     - g++-multilib
     - mingw-w64
-    - clang
-    - build-essential
+    - llvm-9-dev
+    - clang-9
+    - libssl1.0-dev
 
 Install the required packages for cross-compilation 
 
@@ -93,33 +120,53 @@ sudo apt update
 ```
 
 ```bash
-sudo apt install autoconf autoconf-archive automake cmake gcc-multilib g++-multilib mingw-w64 clang build-essential
+sudo apt install build-essential autoconf autoconf-archive automake cmake gcc-multilib g++-multilib mingw-w64 llvm-9-dev clang-9 libssl1.0-dev
 ```
 
 ### 3. Environment Settings
 
 - Make sure `JAVA_HOME` is set to your current JDK
 
+- Export`LD_LIBRARY_PATH="/usr/lib/llvm-9/lib"`
+
+  >  **Note**: This is only needed if you encounter issues cross-compiling for the OSX build targets. See Troubleshooting section below for more details.
+
 ### 4. Clone the source from the repository
-Pick a working directory for your build and clone the project source including it's required submodules (e.g. rpi toolchain).
+Pick a working directory for your build and clone the project source using the following commands below
+
+**Clone the latest from master branch (Submodules included)**
 
 ```bash
-git clone https://github.com/ribasco/ucgdisplay.git --recurse-submodules --remote-submodules
+git clone --recurse-submodules -j4 https://github.com/ribasco/ucgdisplay.git
+```
+
+**Clone from a specific branch (Submodules included)**
+
+```bash
+git clone --recurse-submodules --branch 1.5.0-alpha-dev -j4 https://github.com/ribasco/ucgdisplay.git
 ```
 
 ### 5. Building the project 
 
-#### Cross-compiling with Maven (All-in-one)
+#### Cross-compiling with Maven (Java + Native)
 
-If you compile with maven, you will compile all Java sources including the native libraries for all supported platforms. Take note that we added `build-linux-x86_64` as an exclusion. This is needed to avoid building for the same target twice. For the `buildType` parameter, the possible values are Debug, Release, RelWithDebInfo and MinSizeRel.
+If you compile with maven, you will compile all Java sources including the native libraries of all supported platforms. For the `buildType` parameter, the possible values are `Debug`, `Release`, `RelWithDebInfo` and `MinSizeRel`.
 
-If no profiles are provided, no cross-compilation will take place. Only the Host specific natives will be built.
+<u>Compile Everything</u>
 
 ```bash
-mvn clean install -P'cross-compile,!build-linux-x86_64' -DbuildType=Debug -DskipTests=true -Dgpg.skip
+mvn clean install -P'cross-compile' -DbuildType=Debug -DskipTests=true -Dgpg.skip
 ```
 
-#### Cross-compiling with Apache ANT
+<u>Compiling a specific target architecture</u>
+
+>  **Note**: See 'List of available ANT Build Targets' below for the list of targets
+
+```bash
+mvn clean compile -P'cross-compile' -DbuildType=<buildType> -Dgraphics-build-target=<ant build target>
+```
+
+#### Cross-compiling with Apache ANT (Native Only)
 
 With ant, you can select a specific c++ module to cross-compile. 
 
@@ -167,7 +214,9 @@ All targets with the **-cc** suffix needs to be executed from a 64 bit Linux ope
 | native-build-windows-x86_32    | Graphics | Compile for Windows 32 bit (Needs a Windows 32/64 bit host) |
 | native-build-windows-x86_64    | Graphics | Compile for Windows 64 bit (Needs a Windows 64 bit host)    |
 
-#### Cross-compiling with CMake
+#### Cross-compiling with CMake (Native Only)
+
+CMake is the tool of choice for building the native c++ library.  Minimum required version is 3.10. 
 
 **Properties**
 
@@ -311,6 +360,38 @@ cmake --target ucgdisp
 cmake --build <osx64 build dir path>/osx/x86_64 --target ucgdisp -- -j 4
 ```
 
+### Troubleshooting
+
+<u>OSX: libLTO.so not found</u>
+
+If you get an error such as:
+
+```
+error while loading shared libraries: libLTO.so.9: cannot open shared object file: No such file or directory
+```
+
+1. Make sure `llvm-9-dev` is installed (typically under `/usr/lib/llvm-9`)
+
+2. Make sure the build system will be able to find all the required libraries in `/usr/lib/llvm-9/lib`. If it doesn't, then you need to explicitly export the library path to `LD_LIBRARY_PATH`.
+
+   ```bash
+   export LD_LIBRARY_PATH="/usr/lib/llvm-9/lib" 
+   ```
+
+<u>OSX: Libxar not found</u>
+
+If you encounter this error, you need to install the `xar` package.
+
+ - Required system dependencies: `libssl1.0-dev`
+
+   ```bash
+   git clone https://github.com/mackyle/xar
+   cd xar/xar
+   ./autogen.sh
+   make
+   sudo make install
+   ```
+
 ## Configuring Development **Environment**
 
 **CLion IDE (Coming soon)**
@@ -327,12 +408,6 @@ cmake --build <osx64 build dir path>/osx/x86_64 --target ucgdisp -- -j 4
 
 - Crosstools-NG
 - OSX Cross
-
-# Credits
-
-- olikarus - Project maintainer of [u8g2](https://github.com/olikraus/u8g2)
-- vsergeev - Project maintainer of [c-periphery](https://github.com/vsergeev/c-periphery)
-- joan2937 - Project maintainer of [pigpio](https://github.com/joan2937/pigpio)
 
 # References
 - [Ubuntu Kernel headers/images (all platforms)](https://kernel.ubuntu.com/~kernel-ppa/mainline/)
