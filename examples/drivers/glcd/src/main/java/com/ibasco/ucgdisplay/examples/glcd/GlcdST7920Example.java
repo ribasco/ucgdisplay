@@ -46,7 +46,6 @@ public class GlcdST7920Example {
     }
 
     private void drawU8G2Logo(int offset, GlcdDriver driver) {
-        //driver.clearBuffer();
         driver.setFontMode(1);
 
         driver.setFontDirection(0);
@@ -66,40 +65,50 @@ public class GlcdST7920Example {
         driver.drawHLine(offset + 3, 26, 34);
         driver.drawVLine(offset + 32, 22, 12);
         driver.drawVLine(offset + 33, 23, 12);
-        //driver.sendBuffer();
     }
 
     private void run() throws Exception {
         //SPI HW 4-Wire config for ST7920
-        //Note: Since we are using the Raspberry Pi SPI hardware features, no pin mapping is needed.
 
-        //Pin Mapping (Main SPI Peripheral)
+        //NOTE: On Raspberry Pi systems, you do not need
+        //to explicitly map the pins when hardware capability is
+        //activated for SPI, I2C or UART peripherals.
+        //Pins are automatically configured internally for these interfaces.
+
+        //Pinout for Main SPI Peripheral (Raspberry Pi / J8 Header)
         // - MOSI = 10
         // - SCLK = 11
         // - CE1 = 7
 
         GlcdConfig config = GlcdConfigBuilder
+                //Use ST7920 - 128 x 64 display, SPI 4-wire Hardware
                 .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                //Set to 180 rotation
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
+                //Using system/c-periphery provider
                 .option(GlcdOption.PROVIDER, Provider.SYSTEM)
-                //.option(GlcdOption.PIGPIO_MODE, PigpioMode.DAEMON)
+                //Set to 800,000 bits per second
                 .option(GlcdOption.DEVICE_SPEED, 800000)
+                //Use CE1 or Chip Select 1 on Main SPI peripheral
                 .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
-                /*.option(GlcdOption.DEVICE_GPIO_PATH, "/dev/gpiochip0")
-                .option(GlcdOption.DEVICE_SPI_PATH, "/dev/spidev0.0")
-                .option(GlcdOption.DEVICE_I2C_PATH, "/dev/i2c-1")
-                .option(GlcdOption.I2C_BUS, 1)
-                .option(GlcdOption.SPI_PERIPHERAL, SpiPeripheral.MAIN)
-                .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
-                .option(GlcdOption.SPI_MODE, SpiMode.MODE_0)
-                .option(GlcdOption.SPI_BIT_ORDER, SpiBitOrder.MSB_FIRST)
-                .option(GlcdOption.SPI_BITS_PER_WORD, 8)
-                .option(GlcdOption.I2C_FLAGS, 0)
-                .option(GlcdOption.SPI_FLAGS, 0)
-                .option(GlcdOption.I2C_DEVICE_ADDRESS, 0)
-                .option(GlcdOption.PIGPIO_ADDRESS, null)
-                .option(GlcdOption.PIGPIO_PORT, null)*/
                 .build();
+        /*
+        //Other options available:
+        .option(GlcdOption.DEVICE_GPIO_PATH, "/dev/gpiochip0")
+        .option(GlcdOption.DEVICE_SPI_PATH, "/dev/spidev0.0")
+        .option(GlcdOption.DEVICE_I2C_PATH, "/dev/i2c-1")
+        .option(GlcdOption.I2C_BUS, 1)
+        .option(GlcdOption.SPI_PERIPHERAL, SpiPeripheral.MAIN)
+        .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
+        .option(GlcdOption.SPI_MODE, SpiMode.MODE_0)
+        .option(GlcdOption.SPI_BIT_ORDER, SpiBitOrder.MSB_FIRST)
+        .option(GlcdOption.SPI_BITS_PER_WORD, 8)
+        .option(GlcdOption.I2C_FLAGS, 0)
+        .option(GlcdOption.SPI_FLAGS, 0)
+        .option(GlcdOption.I2C_DEVICE_ADDRESS, 0)
+        .option(GlcdOption.PIGPIO_ADDRESS, null)
+        .option(GlcdOption.PIGPIO_PORT, null)
+        */
 
         GlcdDriver driver = new GlcdDriver(config);
 
