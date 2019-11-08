@@ -63,7 +63,7 @@ install:
   - scripts/verify-builds.sh
 
 script:
-  - mvn test && mvn verify
+  - mvn -Dmaven.antrun.skip=true test && mvn -Dmaven.antrun.skip=true verify
 
 before_deploy:
   - cp scripts/settings.xml $HOME/.m2/settings.xml
