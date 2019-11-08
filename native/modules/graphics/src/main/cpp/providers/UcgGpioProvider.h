@@ -76,11 +76,11 @@ public:
         MODE_ALT5 = 8
     };
 
-    explicit UcgGpioProvider(UcgIOProvider *provider) : UcgProviderBase(provider) {}
+    explicit UcgGpioProvider(UcgIOProvider *provider) : UcgProviderBase(provider), log(ServiceLocator::getInstance().getLogger()) {}
 
     ~UcgGpioProvider() override = default;
 
-    virtual void init(int pin, GpioMode mode) {
+    virtual void init(const std::shared_ptr<ucgd_t>& context, int pin, GpioMode mode) {
         if (!isModeSupported(mode)) {
             std::stringstream ss;
             ss << "init() : GPIO Mode '" << std::to_string(mode) << "' is currently not supported by the gpio provider (" << this->getProvider()->getName() << ")";
@@ -92,7 +92,12 @@ public:
 
     virtual void write(int pin, uint8_t value) = 0;
 
+    static std::string buildGpioDevicePath(const std::shared_ptr<ucgd_t>& context) {
+        int chipNum = context->getOptionInt(OPT_GPIO_CHIP, 0);
+        return std::string("/dev/gpiochip") + std::to_string(chipNum);
+    }
 protected:
+    Log log;
     virtual bool isModeSupported(const GpioMode& mode) = 0;
 };
 

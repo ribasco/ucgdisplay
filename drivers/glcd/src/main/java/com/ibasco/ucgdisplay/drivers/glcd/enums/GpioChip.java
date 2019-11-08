@@ -1,8 +1,8 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Native :: Graphics
- * Filename: UcgPigpioSpiProvider.h
+ * Project: UCGDisplay :: Graphics LCD driver
+ * Filename: GpioChip.java
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,36 +23,41 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-#ifndef UCGD_MOD_GRAPHICS_UCGPIGPIOSPIPROVIDER_H
-#define UCGD_MOD_GRAPHICS_UCGPIGPIOSPIPROVIDER_H
+package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-#include "UcgSpiProvider.h"
-#include "UcgPigpioProvider.h"
-#include <memory>
-#include <utility>
-#include <pigpio.h>
-#include <sstream>
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValue;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdUserDefinedOption;
 
-class UcgPigpioSpiProvider : public UcgSpiProvider {
-public:
-    explicit UcgPigpioSpiProvider(UcgIOProvider *provider);
+/**
+ * An enumeration representing a Gpio Chip Device
+ *
+ * @author Rafael Ibasco
+ */
+public enum GpioChip implements GlcdOptionValue<Integer>, GlcdUserDefinedOption<GpioChip, Integer> {
+    CHIP_0(0),
+    CHIP_1(1),
+    OTHER(-1);
 
-    ~UcgPigpioSpiProvider() override;
+    private int chipNumber;
 
-    void open() override;
+    GpioChip(int chipNumber) {
+        this.chipNumber = chipNumber;
+    }
 
-    int write(uint8_t *buffer, int count) override;
+    @Override
+    public Integer toValue() {
+        return chipNumber;
+    }
 
-    void close() override;
+    @Override
+    public Class<Integer> getType() {
+        return Integer.class;
+    }
 
-    UcgPigpioProvider *getProvider() override;
-
-private:
-    int m_Handle;
-    int m_PigpioHandle;
-
-    void _close();
-};
-
-
-#endif //UCGD_MOD_GRAPHICS_UCGPIGPIOSPIPROVIDER_H
+    @Override
+    public GpioChip value(Integer value) {
+        GpioChip c = OTHER;
+        c.chipNumber = value;
+        return c;
+    }
+}

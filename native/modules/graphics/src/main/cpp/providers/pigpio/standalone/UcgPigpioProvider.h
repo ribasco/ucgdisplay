@@ -29,6 +29,7 @@
 #include <utility>
 #include <iostream>
 #include <UcgIOProvider.h>
+#include <UcgPigpioProviderBase.h>
 
 class PigpioProviderException : public std::runtime_error {
 public:
@@ -44,19 +45,27 @@ public:
     explicit PigpioInitException(const std::string &msg) : PigpioProviderException(msg) {}
 };
 
-class UcgPigpioProvider : public UcgIOProvider {
+class UcgPigpioProvider : public UcgPigpioProviderBase {
 public:
-    explicit UcgPigpioProvider(const std::shared_ptr<u8g2_info_t> &info);
+    UcgPigpioProvider();
 
     ~UcgPigpioProvider() override;
 
-    int getHandle() const;
+    void initialize(const std::shared_ptr<ucgd_t> &context) override;
 
-    int getType();
+    std::string getLibraryName() override;
 
-private:
-    int m_Handle;
-    int m_Type;
+    const std::shared_ptr<UcgSpiProvider> &getSpiProvider() override;
+
+    const std::shared_ptr<UcgI2CProvider> &getI2CProvider() override;
+
+    const std::shared_ptr<UcgGpioProvider> &getGpioProvider() override;
+
+    [[nodiscard]] bool supportsGpio() const override;
+
+    [[nodiscard]] bool supportsSPI() const override;
+
+    [[nodiscard]] bool supportsI2C() const override;
 };
 
 

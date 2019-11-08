@@ -1,8 +1,8 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Graphics LCD driver
- * Filename: GlcdOptionValueInt.java
+ * Project: UCGDisplay :: Native :: Graphics
+ * Filename: UcgPigpiodI2CProvider.h
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,8 +23,32 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-package com.ibasco.ucgdisplay.drivers.glcd;
+#ifndef UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H
+#define UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H
 
-public interface GlcdOptionValueInt extends GlcdOptionValue {
-    int toValueInt();
-}
+#include <UcgI2CProvider.h>
+#include "UcgPigpiodProvider.h"
+
+class UcgPigpiodI2CProvider : public UcgI2CProvider {
+public:
+    explicit UcgPigpiodI2CProvider(UcgIOProvider *provider);
+
+    ~UcgPigpiodI2CProvider() override;
+
+    int open(const std::shared_ptr<ucgd_t> &context) override;
+
+    int close() override;
+
+    int write(unsigned short address, const uint8_t *buffer, unsigned short length) override;
+
+    UcgPigpiodProvider *getProvider() override;
+
+private:
+    int m_PigpioHandle;
+    int m_Handle;
+    int _close();
+    std::string _get_errmsg(int val);
+};
+
+
+#endif //UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H

@@ -29,10 +29,11 @@
 #include <memory>
 #include <utility>
 #include <UcgIOProvider.h>
+#include <ServiceLocator.h>
 
 class UcgProviderBase {
 public:
-    explicit UcgProviderBase(UcgIOProvider *provider) : m_Provider(provider) {}
+    explicit UcgProviderBase(UcgIOProvider *provider) : m_Provider(provider), log(ServiceLocator::getInstance().getLogger()) {}
 
     virtual ~UcgProviderBase() = default;
 
@@ -41,13 +42,7 @@ public:
     }
 
 protected:
-    int getOptionValueInt(std::string key, int defaultValue = 0) {
-        return this->getProvider()->getInfo()->getOptionInt(key, defaultValue);
-    }
-
-    std::string getOptionValueString(const std::string &key, std::string defaultValue = "") {
-        return this->getProvider()->getInfo()->getOptionString(key, defaultValue);
-    }
+    Log log;
 
 private:
     UcgIOProvider *m_Provider;

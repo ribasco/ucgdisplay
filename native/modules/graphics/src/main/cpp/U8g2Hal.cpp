@@ -33,6 +33,7 @@
 
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
 
+#include <ProviderManager.h>
 #include <UcgSpiProvider.h>
 #include <UcgI2CProvider.h>
 #include <UcgGpioProvider.h>
@@ -42,9 +43,12 @@
 
 static u8g2_setup_func_map_t u8g2_setup_functions; //NOLINT
 static u8g2_lookup_font_map_t u8g2_font_map; //NOLINT
-void initializeGpio(const std::shared_ptr<u8g2_info_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio);
 
-void initializeGpioAllOut(const std::shared_ptr<u8g2_info_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio);
+void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio);
+
+void initializeGpioAllOut(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio);
+
+bool tryGetAndInitProvider(const std::shared_ptr<ucgd_t> &context, const std::string& providerName, std::shared_ptr<UcgIOProvider>& provider);
 
 /**
  * Initialize the HAL
@@ -61,7 +65,7 @@ void U8g2hal_Init() {
  * @param function_name The name of the u8g2 setup procedure
  * @return The setup callback function
  */
-u8g2_setup_func_t &U8g2hal_GetSetupProc(const std::string &function_name) {
+u8g2_setup_func_t &U8g2Hal_GetSetupProc(const std::string &function_name) {
     if (u8g2_setup_functions.empty())
         throw SetupProcNotFoundException(std::string("U8g2hal_GetSetupProc : Could not find setup procedure '") + function_name + std::string("'"));
     auto it = u8g2_setup_functions.find(function_name);
@@ -91,13 +95,13 @@ uint8_t *U8g2hal_GetFontByName(const std::string &font_name) {
 /**
  * 4-wire SPI Hardware Callback Routine (ARM)
  */
-uint8_t cb_byte_spi_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_spi_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
 
     std::shared_ptr<UcgSpiProvider> spi = info->provider->getSpiProvider();
 
     switch (msg) {
         case U8X8_MSG_BYTE_INIT: {
-            spi->open();
+            spi->open(info);
             break;
         }
         case U8X8_MSG_BYTE_SEND: {
@@ -127,13 +131,13 @@ uint8_t cb_byte_spi_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, u
 /**
  * I2C Hardware Callback Routine (ARM)
  */
-uint8_t cb_byte_i2c_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_i2c_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     uint8_t *data;
-    std::shared_ptr<UcgI2CProvider> i2c = info->provider->getI2CProvider();
+    const std::shared_ptr<UcgI2CProvider> &i2c = info->provider->getI2CProvider();
 
     switch (msg) {
         case U8X8_MSG_BYTE_INIT: {
-            i2c->open();
+            i2c->open(info);
             break;
         }
         case U8X8_MSG_BYTE_SEND: {
@@ -156,7 +160,7 @@ uint8_t cb_byte_i2c_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, u
 /**
  * GPIO and Delay Procedure Routine (ARM)
 */
-uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
+uint8_t cb_gpio_delay(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
     std::shared_ptr<UcgGpioProvider> gpio = info->provider->getGpioProvider();
 
     switch (msg) {
@@ -256,70 +260,117 @@ uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, ui
     return 1;
 }
 
+bool tryGetAndInitProvider(const std::shared_ptr<ucgd_t> &context, const std::string& providerName, std::shared_ptr<UcgIOProvider>& provider) {
+    Log log = ServiceLocator::getInstance().getLogger();
+    std::unique_ptr<ProviderManager> &pMan = ServiceLocator::getInstance().getProviderManager();
+
+    //Try and retrieve provider for configuring special pin modes specific to the Raspberry Pi
+    std::shared_ptr<UcgIOProvider>& tmpProvider = pMan->getProvider(providerName);
+
+    //Check if installed
+    if (!tmpProvider->isAvailable()) {
+        log.debug("tryGetAndInitProvider() : Provider '{}' not installed on the system", providerName);
+        return false;
+    }
+
+    //Try to initialize
+    if (!tmpProvider->isInitialized()) {
+        try {
+            tmpProvider->initialize(context);
+        } catch (std::runtime_error& e) {
+            log.warn("tryGetAndInitProvider() : Provider '{}' failed to start (Reason: {})", providerName, std::string(e.what()));
+            return false;
+        }
+    }
+
+    provider = tmpProvider;
+
+    return true;
+}
+
 /**
  * Perform special initialization procedures for supported SoC devices
  * @param info The ucgdisplay descriptor
  * @param gpio The default gpio provider
  */
-void initializeGpio(const std::shared_ptr<u8g2_info_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio) {
+void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio) {
+    Log log = ServiceLocator::getInstance().getLogger();
+
     int &comm_int = info->comm_int;
     int &comm_type = info->comm_type;
 
-    info->log->debug("init_gpio() : Detected System \"{}\"", get_soc_description());
+    log.debug("hal_init_gpio() : Detected System \"{}\"", get_soc_description());
 
     //Check if we are using Hardware or Software Implementation
     if (comm_type == COMTYPE_HW) {
-        info->log->debug("init_gpio() : Communication type is HARDWARE");
+        log.debug("hal_init_gpio() : Communication type is HARDWARE");
 
-        //Are we on a Raspberry Pi system?
+        //If this is a raspberry pi system, we will TRY use the pigpio provider to initialize the hardware specific mode sets.
+        //This assumes that you are using a Pi model with the Standard J8 header (would not bother supporting the older versions)
         if (is_soc_raspberrypi()) {
-            //Since this is a raspberry pi system, we will use the pigpio provider to initialize the hardware specific mode sets.
-            //This assumes that you are using a Pi model with the Standard J8 header
-            std::shared_ptr<UcgGpioProvider> pigpioGpio = info->providers[PROVIDER_PIGPIO]->getGpioProvider();
+            log.debug("Detected a raspberry pi system. Trying to automatically configure pins for hardware capability");
+            std::unique_ptr<ProviderManager> &pMan = ServiceLocator::getInstance().getProviderManager();
 
-            //Are we on SPI mode or I2C?
+            //Try and retrieve provider for configuring special pin modes specific to the Raspberry Pi
+            std::shared_ptr<UcgIOProvider> pigpioProvider;
+
+            //Attempt #1: Try Pigpio Daemon mode
+            log.debug("hal_init_gpio() : Attempting to retrieve and connect to the Pigpio daemon...");
+            bool havePigpiod = tryGetAndInitProvider(info, PROVIDER_PIGPIOD, pigpioProvider);
+
+            if (!havePigpiod) {
+                //Attempt #2: Try Pigpio Standalone mode
+                log.debug("hal_init_gpio() : Looks like PIGPIO Daemon is unavailable, trying Pigpio standalone...");
+                bool havePigpio = tryGetAndInitProvider(info, PROVIDER_PIGPIO, pigpioProvider);
+
+                if (!havePigpio) {
+                    //Attempt no fucks given: Do nothing
+                    log.warn("hal_init_gpio() : Failed to retrieve/initialize both pigpio daemon and standalone. Falling back to default routine.");
+                    return;
+                }
+            }
+
+            std::shared_ptr<UcgGpioProvider> pigpioGpio = pigpioProvider->getGpioProvider();
+
+            //Check which hardware peripheral device we need to configure
             if (comm_int == COMINT_3WSPI || comm_int == COMINT_4WSPI || comm_int == COMINT_ST7920SPI) {
-                int spi_peripheral = info->getOptionInt(OPT_SPI_PERIPHERAL);
-
-                if (spi_peripheral == SPI_PERIPHERAL_MAIN) {
-                    pigpioGpio->init(SPI_RPI_PIN_MAIN_MISO, UcgGpioProvider::GpioMode::MODE_ALT0); //MISO
-                    pigpioGpio->init(SPI_RPI_PIN_MAIN_MOSI, UcgGpioProvider::GpioMode::MODE_ALT0); //MOSI
-                    pigpioGpio->init(SPI_RPI_PIN_MAIN_SCLK, UcgGpioProvider::GpioMode::MODE_ALT0); //SCLK
-                    pigpioGpio->init(SPI_RPI_PIN_MAIN_CE1, UcgGpioProvider::GpioMode::MODE_ALT0); //CE1
-                    pigpioGpio->init(SPI_RPI_PIN_MAIN_CE0, UcgGpioProvider::GpioMode::MODE_ALT0); //CE0
-
-                    info->log->debug("init_gpio() : SPI Hardware pins initialized for Main Channel");
-                } else if (spi_peripheral == SPI_PERIPHERAL_AUX) {
-                    pigpioGpio->init(SPI_RPI_PIN_AUX_MISO, UcgGpioProvider::GpioMode::MODE_ALT4); //MISO
-                    pigpioGpio->init(SPI_RPI_PIN_AUX_MOSI, UcgGpioProvider::GpioMode::MODE_ALT4); //MOSI
-                    pigpioGpio->init(SPI_RPI_PIN_AUX_SCLK, UcgGpioProvider::GpioMode::MODE_ALT4); //SCLK
-                    pigpioGpio->init(SPI_RPI_PIN_AUX_CE0, UcgGpioProvider::GpioMode::MODE_ALT4); //CE0
-                    pigpioGpio->init(SPI_RPI_PIN_AUX_CE1, UcgGpioProvider::GpioMode::MODE_ALT4); //CE1
-                    pigpioGpio->init(SPI_RPI_PIN_AUX_CE2, UcgGpioProvider::GpioMode::MODE_ALT4); //CE2
-
-                    info->log->debug("init_gpio() : SPI Hardware pins initialized for Auxillary Channel");
+                int spi_bus_number = info->getOptionInt(OPT_SPI_BUS);
+                if (spi_bus_number == SPI_PERIPHERAL_MAIN) {
+                    pigpioGpio->init(info, SPI_RPI_PIN_MAIN_MISO, UcgGpioProvider::GpioMode::MODE_ALT0); //MISO
+                    pigpioGpio->init(info, SPI_RPI_PIN_MAIN_MOSI, UcgGpioProvider::GpioMode::MODE_ALT0); //MOSI
+                    pigpioGpio->init(info, SPI_RPI_PIN_MAIN_SCLK, UcgGpioProvider::GpioMode::MODE_ALT0); //SCLK
+                    pigpioGpio->init(info, SPI_RPI_PIN_MAIN_CE1, UcgGpioProvider::GpioMode::MODE_ALT0); //CE1
+                    pigpioGpio->init(info, SPI_RPI_PIN_MAIN_CE0, UcgGpioProvider::GpioMode::MODE_ALT0); //CE0
+                    log.debug("hal_init_gpio() : Pins initialized for MAIN SPI Hardware Peripheral");
+                } else if (spi_bus_number == SPI_PERIPHERAL_AUX) {
+                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_MISO, UcgGpioProvider::GpioMode::MODE_ALT4); //MISO
+                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_MOSI, UcgGpioProvider::GpioMode::MODE_ALT4); //MOSI
+                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_SCLK, UcgGpioProvider::GpioMode::MODE_ALT4); //SCLK
+                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE0, UcgGpioProvider::GpioMode::MODE_ALT4); //CE0
+                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE1, UcgGpioProvider::GpioMode::MODE_ALT4); //CE1
+                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE2, UcgGpioProvider::GpioMode::MODE_ALT4); //CE2
+                    log.debug("hal_init_gpio() : Pins initialized for AUXILLARY SPI Hardware Peripheral");
                 } else {
-                    throw std::runtime_error("Unsupported SPI channel mode");
+                    throw std::runtime_error("hal_init_gpio() : SPI bus number not supported");
                 }
             } else if (comm_int == COMINT_I2C) {
-                pigpioGpio->init(I2C_RPI_PIN_SDA, UcgGpioProvider::GpioMode::MODE_ALT0); //Data / SDA
-                pigpioGpio->init(I2C_RPI_PIN_SCL, UcgGpioProvider::GpioMode::MODE_ALT0); //Clock / SCL
+                pigpioGpio->init(info, I2C_RPI_PIN_SDA, UcgGpioProvider::GpioMode::MODE_ALT0); //Data / SDA
+                pigpioGpio->init(info, I2C_RPI_PIN_SCL, UcgGpioProvider::GpioMode::MODE_ALT0); //Clock / SCL
             } else if (comm_int == COMINT_UART) {
-                pigpioGpio->init(UART_RPI_PIN_TXD, UcgGpioProvider::GpioMode::MODE_ALT0); //Transmit / TXD
-                pigpioGpio->init(UART_RPI_PIN_RXD, UcgGpioProvider::GpioMode::MODE_ALT0); //Receive / RXD
-            }
+                pigpioGpio->init(info, UART_RPI_PIN_TXD, UcgGpioProvider::GpioMode::MODE_ALT0); //Transmit / TXD
+                pigpioGpio->init(info, UART_RPI_PIN_RXD, UcgGpioProvider::GpioMode::MODE_ALT0); //Receive / RXD
+            } else {
                 //Other implementations, just init everything to OUT
-            else {
                 initializeGpioAllOut(info, gpio);
             }
-        }
-        else {
-            info->log->warn("init_gpio() : Full compatibility for this SoC cannot be guaranteed. GPIO pins have been left as-is. You might have to initialize them manually.");
+        } else {
+            log.warn("hal_init_gpio() : Unrecognized system. Using default provider for initializing all GPIO pins to OUT.");
+            initializeGpioAllOut(info, gpio);
         }
     }
-    //Software Implementation - Make all GPIO output
+        //Software Implementation - Make all GPIO output
     else if (info->comm_type == COMTYPE_SW) {
-        info->log->debug("init_gpio() : Communication type is SOFTWARE");
+        log.debug("hal_init_gpio() : Communication type is SOFTWARE");
         initializeGpioAllOut(info, gpio);
     } else {
         throw std::runtime_error("Invalid/Unrecognized comm type");
@@ -331,25 +382,25 @@ void initializeGpio(const std::shared_ptr<u8g2_info_t> &info, const std::shared_
  * @param info The ucgdisplay descriptor
  * @param gpio The default gpio provider
  */
-void initializeGpioAllOut(const std::shared_ptr<u8g2_info_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio) {
-#ifdef DEBUG_UCGD
-    std::cout << "Initializing all gpio lines to OUTPUT for Comm Int = " << std::to_string(info->comm_int) << ", Comm Type = " << std::to_string(info->comm_type) << std::endl;
-#endif
+void initializeGpioAllOut(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio) {
+    Log &log = ServiceLocator::getInstance().getLogger();
+    log.debug("Initializing all gpio lines to OUTPUT for Comm Int {}, Comm Type = {}, Provider: {}} ", info->comm_int, info->comm_type, gpio->getProvider()->getName());
+
     // called once during init phase of u8g2/u8x8, can be used to setup pins
-    gpio->init(info->pin_map.d0, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.d1, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.sda, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.scl, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.d2, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.d3, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.d4, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.d5, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.d6, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.d7, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.dc, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.cs, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.cs1, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info->pin_map.cs2, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d0, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d1, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.sda, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.scl, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d2, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d3, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d4, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d5, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d6, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d7, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.dc, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.cs, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.cs1, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.cs2, UcgGpioProvider::GpioMode::MODE_OUTPUT);
 }
 
 #else
@@ -357,21 +408,21 @@ void initializeGpioAllOut(const std::shared_ptr<u8g2_info_t> &info, const std::s
 /**
  * SPI Callback Routine (virtual mode)
  */
-uint8_t cb_byte_spi_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_spi_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return cb_byte_4wire_sw_spi(info, u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * HW I2C Wrapper. Uses software bit-bang implementation (virtual mode)
  */
-uint8_t cb_byte_i2c_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_i2c_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return cb_byte_sw_i2c(info, u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * GPIO and Delay Routine (virtual mode)
  */
-uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
+uint8_t cb_gpio_delay(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
     switch (msg) {
         case U8X8_MSG_GPIO_AND_DELAY_INIT: { // called once during init phase of u8g2/u8x8, can be used to setup pins
             //cout << "U8X8_MSG_GPIO_AND_DELAY_INIT" << endl;
@@ -483,48 +534,48 @@ uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, ui
 /**
  * Wrapper for 'u8x8_byte_sw_i2c'
  */
-uint8_t cb_byte_sw_i2c(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_sw_i2c(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_sw_i2c(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_4wire_sw_spi'
  */
-uint8_t cb_byte_4wire_sw_spi(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_4wire_sw_spi(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_4wire_sw_spi(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_3wire_sw_spi'
  */
-uint8_t cb_byte_3wire_sw_spi(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_3wire_sw_spi(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_3wire_sw_spi(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_8bit_6800mode'
  */
-uint8_t cb_byte_8bit_6800mode(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_8bit_6800mode(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_8bit_6800mode(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_8bit_8080mode'
  */
-uint8_t cb_byte_8bit_8080mode(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_8bit_8080mode(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_8bit_8080mode(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_ks0108'
  */
-uint8_t cb_byte_ks0108(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_ks0108(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_ks0108(u8x8, msg, arg_int, arg_ptr);
 }
 
 /**
  * Wrapper for 'u8x8_byte_sed1520'
  */
-uint8_t cb_byte_sed1520(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_sed1520(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     return u8x8_byte_sed1520(u8x8, msg, arg_int, arg_ptr);
 }

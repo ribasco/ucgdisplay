@@ -25,14 +25,14 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueString;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValue;
 
 /**
  * The enumeration for all available I/O providers supported by the library
  *
  * @author Rafael Ibasco
  */
-public enum Provider implements GlcdOptionValueString {
+public enum Provider implements GlcdOptionValue<String> {
     /**
      * A GPIO library which makes use of the linux character device (replacement of sysfs). SPI and I2C not supported.
      *
@@ -40,11 +40,17 @@ public enum Provider implements GlcdOptionValueString {
      */
     LIBGPIOD("libgpiod"),
     /**
+     * Uses the third-party pigpiod library. Standalone mode (no daemon needed). Supports I2C/GPIO and SPI interfaces.
+     *
+     * @see <a href="https://github.com/joan2937/pigpio">Pigpio Website</a>
+     */
+    PIGPIO_STANDALONE("pigpio"),
+    /**
      * Uses the third-party pigpiod library. Requires the pigpio daemon to be installed and running on the target system. Supports I2C/GPIO and SPI interfaces.
      *
      * @see <a href="https://github.com/joan2937/pigpio">Pigpio Website</a>
      */
-    PIGPIO("pigpio"),
+    PIGPIO_DAEMON("pigpiod"),
     /**
      * Makes use of built-in peripheral I/O interfaces provided by the linux kernel. No external dependencies/packages are required to be installed on the SoC.
      * Fully Supports I2C, GPIO (character device & sysfs) and SPI.
@@ -60,7 +66,12 @@ public enum Provider implements GlcdOptionValueString {
     }
 
     @Override
-    public String toValueString() {
-        return this.value;
+    public String toValue() {
+        return value;
+    }
+
+    @Override
+    public Class<String> getType() {
+        return String.class;
     }
 }

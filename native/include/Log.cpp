@@ -1,4 +1,5 @@
 #include "Log.h"
+#include <Global.h>
 
 static jobject getLogObject(JNIEnv *env, jobject source) {
     assert(source);
@@ -15,23 +16,26 @@ static jobject getLogObject(JNIEnv *env, jobject source) {
     return logObject;
 }
 
-static jmethodID getMethod(JNIEnv *env, jobject log, const std::string& method) {
+static jmethodID getMethod(JNIEnv *env, jobject log, const std::string &method) {
     auto methodId = env->GetMethodID(env->GetObjectClass(log), method.c_str(), "(Ljava/lang/String;[Ljava/lang/Object;)V");
     assert(methodId);
     return methodId;
 }
 
-static JNIEnv* getEnv() {
+static JNIEnv *getEnv() {
     JNIEnv *env;
     GETENV(env);
     return env;
 }
 
 Log::Log(jobject source) :
-env(getEnv()),
-object(source),
-infoMethod(getMethod(env, object, "info")),
-debugMethod(getMethod(env, object, "debug")),
-warnMethod(getMethod(env, object, "warn")) {
+        env(getEnv()),
+        object(source),
+        infoMethod(getMethod(env, object, "info")),
+        debugMethod(getMethod(env, object, "debug")),
+        warnMethod(getMethod(env, object, "warn")),
+        errorMethod(getMethod(env, object, "error")) {
 
 }
+
+Log::~Log() = default;

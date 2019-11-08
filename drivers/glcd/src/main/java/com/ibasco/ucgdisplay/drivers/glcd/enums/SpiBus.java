@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Graphics LCD driver
- * Filename: SpiPeripheral.java
+ * Filename: SpiBus.java
  * 
  * ---------------------------------------------------------
  * %%
@@ -25,14 +25,15 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueInt;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValue;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdUserDefinedOption;
 
 /**
  * <p>The enumeration of all available SPI peripherals of the SoC (e.g. Raspberry Pi)</p>
  *
  * @author Rafael Ibasco
  */
-public enum SpiPeripheral implements GlcdOptionValueInt {
+public enum SpiBus implements GlcdOptionValue<Integer>, GlcdUserDefinedOption<SpiBus, Integer> {
     /**
      * <p>Main SPI Channel</p>
      *
@@ -42,7 +43,7 @@ public enum SpiPeripheral implements GlcdOptionValueInt {
      * SCLK = 11
      * CE0 = 8
      * CE1 = 7
-     * CE2 = -
+     * CE2 = N/A (avaialble in Auxillary)
      * </pre>
      */
     MAIN(0),
@@ -59,16 +60,31 @@ public enum SpiPeripheral implements GlcdOptionValueInt {
      * CE2 = 16
      * </pre>
      */
-    AUXILLARY(1);
+    AUXILLARY(1),
+
+
+    OTHER(-1);
 
     private int channel;
 
-    SpiPeripheral(int channel) {
+    SpiBus(int channel) {
         this.channel = channel;
     }
 
     @Override
-    public int toValueInt() {
+    public Integer toValue() {
         return channel;
+    }
+
+    @Override
+    public Class<Integer> getType() {
+        return Integer.class;
+    }
+
+    @Override
+    public SpiBus value(Integer value) {
+        SpiBus v = OTHER;
+        v.channel = value;
+        return v;
     }
 }

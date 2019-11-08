@@ -28,7 +28,6 @@
 #include <iostream>
 
 #include <pigpio.h>
-#include <pigpiod_if2.h>
 
 enum SpiFlags : int {
     SPI_FLAG_MODE_0,                     //Mode 0           = 0 0                                                                                                                                            (Bits 0 and 1)
@@ -57,67 +56,54 @@ UcgPigpioSpiProvider::~UcgPigpioSpiProvider() {
     _close();
 };
 
-void UcgPigpioSpiProvider::open() {
+void UcgPigpioSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
     if (m_Handle >= 0)
         throw SpiOpenException(std::string("SPI device is already open: ") + std::to_string(m_Handle));
 
-    if (m_PigpioHandle <= -1)
-        m_PigpioHandle = this->getProvider()->getHandle();
-
-    int speed = this->getOptionValueInt(OPT_DEVICE_SPEED, DEFAULT_SPI_SPEED);
-    int peripheral = getOptionValueInt(OPT_SPI_PERIPHERAL, DEFAULT_SPI_PERIPHERAL);
-    int channel = this->getOptionValueInt(OPT_SPI_CHANNEL, DEFAULT_SPI_CHANNEL);
-    int flags = this->getOptionValueInt(OPT_SPI_FLAGS, DEFAULT_SPI_FLAGS);
+    int speed = context->getOptionInt(OPT_DEVICE_SPEED, DEFAULT_SPI_SPEED);
+    int peripheral = context->getOptionInt(OPT_SPI_BUS, DEFAULT_SPI_PERIPHERAL);
+    int channel = context->getOptionInt(OPT_SPI_CHANNEL, DEFAULT_SPI_CHANNEL);
+    int flags = context->getOptionInt(OPT_SPI_FLAGS, DEFAULT_SPI_FLAGS);
 
     //Update peripheral flag
     if (peripheral == SPI_PERIPHERAL_MAIN) {
         flags &= ~(1 << 8);
-        this->getProvider()->getInfo()->log->debug("open() : [PIGPIO] Using Main SPI Peripheral");
+        log.debug("open() : [PIGPIO] Using Main SPI Peripheral");
     } else if (peripheral == SPI_PERIPHERAL_AUX) {
         flags |= 1 << 8;
-        this->getProvider()->getInfo()->log->debug("open() : [PIGPIO] Using Auxillary SPI Peripheral");
+        log.debug("open() : [PIGPIO] Using Auxillary SPI Peripheral");
     } else {
         throw SpiOpenException("open() : Invalid SPI peripheral value. Valid values are 0 = Main, 1 = Auxillary");
     }
 
-    this->getProvider()->getInfo()->log->debug("open() : [PIGPIO] SPI Params: Provider = {}, Peripheral = {}, Speed = {}, Channel = {}, Flags = {}",
-                                                                                                                                        this->getProvider()->getName(),
-                                                                                                                                        peripheral,
-                                                                                                                                        speed,
-                                                                                                                                        channel,
-                                                                                                                                        flags
-                                                                                                                                        );
+    log.debug("open() : [PIGPIO] SPI Params: Provider = {}, Peripheral = {}, Speed = {}, Channel = {}, Flags = {}",
+                                               this->getProvider()->getName(),
+                                               peripheral,
+                                               speed,
+                                               channel,
+                                               flags
+    );
 
-    if (this->getProvider()->getType() == PIGPIO_TYPE_DAEMON)
-        this->m_Handle = spi_open(m_PigpioHandle, channel, speed, flags);
-    else if (this->getProvider()->getType() == PIGPIO_TYPE_STANDALONE)
-        this->m_Handle = spiOpen(channel, speed, flags);
+    this->m_Handle = spiOpen(channel, speed, flags);
 
     if (this->m_Handle < 0) {
         std::stringstream ss;
         ss << "Failed to open spi device (channel: " << std::to_string(channel)
            << ", speed: " << std::to_string(speed)
            << ", flags: " << std::to_string(flags)
-           << ", handle: " << std::to_string(this->getProvider()->getHandle())
            << ", Code: " << std::to_string(m_Handle) << ")";
         throw SpiOpenException(ss.str());
     }
 
-    this->getProvider()->getInfo()->log->debug("open() : [PIGPIO] Successfully opened SPI device");
+    log.debug("open() : [PIGPIO] Successfully opened SPI device");
 }
 
 int UcgPigpioSpiProvider::write(uint8_t *buffer, int count) {
     if (this->m_Handle < 0) {
-        throw SpiWriteException("write() : SPI device not open");
+        throw SpiWriteException("write() : [PIGPIO] SPI device not open");
     }
 
-    int retval;
-    if (this->getProvider()->getType() == PIGPIO_TYPE_DAEMON)
-        retval = spi_write(this->getProvider()->getHandle(), this->m_Handle, (char *) buffer, count);
-    else if (this->getProvider()->getType() == PIGPIO_TYPE_STANDALONE)
-        retval = spiWrite(this->m_Handle, (char *) buffer, count);
-    else
-        throw SpiWriteException("write() : Invalid pigpio type");
+    int retval = spiWrite(this->m_Handle, (char *) buffer, count);
 
     if (retval < 0) {
         std::string reason;
@@ -150,11 +136,7 @@ void UcgPigpioSpiProvider::close() {
 }
 
 void UcgPigpioSpiProvider::_close() {
-    if (this->getProvider()->getType() == PIGPIO_TYPE_DAEMON)
-        spi_close(this->m_PigpioHandle, this->m_Handle);
-    else if (this->getProvider()->getType() == PIGPIO_TYPE_STANDALONE)
-        spiClose(this->m_Handle);
-
+    spiClose(this->m_Handle);
     m_PigpioHandle = -1;
     m_Handle = -1;
 }

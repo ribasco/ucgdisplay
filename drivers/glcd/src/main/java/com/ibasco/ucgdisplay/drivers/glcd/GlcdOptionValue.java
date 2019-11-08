@@ -25,5 +25,8 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-public interface GlcdOptionValue {
+public interface GlcdOptionValue<T> {
+    T toValue();
+
+    Class<T> getType();
 }

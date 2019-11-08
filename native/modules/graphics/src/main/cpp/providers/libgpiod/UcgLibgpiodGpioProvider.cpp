@@ -37,7 +37,7 @@ UcgLibgpiodGpioProvider::UcgLibgpiodGpioProvider(UcgIOProvider *provider) : UcgG
 
 UcgLibgpiodGpioProvider::~UcgLibgpiodGpioProvider() = default;
 
-void UcgLibgpiodGpioProvider::init(int pin, GpioMode direction) {
+void UcgLibgpiodGpioProvider::init(const std::shared_ptr<ucgd_t> &context, int pin, GpioMode direction) {
     //Do not process unassinged
     if (pin <= -1)
         return;
@@ -64,7 +64,7 @@ void UcgLibgpiodGpioProvider::init(int pin, GpioMode direction) {
 
     gpio_line->request({GPIOUS_CONSUMER, dirToInt(direction), 0});
 
-    this->getProvider()->getInfo()->log->debug("init_gpio() : [LIBGPIOD] Pin = {}, Mode = {}", pin, std::to_string(direction));
+    log.debug("init_gpio() : [LIBGPIOD] Pin = {}, Mode = {}", pin, std::to_string(direction));
 }
 
 void UcgLibgpiodGpioProvider::write(int pin, uint8_t value) {

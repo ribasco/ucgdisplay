@@ -29,6 +29,7 @@
 #include <memory>
 #include <utility>
 #include <UcgdTypes.h>
+#include <ServiceLocator.h>
 
 //Forward declarations
 class UcgSpiProvider;
@@ -40,32 +41,67 @@ class UcgGpioProvider;
 //Class exceptions
 class UcgProviderException : public std::runtime_error {
 public:
-    explicit UcgProviderException(const std::string &arg) : runtime_error(arg) {}
+    explicit UcgProviderException(const std::string &arg, UcgIOProvider *provider) : runtime_error(arg), m_Provider(provider) {}
 
-    explicit UcgProviderException(const char *string) : runtime_error(string) {}
+    explicit UcgProviderException(const char *string, UcgIOProvider *provider) : runtime_error(string), m_Provider(provider) {}
 
-    explicit UcgProviderException(const runtime_error &error) : runtime_error(error) {}
+    explicit UcgProviderException(const runtime_error &error, UcgIOProvider *provider) : runtime_error(error), m_Provider(provider) {}
+
+    UcgIOProvider *getProvider() {
+        return this->m_Provider;
+    }
+
+private:
+    UcgIOProvider *m_Provider;
 };
 
 //Class exceptions
 class UcgProviderInitException : public UcgProviderException {
 public:
-    explicit UcgProviderInitException(const std::string &arg) : UcgProviderException(arg) {}
+    explicit UcgProviderInitException(const std::string &arg, UcgIOProvider *provider) : UcgProviderException(arg, provider) {}
 
-    explicit UcgProviderInitException(const char *string) : UcgProviderException(string) {}
+    explicit UcgProviderInitException(const char *string, UcgIOProvider *provider) : UcgProviderException(string, provider) {}
 
-    explicit UcgProviderInitException(const runtime_error &error) : UcgProviderException(error) {}
+    explicit UcgProviderInitException(const runtime_error &error, UcgIOProvider *provider) : UcgProviderException(error, provider) {}
+
+    explicit UcgProviderInitException(const std::exception &error, UcgIOProvider *provider) : UcgProviderException(std::string(error.what()), provider) {}
 };
 
 class UcgIOProvider {
+    friend class ProviderManager;
+
 public:
-    explicit UcgIOProvider(std::shared_ptr<u8g2_info_t> info, const std::string& name) : m_Info(std::move(info)), m_Name(name) {}
+    explicit UcgIOProvider(const std::string &name) :
+            m_Name(name),
+            m_Initialized(false),
+            log(ServiceLocator::getInstance().getLogger()),
+            m_spiProvider(nullptr),
+            m_gpioProvider(nullptr),
+            m_i2cProvider(nullptr) {
+    }
 
     virtual ~UcgIOProvider() = default;
 
-    const std::shared_ptr<u8g2_info_t> &getInfo() {
-        return m_Info;
+    /**
+     * Perform initialization
+     */
+    virtual void initialize(const std::shared_ptr<ucgd_t> &context) = 0;
+
+    /**
+     * Checks if the current provider is available/installed on the system
+     *
+     * @return true if the provider is available
+     */
+    bool isAvailable() {
+        return m_Available;
     }
+
+    /**
+     * Get the library name of this provider
+     *
+     * @return The library (*.so) name associated with this provider
+     */
+    virtual std::string getLibraryName() = 0;
 
     virtual const std::shared_ptr<UcgSpiProvider> &getSpiProvider() {
         return m_spiProvider;
@@ -79,22 +115,45 @@ public:
         return m_gpioProvider;
     }
 
-    bool supportsGpio() const {
+    virtual bool supportsGpio() const {
         return m_gpioProvider != nullptr;
     }
 
-    bool supportsSPI() const {
+    virtual bool supportsSPI() const {
         return m_spiProvider != nullptr;
     }
 
-    bool supportsI2C() const {
+    virtual bool supportsI2C() const {
         return m_i2cProvider != nullptr;
     }
 
-    std::string& getName() {
+    virtual bool isProvided() {
+        return false;
+    }
+
+    std::string &getName() {
         return m_Name;
     }
+
+    bool isInitialized() const {
+        return m_Initialized;
+    }
+
+    void markAvailable() {
+        m_Available = true;
+    }
+
+    void markUnavailable() {
+        m_Available = false;
+    }
+
+    void setInitialized(bool initialized) {
+        m_Initialized = initialized;
+    }
+
 protected:
+    Log &log;
+
     void setSPIProvider(const std::shared_ptr<UcgSpiProvider> &spiProvider) {
         m_spiProvider = spiProvider;
     }
@@ -111,8 +170,9 @@ private:
     std::shared_ptr<UcgSpiProvider> m_spiProvider;
     std::shared_ptr<UcgI2CProvider> m_i2cProvider;
     std::shared_ptr<UcgGpioProvider> m_gpioProvider;
-    std::shared_ptr<u8g2_info_t> m_Info;
     std::string m_Name;
+    bool m_Initialized;
+    bool m_Available;
 };
 
 #endif //UCGD_MOD_GRAPHICS_UCGIOPROVIDER_H

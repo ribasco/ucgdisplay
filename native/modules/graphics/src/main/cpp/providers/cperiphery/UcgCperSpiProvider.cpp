@@ -46,17 +46,21 @@ UcgCperSpiProvider::~UcgCperSpiProvider() {
     _close();
 };
 
-void UcgCperSpiProvider::open() {
-    printDebugInfo();
+void UcgCperSpiProvider::open(const std::shared_ptr<ucgd_t>& context) {
+    printDebugInfo(context);
 
-    std::string devicePath = this->getOptionValueString(OPT_DEVICE_SPI_PATH, DEFAULT_SPI_DEV_PATH);
-    int speed = this->getOptionValueInt(OPT_DEVICE_SPEED, DEFAULT_SPI_SPEED);
-    int flags = this->getOptionValueInt(OPT_SPI_FLAGS, DEFAULT_SPI_FLAGS);
-    cp_spi_bit_order bit_order = static_cast<cp_spi_bit_order>(this->getOptionValueInt(OPT_SPI_BIT_ORDER, DEFAULT_SPI_BIT_ORDER));
-    uint8_t bits_per_word = this->getOptionValueInt(OPT_SPI_BITS_PER_WORD, DEFAULT_SPI_BITS_PER_WORD);
-    int mode = this->getOptionValueInt(OPT_SPI_MODE, DEFAULT_SPI_MODE);
+    //std::string devicePath = context->getOptionString(OPT_DEVICE_SPI_PATH, DEFAULT_SPI_DEV_PATH);
+    std::string devicePath = UcgSpiProvider::buildSPIDevicePath(context);
+    int speed = context->getOptionInt(OPT_DEVICE_SPEED, DEFAULT_SPI_SPEED);
+    int flags = context->getOptionInt(OPT_SPI_FLAGS, DEFAULT_SPI_FLAGS);
 
-    this->getProvider()->getInfo()->log->debug("open() : [C-PERIPHERY] Bit Order = {}, Bits Per Word = {}, Mode = {}", bit_order, bits_per_word, mode);
+    //OPT_SPI_CHANNEL 0, 1, 2
+    //OPT_SPI_BUS 0, or 1
+
+    cp_spi_bit_order bit_order = static_cast<cp_spi_bit_order>(context->getOptionInt(OPT_SPI_BIT_ORDER, DEFAULT_SPI_BIT_ORDER));
+    uint8_t bits_per_word = context->getOptionInt(OPT_SPI_BITS_PER_WORD, DEFAULT_SPI_BITS_PER_WORD);
+    int mode = context->getOptionInt(OPT_SPI_MODE, DEFAULT_SPI_MODE);
+    log.debug("open() : [C-PERIPHERY] Bit Order = {}, Bits Per Word = {}, Mode = {}", bit_order, bits_per_word, mode);
 
     if (devicePath.empty()) {
         throw SpiOpenException("open() : [C-PERIPHERY] SPI Device path not specified");

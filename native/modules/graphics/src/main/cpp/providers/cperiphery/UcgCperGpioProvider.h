@@ -39,7 +39,7 @@ public:
 
     UcgCperipheryProvider *getProvider() override;
 
-    void init(int pin, GpioMode mode) override;
+    void init(const std::shared_ptr<ucgd_t>& context, int pin, GpioMode mode) override;
 
     void write(int pin, uint8_t value) override;
 

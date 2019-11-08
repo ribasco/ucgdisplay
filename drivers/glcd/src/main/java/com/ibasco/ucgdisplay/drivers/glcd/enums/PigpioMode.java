@@ -25,20 +25,20 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueInt;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValue;
 
 /**
  * Enumeration for available Pigpio modes
  *
  * @author Rafael Ibasco
  */
-public enum PigpioMode implements GlcdOptionValueInt {
+public enum PigpioMode implements GlcdOptionValue<Integer> {
     /**
      * Allows pigpio to communicate directly to the I/O peripheral devices.
      * No daemon service on the background is required.
      * <blockquote>
      * IMPORTANT: When choosing this mode, remember to run your program as ROOT
-     * and make sure that the pigpio daemon is not running, otherwise the program would fail.
+     * and make sure that the pigpio daemon is not running, otherwise the native library would throw an exception.
      * </blockquote>
      */
     STANDALONE(0),
@@ -57,7 +57,12 @@ public enum PigpioMode implements GlcdOptionValueInt {
     }
 
     @Override
-    public int toValueInt() {
+    public Integer toValue() {
         return mode;
+    }
+
+    @Override
+    public Class<Integer> getType() {
+        return Integer.class;
     }
 }

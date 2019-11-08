@@ -50,19 +50,9 @@ public class GlcdOption<T> {
     public static final GlcdOption<Integer> DEVICE_SPEED = createOption("device_speed");
 
     /**
-     * The SPI device path (e.g. /dev/spidev0.0). This is required by {@link Provider#SYSTEM}.
+     * The GPIO Chip device
      */
-    public static final GlcdOption<String> DEVICE_SPI_PATH = createOption("device_path_spi");
-
-    /**
-     * The I2C device path (e.g. /dev/i2c-1). This is required by {@link Provider#SYSTEM}.
-     */
-    public static final GlcdOption<String> DEVICE_I2C_PATH = createOption("device_path_i2c");
-
-    /**
-     * The GPIO device path (e.g. /dev/gpiochip0). This is required by {@link Provider#LIBGPIOD}.
-     */
-    public static final GlcdOption<String> DEVICE_GPIO_PATH = createOption("device_path_gpio");
+    public static final GlcdOption<GpioChip> GPIO_CHIP = createOption("gpio_chip");
 
     /**
      * The SPI channel (also known as Chip-Select)
@@ -88,7 +78,7 @@ public class GlcdOption<T> {
      * The SPI Peripheral device. For raspberry pi systems, there are two SPI peripherals available, the main and
      * the auxillary.
      */
-    public static final GlcdOption<SpiPeripheral> SPI_PERIPHERAL = createOption("spi_peripheral");
+    public static final GlcdOption<SpiBus> SPI_BUS = createOption("spi_bus_number");
 
     /**
      * The SPI Mode. Values can be 0, 1, 2, or 3. (Default: 0)
@@ -116,7 +106,7 @@ public class GlcdOption<T> {
      * <p>
      * Note: This is only required if you choose pigpio as your I2C provider and the I/O implementation is Hardware.
      */
-    public static final GlcdOption<Integer> I2C_BUS = createOption("i2c_bus_number");
+    public static final GlcdOption<I2CBus> I2C_BUS = createOption("i2c_bus_number");
 
     /**
      * The i2c device address.
@@ -146,13 +136,6 @@ public class GlcdOption<T> {
      * Note: The default value can also be overriden by an environment variable on the target's OS (PIGPIO_ADDR)
      */
     public static final GlcdOption<String> PIGPIO_ADDRESS = createOption("pigpio_addr");
-
-    /**
-     * Set PIGPIO to run as standalone or daemon mode
-     *
-     * @see PigpioMode
-     */
-    public static final GlcdOption<PigpioMode> PIGPIO_MODE = createOption("pigpio_mode");
 
     /**
      * The port number of the pigpiod daemon. If null/empty, the default value would be used (Default: 8888).

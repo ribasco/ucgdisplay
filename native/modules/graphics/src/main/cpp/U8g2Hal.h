@@ -33,7 +33,7 @@
 #include <map>
 #include <functional>
 #include <jni.h>
-#include "UcgdTypes.h"
+#include <UcgdTypes.h>
 
 extern "C" {
 #include <u8g2.h>
@@ -50,59 +50,59 @@ public:
 
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
 
-#include "UcgIOProvider.h"
+//#include "UcgIOProvider.h"
 
 #endif
 
 /**
  * Hardware I2C byte communication callback (Using c-periphery)
  */
-uint8_t cb_byte_i2c_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_i2c_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Hardware SPI byte communications callback (Using c-periphery)
  */
-uint8_t cb_byte_spi_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_spi_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * GPIO and Delay callback (Using libgpiod/linux userspace)
  */
-uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr);
+uint8_t cb_gpio_delay(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_sw_i2c (Software Bit-bang implementation)
 */
-uint8_t cb_byte_sw_i2c(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_sw_i2c(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_4wire_sw_spi (Software Bit-bang implementation)
  */
-uint8_t cb_byte_4wire_sw_spi(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_4wire_sw_spi(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_3wire_sw_spi (Software Bit-bang implementation)
  */
-uint8_t cb_byte_3wire_sw_spi(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_3wire_sw_spi(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_8bit_6800mode (Software Bit-bang implementation)
  */
-uint8_t cb_byte_8bit_6800mode(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_8bit_6800mode(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_8bit_8080mode (Software Bit-bang implementation)
  */
-uint8_t cb_byte_8bit_8080mode(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_8bit_8080mode(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_ks0108 (Software Bit-bang implementation)
  */
-uint8_t cb_byte_ks0108(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_ks0108(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Wrapper for u8x8_byte_sed1520 (Software Bit-bang implementation)
  */
-uint8_t cb_byte_sed1520(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+uint8_t cb_byte_sed1520(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Initialize the lookup t ables. This shuld be called prior to calling the other methods found in this file
@@ -126,7 +126,7 @@ void U8g2hal_InitFonts(u8g2_lookup_font_map_t &font_map);
  * @return The function callback if found, otherwise null if not found
  * @throws SetupProcNotFoundException if procedure is not found
  */
-u8g2_setup_func_t& U8g2hal_GetSetupProc(const std::string &function_name);
+u8g2_setup_func_t& U8g2Hal_GetSetupProc(const std::string &function_name);
 
 /**
  * Retrieve font data by name

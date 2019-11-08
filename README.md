@@ -40,11 +40,11 @@
 * Flexible configuration options for interfacing with your SoC device (e.g. GPIO expanders/I2C/SPI)
 * Flexible pin mapping configuration
 * Supported LCD adapters
-    * MCP23017
-    * Shift Register (e.g. 74HC595)
+    * `MCP23017`
+    * Shift Register (e.g. `74HC595`)
     * GPIO
-    * MCP23008 (Coming soon)
-    * PCF8574 (Coming soon)
+    * `MCP23008`(Coming soon)
+    * `PCF8574` (Coming soon)
 ###### Graphic LCD driver features (Work in Progress)
 * SPI and I2C hardware capability and other software bit-banging implementations
 * Over 46+ controllers are supported. Refer to the table below for the list of supported display controllers. (note: not everything has been tested yet)
@@ -78,9 +78,9 @@
 ### Project Resources
 
 ---
-* [Snapshot Builds](https://oss.sonatype.org/content/repositories/snapshots/com/ibasco/ucgdisplay/)
-* [Release Builds](https://oss.sonatype.org/content/repositories/releases/com/ibasco/ucgdisplay)
-* [Display Controller Status](https://goo.gl/5GNQmy) - Please feel free to edit this page if you were able to successfully test your device using this library
+* [Snapshot Builds](https://oss.sonatype.org/content/repositories/snapshots/com/ibasco/ucgdisplay/) - Builds from the latest development branch
+* [Release Builds](https://oss.sonatype.org/content/repositories/releases/com/ibasco/ucgdisplay) - All release builds
+* [Display Controller Status](https://goo.gl/5GNQmy) - A spreadsheet containing the status of all supported GLCD.
 
 ### Pre-requisites
 
@@ -118,7 +118,7 @@
     
 2. From source
 
-    Clone from Github
+    Clone from Github (Sub-modules included)
 
     ```bash
     git clone --recurse-submodules -j4 https://github.com/ribasco/ucgdisplay.git
@@ -225,6 +225,28 @@ import java.util.Objects;
 public class GlcdST7920Example {
     public static void main(String[] args) throws Exception {
         new GlcdST7920Example().run();
+    }
+    
+    private void drawU8G2Logo(int offset, GlcdDriver driver) {
+        driver.setFontMode(1);
+
+        driver.setFontDirection(0);
+        driver.setFont(GlcdFont.FONT_INB16_MF);
+        driver.drawString(offset, 22, "U");
+
+        driver.setFontDirection(1);
+        driver.setFont(GlcdFont.FONT_INB19_MN);
+        driver.drawString(offset + 14, 8, "8");
+
+        driver.setFontDirection(0);
+        driver.setFont(GlcdFont.FONT_INB16_MF);
+        driver.drawString(offset + 36, 22, "g");
+        driver.drawString(offset + 48, 22, "2");
+
+        driver.drawHLine(offset + 2, 25, 34);
+        driver.drawHLine(offset + 3, 26, 34);
+        driver.drawVLine(offset + 32, 22, 12);
+        driver.drawVLine(offset + 33, 23, 12);
     }
     
     private void run() throws Exception {
@@ -349,13 +371,13 @@ use `gpio readall` to verify that we have set the correct mode (`ALT0`) for `MOS
 ---
 * Works only on linux kernel v4.8 or higher
 * The adapters for character lcd driver `Mcp23008LcdAdapter` and `Pcf8574TLcdAdapter` are not yet implemented. 
-* Due to lack of hardware availability, I am currently unable to test the SPI, I2C and Software Bit-bang interfaces for the other display controllers. Do know that the code implementation for these interfaces are complete, so In theory, they should work but not guaranteed. I am going to rely on your feedback for this and I will do my best to support any issues you may encounter.
+* Due to lack of hardware availability, I am currently unable to test the `SPI`, `I2C` and bit-bang interfaces for most of the display controllers. The code implementation for these interfaces are complete, so In theory, they should work but it is not confirmed whether they are working or not. I am going to rely on your feedback for this and I will do my best to support any issues you may encounter.
 * As of JDK 11, javadocs won't be available for the meantime due to issues encountered during the build process. Still working into resolving this issue, but for now it remains disabled.
 
 ### Contribution
 
 ---
-Feel free to contribute to the project. For starters, checkout the guide to setting up your dev/build environment for more information. 
+Contributions are always welcome. For starters, checkout the guide to setting up your Dev/Build environment for more information.
 
 * [Cross-compilation guide](https://github.com/ribasco/ucgdisplay/blob/master/native/README.md) 
 

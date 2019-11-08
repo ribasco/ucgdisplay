@@ -52,8 +52,9 @@ extern "C" {
 //Global macros
 #define PROVIDER_LIBGPIOD "libgpiod"
 #define PROVIDER_CPERIPHERY "cperiphery"
-#define PROVIDER_PIGPIO "pigpio"
-
+#define PROVIDER_PIGPIO "pigpio" //pigpio - standalone
+#define PROVIDER_PIGPIOD "pigpiod" //pigpio - daemon
+#define PROVIDER_DEFAULT PROVIDER_CPERIPHERY
 /**
  * C linked against pigpio. Fastest code, slowest development.
  * Only one program linked against the pigpio library can be running at a time (the program in effect becomes the pigpio daemon).
@@ -75,17 +76,15 @@ extern "C" {
 //Options
 #define OPT_ROTATION "rotation"
 #define OPT_DEVICE_SPEED "device_speed"
-#define OPT_DEVICE_SPI_PATH "device_path_spi"
-#define OPT_DEVICE_I2C_PATH "device_path_i2c"
-#define OPT_DEVICE_GPIO_PATH "device_path_gpio"
 #define OPT_PROVIDER "default_provider"
+#define OPT_GPIO_CHIP "gpio_chip"
 
 #define OPT_PROVIDER_GPIO "provider_gpio"
 #define OPT_PROVIDER_SPI "provider_spi"
 #define OPT_PROVIDER_I2C "provider_i2c"
 
 #define OPT_SPI_CHANNEL "spi_channel"
-#define OPT_SPI_PERIPHERAL "spi_peripheral"
+#define OPT_SPI_BUS "spi_bus_number"
 #define OPT_SPI_FLAGS "spi_flags"
 #define OPT_SPI_MODE "spi_mode"
 #define OPT_SPI_BIT_ORDER "spi_bit_order"
@@ -180,15 +179,6 @@ public:
     explicit OptionNotFoundException(const runtime_error &error) : runtime_error(error) {}
 };
 
-class ProviderNotFoundException : public std::runtime_error {
-public:
-    explicit ProviderNotFoundException(const std::string &arg) : runtime_error(arg) {};
-
-    explicit ProviderNotFoundException(const char *string) : runtime_error(string) {}
-
-    explicit ProviderNotFoundException(const runtime_error &error) : runtime_error(error) {}
-};
-
 //Forward declarations
 class UcgIOProvider;
 
@@ -198,7 +188,7 @@ class UcgI2CProvider;
 
 class UcgGpioProvider;
 
-struct u8g2_info_t;
+struct ucgd_t;
 
 typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;
 
@@ -208,7 +198,7 @@ typedef std::map<std::string, u8g2_setup_func_t> u8g2_setup_func_map_t;
 
 typedef std::map<std::string, const uint8_t *> u8g2_lookup_font_map_t;
 
-typedef std::function<uint8_t(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
+typedef std::function<uint8_t(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
 
 typedef struct {
     //pin configuration
@@ -231,22 +221,28 @@ typedef struct {
 } u8g2_pin_map_t;
 
 /**
- * Our main u8g2 descriptor
+ * The context
  */
-struct u8g2_info_t {
+struct ucgd_t {
+    //U8g2 pin mapping definition
     u8g2_pin_map_t pin_map;
+    //U8g2 descriptor
     std::unique_ptr<u8g2_t> u8g2;
+    //U8g2 setup procedure name
     std::string setup_proc_name;
+    //U8g2 Setup Callback
     u8g2_setup_func_t setup_cb;
+    //BYTE callback
     u8g2_msg_func_t byte_cb;
+    //GPIO callback
     u8g2_msg_func_t gpio_cb;
+    //Dislpay rotation mode
     u8g2_cb_t *rotation;
     bool flag_font;
     bool flag_virtual;
-    int comm_int;
-    int comm_type;
+    int comm_int; //communications interface
+    int comm_type; //communications type
     bool debug;
-    std::shared_ptr<Log> log;
 
     uintptr_t address() {
         return (uintptr_t) u8g2.get();
@@ -254,7 +250,6 @@ struct u8g2_info_t {
 
 //Only available on ARM 32/64 bit platforms
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
-    std::map<std::string, std::shared_ptr<UcgIOProvider>> providers;
     std::shared_ptr<UcgIOProvider> provider;
     std::map<std::string, std::any> options;
 
@@ -283,7 +278,6 @@ struct u8g2_info_t {
             return defaultVal;
         }
     }
-
 #endif
 };
 

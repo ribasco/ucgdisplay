@@ -28,9 +28,58 @@
 #include <UcgCperI2CProvider.h>
 #include <UcgCperGpioProvider.h>
 
-UcgCperipheryProvider::UcgCperipheryProvider(const std::shared_ptr<u8g2_info_t> &info) : UcgIOProvider(info, PROVIDER_CPERIPHERY) {
-    info->log->debug("init_provider() : [C-PERIPHERY] Initializing provider");
-    setSPIProvider(std::make_shared<UcgCperSpiProvider>(this));
-    setI2CProvider(std::make_shared<UcgCperI2CProvider>(this));
-    setGPIOProvider(std::make_shared<UcgCperGpioProvider>(this));
+UcgCperipheryProvider::UcgCperipheryProvider() : UcgIOProvider(PROVIDER_CPERIPHERY) {
+}
+
+void UcgCperipheryProvider::initialize(const std::shared_ptr<ucgd_t>& context) {
+    log.debug("init_cper() : [C-PERIPHERY] No initialization is needed for this provider");
+    setInitialized(true);
+}
+
+std::string UcgCperipheryProvider::getLibraryName() {
+    //this provider is statically linked to this library, so we do not have a name to return
+    return std::string();
+}
+
+bool UcgCperipheryProvider::supportsGpio() const {
+    return true;
+}
+
+bool UcgCperipheryProvider::supportsSPI() const {
+    return true;
+}
+
+bool UcgCperipheryProvider::supportsI2C() const {
+    return true;
+}
+
+const std::shared_ptr<UcgSpiProvider> &UcgCperipheryProvider::getSpiProvider() {
+    if (!isInitialized()) {
+        initialize(nullptr);
+    }
+    if (UcgIOProvider::getSpiProvider() == nullptr) {
+        log.debug("init_cper() : [C-PERIPHERY] Initializing system SPI provider");
+        setSPIProvider(std::make_shared<UcgCperSpiProvider>(this));
+    }
+    return UcgIOProvider::getSpiProvider();
+}
+
+const std::shared_ptr<UcgI2CProvider> &UcgCperipheryProvider::getI2CProvider() {
+    if (UcgIOProvider::getI2CProvider() == nullptr) {
+        log.debug("init_cper() : [C-PERIPHERY] Initializing system I2C provider");
+        setI2CProvider(std::make_shared<UcgCperI2CProvider>(this));
+    }
+    return UcgIOProvider::getI2CProvider();
+}
+
+const std::shared_ptr<UcgGpioProvider> &UcgCperipheryProvider::getGpioProvider() {
+    if (UcgIOProvider::getGpioProvider() == nullptr) {
+        log.debug("init_cper() : [C-PERIPHERY] Initializing system GPIO provider");
+        setGPIOProvider(std::make_shared<UcgCperGpioProvider>(this));
+    }
+    return UcgIOProvider::getGpioProvider();
+}
+
+bool UcgCperipheryProvider::isProvided() {
+    return true;
 }

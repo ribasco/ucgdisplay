@@ -216,7 +216,7 @@
                         <configuration>
                             <target>
                                 <!-- Pass maven properties to ant -->
-                                <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${graphics-build-target}, BUILD TYPE: ${buildType})</echo>
+                                <echo>Building native GRAPHICS library (CROSS-COMPILE: ${crossCompile}, OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${graphics-build-target}, BUILD TYPE: ${buildType})</echo>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.."/>
                                 <!--suppress UnresolvedMavenProperty -->

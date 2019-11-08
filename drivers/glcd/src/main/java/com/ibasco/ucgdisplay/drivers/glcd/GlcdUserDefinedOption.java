@@ -1,8 +1,8 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Native :: Graphics
- * Filename: UcgPigpioI2CProvider.h
+ * Project: UCGDisplay :: Graphics LCD driver
+ * Filename: GlcdUserDefinedOption.java
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,32 +23,8 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-#ifndef UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H
-#define UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H
+package com.ibasco.ucgdisplay.drivers.glcd;
 
-#include <UcgI2CProvider.h>
-#include <UcgPigpioProvider.h>
-
-class UcgPigpioI2CProvider : public UcgI2CProvider {
-public:
-    explicit UcgPigpioI2CProvider(UcgIOProvider *provider);
-
-    ~UcgPigpioI2CProvider() override;
-
-    int open() override;
-
-    int close() override;
-
-    int write(unsigned short address, const uint8_t *buffer, unsigned short length) override;
-
-    UcgPigpioProvider *getProvider() override;
-
-private:
-    int m_PigpioHandle;
-    int m_Handle;
-    int _close();
-    std::string _get_errmsg(int val);
-};
-
-
-#endif //UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H
+public interface GlcdUserDefinedOption<S extends Enum, T> {
+    S value(T value);
+}

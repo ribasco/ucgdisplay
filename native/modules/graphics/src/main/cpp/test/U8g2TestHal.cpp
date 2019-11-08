@@ -9,12 +9,12 @@
 #include <UcgSpiProvider.h>
 #include <UcgI2CProvider.h>
 
-static std::shared_ptr<u8g2_info_t> u8g2_rpi_hal;
-static std::map<uintptr_t, std::shared_ptr<u8g2_info_t>> u8g2_device_cache; // NOLINT
-void initializeGpio(const std::shared_ptr<u8g2_info_t>& info, const std::shared_ptr<UcgGpioProvider>& gpio);
-void initializeGpioAllOut(const std::shared_ptr<u8g2_info_t>& info, const std::shared_ptr<UcgGpioProvider>& gpio);
+static std::shared_ptr<ucgd_t> u8g2_rpi_hal;
+static std::map<uintptr_t, std::shared_ptr<ucgd_t>> u8g2_device_cache; // NOLINT
+void initializeGpio(const std::shared_ptr<ucgd_t>& info, const std::shared_ptr<UcgGpioProvider>& gpio);
+void initializeGpioAllOut(const std::shared_ptr<ucgd_t>& info, const std::shared_ptr<UcgGpioProvider>& gpio);
 
-uint8_t cb_byte_spi_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_spi_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     std::shared_ptr<UcgSpiProvider> spi = info->provider->getSpiProvider();
 
     switch (msg) {
@@ -46,7 +46,7 @@ uint8_t cb_byte_spi_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, u
     return 1;
 }
 
-uint8_t cb_byte_i2c_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
+uint8_t cb_byte_i2c_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     uint8_t *data;
 
     std::shared_ptr<UcgI2CProvider> i2c = info->provider->getI2CProvider();
@@ -75,7 +75,7 @@ uint8_t cb_byte_i2c_hw(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, u
 /**
  * GPIO and Delay Procedure Routine (ARM)
 */
-uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
+uint8_t cb_gpio_delay(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
 
     std::shared_ptr<UcgGpioProvider> gpio = info->provider->getGpioProvider();
 
@@ -177,7 +177,7 @@ uint8_t cb_gpio_delay(const std::shared_ptr<u8g2_info_t> &info, u8x8_t *u8x8, ui
     return 1;
 }
 
-void initializeGpio(const std::shared_ptr<u8g2_info_t>& info, const std::shared_ptr<UcgGpioProvider>& gpio) {
+void initializeGpio(const std::shared_ptr<ucgd_t>& info, const std::shared_ptr<UcgGpioProvider>& gpio) {
     int& comm_int = info->comm_int;
     int& comm_type = info->comm_type;
 
@@ -187,11 +187,12 @@ void initializeGpio(const std::shared_ptr<u8g2_info_t>& info, const std::shared_
         if (is_soc_raspberrypi()) {
             //Since this is a raspberry pi system, we will use the pigpio provider instead to initialize the hardware specific mode sets.
             //This assumes that you are using a Pi model with the Standard J8 header
-            std::shared_ptr<UcgGpioProvider> pigpioGpio = info->providers[PROVIDER_PIGPIO]->getGpioProvider();
-
+            std::cout << "Checking RPI system" << std::endl;
+            std::shared_ptr<UcgGpioProvider> pigpioGpio = info->providers[PROVIDER_PIGPIOD]->getGpioProvider();
+            std::cout << "Got pigpiod" << std::endl;
             //Are we on SPI mode or I2C?
             if (comm_int == COMINT_3WSPI || comm_int == COMINT_4WSPI || comm_int == COMINT_ST7920SPI) {
-                int spi_peripheral = info->getOptionInt(OPT_SPI_PERIPHERAL);
+                int spi_peripheral = info->getOptionInt(OPT_SPI_BUS);
                 int spi_channel = info->getOptionInt(OPT_SPI_CHANNEL);
 
                 if (spi_peripheral == SPI_PERIPHERAL_MAIN) {
@@ -243,7 +244,7 @@ void initializeGpio(const std::shared_ptr<u8g2_info_t>& info, const std::shared_
     }
 }
 
-void initializeGpioAllOut(const std::shared_ptr<u8g2_info_t>& info, const std::shared_ptr<UcgGpioProvider>& gpio) {
+void initializeGpioAllOut(const std::shared_ptr<ucgd_t>& info, const std::shared_ptr<UcgGpioProvider>& gpio) {
 #ifdef DEBUG_UCGD
     std::cout << "Initializing all gpio lines to OUTPUT for Comm Int = " << std::to_string(info->comm_int) << ", Comm Type = " << std::to_string(info->comm_type) << std::endl;
 #endif
@@ -264,11 +265,11 @@ void initializeGpioAllOut(const std::shared_ptr<u8g2_info_t>& info, const std::s
     gpio->init(info->pin_map.cs2, UcgGpioProvider::GpioMode::MODE_OUTPUT);
 }
 
-void addToDeviceCache(u8g2_t *ptr, const std::shared_ptr<u8g2_info_t> &info) {
+void addToDeviceCache(u8g2_t *ptr, const std::shared_ptr<ucgd_t> &info) {
     u8g2_device_cache.insert(std::make_pair((uintptr_t) ptr, info));
 }
 
-std::shared_ptr<u8g2_info_t> U8g2Util_GetDisplayDeviceInfo(uintptr_t addr) {
+std::shared_ptr<ucgd_t> U8g2Util_GetDisplayDeviceInfo(uintptr_t addr) {
     auto it = u8g2_device_cache.find(addr);
     if (it != u8g2_device_cache.end())
         return it->second;
@@ -277,7 +278,7 @@ std::shared_ptr<u8g2_info_t> U8g2Util_GetDisplayDeviceInfo(uintptr_t addr) {
 
 uint8_t U8g2Util_ByteCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    std::shared_ptr<u8g2_info_t> info = U8g2Util_GetDisplayDeviceInfo(addr);
+    std::shared_ptr<ucgd_t> info = U8g2Util_GetDisplayDeviceInfo(addr);
     if (info == nullptr) {
         std::cerr << "[u8g2_setup_helper_byte] Unable to obtain display device info for address: " << std::to_string(addr) << std::endl;
         return 0;
@@ -287,7 +288,7 @@ uint8_t U8g2Util_ByteCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int,
 
 uint8_t U8g2Util_GpioCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    std::shared_ptr<u8g2_info_t> info = U8g2Util_GetDisplayDeviceInfo(addr);
+    std::shared_ptr<ucgd_t> info = U8g2Util_GetDisplayDeviceInfo(addr);
     if (info == nullptr) {
         std::cerr << "[u8g2_setup_helper_byte] Unable to obtain display device info for address: " << std::to_string(addr) << std::endl;
         return 0;
@@ -295,7 +296,7 @@ uint8_t U8g2Util_GpioCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int,
     return info->gpio_cb(u8x8, msg, arg_int, arg_ptr);
 }
 
-u8g2_cb_t *U8g2util_ToRotation(int rotation) {
+u8g2_cb_t *U8g2Util_ToRotation(int rotation) {
     switch (rotation) {
         case 0: {
             return const_cast<u8g2_cb_t *>(U8G2_R0);

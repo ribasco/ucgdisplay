@@ -62,7 +62,7 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
         int commInt = config.getBusInterface().getValue();
         int commType = config.getBusInterface().getBusType().getValue();
         int[] pinConfig = ObjectUtils.defaultIfNull(config.getPinMap(), new GlcdPinMapConfig()).toIntArray();
-        int rotation = GlcdRotation.ROTATION_NONE.toValueInt();
+        int rotation = GlcdRotation.ROTATION_NONE.toValue();
         if (config.getOption(GlcdOption.ROTATION) != null) {
             rotation = config.getOption(GlcdOption.ROTATION);
         }
@@ -508,7 +508,7 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     @Override
     public void setDisplayRotation(GlcdRotation rotation) {
         checkRequirements();
-        setDisplayRotation(rotation.toValueInt());
+        setDisplayRotation(rotation.toValue());
     }
 
     @Override

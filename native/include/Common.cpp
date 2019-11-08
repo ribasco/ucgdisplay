@@ -8,8 +8,8 @@
 #include <string>
 
 const std::map<std::string, std::string> revisions = { // NOLINT(cert-err58-cpp)
-        //{"900021", "Raspberry Pi A+ v1.1 512MB"},
-        //{"900032", "Raspberry Pi B+ v1.2 512MB"},
+        {"900021", "Raspberry Pi A+ v1.1 512MB"},
+        {"900032", "Raspberry Pi B+ v1.2 512MB"},
         {"900092", "Raspberry Pi Zero v1.2 512MB"},
         {"900093", "Raspberry Pi Zero v1.3 512MB"},
         {"9000c1", "Raspberry Pi Zero W v1.1 512MB"},

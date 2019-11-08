@@ -26,14 +26,14 @@
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
 import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueInt;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValue;
 
 /**
  * Enumeration for the available rotation modes for the display controller
  *
  * @author Rafael Ibasco
  */
-public enum GlcdRotation implements GlcdOptionValueInt {
+public enum GlcdRotation implements GlcdOptionValue<Integer> {
     /**
      * No rotation
      */
@@ -62,7 +62,12 @@ public enum GlcdRotation implements GlcdOptionValueInt {
     }
 
     @Override
-    public int toValueInt() {
+    public Integer toValue() {
         return value;
+    }
+
+    @Override
+    public Class<Integer> getType() {
+        return Integer.class;
     }
 }

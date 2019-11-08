@@ -25,7 +25,7 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueInt;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValue;
 
 /**
  * Enumeration for all available SPI modes
@@ -33,7 +33,7 @@ import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueInt;
  * @author Rafael Ibasco
  * @see <a href="https://www.allaboutcircuits.com/technical-articles/spi-serial-peripheral-interface/">Serial Peripheral Interface</a>
  */
-public enum SpiMode implements GlcdOptionValueInt {
+public enum SpiMode implements GlcdOptionValue<Integer> {
     /**
      * Clock phase is configured such that data is sampled on the rising edge of the clock pulse and shifted out on
      * the falling edge of the clock pulse. Note that data must be available before the first rising edge of the clock.
@@ -62,7 +62,12 @@ public enum SpiMode implements GlcdOptionValueInt {
     }
 
     @Override
-    public int toValueInt() {
+    public Integer toValue() {
         return mode;
+    }
+
+    @Override
+    public Class<Integer> getType() {
+        return Integer.class;
     }
 }

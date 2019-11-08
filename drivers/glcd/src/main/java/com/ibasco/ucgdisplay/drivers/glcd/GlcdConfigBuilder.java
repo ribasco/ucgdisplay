@@ -30,8 +30,10 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 /**
  * Utility class for building {@link GlcdConfig} instances
@@ -189,22 +191,35 @@ public class GlcdConfigBuilder {
         } else {
             if (GlcdOptionValue.class.isAssignableFrom(value.getClass())) {
                 //Process special enum types
-                if (value instanceof GlcdOptionValueString) {
-                    log.debug("option() : Found GlcdOptionValueString type for key '{}'. Converting to reference type", option.getName());
-                    config.getOptions().put(option.getName(), ((GlcdOptionValueString) value).toValueString());
-                } else if (value instanceof GlcdOptionValueInt) {
-                    log.debug("option() : Found GlcdOptionValueInt type for key '{}'. Converting to reference type.", option.getName());
-                    config.getOptions().put(option.getName(), ((GlcdOptionValueInt) value).toValueInt());
-                }
-            } else if (Enum.class.isAssignableFrom(value.getClass())) {
-                log.warn("option() : The enum value for '{}' does not derive from the GlcdOptionValue interface. This could not be interpreted correctly by the native interface.", option.getName());
+                GlcdOptionValue<?> optionValue = (GlcdOptionValue) value;
+
+                if (!optionValueTypeSupported(optionValue))
+                    throw new IllegalStateException("The value type of option '" + option + "' value is not supported");
+
+                log.debug("option() : Found GlcdOptionValue type for key '{}'. Converting to reference type", option.getName());
+                config.getOptions().put(option.getName(), optionValue.toValue());
             } else {
-                if (!(value instanceof String) && !(value instanceof Integer)) {
-                    log.warn("option() : Only string and integer types are supported by the option map");
+                if (!valueTypeSupported(value)) {
+                    log.warn("option() : The value type is currently not supported by the native library. Supported types are: " + Arrays.stream(getSupportedTypes())
+                            .map(Class::getSimpleName)
+                            .collect(Collectors.joining(", ")));
                 }
-                log.info("option() : Adding option {} = {}", option.getName(), value);
                 config.getOptions().put(option.getName(), value);
             }
         }
+    }
+
+    private Class<?>[] getSupportedTypes() {
+        return new Class[]{Integer.class, String.class};
+    }
+
+    private boolean valueTypeSupported(Object value) {
+        if (value == null)
+            return false;
+        return Arrays.stream(getSupportedTypes()).anyMatch(c -> c.equals(value.getClass()));
+    }
+
+    private boolean optionValueTypeSupported(GlcdOptionValue<?> optionValue) {
+        return Arrays.stream(getSupportedTypes()).anyMatch(c -> c.equals(optionValue.getType()));
     }
 }

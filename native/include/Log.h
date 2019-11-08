@@ -4,7 +4,6 @@
 #include <jni.h>
 #include <string>
 #include <cassert>
-#include <Global.h>
 
 /**
  * A JNI wrapper to use Slf4j facility.
@@ -24,14 +23,20 @@ public:
     template<typename... Ts>
     void warn(const std::string &format, Ts &&...args);
 
+    template<typename... Ts>
+    void error(const std::string &format, Ts &&...args);
+
     explicit Log(jobject source);
+
+    virtual ~Log();
 
 private:
     JNIEnv* env;
-    const jobject object;
-    const jmethodID infoMethod;
-    const jmethodID debugMethod;
-    const jmethodID warnMethod;
+    jobject object;
+    jmethodID infoMethod;
+    jmethodID debugMethod;
+    jmethodID warnMethod;
+    jmethodID errorMethod;
 
     inline jobject &toJava(jobject &value);
     inline jstring toJava(const char *value);
@@ -48,7 +53,6 @@ template<typename... Ts>
 void Log::info(const std::string &format, Ts &&... args) {
     auto argArray = env->NewObjectArray(sizeof...(args), env->FindClass("java/lang/Object"), nullptr);
     toArgArray(env, argArray, 0, std::forward<Ts>(args)...);
-
     env->CallVoidMethod(object, infoMethod, toJava(format), argArray);
 }
 
@@ -64,6 +68,13 @@ void Log::warn(const std::string &format, Ts &&... args) {
     auto argArray = env->NewObjectArray(sizeof...(args), env->FindClass("java/lang/Object"), nullptr);
     toArgArray(env, argArray, 0, std::forward<Ts>(args)...);
     env->CallVoidMethod(object, warnMethod, toJava(format), argArray);
+};
+
+template<typename... Ts>
+void Log::error(const std::string &format, Ts &&... args) {
+    auto argArray = env->NewObjectArray(sizeof...(args), env->FindClass("java/lang/Object"), nullptr);
+    toArgArray(env, argArray, 0, std::forward<Ts>(args)...);
+    env->CallVoidMethod(object, errorMethod, toJava(format), argArray);
 };
 
 void Log::toArgArray(JNIEnv *env, jobjectArray &array, int) {
@@ -97,5 +108,7 @@ jobject Log::toJava(int value) {
 
     return env->NewObject(class_, ctor, value);
 }
+
+
 
 #endif //LOG_HH

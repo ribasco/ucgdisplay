@@ -29,13 +29,25 @@
 #include <iomanip>
 #include <memory>
 
+#include <UcgdConfig.h>
 #include <Global.h>
 #include <Common.h>
 
-#include "UcgdConfig.h"
-#include "U8g2Graphics.h"
-#include "U8g2Hal.h"
-#include "U8g2Utils.h"
+#include <U8g2Graphics.h>
+#include <U8g2Hal.h>
+#include <U8g2Utils.h>
+#include <ServiceLocator.h>
+#include <DeviceManager.h>
+
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+
+#include <ProviderManager.h>
+#include <UcgCperipheryProvider.h>
+#include <UcgPigpioProvider.h>
+#include <UcgPigpiodProvider.h>
+#include <UcgLibgpiodProvider.h>
+
+#endif
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -62,7 +74,7 @@ JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
 
 void set_font_flag(JNIEnv *env, jlong id, bool value) {
-    std::shared_ptr<u8g2_info_t> info = U8g2Util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
+    std::shared_ptr<ucgd_t> info = ServiceLocator::getInstance().getDeviceManager()->getDevice(static_cast<uintptr_t>(id));
     if (info == nullptr) {
         JNI_ThrowNativeLibraryException(env, "Unable to set font flag. Device Info for address does not exist");
         return;
@@ -71,7 +83,7 @@ void set_font_flag(JNIEnv *env, jlong id, bool value) {
 }
 
 bool get_font_flag(JNIEnv *env, jlong id) {
-    std::shared_ptr<u8g2_info_t> info = U8g2Util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id));
+    std::shared_ptr<ucgd_t> info = ServiceLocator::getInstance().getDeviceManager()->getDevice(static_cast<uintptr_t>(id));
     if (info == nullptr) {
         JNI_ThrowNativeLibraryException(env, "Unable to set font flag. Device Info for address does not exist");
         return false;
@@ -80,14 +92,14 @@ bool get_font_flag(JNIEnv *env, jlong id) {
 }
 
 bool check_validity(JNIEnv *env, jlong id) {
-    if (U8g2Util_GetDisplayDeviceInfo(static_cast<uintptr_t>(id)) == nullptr) {
+    if (ServiceLocator::getInstance().getDeviceManager()->getDevice(static_cast<uintptr_t>(id)) == nullptr) {
         JNI_ThrowNativeLibraryException(env, std::string("Invalid Id specified (") + std::to_string(id) + std::string(")"));
         return false;
     }
     return true;
 }
 
-void updateKeyValueStore(JNIEnv *env, std::string key, jobject& value, option_map_t &map) {
+void update_key_value_store(JNIEnv *env, std::string key, jobject &value, option_map_t &map) {
     jclass clsString = env->FindClass(CLS_STRING);
     jclass clsObj = env->GetObjectClass(value);
     jclass clsInteger = env->FindClass(CLS_INTEGER);
@@ -108,7 +120,7 @@ void updateKeyValueStore(JNIEnv *env, std::string key, jobject& value, option_ma
     }
 }
 
-void process_options(JNIEnv *env, jobject options, option_map_t &map, std::shared_ptr<Log>& log) {
+void process_options(JNIEnv *env, jobject options, option_map_t &map, std::unique_ptr<Log> &log) {
     jclass clsMap = env->GetObjectClass(options);
     jmethodID midEntrySet = env->GetMethodID(clsMap, "entrySet", "()Ljava/util/Set;");
 
@@ -150,7 +162,7 @@ void process_options(JNIEnv *env, jobject options, option_map_t &map, std::share
 
         log->debug("process_options() : {}) Key = {}, Value = {}", ctr++, std::string(strKey), std::string(strValue));
 
-        updateKeyValueStore(env, std::string(strKey), objValue, map);
+        update_key_value_store(env, std::string(strKey), objValue, map);
         hasNext = (bool) env->CallBooleanMethod(objIterator, midHasNext);
     }
 
@@ -160,7 +172,8 @@ void process_options(JNIEnv *env, jobject options, option_map_t &map, std::share
 jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jintArray pin_config, jobject options, jboolean virtualMode, jobject logger) {
     jobject globalLogger;
     JNI_MakeGlobal(env, logger, globalLogger);
-    std::shared_ptr<Log> log = std::make_shared<Log>(globalLogger);
+
+    std::unique_ptr<Log> log = std::make_unique<Log>(globalLogger);
 
     log->debug("=========================================================================================================");
     log->debug(" ");
@@ -172,7 +185,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     log->debug(" ╚═════╝  ╚═════╝ ╚═════╝ ╚═════╝ ╚═╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝");
     log->debug(" ");
     log->debug("=========================================================================================================");
-    log->debug("Native Library - Version 1.5.0-alpha");
+    log->debug("Native Library - Version {}", UCGD_VERSION);
     log->debug("=========================================================================================================");
 
     std::string setup_proc_name;
@@ -226,20 +239,49 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     }
 
     //Get actual rotation value
-    const u8g2_cb_t *_rotation = U8g2util_ToRotation(rotation);
+    const u8g2_cb_t *_rotation = U8g2Util_ToRotation(rotation);
+
+    static bool initialized;
+
+    //Initialize service locator and providers
+    ServiceLocator &locator = ServiceLocator::getInstance();
+
+    if (!initialized) {
+        //Initialize Logger
+        locator.setLogger(log);
+
+        //Initialize Device Manager
+        locator.setDeviceManager(std::make_unique<DeviceManager>());
+
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+        //Initialize Providers
+        locator.setProviderManager(std::make_unique<ProviderManager>());
+        auto &pMan = locator.getProviderManager();
+
+        std::string pigAddr = mapOptions[OPT_PIGPIO_ADDR].has_value() ? std::any_cast<std::string>(mapOptions[OPT_PIGPIO_ADDR]) : "";
+        std::string pigPort = mapOptions[OPT_PIGPIO_PORT].has_value() ? std::any_cast<std::string>(mapOptions[OPT_PIGPIO_PORT]) : "";
+
+        //Register supported providers
+        if (!pMan->isRegistered(PROVIDER_CPERIPHERY))
+            pMan->registerProvider(std::make_unique<UcgCperipheryProvider>());
+        if (!pMan->isRegistered(PROVIDER_PIGPIO))
+            pMan->registerProvider(std::make_unique<UcgPigpioProvider>());
+        if (!pMan->isRegistered(PROVIDER_PIGPIOD))
+            pMan->registerProvider(std::make_unique<UcgPigpiodProvider>(pigAddr, pigPort));
+        if (!pMan->isRegistered(PROVIDER_LIBGPIOD))
+            pMan->registerProvider(std::make_unique<UcgLibgpiodProvider>());
+#endif
+        initialized = true;
+    }
 
     //7. Setup and Initialize the Display
     try {
-        std::shared_ptr<u8g2_info_t> info = U8g2Util_SetupAndInitDisplay(setup_proc_name, commInt, commType, _rotation, *pinMap, mapOptions, log, virtualMode);
-        if (info == nullptr) {
-            JNI_ThrowNativeLibraryException(env, std::string("Failed to initialize the display device. Reason: Unknown"));
-            return -1;
-        }
-        return info->address();
-    } catch (std::exception& e) {
+        std::shared_ptr<ucgd_t>& context = U8g2Util_SetupAndInitDisplay(setup_proc_name, commInt, commType, _rotation, *pinMap, mapOptions, virtualMode);
+        locator.getLogger().debug("setup() : Returning to java caller");
+        return context->address();
+    } catch (std::exception &e) {
         JNI_ThrowNativeLibraryException(env, std::string("Failed to initialize the display device. Reason: \"") + std::string(e.what()) + std::string("\""));
     }
-
     return -1;
 }
 
@@ -618,7 +660,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setContrast(JNIEnv *env, 
 void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setDisplayRotation(JNIEnv *env, jclass cls, jlong id, jint rotation) {
     if (!check_validity(env, id))
         return;
-    u8g2_cb_t *_rotation = U8g2util_ToRotation(rotation);
+    u8g2_cb_t *_rotation = U8g2Util_ToRotation(rotation);
     if (_rotation == nullptr)
         return;
     u8g2_SetDisplayRotation(toU8g2(id), _rotation);

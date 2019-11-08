@@ -26,9 +26,12 @@
 #ifndef UCGDISP_GLOBAL_H
 #define UCGDISP_GLOBAL_H
 
+#define UCGD_VERSION "1.5.0-alpha"
+
 #include <jni.h>
 #include <string>
 #include <map>
+#include <Utils.h>
 
 #define GPIOUS_CONSUMER "ucgdisplay"
 

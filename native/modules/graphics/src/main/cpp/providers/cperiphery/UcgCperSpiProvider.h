@@ -38,7 +38,7 @@ public:
 
     ~UcgCperSpiProvider() override;
 
-    void open() override;
+    void open(const std::shared_ptr<ucgd_t>& context) override;
 
     int write(uint8_t *buffer, int count) override;
 

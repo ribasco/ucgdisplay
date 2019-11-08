@@ -56,13 +56,19 @@ UcgCperGpioProvider::~UcgCperGpioProvider() {
     _close();
 };
 
-void UcgCperGpioProvider::init(int pin, UcgGpioProvider::GpioMode mode) {
+void UcgCperGpioProvider::init(const std::shared_ptr<ucgd_t> &context, int pin, UcgGpioProvider::GpioMode mode) {
     if (pin < 0)
         return;
-    UcgGpioProvider::init(pin, mode);
-    std::string devicePath = getOptionValueString(OPT_DEVICE_GPIO_PATH, DEFAULT_GPIO_DEVICE_PATH);
+    UcgGpioProvider::init(context, pin, mode);
 
-    this->getProvider()->getInfo()->log->debug("init() : [C-PERIPHERY] Initializing GPIO (Pin: {}, Mode: {}, Device Path: {})", pin, std::to_string(mode), devicePath);
+    //TODO: device path removed, need to do automatic translation the gpio number to a path
+    //std::string devicePath = getOptionValueString(OPT_DEVICE_GPIO_PATH, DEFAULT_GPIO_DEVICE_PATH);
+
+    std::string devicePath = UcgGpioProvider::buildGpioDevicePath(context);
+
+    //TODO: Validate path
+
+    log.debug("init() : [C-PERIPHERY] Initializing GPIO (Pin: {}, Mode: {}, Device Path: {})", pin, std::to_string(mode), devicePath);
 
     std::shared_ptr<gpio_t> gpio = findOrCreateGpioLine(pin);
 
@@ -73,7 +79,7 @@ void UcgCperGpioProvider::init(int pin, UcgGpioProvider::GpioMode mode) {
         throw GpioInitException(ss.str());
     }
 
-    this->getProvider()->getInfo()->log->debug("init_gpio() : [C-PERIPHERY] Pin = {}, Mode = {}", pin, std::to_string(mode));
+    log.debug("init_gpio() : [C-PERIPHERY] Pin = {}, Mode = {}", pin, std::to_string(mode));
 }
 
 void UcgCperGpioProvider::write(int pin, uint8_t value) {
@@ -93,7 +99,7 @@ void UcgCperGpioProvider::close() {
 }
 
 int UcgCperGpioProvider::_close() {
-    for (auto & it : m_GpioLineCache) {
+    for (auto &it : m_GpioLineCache) {
         std::shared_ptr<gpio_t> ptr = it.second;
         int retval = cp_gpio_close(ptr.get());
         if (retval == 0) {

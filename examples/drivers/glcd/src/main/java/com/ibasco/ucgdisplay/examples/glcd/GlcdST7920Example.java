@@ -75,11 +75,10 @@ public class GlcdST7920Example {
         //activated for SPI, I2C or UART peripherals.
         //Pins are automatically configured internally for these interfaces.
 
-        //Pinout for Main SPI Peripheral (Raspberry Pi / J8 Header)
+        //Pinout for Main SPI Peripheral (Raspberry Pi / J8 Header / BCM Pin configuration)
         // - MOSI = 10
         // - SCLK = 11
         // - CE1 = 7
-
         GlcdConfig config = GlcdConfigBuilder
                 //Use ST7920 - 128 x 64 display, SPI 4-wire Hardware
                 .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
@@ -89,9 +88,12 @@ public class GlcdST7920Example {
                 .option(GlcdOption.PROVIDER, Provider.SYSTEM)
                 //Set to 800,000 bits per second
                 .option(GlcdOption.DEVICE_SPEED, 800000)
-                //Use CE1 or Chip Select 1 on Main SPI peripheral
+                //The SPI Bus (RPI as two SPI buses available, the Main and Auxillary)
+                .option(GlcdOption.SPI_BUS, SpiBus.MAIN)
+                //Use CE1 or Chip Select 1 on Main SPI peripheral/bus
                 .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
                 .build();
+
         /*
         //Other options available:
         .option(GlcdOption.DEVICE_GPIO_PATH, "/dev/gpiochip0")

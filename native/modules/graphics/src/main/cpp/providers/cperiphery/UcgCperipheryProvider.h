@@ -30,9 +30,27 @@
 
 class UcgCperipheryProvider : public UcgIOProvider {
 public:
-    explicit UcgCperipheryProvider(const std::shared_ptr<u8g2_info_t> &info);
+    UcgCperipheryProvider();
 
     ~UcgCperipheryProvider() override = default;
+
+    void initialize(const std::shared_ptr<ucgd_t>& context) override;
+
+    std::string getLibraryName() override;
+
+    const std::shared_ptr<UcgSpiProvider> &getSpiProvider() override;
+
+    const std::shared_ptr<UcgI2CProvider> &getI2CProvider() override;
+
+    const std::shared_ptr<UcgGpioProvider> &getGpioProvider() override;
+
+    bool isProvided() override;
+
+    [[nodiscard]] bool supportsGpio() const override;
+
+    [[nodiscard]] bool supportsSPI() const override;
+
+    [[nodiscard]] bool supportsI2C() const override;
 };
 
 #endif //UCGD_MOD_GRAPHICS_UCGCPERIPHERYPROVIDER_H

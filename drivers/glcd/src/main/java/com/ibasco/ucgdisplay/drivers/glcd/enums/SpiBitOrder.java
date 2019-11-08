@@ -26,14 +26,14 @@
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
 import com.ibasco.ucgdisplay.drivers.glcd.GlcdOption;
-import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValueInt;
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValue;
 
 /**
  * SPI bit Order enumeration
  *
  * @author Rafael Ibasco
  */
-public enum SpiBitOrder implements GlcdOptionValueInt {
+public enum SpiBitOrder implements GlcdOptionValue<Integer> {
     MSB_FIRST(0),
     LSB_FIRST(1);
 
@@ -44,7 +44,12 @@ public enum SpiBitOrder implements GlcdOptionValueInt {
     }
 
     @Override
-    public int toValueInt() {
+    public Integer toValue() {
         return value;
+    }
+
+    @Override
+    public Class<Integer> getType() {
+        return Integer.class;
     }
 }

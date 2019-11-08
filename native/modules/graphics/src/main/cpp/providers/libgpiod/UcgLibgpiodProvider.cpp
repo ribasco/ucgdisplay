@@ -35,13 +35,50 @@ const std::shared_ptr<gpiod::chip> &UcgLibgpiodProvider::getChip() const {
     return m_Chip;
 }
 
-UcgLibgpiodProvider::UcgLibgpiodProvider(const std::shared_ptr<u8g2_info_t> &info) : UcgIOProvider(info, PROVIDER_LIBGPIOD) {
-    info->log->debug("init_provider() : [LIBGPIOD] Initializing provider");
+UcgLibgpiodProvider::UcgLibgpiodProvider() : UcgIOProvider(PROVIDER_LIBGPIOD) {
+
+}
+
+void UcgLibgpiodProvider::initialize(const std::shared_ptr<ucgd_t>& context) {
+    log.debug("init_libgpiod() : [LIBGPIOD] Initializing libgpiod provider");
     try {
-        std::string devicePath = info->getOptionString(OPT_DEVICE_GPIO_PATH);
+        std::string devicePath = UcgGpioProvider::buildGpioDevicePath(context);
         this->m_Chip = std::make_shared<gpiod::chip>(devicePath);
-        setGPIOProvider(std::make_shared<UcgLibgpiodGpioProvider>(this));
-    } catch (const std::system_error &e) {
-        throw UcgProviderInitException(e);
+        setInitialized(true);
+    } catch (const std::exception &e) {
+        setInitialized(false);
+        throw UcgProviderInitException(e, this);
     }
+}
+
+std::string UcgLibgpiodProvider::getLibraryName() {
+    return "libgpiodcxx.so";
+}
+
+const std::shared_ptr<UcgSpiProvider> &UcgLibgpiodProvider::getSpiProvider() {
+    return UcgIOProvider::getSpiProvider();
+}
+
+const std::shared_ptr<UcgI2CProvider> &UcgLibgpiodProvider::getI2CProvider() {
+    return UcgIOProvider::getI2CProvider();
+}
+
+const std::shared_ptr<UcgGpioProvider> &UcgLibgpiodProvider::getGpioProvider() {
+    if (UcgIOProvider::getGpioProvider() == nullptr) {
+        log.debug("init_libgpiod() : [LIBGPIOD] Initializing libgpiod GPIO provider");
+        setGPIOProvider(std::make_shared<UcgLibgpiodGpioProvider>(this));
+    }
+    return UcgIOProvider::getGpioProvider();
+}
+
+bool UcgLibgpiodProvider::supportsGpio() const {
+    return true;
+}
+
+bool UcgLibgpiodProvider::supportsSPI() const {
+    return false;
+}
+
+bool UcgLibgpiodProvider::supportsI2C() const {
+    return false;
 }

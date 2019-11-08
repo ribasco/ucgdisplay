@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Native :: Graphics
- * Filename: UcgPigpioGpioProvider.h
+ * Filename: UcgPigpioI2CProvider.h
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,35 +23,31 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-#ifndef UCGD_MOD_GRAPHICS_UCGPIGPIOGPIOPROVIDER_H
-#define UCGD_MOD_GRAPHICS_UCGPIGPIOGPIOPROVIDER_H
+#ifndef UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H
+#define UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H
 
-#include <UcgGpioProvider.h>
-#include "UcgPigpioProvider.h"
+#include <UcgI2CProvider.h>
+#include <UcgPigpioProvider.h>
 
-class UcgPigpioGpioProvider : public UcgGpioProvider {
+class UcgPigpioI2CProvider : public UcgI2CProvider {
 public:
-    explicit UcgPigpioGpioProvider(UcgIOProvider *provider);
+    explicit UcgPigpioI2CProvider(UcgIOProvider *provider);
 
-    ~UcgPigpioGpioProvider() override;
+    ~UcgPigpioI2CProvider() override;
 
-    void init(int pin, GpioMode direction) override;
+    int open(const std::shared_ptr<ucgd_t> &context) override;
 
-    void write(int pin, uint8_t value) override;
+    int close() override;
 
-    void close() override;
+    int write(unsigned short address, const uint8_t *buffer, unsigned short length) override;
 
     UcgPigpioProvider *getProvider() override;
 
-protected:
-    bool isModeSupported(const GpioMode &mode) override;
-
 private:
-    void checkHandle();
-
-    static unsigned int gpioModeToPigpio(GpioMode mode);
-
-    static GpioMode pigpioToGpioMode(int mode);
+    int m_Handle;
+    int _close();
+    std::string _get_errmsg(int val);
 };
 
-#endif //UCGD_MOD_GRAPHICS_UCGPIGPIOGPIOPROVIDER_H
+
+#endif //UCGD_MOD_GRAPHICS_UCGPIGPIOI2CPROVIDER_H

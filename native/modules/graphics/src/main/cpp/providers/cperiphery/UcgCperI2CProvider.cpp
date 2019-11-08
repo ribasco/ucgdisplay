@@ -44,9 +44,10 @@ UcgCperI2CProvider::~UcgCperI2CProvider() {
     _close();
 };
 
-int UcgCperI2CProvider::open() {
-    std::string devicePath = getOptionValueString(OPT_DEVICE_I2C_PATH, DEFAULT_I2C_DEVICE_PATH);
-    printDebugInfo();
+int UcgCperI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
+    //std::string devicePath = context->getOptionString(OPT_DEVICE_I2C_PATH, DEFAULT_I2C_DEVICE_PATH);
+    std::string devicePath = UcgI2CProvider::buildI2CDevicePath(context);
+    printDebugInfo(context);
     if (cp_i2c_open(m_I2C.get(), devicePath.c_str()) < 0) {
         const char *errmsg = cp_i2c_errmsg(m_I2C.get());
         std::stringstream ss;

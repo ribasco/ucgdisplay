@@ -1,8 +1,8 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Graphics LCD driver
- * Filename: GlcdOptionValueString.java
+ * Project: UCGDisplay :: Native :: Graphics
+ * Filename: UcgPigpioSpiProvider.h
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,8 +23,35 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-package com.ibasco.ucgdisplay.drivers.glcd;
+#ifndef UCGD_MOD_GRAPHICS_UCGPIGPIODSPIPROVIDER_H
+#define UCGD_MOD_GRAPHICS_UCGPIGPIODSPIPROVIDER_H
 
-public interface GlcdOptionValueString extends GlcdOptionValue {
-    String toValueString();
-}
+#include "UcgSpiProvider.h"
+#include "UcgPigpiodProvider.h"
+#include <memory>
+#include <utility>
+#include <sstream>
+
+class UcgPigpiodSpiProvider : public UcgSpiProvider {
+public:
+    explicit UcgPigpiodSpiProvider(UcgIOProvider *provider);
+
+    ~UcgPigpiodSpiProvider() override;
+
+    void open(const std::shared_ptr<ucgd_t> &context) override;
+
+    int write(uint8_t *buffer, int count) override;
+
+    void close() override;
+
+    UcgPigpiodProvider *getProvider() override;
+
+private:
+    int m_Handle;
+    int m_PigpioHandle;
+
+    void _close();
+};
+
+
+#endif //UCGD_MOD_GRAPHICS_UCGPIGPIODSPIPROVIDER_H

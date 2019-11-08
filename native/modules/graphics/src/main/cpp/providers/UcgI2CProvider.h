@@ -65,7 +65,7 @@ public:
 
     ~UcgI2CProvider() override = default;;
 
-    virtual int open() {};
+    virtual int open(const std::shared_ptr<ucgd_t> &context) {};
 
     virtual int close() {};
 
@@ -73,21 +73,24 @@ public:
 
 protected:
 
-    void printDebugInfo() {
-#ifdef DEBUG_UCGD
-        std::string devicePath = this->getOptionValueString(OPT_DEVICE_I2C_PATH, DEFAULT_I2C_DEVICE_PATH);
-        int bus = this->getOptionValueInt(OPT_I2C_BUS, 1);
-        int flags = this->getOptionValueInt(OPT_I2C_FLAGS, 0);
+    static std::string buildI2CDevicePath(const std::shared_ptr<ucgd_t>& context) {
+        return std::string("/dev/i2c-") + std::to_string(context->getOptionInt(OPT_I2C_BUS, 1));
+    }
 
-        this->getProvider()->getInfo()->log->debug("=====================================================================");
-        this->getProvider()->getInfo()->log->debug("I2C Setup Info");
-        this->getProvider()->getInfo()->log->debug("=====================================================================");
-        this->getProvider()->getInfo()->log->debug(" - Provider: {}", this->getProvider()->getName());
-        this->getProvider()->getInfo()->log->debug(" -     Path: {}", devicePath);
-        this->getProvider()->getInfo()->log->debug(" -      Bus: {}", std::to_string(bus));
-        this->getProvider()->getInfo()->log->debug(" -    Flags: {}", std::to_string(flags));
-        this->getProvider()->getInfo()->log->debug("=====================================================================");
-#endif
+    void printDebugInfo(const std::shared_ptr<ucgd_t>& context) {
+        //std::string devicePath = context->getOptionString(OPT_DEVICE_I2C_PATH, DEFAULT_I2C_DEVICE_PATH);
+        std::string devicePath = buildI2CDevicePath(context);
+        int bus = context->getOptionInt(OPT_I2C_BUS, 1);
+        int flags = context->getOptionInt(OPT_I2C_FLAGS, 0);
+        Log log = ServiceLocator::getInstance().getLogger();
+        log.debug("=====================================================================");
+        log.debug("I2C Setup Info");
+        log.debug("=====================================================================");
+        log.debug(" - Provider: {}", this->getProvider()->getName());
+        log.debug(" -     Path: {}", devicePath);
+        log.debug(" -      Bus: {}", std::to_string(bus));
+        log.debug(" -    Flags: {}", std::to_string(flags));
+        log.debug("=====================================================================");
     }
 };
 

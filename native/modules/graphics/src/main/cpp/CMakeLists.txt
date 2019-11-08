@@ -18,16 +18,43 @@ configure_file(
         "${PROJECT_BINARY_DIR}/UcgdConfig.h"
 )
 
-list(APPEND UCGDISP_HDR "${GLOBAL_INC_DIR}/Global.h" "${GLOBAL_INC_DIR}/Common.h" "${GLOBAL_INC_DIR}/Log.h" "U8g2Utils.h" "U8g2Graphics.h" "U8g2Hal.h" "UcgdTypes.h")
-list(APPEND UCGDISP_SRC "${GLOBAL_INC_DIR}/Global.cpp" "${GLOBAL_INC_DIR}/Common.cpp" "${GLOBAL_INC_DIR}/Log.cpp" "U8g2Utils.cpp" "U8g2Graphics.cpp" "U8g2Hal.cpp" "U8g2LookupSetup.cpp" "U8g2LookupFonts.cpp")
+list(APPEND UCGDISP_HDR
+        "${GLOBAL_INC_DIR}/Global.h"
+        "${GLOBAL_INC_DIR}/Common.h"
+        "${GLOBAL_INC_DIR}/Log.h"
+        "${GLOBAL_INC_DIR}/Utils.h"
+        "U8g2Utils.h"
+        "U8g2Graphics.h"
+        "U8g2Hal.h"
+        "UcgdTypes.h"
+        "ServiceLocator.h"
+        "DeviceManager.h"
+
+        )
+list(APPEND UCGDISP_SRC
+        "${GLOBAL_INC_DIR}/Global.cpp"
+        "${GLOBAL_INC_DIR}/Common.cpp"
+        "${GLOBAL_INC_DIR}/Log.cpp"
+        "${GLOBAL_INC_DIR}/Utils.cpp"
+        "U8g2Utils.cpp"
+        "U8g2Graphics.cpp"
+        "U8g2Hal.cpp"
+        "U8g2LookupSetup.cpp"
+        "U8g2LookupFonts.cpp"
+        "ServiceLocator.cpp"
+        "DeviceManager.cpp"
+        )
 
 add_library(ucgdisp SHARED ${UCGDISP_HDR} ${UCGDISP_SRC})
 set_target_properties(ucgdisp PROPERTIES LINK_FLAGS_RELEASE -s)
 
+# Set provider paths
 set(PROVIDER_DIR_PATH "${ucgd-mod-graphics_SOURCE_DIR}/providers")
 set(PROVIDER_CPERIPHERY_DIR_PATH "${PROVIDER_DIR_PATH}/cperiphery")
 set(PROVIDER_LIBGPIOD_DIR_PATH "${PROVIDER_DIR_PATH}/libgpiod")
 set(PROVIDER_PIGPIO_DIR_PATH "${PROVIDER_DIR_PATH}/pigpio")
+set(PROVIDER_PIGPIO_STANDALN_DIR_PATH "${PROVIDER_PIGPIO_DIR_PATH}/standalone")
+set(PROVIDER_PIGPIOD_DAEMON_DIR_PATH "${PROVIDER_PIGPIO_DIR_PATH}/daemon")
 
 if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
     list(APPEND UCGDISP_HDR
@@ -36,8 +63,9 @@ if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
             "${PROVIDER_DIR_PATH}/UcgGpioProvider.h"
             "${PROVIDER_DIR_PATH}/UcgSpiProvider.h"
             "${PROVIDER_DIR_PATH}/UcgI2CProvider.h"
+            "ProviderManager.h"
             )
-    list(APPEND UCGDISP_SRC "")
+    list(APPEND UCGDISP_SRC "ProviderManager.cpp")
 
     # LIBGPIOD
     include(external/libgpiod)
@@ -54,16 +82,41 @@ if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
     # PIGPIO
     include(external/pigpio)
     if (TARGET pigpio)
+        # PIGPIO - Common Files
         list(APPEND UCGDISP_HDR
-                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioProvider.h"
-                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioGpioProvider.h"
-                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioSpiProvider.h"
-                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioI2CProvider.h")
-        list(APPEND UCGDISP_SRC "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioProvider.cpp"
-                                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioGpioProvider.cpp"
-                                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioSpiProvider.cpp"
-                                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioI2CProvider.cpp")
-        target_link_libraries(ucgdisp pigpio pigpiod_if2)
+                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioCommon.h"
+                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioProviderBase.h"
+                )
+        list(APPEND UCGDISP_SRC
+                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioCommon.cpp"
+                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioProviderBase.cpp"
+                )
+
+        # PIGPIO - Standalone
+        list(APPEND UCGDISP_HDR
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioProvider.h"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioGpioProvider.h"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioSpiProvider.h"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioI2CProvider.h")
+        list(APPEND UCGDISP_SRC
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioProvider.cpp"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioGpioProvider.cpp"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioSpiProvider.cpp"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioI2CProvider.cpp")
+        target_link_libraries(ucgdisp pigpio)
+
+        # PIGPIO - Daemon
+        list(APPEND UCGDISP_HDR
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodProvider.h"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodGpioProvider.h"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodSpiProvider.h"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodI2CProvider.h")
+        list(APPEND UCGDISP_SRC
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodProvider.cpp"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodGpioProvider.cpp"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodSpiProvider.cpp"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodI2CProvider.cpp")
+        target_link_libraries(ucgdisp pigpiod_if2)
     endif ()
 
     # C-PERIPHERY
@@ -97,11 +150,14 @@ target_include_directories(ucgdisp PRIVATE
         "${PROVIDER_DIR_PATH}"
         "${PROVIDER_CPERIPHERY_DIR_PATH}"
         "${PROVIDER_PIGPIO_DIR_PATH}"
+        "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}"
+        "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}"
         "${PROVIDER_LIBGPIOD_DIR_PATH}")
 target_compile_options(ucgdisp PRIVATE -Wno-write-strings)
 
 add_subdirectory(test)
 add_subdirectory(utils)
+# add_subdirectory(scratch)
 
 if (WIN32)
     message(STATUS "[target_link_libraries] Setting MINGW dependencies static")

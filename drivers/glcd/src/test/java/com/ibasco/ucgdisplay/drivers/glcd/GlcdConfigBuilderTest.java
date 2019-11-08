@@ -78,14 +78,14 @@ class GlcdConfigBuilderTest {
     void testCopyOptions() {
         Map<GlcdOption<?>, Object> newOptions = new HashMap<>();
         newOptions.put(GlcdOption.ROTATION, GlcdRotation.ROTATION_180);
-        newOptions.put(GlcdOption.PROVIDER, Provider.PIGPIO);
-        newOptions.put(GlcdOption.PIGPIO_MODE, PigpioMode.STANDALONE);
+        newOptions.put(GlcdOption.PROVIDER, Provider.PIGPIO_STANDALONE);
+        newOptions.put(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1);
         newOptions.put(GlcdOption.SPI_FLAGS, 10);
 
         //Existing entries
         configBuilder
                 .option(GlcdOption.SPI_BITS_PER_WORD, 8)
-                .option(GlcdOption.SPI_PERIPHERAL, SpiPeripheral.MAIN)
+                .option(GlcdOption.SPI_BUS, SpiBus.MAIN)
                 .option(GlcdOption.SPI_FLAGS, 5);
 
         configBuilder.options(newOptions);
@@ -95,5 +95,14 @@ class GlcdConfigBuilderTest {
 
         assertEquals(6, config.getOptions().size());
         assertEquals(10, spiFlags);
+    }
+
+    @Test
+    void testUserDefinedOptionValues() {
+        configBuilder.option(GlcdOption.SPI_BUS, SpiBus.OTHER.value(2));
+        GlcdConfig config = configBuilder.build();
+        assertNotNull(config);
+        int peripheral = config.getOption(GlcdOption.SPI_BUS);
+        assertEquals(2, peripheral);
     }
 }

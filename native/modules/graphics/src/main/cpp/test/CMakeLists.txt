@@ -8,7 +8,8 @@ endif()
 list(APPEND TEST_SOURCES
         "U8g2Test.cpp"
         "U8g2TestHal.h"
-        "U8g2TestHal.cpp")
+        "U8g2TestHal.cpp"
+        )
 
 list(APPEND TEST_SOURCES
         "${ucgd-mod-graphics_SOURCE_DIR}/UcgdTypes.h"
@@ -29,14 +30,14 @@ list(APPEND TEST_SOURCES
         "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgLibgpiodGpioProvider.h"
         "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgLibgpiodProvider.cpp"
         "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgLibgpiodProvider.h"
-        "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioGpioProvider.cpp"
-        "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioGpioProvider.h"
-        "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioI2CProvider.cpp"
-        "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioI2CProvider.h"
-        "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioProvider.cpp"
-        "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioProvider.h"
-        "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioSpiProvider.cpp"
-        "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioSpiProvider.h"
+        "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodGpioProvider.cpp"
+        "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodGpioProvider.h"
+        "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodI2CProvider.cpp"
+        "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodI2CProvider.h"
+        "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodProvider.cpp"
+        "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodProvider.h"
+        "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodSpiProvider.cpp"
+        "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodSpiProvider.h"
         )
 
 add_executable(ucgd-test "")
@@ -48,7 +49,8 @@ target_include_directories(ucgd-test PRIVATE
         "${PROVIDER_DIR_PATH}"
         "${PROVIDER_CPERIPHERY_DIR_PATH}"
         "${PROVIDER_LIBGPIOD_DIR_PATH}"
-        "${PROVIDER_PIGPIO_DIR_PATH}")
+        "${PROVIDER_PIGPIO_DIR_PATH}"
+        "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}")
 
 target_sources(ucgd-test PUBLIC
         "../${GLOBAL_INC_DIR}/Global.h"
@@ -58,4 +60,4 @@ target_sources(ucgd-test PUBLIC
         PRIVATE
         ${TEST_SOURCES})
 
-target_link_libraries(ucgd-test libgpiod pigpio u8g2 cperiphery)
+target_link_libraries(ucgd-test libgpiod pigpiod_if2 u8g2 cperiphery)

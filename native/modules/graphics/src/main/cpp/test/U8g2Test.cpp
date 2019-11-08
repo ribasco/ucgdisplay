@@ -1,12 +1,14 @@
+#define UCGTEST
+
 #include <iostream>
 #include <u8g2.h>
 #include <unistd.h>
 #include <chrono>
 #include <csignal>
-#include <UcgPigpioProvider.h>
+#include <UcgPigpiodProvider.h>
 #include <UcgLibgpiodProvider.h>
 #include <UcgCperipheryProvider.h>
-#include <providers/UcgSpiProvider.h>
+#include <UcgSpiProvider.h>
 #include "U8g2TestHal.h"
 
 static volatile bool complete = false;
@@ -73,19 +75,25 @@ void drawBannerText(u8g2_t *u8g2, uint32_t durationSecs) {
     }
 }
 
-void initializeProviders(const std::shared_ptr<u8g2_info_t> &info) {
+void initializeProviders(const std::shared_ptr<ucgd_t> &info) {
 #ifdef DEBUG_UCGD
     std::cout << "U8g2Util_InitializeProviders: Initializing selected provider" << std::endl;
 #endif
     try {
         //Initialize all available providers
-        auto pigpio_it = info->providers.insert(make_pair(PROVIDER_PIGPIO, std::make_shared<UcgPigpioProvider>(info)));
+        auto pigpio_it = info->providers.insert(make_pair(PROVIDER_PIGPIO, std::make_shared<UcgPigpiodProvider>(info)));
         auto libgpiod_it = info->providers.insert(make_pair(PROVIDER_LIBGPIOD, std::make_shared<UcgLibgpiodProvider>(info)));
         auto cper_it = info->providers.insert(make_pair(PROVIDER_CPERIPHERY, std::make_shared<UcgCperipheryProvider>(info)));
 
         //Retrieve the default provider
         std::string defaultProvider = info->getOptionString(OPT_PROVIDER);
         std::cout << "Found default provider: " << defaultProvider << std::endl;
+
+        std::cout << "Initializing providers: START" << std::endl;
+        pigpio_it.first->second->initialize();
+        cper_it.first->second->initialize();
+        libgpiod_it.first->second->initialize();
+        std::cout << "Initializing providers: END" << std::endl;
 
         if (defaultProvider == PROVIDER_PIGPIO) {
             info->provider = pigpio_it.first->second;
@@ -104,7 +112,7 @@ void initializeProviders(const std::shared_ptr<u8g2_info_t> &info) {
 
 u8g2_t *setupDisplay(const std::string &gpioProvider, const std::string &spiProvider, const std::string &i2cProvider) {
     //Configure the SPI pins
-    std::shared_ptr<u8g2_info_t> info = std::make_shared<u8g2_info_t>();
+    std::shared_ptr<ucgd_t> info = std::make_shared<ucgd_t>();
 
     u8g2_pin_map_t pin_config = {};
     /*pin_config.d0 = 11;
@@ -122,7 +130,7 @@ u8g2_t *setupDisplay(const std::string &gpioProvider, const std::string &spiProv
     //Populate options
     info->options[OPT_DEVICE_SPEED] = DEFAULT_SPI_SPEED;
     info->options[OPT_PROVIDER] = std::string(PROVIDER_CPERIPHERY);
-    info->options[OPT_SPI_PERIPHERAL] = SPI_PERIPHERAL_MAIN;
+    info->options[OPT_SPI_BUS] = SPI_PERIPHERAL_MAIN;
     info->options[OPT_SPI_CHANNEL] = DEFAULT_SPI_CHANNEL;
     info->options[OPT_DEVICE_GPIO_PATH] = std::string("/dev/gpiochip0");
     info->options[OPT_DEVICE_I2C_PATH] = std::string("/dev/i2c-1");
@@ -130,6 +138,7 @@ u8g2_t *setupDisplay(const std::string &gpioProvider, const std::string &spiProv
     info->options[OPT_I2C_BUS] = 1;
 
     initializeProviders(info);
+    std::cout << "initializeProviders : DONE" << std::endl;
 
     //Init callbacks
     info->byte_cb = [info](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {

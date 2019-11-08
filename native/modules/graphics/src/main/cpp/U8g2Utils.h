@@ -31,6 +31,51 @@
 
 #define U8G2_BYTE_SEND_INIT 28
 
+class UcgdSetupException : public std::runtime_error {
+public:
+    explicit UcgdSetupException(const std::string &arg) : std::runtime_error(arg) {};
+
+    explicit UcgdSetupException(const char *string) : std::runtime_error(string) {};
+
+    explicit UcgdSetupException(const runtime_error &error) : std::runtime_error(error) {};
+};
+
+class UcgdByteCallbackException : public std::runtime_error {
+public:
+    explicit UcgdByteCallbackException(const std::string &arg) : std::runtime_error(arg) {};
+
+    explicit UcgdByteCallbackException(const char *string) : std::runtime_error(string) {};
+
+    explicit UcgdByteCallbackException(const runtime_error &error) : std::runtime_error(error) {};
+};
+
+class UcgdGpioCallbackException : public std::runtime_error {
+public:
+    explicit UcgdGpioCallbackException(const std::string &arg) : std::runtime_error(arg) {};
+
+    explicit UcgdGpioCallbackException(const char *string) : std::runtime_error(string) {};
+
+    explicit UcgdGpioCallbackException(const runtime_error &error) : std::runtime_error(error) {};
+};
+
+class UcgdByteCallbackWrapperException : public std::runtime_error {
+public:
+    explicit UcgdByteCallbackWrapperException(const std::string &arg) : std::runtime_error(arg) {};
+
+    explicit UcgdByteCallbackWrapperException(const char *string) : std::runtime_error(string) {};
+
+    explicit UcgdByteCallbackWrapperException(const runtime_error &error) : std::runtime_error(error) {};
+};
+
+class UcgdGpioCallbackWrapperException : public std::runtime_error {
+public:
+    explicit UcgdGpioCallbackWrapperException(const std::string &arg) : std::runtime_error(arg) {};
+
+    explicit UcgdGpioCallbackWrapperException(const char *string) : std::runtime_error(string) {};
+
+    explicit UcgdGpioCallbackWrapperException(const runtime_error &error) : std::runtime_error(error) {};
+};
+
 /**
  * Load the Utils Module
  * @param env
@@ -38,12 +83,14 @@
 void U8gUtils_Load(JNIEnv *env);
 
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+
 /**
  * Initialize all supported providers
  *
  * @param info The project descriptor
  */
-void U8g2Util_InitializeProviders(const std::shared_ptr<u8g2_info_t>& info);
+//void U8g2Util_InitializeProviders(const std::shared_ptr<ucgd_t> &info);
+
 #endif
 
 /**
@@ -67,7 +114,7 @@ u8g2_t *toU8g2(jlong address);
  * @param rotation The rotation index
  * @return Pointer to u8g2_cb_t struct
  */
-u8g2_cb_t *U8g2util_ToRotation(int rotation);
+u8g2_cb_t *U8g2Util_ToRotation(int rotation);
 
 /**
  * Setup and initialize the display. This method must be called first before calling any other U8G2 methods.
@@ -83,14 +130,7 @@ u8g2_cb_t *U8g2util_ToRotation(int rotation);
  * @param virtualMode Set to true to activate emulator mode
  * @return
  */
-std::shared_ptr<u8g2_info_t> U8g2Util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, option_map_t& options, std::shared_ptr<Log>& logger, bool virtualMode = false);
-
-/**
- * Retrieves the device details from the cache
- * @param addr  The pointer address to lookup
- * @return A shared_ptr of u8g2_info_t
- */
-std::shared_ptr<u8g2_info_t> U8g2Util_GetDisplayDeviceInfo(uintptr_t addr);
+std::shared_ptr<ucgd_t>& U8g2Util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, option_map_t &options, bool virtualMode = false);
 
 /**
  * Byte callback wrapper for u8g2 setup procedures

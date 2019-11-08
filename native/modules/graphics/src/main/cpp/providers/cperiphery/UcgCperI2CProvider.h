@@ -36,7 +36,7 @@ public:
 
     ~UcgCperI2CProvider() override;
 
-    int open() override;
+    int open(const std::shared_ptr<ucgd_t>& context) override;
 
     int close() override;
 

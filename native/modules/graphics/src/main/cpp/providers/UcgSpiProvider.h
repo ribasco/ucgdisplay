@@ -72,7 +72,7 @@ public:
 
     ~UcgSpiProvider() = default;
 
-    virtual void open() = 0;
+    virtual void open(const std::shared_ptr<ucgd_t> &context) = 0;
 
     virtual void close() = 0;
 
@@ -80,27 +80,31 @@ public:
 
 protected:
 
-    void printDebugInfo() {
-#ifdef DEBUG_UCGD
-        std::string devicePath = this->getOptionValueString(OPT_DEVICE_SPI_PATH, DEFAULT_SPI_DEV_PATH);
-        int peripheral = this->getOptionValueInt(OPT_SPI_PERIPHERAL, DEFAULT_SPI_PERIPHERAL);
-        int speed = this->getOptionValueInt(OPT_DEVICE_SPEED, DEFAULT_SPI_SPEED);
-        int channel = this->getOptionValueInt(OPT_SPI_CHANNEL, DEFAULT_SPI_CHANNEL);
-        int flags = this->getOptionValueInt(OPT_SPI_FLAGS, 0);
+    static std::string buildSPIDevicePath(const std::shared_ptr<ucgd_t>& context) {
+        int peripheral = context->getOptionInt(OPT_SPI_BUS, DEFAULT_SPI_PERIPHERAL);
+        int channel = context->getOptionInt(OPT_SPI_CHANNEL, DEFAULT_SPI_CHANNEL);
+        return std::string("/dev/spidev") + std::to_string(peripheral) + std::string(".") + std::to_string(channel);
+    }
 
-        std::shared_ptr<Log> log = getProvider()->getInfo()->log;
+    void printDebugInfo(const std::shared_ptr<ucgd_t>& context) {
+        Log log = ServiceLocator::getInstance().getLogger();
 
-        log->debug("=====================================================================");
-        log->debug("SPI Configuration Parameters");
-        log->debug("=====================================================================");
-        log->debug(" -   Provider: {}" , this->getProvider()->getName());
-        log->debug(" -       Path: {}" , devicePath);
-        log->debug(" - Peripheral: {}" , std::to_string(peripheral));
-        log->debug(" -      Speed: {}" , std::to_string(speed));
-        log->debug(" -    Channel: {}" , std::to_string(channel));
-        log->debug(" -      Flags: {}" , std::to_string(flags));
-        log->debug("=====================================================================");
-#endif
+        std::string devicePath = buildSPIDevicePath(context);
+        int peripheral = context->getOptionInt(OPT_SPI_BUS, DEFAULT_SPI_PERIPHERAL);
+        int speed = context->getOptionInt(OPT_DEVICE_SPEED, DEFAULT_SPI_SPEED);
+        int channel = context->getOptionInt(OPT_SPI_CHANNEL, DEFAULT_SPI_CHANNEL);
+        int flags = context->getOptionInt(OPT_SPI_FLAGS, 0);
+
+        log.debug("=====================================================================");
+        log.debug("SPI Configuration Parameters");
+        log.debug("=====================================================================");
+        log.debug(" -   Provider: {}" , this->getProvider()->getName());
+        log.debug(" -       Path: {}" , devicePath);
+        log.debug(" - Peripheral: {}" , std::to_string(peripheral));
+        log.debug(" -      Speed: {}" , std::to_string(speed));
+        log.debug(" -    Channel: {}" , std::to_string(channel));
+        log.debug(" -      Flags: {}" , std::to_string(flags));
+        log.debug("=====================================================================");
     }
 };
 

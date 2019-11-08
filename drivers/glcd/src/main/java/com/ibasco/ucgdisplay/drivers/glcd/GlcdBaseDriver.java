@@ -239,7 +239,7 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
         //Check if rotation was specified, otherwise assign default
         if (config.getOption(GlcdOption.ROTATION) == null) {
             log.warn("No rotation specified. Using default = {}", DEFAULT_ROTATION);
-            config.setOption(GlcdOption.ROTATION.getName(), DEFAULT_ROTATION.toValueInt());
+            config.setOption(GlcdOption.ROTATION.getName(), DEFAULT_ROTATION.toValue());
         }
     }
 

@@ -82,3 +82,4 @@ hs_err_pid*
 /native/modules/graphics/src/main/cpp/utils/build/
 /native/tools/osxcross/
 /native/tools/rpi-tools/
+/native/modules/graphics/src/main/cpp/scratch/

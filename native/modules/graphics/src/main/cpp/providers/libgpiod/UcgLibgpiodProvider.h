@@ -31,11 +31,28 @@
 
 class UcgLibgpiodProvider : public UcgIOProvider {
 public:
-    explicit UcgLibgpiodProvider(const std::shared_ptr<u8g2_info_t> &info);
+    explicit UcgLibgpiodProvider();
 
     ~UcgLibgpiodProvider() override;
 
     [[nodiscard]] const std::shared_ptr<gpiod::chip> &getChip() const;
+
+    void initialize(const std::shared_ptr<ucgd_t>& context) override;
+
+    std::string getLibraryName() override;
+
+    const std::shared_ptr<UcgSpiProvider> &getSpiProvider() override;
+
+    const std::shared_ptr<UcgI2CProvider> &getI2CProvider() override;
+
+    const std::shared_ptr<UcgGpioProvider> &getGpioProvider() override;
+
+    [[nodiscard]] bool supportsGpio() const override;
+
+    [[nodiscard]] bool supportsSPI() const override;
+
+    [[nodiscard]] bool supportsI2C() const override;
+
 private:
     std::shared_ptr<gpiod::chip> m_Chip;
 };

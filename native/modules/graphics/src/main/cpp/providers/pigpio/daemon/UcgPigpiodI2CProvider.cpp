@@ -2,7 +2,7 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Native :: Graphics
- * Filename: UcgPigpioI2CProvider.cpp
+ * Filename: UcgPigpiodI2CProvider.cpp
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,33 +23,30 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-#include "UcgPigpioI2CProvider.h"
+#include "UcgPigpiodI2CProvider.h"
 #include <pigpiod_if2.h>
 #include <sstream>
+#include <UcgPigpioCommon.h>
 
-UcgPigpioI2CProvider::UcgPigpioI2CProvider(UcgIOProvider *provider) : UcgI2CProvider(provider), m_PigpioHandle(-1), m_Handle(-1) {}
+UcgPigpiodI2CProvider::UcgPigpiodI2CProvider(UcgIOProvider *provider) : UcgI2CProvider(provider), m_PigpioHandle(-1), m_Handle(-1) {}
 
-UcgPigpioI2CProvider::~UcgPigpioI2CProvider() {
+UcgPigpiodI2CProvider::~UcgPigpiodI2CProvider() {
     _close();
 };
 
-int UcgPigpioI2CProvider::open() {
-    printDebugInfo();
+int UcgPigpiodI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
+    printDebugInfo(context);
 
     if (m_PigpioHandle <= -1) {
         m_PigpioHandle = this->getProvider()->getHandle();
     }
 
-    int busNumber = getOptionValueInt(OPT_I2C_BUS, DEFAULT_I2C_BUS);
-    int address = getOptionValueInt(OPT_I2C_ADDRESS);
-    int flags = getOptionValueInt(OPT_I2C_FLAGS);
+    int busNumber = context->getOptionInt(OPT_I2C_BUS, DEFAULT_I2C_BUS);
+    int address = context->getOptionInt(OPT_I2C_ADDRESS);
+    int flags = context->getOptionInt(OPT_I2C_FLAGS);
 
-    if (this->getProvider()->getType() == PIGPIO_TYPE_DAEMON) {
-        //Note: Returns a handle (>=0) if OK, otherwise PI_BAD_I2C_BUS, PI_BAD_I2C_ADDR, PI_BAD_FLAGS, PI_NO_HANDLE, or PI_I2C_OPEN_FAILED.
-        m_Handle = i2c_open(m_PigpioHandle, busNumber, address, flags);
-    } else if (this->getProvider()->getType() == PIGPIO_TYPE_STANDALONE) {
-        m_Handle = i2cOpen(busNumber, address, flags);
-    }
+    //Note: Returns a handle (>=0) if OK, otherwise PI_BAD_I2C_BUS, PI_BAD_I2C_ADDR, PI_BAD_FLAGS, PI_NO_HANDLE, or PI_I2C_OPEN_FAILED.
+    m_Handle = i2c_open(m_PigpioHandle, busNumber, address, flags);
 
     if (m_Handle < 0) {
         std::stringstream ss;
@@ -60,14 +57,9 @@ int UcgPigpioI2CProvider::open() {
     return m_Handle;
 }
 
-int UcgPigpioI2CProvider::write(unsigned short address, const uint8_t *buffer, unsigned short length) {
+int UcgPigpiodI2CProvider::write(unsigned short address, const uint8_t *buffer, unsigned short length) {
     int retval = -1;
-    if (this->getProvider()->getType() == PIGPIO_TYPE_DAEMON) {
-        retval = i2c_write_device(m_PigpioHandle, m_Handle, (char *) buffer, length);
-    } else if (this->getProvider()->getType() == PIGPIO_TYPE_STANDALONE) {
-        retval = i2cWriteDevice(m_Handle, (char *) buffer, length);
-    }
-
+    retval = i2c_write_device(m_PigpioHandle, m_Handle, (char *) buffer, length);
     if (retval < 0) {
         std::stringstream ss;
         ss << "Failed to write to I2C device. Reason: " << _get_errmsg(retval);
@@ -76,26 +68,19 @@ int UcgPigpioI2CProvider::write(unsigned short address, const uint8_t *buffer, u
     return retval;
 }
 
-int UcgPigpioI2CProvider::close() {
+int UcgPigpiodI2CProvider::close() {
     return _close();
 }
 
-UcgPigpioProvider *UcgPigpioI2CProvider::getProvider() {
-    return dynamic_cast<UcgPigpioProvider *>(UcgProviderBase::getProvider());
+UcgPigpiodProvider *UcgPigpiodI2CProvider::getProvider() {
+    return dynamic_cast<UcgPigpiodProvider *>(UcgProviderBase::getProvider());
 }
 
-int UcgPigpioI2CProvider::_close() {
-    int retval = -1;
-
-    if (this->getProvider()->getType() == PIGPIO_TYPE_DAEMON) {
-        retval = i2c_close(m_PigpioHandle, m_Handle);
-    } else if (this->getProvider()->getType() == PIGPIO_TYPE_STANDALONE) {
-        retval = i2cClose(m_Handle);
-    }
-
+int UcgPigpiodI2CProvider::_close() {
+    int retval = i2c_close(m_PigpioHandle, m_Handle);
     if (retval < 0) {
         std::stringstream ss;
-        ss << "Failed to close I2C device. Reason: " << _get_errmsg(retval);
+        ss << "Failed to close I2C device. Reason: " << UcgPigpioCommon::getErrorMsg(retval);
         throw I2CException(ss.str());
     }
     m_PigpioHandle = -1;
@@ -103,9 +88,9 @@ int UcgPigpioI2CProvider::_close() {
     return retval;
 }
 
-std::string UcgPigpioI2CProvider::_get_errmsg(int val) {
+std::string UcgPigpiodI2CProvider::_get_errmsg(int val) {
     std::string reason;
-    switch (m_Handle) {
+    switch (val) {
         case PI_BAD_I2C_BUS:
             reason = "Bad I2C Bus";
             break;
@@ -119,8 +104,9 @@ std::string UcgPigpioI2CProvider::_get_errmsg(int val) {
             reason = "No handle available";
             break;
         case PI_I2C_OPEN_FAILED: {
-            int busNumber = getOptionValueInt(OPT_I2C_BUS, DEFAULT_I2C_BUS);
-            reason = std::string("Can't open I2C device: ") + std::to_string(busNumber);
+            //int busNumber = context->getOptionInt(OPT_I2C_BUS, DEFAULT_I2C_BUS);
+            //reason = std::string("Can't open I2C device: ") + std::to_string(busNumber);
+            reason = std::string("Can't open I2C device");
             break;
         }
         case PI_BAD_HANDLE: {
