@@ -54,7 +54,9 @@ public class GlcdPinMapConfig {
      * @param glcdPin
      *         A {@link GlcdPin} to be mapped
      * @param value
-     *         The gpio line number. Use the 'gpioinfo' utility of libgpiod to display the list of available gpio lines.
+     *         The gpio line number. Follows the standard BCM pin numbering scheme.
+     *
+     * @apiNote Use the 'gpioinfo' utility of libgpiod to display the list of available gpio lines.
      *
      * @return GlcdPinMapConfig
      */
