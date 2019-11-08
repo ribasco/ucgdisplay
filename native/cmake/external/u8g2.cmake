@@ -7,7 +7,7 @@ set(PROJ_PREFIX "u8g2")
 
 ExternalProject_Add(
         project_u8g2
-        GIT_REPOSITORY "/home/raffy/projects/u8g2.git"
+        GIT_REPOSITORY "https://github.com/olikraus/u8g2.git"
         GIT_TAG "master"
         PREFIX ${PROJ_PREFIX}
         INSTALL_COMMAND ""
