@@ -1,0 +1,833 @@
+<!-- Run/Debug configuration -->
+<component name="RunManager" selected="Maven.Compile All  (Clean)">
+    <configuration name="Cross Compile - ALL (Debug)" type="AntRunConfiguration">
+        <antsettings antfile="file://$PROJECT_DIR$/scripts/build-graphics.xml" target="native-build-cc-all">
+            <property name="root.dir" value="$PROJECT_DIR$" />
+            <property name="cpp.build.type" value="Debug" />
+        </antsettings>
+        <method v="2">
+            <option name="Make" enabled="true" />
+            <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean" />
+        </method>
+    </configuration>
+    <configuration name="Cross Compile - ALL (Release)" type="AntRunConfiguration">
+        <antsettings antfile="file://$PROJECT_DIR$/scripts/build-graphics.xml" target="native-build-cc-all">
+            <property name="root.dir" value="$PROJECT_DIR$" />
+            <property name="cpp.build.type" value="Release" />
+        </antsettings>
+        <method v="2">
+            <option name="Make" enabled="true" />
+            <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean" />
+        </method>
+    </configuration>
+    <configuration name="Cross Compile - ARM 32-bit" type="AntRunConfiguration">
+        <antsettings antfile="file://$PROJECT_DIR$/scripts/build-graphics.xml" target="native-build-cc-linux-arm32">
+            <property name="root.dir" value="$PROJECT_DIR$" />
+        </antsettings>
+        <method v="2">
+            <option name="Make" enabled="true" />
+        </method>
+    </configuration>
+    <configuration name="Cross Compile - OSX 32-bit" type="AntRunConfiguration">
+        <antsettings antfile="file://$PROJECT_DIR$/scripts/build-graphics.xml" target="native-build-cc-osx-x86_32">
+            <property name="root.dir" value="$PROJECT_DIR$" />
+        </antsettings>
+        <method v="2">
+            <option name="Make" enabled="true" />
+        </method>
+    </configuration>
+    <configuration name="Cross Compile - OSX 64-bit" type="AntRunConfiguration">
+        <antsettings antfile="file://$PROJECT_DIR$/scripts/build-graphics.xml" target="native-build-cc-osx-x86_64">
+            <property name="root.dir" value="$PROJECT_DIR$" />
+        </antsettings>
+        <method v="2">
+            <option name="Make" enabled="true" />
+        </method>
+    </configuration>
+    <configuration name="GlcdConfigBuilderTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+        <module name="ucgd-drivers-glcd" />
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.ibasco.ucgdisplay.drivers.glcd.*" />
+                <option name="ENABLED" value="true" />
+            </pattern>
+        </extension>
+        <option name="PACKAGE_NAME" value="com.ibasco.ucgdisplay.drivers.glcd" />
+        <option name="MAIN_CLASS_NAME" value="com.ibasco.ucgdisplay.drivers.glcd.GlcdConfigBuilderTest" />
+        <option name="TEST_OBJECT" value="class" />
+        <method v="2">
+            <option name="Make" enabled="true" />
+        </method>
+    </configuration>
+    <configuration name="Compile ARM 32-bit (Clean)" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s) (Clean)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-linux-arm32" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile ARM 64-bit (Clean)" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s) (Clean)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-linux-arm64" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile All  (Clean with Tests)" type="MavenRunConfiguration" factoryName="Maven">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="compile" />
+                            <option value="test" />
+                            <option value="verify" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-all" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile All  (Clean)" type="MavenRunConfiguration" factoryName="Maven">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-all" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile All (No Clean - With Tests)" type="MavenRunConfiguration" factoryName="Maven">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="compile" />
+                            <option value="test" />
+                            <option value="verify" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile All (No Clean)" type="MavenRunConfiguration" factoryName="Maven">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="compile" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile LINUX 32-bit (Clean)" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s) (Clean)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-linux-x86_32" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile LINUX 64-bit (Clean)" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s) (Clean)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-linux-x86_64" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile LINUX ARM 32-bit" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-linux-arm32" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile LINUX ARM 64-bit" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-linux-arm64" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile LINUX x86 32-bit" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-linux-x86_32" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile LINUX x86 64-bit" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-linux-x86_64" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile OSX 32-bit (Clean)" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s) (Clean)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-osx-x86_32" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile OSX 64-bit (Clean)" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s) (Clean)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-osx-x86_64" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile OSX x86 32-bit" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-osx-x86_32" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile OSX x86 64-bit" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-osx-x86_64" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile WIN 32-bit (Clean)" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s) (Clean)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-windows-x86_32" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile WIN 64-bit (Clean)" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s) (Clean)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-windows-x86_64" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile WIN x86 32-bit" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-windows-x86_32" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Compile WIN x86 64-bit" type="MavenRunConfiguration" factoryName="Maven" folderName="Compile Target(s)">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="compile" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-windows-x86_64" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Package All  (Clean with Tests)" type="MavenRunConfiguration" factoryName="Maven">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="clean" />
+                            <option value="package" />
+                            <option value="test" />
+                            <option value="verify" />
+                            <option value="-DbuildType=Release" />
+                            <option value="-Dgraphics-build-target=native-build-cc-all" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map>
+                            <entry key="cross-compile" value="true" />
+                        </map>
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Test" type="MavenRunConfiguration" factoryName="Maven">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="test" />
+                            <option value="-Dmaven.antrun.skip=true" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map />
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Verify" type="MavenRunConfiguration" factoryName="Maven">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list>
+                            <option value="verify" />
+                            <option value="-Dmaven.antrun.skip=true" />
+                        </list>
+                    </option>
+                    <option name="pomFileName" value="pom.xml" />
+                    <option name="profilesMap">
+                        <map />
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration default="true" type="MavenRunConfiguration" factoryName="Maven">
+        <MavenSettings>
+            <option name="myGeneralSettings" />
+            <option name="myRunnerSettings" />
+            <option name="myRunnerParameters">
+                <MavenRunnerParameters>
+                    <option name="profiles">
+                        <set />
+                    </option>
+                    <option name="goals">
+                        <list />
+                    </option>
+                    <option name="pomFileName" />
+                    <option name="profilesMap">
+                        <map />
+                    </option>
+                    <option name="resolveToWorkspace" value="false" />
+                    <option name="workingDirPath" value="$PROJECT_DIR$" />
+                </MavenRunnerParameters>
+            </option>
+        </MavenSettings>
+        <method v="2" />
+    </configuration>
+    <configuration name="Test Example" type="Run as an Embedded Java application" factoryName="Embedded Linux JVM">
+        <option name="classesDirectory" />
+        <option name="hostname" value="192.168.1.22" />
+        <option name="keyPath" value="" />
+        <option name="password" value="***REMOVED***" />
+        <option name="port" value="1234" />
+        <option name="programArguments" value="" />
+        <option name="runAsRoot" value="true" />
+        <option name="sshPort" value="22" />
+        <option name="username" value="pi" />
+        <option name="usingKey" value="false" />
+        <option name="vmParameters" value="" />
+        <option name="moduleName" value="ucgd-examples-drivers-glcd" />
+        <option name="mainclass" value="com.ibasco.ucgdisplay.examples.glcd.GlcdST7920Example" />
+        <method v="2">
+            <option name="Make" enabled="true" />
+            <option name="RunConfigurationTask" enabled="true" run_configuration_name="Compile LINUX ARM 32-bit" run_configuration_type="MavenRunConfiguration" />
+        </method>
+    </configuration>
+    <configuration default="true" type="Run as an Embedded Java application" factoryName="Embedded Linux JVM">
+        <option name="classesDirectory" />
+        <option name="hostname" value="192.168.1.22" />
+        <option name="keyPath" value="" />
+        <option name="password" value="***REMOVED***" />
+        <option name="port" value="1234" />
+        <option name="programArguments" value="" />
+        <option name="runAsRoot" value="false" />
+        <option name="sshPort" value="22" />
+        <option name="username" value="pi" />
+        <option name="usingKey" value="false" />
+        <option name="vmParameters" value="" />
+        <option name="moduleName" value="ucgd-examples-drivers-glcd" />
+        <option name="mainclass" value="com.ibasco.ucgdisplay.examples.glcd.GlcdST7920Example" />
+        <method v="2">
+            <option name="Make" enabled="true" />
+        </method>
+    </configuration>
+    <list>
+        <item itemvalue="Ant Target.Cross Compile - ARM 32-bit" />
+        <item itemvalue="Ant Target.Cross Compile - OSX 32-bit" />
+        <item itemvalue="Ant Target.Cross Compile - OSX 64-bit" />
+        <item itemvalue="Ant Target.Cross Compile - ALL (Debug)" />
+        <item itemvalue="Ant Target.Cross Compile - ALL (Release)" />
+        <item itemvalue="Embedded Linux JVM.Test Example" />
+        <item itemvalue="JUnit.GlcdConfigBuilderTest" />
+        <item itemvalue="Maven.Compile LINUX x86 32-bit" />
+        <item itemvalue="Maven.Compile LINUX x86 64-bit" />
+        <item itemvalue="Maven.Compile OSX x86 32-bit" />
+        <item itemvalue="Maven.Compile OSX x86 64-bit" />
+        <item itemvalue="Maven.Compile LINUX ARM 32-bit" />
+        <item itemvalue="Maven.Compile LINUX ARM 64-bit" />
+        <item itemvalue="Maven.Compile WIN x86 32-bit" />
+        <item itemvalue="Maven.Compile WIN x86 64-bit" />
+        <item itemvalue="Maven.Compile LINUX 32-bit (Clean)" />
+        <item itemvalue="Maven.Compile LINUX 64-bit (Clean)" />
+        <item itemvalue="Maven.Compile OSX 32-bit (Clean)" />
+        <item itemvalue="Maven.Compile OSX 64-bit (Clean)" />
+        <item itemvalue="Maven.Compile ARM 32-bit (Clean)" />
+        <item itemvalue="Maven.Compile ARM 64-bit (Clean)" />
+        <item itemvalue="Maven.Compile WIN 32-bit (Clean)" />
+        <item itemvalue="Maven.Compile WIN 64-bit (Clean)" />
+        <item itemvalue="Maven.Compile All  (Clean with Tests)" />
+        <item itemvalue="Maven.Compile All  (Clean)" />
+        <item itemvalue="Maven.Compile All (No Clean - With Tests)" />
+        <item itemvalue="Maven.Compile All (No Clean)" />
+        <item itemvalue="Maven.Package All  (Clean with Tests)" />
+        <item itemvalue="Maven.Test" />
+        <item itemvalue="Maven.Verify" />
+    </list>
+    <recent_temporary>
+        <list>
+            <item itemvalue="JUnit.GlcdConfigBuilderTest" />
+        </list>
+    </recent_temporary>
+</component>
