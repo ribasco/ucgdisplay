@@ -2,8 +2,8 @@ package com.ibasco.ucgdisplay.examples.glcd;/*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Graphics LCD driver examples
- * Filename: GlcdST7920Example.java
- *
+ * Filename: GlcdST7920SWExample.java
+ * 
  * ---------------------------------------------------------
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
@@ -12,12 +12,12 @@ package com.ibasco.ucgdisplay.examples.glcd;/*-
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -35,14 +35,17 @@ import java.time.Duration;
 import java.util.Objects;
 
 /**
- * ST7920 Example
+ * ST7920 Example - SPI Software Bit-Bang.
+ *
+ * Note: This is ALOT slower than SPI HW
  */
-public class GlcdST7920Example {
+@SuppressWarnings("DuplicatedCode")
+public class GlcdST7920SWExample {
 
-    private static final Logger log = LoggerFactory.getLogger(GlcdST7920Example.class);
+    private static final Logger log = LoggerFactory.getLogger(GlcdST7920SWExample.class);
 
     public static void main(String[] args) throws Exception {
-        new GlcdST7920Example().run();
+        new GlcdST7920SWExample().run();
     }
 
     private void drawU8G2Logo(int offset, GlcdDriver driver) {
@@ -68,7 +71,7 @@ public class GlcdST7920Example {
     }
 
     private void run() throws Exception {
-        //SPI HW 4-Wire config for ST7920
+        //SPI Software config for ST7920
 
         //NOTE: On Raspberry Pi systems, pins can be automatically configured for hardware capability.
         //For automatic configuration to work, pigpio needs to be installed on the system and set as the default provider.
@@ -79,17 +82,15 @@ public class GlcdST7920Example {
         // - CE1 = 7
         GlcdConfig config = GlcdConfigBuilder
                 //Use ST7920 - 128 x 64 display, SPI 4-wire Hardware
-                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_SW_4WIRE_ST7920)
                 //Set to 180 rotation
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
                 //Using system/c-periphery provider
-                .option(GlcdOption.PROVIDER, Provider.PIGPIO_DAEMON)
-                //Set to 1,000,000 Hz/bps (1.00 MHz)
-                .option(GlcdOption.BUS_SPEED, 1000000)
-                //The SPI Bus (RPI as two SPI buses available, the Main and Auxillary)
-                .option(GlcdOption.SPI_BUS, SpiBus.MAIN)
-                //Use CE1 or Chip Select 1 on Main SPI peripheral/bus
-                .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
+                .option(GlcdOption.PROVIDER, Provider.SYSTEM)
+                //Map pins
+                .mapPin(GlcdPin.SPI_MOSI, 10)
+                .mapPin(GlcdPin.SPI_CLOCK, 11)
+                .mapPin(GlcdPin.CS, 7)
                 .build();
 
         GlcdDriver driver = new GlcdDriver(config);
