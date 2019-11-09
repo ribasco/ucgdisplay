@@ -73,14 +73,17 @@ void UcgPigpioGpioProvider::write(int pin, uint8_t value) {
         return;
 
     int res = gpioWrite(pin, value);
-    if (res == PI_BAD_GPIO) {
+
+    if (res == 0) {
+        return;
+    } else if (res == PI_BAD_GPIO) {
         throw GpioWriteException(std::string("write() : [PIGPIO] Invalid GPIO pin (") + std::to_string(pin) + std::string("). Must be between 0 and 53"));
     } else if (res == PI_BAD_LEVEL) {
         throw GpioWriteException("write() : [PIGPIO] Invalid level. Must be either 0 or 1");
     } else if (res == PI_NOT_PERMITTED) {
         throw GpioWriteException("write() : [PIGPIO] GPIO operation not permitted");
     } else {
-        throw GpioWriteException("write() : [PIGPIO] Unknown error");
+        throw GpioWriteException(std::string("write() : [PIGPIO] Could not initialize GPIO pin. Reason code: ") + std::to_string(res));
     }
 }
 

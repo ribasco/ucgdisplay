@@ -360,7 +360,7 @@ void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<U
  */
 void initializeGpioAllOut(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio) {
     Log &log = ServiceLocator::getInstance().getLogger();
-    log.debug("Initializing all gpio lines to OUTPUT for Comm Int {}, Comm Type = {}, Provider: {}} ", info->comm_int, info->comm_type, gpio->getProvider()->getName());
+    log.debug("Initializing all gpio lines to OUTPUT for Comm Int = {}, Comm Type = {}, Provider: {} ", info->comm_int, info->comm_type, gpio->getProvider()->getName());
 
     // called once during init phase of u8g2/u8x8, can be used to setup pins
     gpio->init(info, info->pin_map.d0, UcgGpioProvider::GpioMode::MODE_OUTPUT);
