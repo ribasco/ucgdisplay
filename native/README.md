@@ -112,6 +112,10 @@ deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main
     - llvm-9-dev
     - clang-9
     - libssl1.0-dev
+    - libtool
+    - python-setuptools
+    - python3-setuptools
+    - pkg-config
 
 Install the required packages for cross-compilation 
 
@@ -120,7 +124,7 @@ sudo apt update
 ```
 
 ```bash
-sudo apt install build-essential autoconf autoconf-archive automake cmake gcc-multilib g++-multilib mingw-w64 llvm-9-dev clang-9 libssl1.0-dev
+sudo apt install build-essential autoconf autoconf-archive automake cmake gcc-multilib g++-multilib mingw-w64 llvm-9-dev clang-9 libssl1.0-dev libtool python-setuptools python3-setuptools pkg-config
 ```
 
 ### 3. Environment Settings
