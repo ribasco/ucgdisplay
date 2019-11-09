@@ -45,9 +45,9 @@ public class GlcdOption<T> {
     /**
      * The transfer rate to be applied for the I/O peripheral (e.g. SPI interface).
      * <p>
-     * ex: Use 100000 for 100,000 bits per second
+     * ex: Use 100000 for 100,000 Hz
      */
-    public static final GlcdOption<Integer> DEVICE_SPEED = createOption("device_speed");
+    public static final GlcdOption<Integer> BUS_SPEED = createOption("bus_speed");
 
     /**
      * The GPIO Chip device

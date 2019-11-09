@@ -68,8 +68,6 @@ public:
 };
 
 class UcgIOProvider {
-    friend class ProviderManager;
-
 public:
     explicit UcgIOProvider(const std::string &name) :
             m_Name(name),
@@ -153,6 +151,9 @@ public:
 
 protected:
     Log &log;
+    std::shared_ptr<UcgSpiProvider> m_spiProvider;
+    std::shared_ptr<UcgI2CProvider> m_i2cProvider;
+    std::shared_ptr<UcgGpioProvider> m_gpioProvider;
 
     void setSPIProvider(const std::shared_ptr<UcgSpiProvider> &spiProvider) {
         m_spiProvider = spiProvider;
@@ -167,9 +168,6 @@ protected:
     }
 
 private:
-    std::shared_ptr<UcgSpiProvider> m_spiProvider;
-    std::shared_ptr<UcgI2CProvider> m_i2cProvider;
-    std::shared_ptr<UcgGpioProvider> m_gpioProvider;
     std::string m_Name;
     bool m_Initialized;
     bool m_Available;

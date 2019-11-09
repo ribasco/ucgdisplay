@@ -81,17 +81,20 @@ public:
 protected:
 
     static std::string buildSPIDevicePath(const std::shared_ptr<ucgd_t>& context) {
-        int peripheral = context->getOptionInt(OPT_SPI_BUS, DEFAULT_SPI_PERIPHERAL);
-        int channel = context->getOptionInt(OPT_SPI_CHANNEL, DEFAULT_SPI_CHANNEL);
-        return std::string("/dev/spidev") + std::to_string(peripheral) + std::string(".") + std::to_string(channel);
+        Log& log = ServiceLocator::getInstance().getLogger();
+        int peripheral = context->getOptionInt(OPT_SPI_BUS);
+        int channel = context->getOptionInt(OPT_SPI_CHANNEL);
+        std::string path = std::string("/dev/spidev") + std::to_string(peripheral) + std::string(".") + std::to_string(channel);
+        log.debug(std::string("buildSPIDevicePath() : Building device path: BUS = ") + std::to_string(peripheral) + std::string(", CHANNEL = ") + std::to_string(channel) + std::string(", PATH = ") + path);
+        return path;
     }
 
     void printDebugInfo(const std::shared_ptr<ucgd_t>& context) {
-        Log log = ServiceLocator::getInstance().getLogger();
+        Log& log = ServiceLocator::getInstance().getLogger();
 
         std::string devicePath = buildSPIDevicePath(context);
         int peripheral = context->getOptionInt(OPT_SPI_BUS, DEFAULT_SPI_PERIPHERAL);
-        int speed = context->getOptionInt(OPT_DEVICE_SPEED, DEFAULT_SPI_SPEED);
+        int speed = context->getOptionInt(OPT_BUS_SPEED, DEFAULT_SPI_SPEED);
         int channel = context->getOptionInt(OPT_SPI_CHANNEL, DEFAULT_SPI_CHANNEL);
         int flags = context->getOptionInt(OPT_SPI_FLAGS, 0);
 

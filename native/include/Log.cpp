@@ -1,6 +1,8 @@
 #include "Log.h"
 #include <Global.h>
 
+#ifndef UCGD_DEBUG
+
 static jobject getLogObject(JNIEnv *env, jobject source) {
     assert(source);
 
@@ -39,3 +41,5 @@ Log::Log(jobject source) :
 }
 
 Log::~Log() = default;
+
+#endif

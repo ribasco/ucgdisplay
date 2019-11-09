@@ -56,7 +56,9 @@ void UcgPigpioProvider::initialize(const std::shared_ptr<ucgd_t> &context) {
 }
 
 UcgPigpioProvider::~UcgPigpioProvider() {
-    gpioTerminate();
+    if (isInitialized()) {
+        gpioTerminate();
+    }
 }
 
 std::string UcgPigpioProvider::getLibraryName() {

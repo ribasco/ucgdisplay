@@ -75,7 +75,7 @@ extern "C" {
 
 //Options
 #define OPT_ROTATION "rotation"
-#define OPT_DEVICE_SPEED "device_speed"
+#define OPT_BUS_SPEED "bus_speed"
 #define OPT_PROVIDER "default_provider"
 #define OPT_GPIO_CHIP "gpio_chip"
 
@@ -250,6 +250,8 @@ struct ucgd_t {
 
 //Only available on ARM 32/64 bit platforms
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+    int spi_handle = -1;
+    int i2c_handle = -1;
     std::shared_ptr<UcgIOProvider> provider;
     std::map<std::string, std::any> options;
 
@@ -270,7 +272,12 @@ struct ucgd_t {
         }
     }
 
-    int getOptionInt(const std::string &key, int defaultVal = 0) {
+    int getOptionInt(const std::string &key) {
+        std::any value = getOption(key);
+        return std::any_cast<int>(value);
+    }
+
+    int getOptionInt(const std::string &key, int defaultVal) {
         try {
             std::any value = getOption(key);
             return std::any_cast<int>(value);

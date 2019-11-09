@@ -49,21 +49,18 @@ UcgCperSpiProvider::~UcgCperSpiProvider() {
 void UcgCperSpiProvider::open(const std::shared_ptr<ucgd_t>& context) {
     printDebugInfo(context);
 
-    //std::string devicePath = context->getOptionString(OPT_DEVICE_SPI_PATH, DEFAULT_SPI_DEV_PATH);
     std::string devicePath = UcgSpiProvider::buildSPIDevicePath(context);
-    int speed = context->getOptionInt(OPT_DEVICE_SPEED, DEFAULT_SPI_SPEED);
+    int speed = context->getOptionInt(OPT_BUS_SPEED, DEFAULT_SPI_SPEED);
     int flags = context->getOptionInt(OPT_SPI_FLAGS, DEFAULT_SPI_FLAGS);
-
-    //OPT_SPI_CHANNEL 0, 1, 2
-    //OPT_SPI_BUS 0, or 1
 
     cp_spi_bit_order bit_order = static_cast<cp_spi_bit_order>(context->getOptionInt(OPT_SPI_BIT_ORDER, DEFAULT_SPI_BIT_ORDER));
     uint8_t bits_per_word = context->getOptionInt(OPT_SPI_BITS_PER_WORD, DEFAULT_SPI_BITS_PER_WORD);
     int mode = context->getOptionInt(OPT_SPI_MODE, DEFAULT_SPI_MODE);
+
     log.debug("open() : [C-PERIPHERY] Bit Order = {}, Bits Per Word = {}, Mode = {}", bit_order, bits_per_word, mode);
 
     if (devicePath.empty()) {
-        throw SpiOpenException("open() : [C-PERIPHERY] SPI Device path not specified");
+        throw SpiOpenException("open() : [C-PERIPHERY] Device path is empty");
     }
 
     //mode = 0,1,2,3
@@ -91,6 +88,10 @@ void UcgCperSpiProvider::close() {
 }
 
 void UcgCperSpiProvider::_close() {
-    cp_spi_close(m_SPI.get());
-    cp_spi_free(m_SPI.get());
+    if (m_SPI != nullptr) {
+        cp_spi_close(m_SPI.get());
+        cp_spi_free(m_SPI.get());
+        m_SPI.reset();
+        m_SPI = nullptr;
+    }
 }

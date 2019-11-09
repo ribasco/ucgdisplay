@@ -48,7 +48,7 @@ enum SpiFlags : int {
     SPI_FLAG_AUX_WORDSIZE,               //bbbbbb           = defines the word size in bits (0-32). The default (0) sets 8 bits per word. Auxiliary SPI only                                                 (Bit 16-21)
 };
 
-UcgPigpioSpiProvider::UcgPigpioSpiProvider(UcgIOProvider *provider) : UcgSpiProvider(provider), m_PigpioHandle(-1), m_Handle(-1) {
+UcgPigpioSpiProvider::UcgPigpioSpiProvider(UcgIOProvider *provider) : UcgSpiProvider(provider), m_Handle(-1) {
 
 }
 
@@ -60,9 +60,9 @@ void UcgPigpioSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
     if (m_Handle >= 0)
         throw SpiOpenException(std::string("SPI device is already open: ") + std::to_string(m_Handle));
 
-    int speed = context->getOptionInt(OPT_DEVICE_SPEED, DEFAULT_SPI_SPEED);
-    int peripheral = context->getOptionInt(OPT_SPI_BUS, DEFAULT_SPI_PERIPHERAL);
-    int channel = context->getOptionInt(OPT_SPI_CHANNEL, DEFAULT_SPI_CHANNEL);
+    int peripheral = context->getOptionInt(OPT_SPI_BUS); //required
+    int channel = context->getOptionInt(OPT_SPI_CHANNEL); //required
+    int speed = context->getOptionInt(OPT_BUS_SPEED, DEFAULT_SPI_SPEED);
     int flags = context->getOptionInt(OPT_SPI_FLAGS, DEFAULT_SPI_FLAGS);
 
     //Update peripheral flag
@@ -84,6 +84,7 @@ void UcgPigpioSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
                                                flags
     );
 
+    //TODO: spi handle should be placed on the context object
     this->m_Handle = spiOpen(channel, speed, flags);
 
     if (this->m_Handle < 0) {
@@ -136,7 +137,8 @@ void UcgPigpioSpiProvider::close() {
 }
 
 void UcgPigpioSpiProvider::_close() {
-    spiClose(this->m_Handle);
-    m_PigpioHandle = -1;
-    m_Handle = -1;
+    if (this->m_Handle > -1) {
+        spiClose(this->m_Handle);
+        m_Handle = -1;
+    }
 }

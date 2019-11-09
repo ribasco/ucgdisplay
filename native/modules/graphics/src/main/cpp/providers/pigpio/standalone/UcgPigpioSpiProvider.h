@@ -49,7 +49,6 @@ public:
 
 private:
     int m_Handle;
-    int m_PigpioHandle;
 
     void _close();
 };

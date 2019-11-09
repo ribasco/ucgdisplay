@@ -9,7 +9,9 @@
 #include <UcgLibgpiodProvider.h>
 #include <UcgCperipheryProvider.h>
 #include <UcgSpiProvider.h>
+#include <UcgPigpioProvider.h>
 #include "U8g2TestHal.h"
+#include <sstream>
 
 static volatile bool complete = false;
 
@@ -75,44 +77,99 @@ void drawBannerText(u8g2_t *u8g2, uint32_t durationSecs) {
     }
 }
 
-void initializeProviders(const std::shared_ptr<ucgd_t> &info) {
-#ifdef DEBUG_UCGD
-    std::cout << "U8g2Util_InitializeProviders: Initializing selected provider" << std::endl;
-#endif
-    try {
-        //Initialize all available providers
-        auto pigpio_it = info->providers.insert(make_pair(PROVIDER_PIGPIO, std::make_shared<UcgPigpiodProvider>(info)));
-        auto libgpiod_it = info->providers.insert(make_pair(PROVIDER_LIBGPIOD, std::make_shared<UcgLibgpiodProvider>(info)));
-        auto cper_it = info->providers.insert(make_pair(PROVIDER_CPERIPHERY, std::make_shared<UcgCperipheryProvider>(info)));
+void initializeProviders() {
+    //Initialize service locator and providers
+    ServiceLocator &locator = ServiceLocator::getInstance();
+    std::unique_ptr<Log> log = std::make_unique<Log>(nullptr);
+    //Initialize Logger
+    locator.setLogger(log);
 
-        //Retrieve the default provider
-        std::string defaultProvider = info->getOptionString(OPT_PROVIDER);
-        std::cout << "Found default provider: " << defaultProvider << std::endl;
+    //Initialize Device Manager
+    locator.setDeviceManager(std::make_unique<DeviceManager>());
 
-        std::cout << "Initializing providers: START" << std::endl;
-        pigpio_it.first->second->initialize();
-        cper_it.first->second->initialize();
-        libgpiod_it.first->second->initialize();
-        std::cout << "Initializing providers: END" << std::endl;
+    //Initialize Providers
+    locator.setProviderManager(std::make_unique<ProviderManager>());
+    auto &pMan = locator.getProviderManager();
 
-        if (defaultProvider == PROVIDER_PIGPIO) {
-            info->provider = pigpio_it.first->second;
-        } else if (defaultProvider == PROVIDER_LIBGPIOD) {
-            info->provider = libgpiod_it.first->second;
-        } else if (defaultProvider == PROVIDER_CPERIPHERY) {
-            info->provider = cper_it.first->second;
-        } else {
-            throw std::runtime_error(std::string("Provider '") + defaultProvider + std::string("' not supported"));
-        }
-    } catch (OptionNotFoundException &e) {
-        std::cout << "Default provider not found" << std::endl;
-        throw e;
-    }
+    //Register supported providers
+    if (!pMan->isRegistered(PROVIDER_CPERIPHERY))
+        pMan->registerProvider(std::make_unique<UcgCperipheryProvider>());
+    if (!pMan->isRegistered(PROVIDER_PIGPIO))
+        pMan->registerProvider(std::make_unique<UcgPigpioProvider>());
+    if (!pMan->isRegistered(PROVIDER_PIGPIOD))
+        pMan->registerProvider(std::make_unique<UcgPigpiodProvider>("", ""));
+    if (!pMan->isRegistered(PROVIDER_LIBGPIOD))
+        pMan->registerProvider(std::make_unique<UcgLibgpiodProvider>());
 }
 
-u8g2_t *setupDisplay(const std::string &gpioProvider, const std::string &spiProvider, const std::string &i2cProvider) {
-    //Configure the SPI pins
-    std::shared_ptr<ucgd_t> info = std::make_shared<ucgd_t>();
+u8g2_msg_func_info_t U8g2Util_GetByteCb(int commInt, int commType) {
+    switch (commInt) {
+        case COMINT_3WSPI: {
+            if (commType == COMTYPE_HW) {
+                //no HW support for 3-wire interface?
+                return nullptr;
+            }
+            return cb_byte_3wire_sw_spi;
+        }
+        case COMINT_4WSPI: {
+            if (commType == COMTYPE_HW) {
+                return cb_byte_spi_hw;
+            }
+            return cb_byte_4wire_sw_spi;
+        }
+            //Similar to 4W_SPI
+        case COMINT_ST7920SPI: {
+            if (commType == COMTYPE_HW) {
+                return cb_byte_spi_hw;
+            }
+            return cb_byte_4wire_sw_spi;
+        }
+        case COMINT_I2C: {
+            if (commType == COMTYPE_HW) {
+                return cb_byte_i2c_hw;
+            }
+            return cb_byte_sw_i2c;
+        }
+        case COMINT_6800: {
+            if (commType == COMTYPE_HW) {
+                return nullptr;
+            }
+            return cb_byte_8bit_6800mode;
+        }
+        case COMINT_8080: {
+            if (commType == COMTYPE_HW) {
+                return nullptr;
+            }
+            return cb_byte_8bit_8080mode;
+        }
+        case COMINT_UART: {
+            //SEE: u8g2_Setup_a2printer_384x240_f()
+            return nullptr;
+        }
+            //similar to 6800 mode
+        case COMINT_KS0108: {
+            if (commType == COMTYPE_HW) {
+                return nullptr;
+            }
+            return cb_byte_ks0108;
+        }
+        case COMINT_SED1520: {
+            if (commType == COMTYPE_HW) {
+                return nullptr;
+            }
+            return cb_byte_sed1520;
+        }
+        default:
+            break;
+    }
+    return nullptr;
+}
+
+u8g2_t *setupDisplay(const std::string &provider) {
+    initializeProviders();
+
+    const std::unique_ptr<DeviceManager> &devMgr = ServiceLocator::getInstance().getDeviceManager();
+    std::shared_ptr<ucgd_t> &info = devMgr->createDevice();
 
     u8g2_pin_map_t pin_config = {};
     /*pin_config.d0 = 11;
@@ -120,7 +177,7 @@ u8g2_t *setupDisplay(const std::string &gpioProvider, const std::string &spiProv
     pin_config.cs = 8;*/
 
     //Initialize device info details
-    info->u8g2 = std::make_unique<u8g2_t>();
+    //info->u8g2 = std::make_unique<u8g2_t>();
     info->pin_map = pin_config;
     info->rotation = const_cast<u8g2_cb_t *>(U8G2_R0);
     info->flag_virtual = false;
@@ -128,37 +185,77 @@ u8g2_t *setupDisplay(const std::string &gpioProvider, const std::string &spiProv
     info->comm_type = COMTYPE_HW;
 
     //Populate options
-    info->options[OPT_DEVICE_SPEED] = DEFAULT_SPI_SPEED;
+    info->options[OPT_BUS_SPEED] = DEFAULT_SPI_SPEED;
     info->options[OPT_PROVIDER] = std::string(PROVIDER_CPERIPHERY);
     info->options[OPT_SPI_BUS] = SPI_PERIPHERAL_MAIN;
-    info->options[OPT_SPI_CHANNEL] = DEFAULT_SPI_CHANNEL;
-    info->options[OPT_DEVICE_GPIO_PATH] = std::string("/dev/gpiochip0");
-    info->options[OPT_DEVICE_I2C_PATH] = std::string("/dev/i2c-1");
-    info->options[OPT_DEVICE_SPI_PATH] = std::string("/dev/spidev0.0");
+    info->options[OPT_SPI_CHANNEL] = SPI_RPI_CHANNEL_CE1;
     info->options[OPT_I2C_BUS] = 1;
+    info->options[OPT_PROVIDER] = provider;
+    info->provider = ServiceLocator::getInstance().getProviderManager()->getProvider(info);
+    info->provider->initialize(info);
 
-    initializeProviders(info);
+    //Make sure the provider supports the current configuration setup
+    //e.g. SPI & I2C capability
+    if (info->comm_type == COMTYPE_HW) {
+        if ((info->comm_int == COMINT_4WSPI || info->comm_int == COMINT_3WSPI || info->comm_int == COMINT_ST7920SPI) && !info->provider->supportsSPI()) {
+            throw std::runtime_error(std::string("Your current setup is configured for Hardware SPI but the provider you selected '") + info->provider->getName() + std::string("' does not have hardware SPI capability"));
+        } else if ((info->comm_int == COMINT_I2C) && !info->provider->supportsI2C()) {
+            throw std::runtime_error(std::string("Your current setup is configured for Hardware I2C but the provider you selected '") + info->provider->getName() + std::string("' does not have hardware I2C capability"));
+        }
+    } else if (info->comm_type == COMTYPE_SW) {
+        //make sure the current provider supports GPIO for bit-bang implementations
+        if (!info->provider->supportsGpio()) {
+            throw std::runtime_error(std::string("Your current setup is configured for software bit-bang implementation but the provider you selected does '") + info->provider->getName() + std::string("' not have GPIO capability"));
+        }
+    }
+
+    //Assign the i2c addres if applicable
+    if (info->comm_type == COMINT_I2C) {
+        std::any addr = info->options[OPT_I2C_ADDRESS];
+        if (addr.has_value()) {
+            int intVal = std::any_cast<int>(addr);
+            u8g2_SetI2CAddress(info->u8g2.get(), intVal);
+        }
+    }
+
     std::cout << "initializeProviders : DONE" << std::endl;
 
+    //Retrieve the byte callback function based on the commInt and commType arguments
+    u8g2_msg_func_info_t cb_byte = U8g2Util_GetByteCb(info->comm_int, info->comm_type);
+
+    if (cb_byte == nullptr) {
+        throw std::runtime_error(std::string("No available byte callback procedures for CommInt = ") + std::to_string(info->comm_int) + std::string(", CommType = ") + std::to_string(info->comm_type));
+    }
+
     //Init callbacks
-    info->byte_cb = [info](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
-        return cb_byte_spi_hw(info, u8x8, msg, arg_int, arg_ptr);
+    info->byte_cb = [info, cb_byte](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+        try {
+            return cb_byte(info, u8x8, msg, arg_int, arg_ptr);
+        } catch (std::exception &e) {
+            std::stringstream ss;
+            ss << "byte_cb() : " << std::string(e.what()) << std::endl;
+            throw std::runtime_error(ss.str());
+        }
+        return cb_byte(info, u8x8, msg, arg_int, arg_ptr);
     };
 
     info->gpio_cb = [info](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
-        return cb_gpio_delay(info, u8x8, msg, arg_int, arg_ptr);
+        try {
+            return cb_gpio_delay(info, u8x8, msg, arg_int, arg_ptr);
+        } catch (std::exception &e) {
+            std::stringstream ss;
+            ss << "gpio_cb() : " << std::string(e.what()) << std::endl;
+            throw std::runtime_error(ss.str());
+        }
     };
 
     //Obtain the raw pointer
     u8g2_t *pU8g2 = info->u8g2.get();
 
-    //Insert device m_Info in cache
-    addToDeviceCache(pU8g2, info);
-
     //for bit bang implementations, you can use the pre-built callbacks available in the u8g2 library
     //see https://github.com/olikraus/u8g2/wiki/Porting-to-new-MCU-platform#communication-callback-eg-u8x8_byte_hw_i2c
     //ex: u8x8_byte_4wire_sw_spi
-    u8g2_Setup_st7920_s_128x64_f(pU8g2, U8G2_R2, U8g2Util_ByteCallbackWrapper, U8g2Util_GpioCallbackWrapper);;
+    u8g2_Setup_st7920_s_128x64_f(pU8g2, U8G2_R2, ByteCallbackWrapper, GpioCallbackWrapper);;
 
     //Initialize Display
     u8g2_InitDisplay(pU8g2);
@@ -175,13 +272,13 @@ void signal_callback_handler(int signum) {
 }
 
 bool validProvider(const std::string &provider) {
-    if (provider == PROVIDER_PIGPIO || provider == PROVIDER_CPERIPHERY || provider == PROVIDER_LIBGPIOD)
+    if (provider == PROVIDER_PIGPIO || provider == PROVIDER_PIGPIOD || provider == PROVIDER_CPERIPHERY || provider == PROVIDER_LIBGPIOD)
         return true;
     return false;
 }
 
 void printUsage(char *argv[]) {
-    std::cout << "Usage: " << std::string(argv[0]) << " [-d] <gpio provider> <spi provider> <i2c provider>" << std::endl;
+    std::cout << "Usage: " << std::string(argv[0]) << " [-d] <provider>" << std::endl;
     exit(1);
 }
 
@@ -189,43 +286,29 @@ int main(int argc, char *argv[]) {
     // Register signal and signal handler
     signal(SIGINT, signal_callback_handler);
 
-    std::string gpioProvider;
-    std::string spiProvider;
-    std::string i2cProvider;
+    std::string provider;
 
-    if (argc == 4) {
-        gpioProvider = std::string(argv[1]);
-        spiProvider = std::string(argv[2]);
-        i2cProvider = std::string(argv[3]);
-    } else if (argc >= 2) {
+    if (argc == 2) {
         if (strcmp("-d", argv[1]) == 0) {
-            gpioProvider = std::string(PROVIDER_LIBGPIOD);
-            spiProvider = std::string(PROVIDER_PIGPIO);
-            i2cProvider = std::string(PROVIDER_PIGPIO);
+            provider = std::string(PROVIDER_PIGPIO);
         } else {
-            printUsage(argv);
+            provider = std::string(argv[1]);
         }
     } else {
         printUsage(argv);
     }
 
     //validate input
-    if (!validProvider(gpioProvider))
-        printUsage(argv);
-    if (!validProvider(spiProvider))
-        printUsage(argv);
-    if (!validProvider(i2cProvider))
+    if (!validProvider(provider))
         printUsage(argv);
 
     std::cout << "=========================================" << std::endl;
     std::cout << "Using Providers" << std::endl;
     std::cout << "=========================================" << std::endl;
-    std::cout << "GPIO PROVIDER = " << gpioProvider << std::endl;
-    std::cout << "SPI PROVIDER = " << spiProvider << std::endl;
-    std::cout << "I2C PROVIDER = " << i2cProvider << std::endl;
+    std::cout << "PROVIDER = " << provider << std::endl;
     std::cout << "=========================================" << std::endl;
 
-    u8g2_t *u8g2 = setupDisplay(gpioProvider, spiProvider, i2cProvider);
+    u8g2_t *u8g2 = setupDisplay(provider);
 
     std::cout << "Running display demo...Press Ctrl+C to exit" << std::endl;
 

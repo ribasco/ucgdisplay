@@ -70,10 +70,8 @@ public class GlcdST7920Example {
     private void run() throws Exception {
         //SPI HW 4-Wire config for ST7920
 
-        //NOTE: On Raspberry Pi systems, you do not need
-        //to explicitly map the pins when hardware capability is
-        //activated for SPI, I2C or UART peripherals.
-        //Pins are automatically configured internally for these interfaces.
+        //NOTE: On Raspberry Pi systems, pins can be automatically configured for hardware capability.
+        //For automatic configuration to work, pigpio needs to be installed on the system and set as the default provider.
 
         //Pinout for Main SPI Peripheral (Raspberry Pi / J8 Header / BCM Pin configuration)
         // - MOSI = 10
@@ -86,31 +84,13 @@ public class GlcdST7920Example {
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
                 //Using system/c-periphery provider
                 .option(GlcdOption.PROVIDER, Provider.SYSTEM)
-                //Set to 800,000 bits per second
-                .option(GlcdOption.DEVICE_SPEED, 800000)
+                //Set to 1,250,000 Hz (1.25 MHz)
+                .option(GlcdOption.BUS_SPEED, 1250000)
                 //The SPI Bus (RPI as two SPI buses available, the Main and Auxillary)
                 .option(GlcdOption.SPI_BUS, SpiBus.MAIN)
                 //Use CE1 or Chip Select 1 on Main SPI peripheral/bus
                 .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
                 .build();
-
-        /*
-        //Other options available:
-        .option(GlcdOption.DEVICE_GPIO_PATH, "/dev/gpiochip0")
-        .option(GlcdOption.DEVICE_SPI_PATH, "/dev/spidev0.0")
-        .option(GlcdOption.DEVICE_I2C_PATH, "/dev/i2c-1")
-        .option(GlcdOption.I2C_BUS, 1)
-        .option(GlcdOption.SPI_PERIPHERAL, SpiPeripheral.MAIN)
-        .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
-        .option(GlcdOption.SPI_MODE, SpiMode.MODE_0)
-        .option(GlcdOption.SPI_BIT_ORDER, SpiBitOrder.MSB_FIRST)
-        .option(GlcdOption.SPI_BITS_PER_WORD, 8)
-        .option(GlcdOption.I2C_FLAGS, 0)
-        .option(GlcdOption.SPI_FLAGS, 0)
-        .option(GlcdOption.I2C_DEVICE_ADDRESS, 0)
-        .option(GlcdOption.PIGPIO_ADDRESS, null)
-        .option(GlcdOption.PIGPIO_PORT, null)
-        */
 
         GlcdDriver driver = new GlcdDriver(config);
 
@@ -149,7 +129,7 @@ public class GlcdST7920Example {
             //Send all buffered data to the display
             driver.sendBuffer();
 
-            Thread.sleep(1);
+            //Thread.sleep(1);
         }
 
         //Clear the display

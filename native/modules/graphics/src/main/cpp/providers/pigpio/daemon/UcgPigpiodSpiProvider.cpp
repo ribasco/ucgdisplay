@@ -45,7 +45,7 @@ void UcgPigpiodSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
         m_PigpioHandle = this->getProvider()->getHandle();
     }
 
-    int speed = context->getOptionInt(OPT_DEVICE_SPEED, DEFAULT_SPI_SPEED);
+    int speed = context->getOptionInt(OPT_BUS_SPEED, DEFAULT_SPI_SPEED);
     int peripheral = context->getOptionInt(OPT_SPI_BUS, DEFAULT_SPI_PERIPHERAL);
     int channel = context->getOptionInt(OPT_SPI_CHANNEL, DEFAULT_SPI_CHANNEL);
     int flags = context->getOptionInt(OPT_SPI_FLAGS, DEFAULT_SPI_FLAGS);

@@ -1,9 +1,57 @@
 #ifndef LOG_HH
 #define LOG_HH
 
-#include <jni.h>
 #include <string>
 #include <cassert>
+#include <UcgdConfig.h>
+
+#ifdef UCGD_DEBUG
+
+#include <iostream>
+
+/**
+ * A JNI wrapper to use Slf4j facility.
+ *
+ * @author Andrea Leofreddi
+ *
+ * @see <a href="http://www.vleo.net/using-slf4j-from-c-jni/">Using Slf4j from C++ JNI</a>
+ */
+class Log {
+public:
+    template<typename... Ts>
+    void info(const std::string &format, Ts &&...args) {
+        std::cout << "INFO: " << format << std::endl;
+    }
+
+    template<typename... Ts>
+    void debug(const std::string &format, Ts &&...args) {
+        std::cout << "DEBUG: " << format << std::endl;
+    }
+
+    template<typename... Ts>
+    void warn(const std::string &format, Ts &&...args) {
+        std::cout << "WARN: " << format << std::endl;
+    }
+
+    template<typename... Ts>
+    void error(const std::string &format, Ts &&...args) {
+        std::cerr << "ERROR: " << format << std::endl;
+    }
+
+    explicit Log(void* source) {
+
+    }
+
+    virtual ~Log() {
+
+    }
+
+private:
+};
+
+#else
+
+#include <jni.h>
 
 /**
  * A JNI wrapper to use Slf4j facility.
@@ -109,6 +157,6 @@ jobject Log::toJava(int value) {
     return env->NewObject(class_, ctor, value);
 }
 
-
+#endif
 
 #endif //LOG_HH
