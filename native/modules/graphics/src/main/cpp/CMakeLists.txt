@@ -10,6 +10,11 @@ include(${GLOBAL_INC_DIR}/CMakeCommon.txt)
 # The version number
 set(UCGD_VERSION_MAJOR 1)
 set(UCGD_VERSION_MINOR 5)
+set(UCGD_VERSION_PATCH 0)
+set(UCGD_VERSION_QUALIFIER "alpha")
+
+# Project Specific Options
+option(UCGD_DEBUG "Enable debbugging" OFF)
 
 # configure a header file to pass some of the CMake settings
 # to the source code
