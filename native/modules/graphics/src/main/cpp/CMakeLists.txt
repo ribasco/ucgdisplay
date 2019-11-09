@@ -34,7 +34,6 @@ list(APPEND UCGDISP_HDR
         "UcgdTypes.h"
         "ServiceLocator.h"
         "DeviceManager.h"
-
         )
 list(APPEND UCGDISP_SRC
         "${GLOBAL_INC_DIR}/Global.cpp"

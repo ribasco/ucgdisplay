@@ -83,9 +83,9 @@ public class GlcdST7920Example {
                 //Set to 180 rotation
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
                 //Using system/c-periphery provider
-                .option(GlcdOption.PROVIDER, Provider.SYSTEM)
-                //Set to 1,250,000 Hz (1.25 MHz)
-                .option(GlcdOption.BUS_SPEED, 1250000)
+                .option(GlcdOption.PROVIDER, Provider.PIGPIO_DAEMON)
+                //Set to 1,000,000 Hz/bps (1.00 MHz)
+                .option(GlcdOption.BUS_SPEED, 1000000)
                 //The SPI Bus (RPI as two SPI buses available, the Main and Auxillary)
                 .option(GlcdOption.SPI_BUS, SpiBus.MAIN)
                 //Use CE1 or Chip Select 1 on Main SPI peripheral/bus

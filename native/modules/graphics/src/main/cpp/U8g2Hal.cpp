@@ -106,7 +106,7 @@ uint8_t cb_byte_spi_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_
         }
         case U8X8_MSG_BYTE_SEND: {
             auto *buf = (uint8_t *) arg_ptr;
-            spi->write(buf, arg_int);
+            spi->write(info, buf, arg_int);
             break;
         }
         case U8X8_MSG_BYTE_START_TRANSFER: {
@@ -142,7 +142,7 @@ uint8_t cb_byte_i2c_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_
         }
         case U8X8_MSG_BYTE_SEND: {
             data = (uint8_t *) arg_ptr;
-            i2c->write(u8x8_GetI2CAddress(u8x8), (uint8_t *) arg_ptr, arg_int);
+            i2c->write(info, u8x8_GetI2CAddress(u8x8), (uint8_t *) arg_ptr, arg_int);
             break;
         }
         case U8X8_MSG_BYTE_START_TRANSFER: {

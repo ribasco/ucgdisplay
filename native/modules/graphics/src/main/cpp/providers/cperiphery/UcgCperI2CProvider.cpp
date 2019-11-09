@@ -27,29 +27,27 @@
 #include <sstream>
 #include <i2c.h>
 
-struct cp_i2c_handle {
-    int fd;
-
-    struct {
-        int c_errno;
-        char errmsg[96];
-    } error;
-};
-
 UcgCperI2CProvider::UcgCperI2CProvider(UcgIOProvider *provider) : UcgI2CProvider(provider) {
-    m_I2C = std::shared_ptr<cp_i2c_t>(cp_i2c_new());
+    //m_I2C = std::shared_ptr<cp_i2c_t>(cp_i2c_new());
 }
 
 UcgCperI2CProvider::~UcgCperI2CProvider() {
-    _close();
+    //_close();
 };
 
 int UcgCperI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
-    //std::string devicePath = context->getOptionString(OPT_DEVICE_I2C_PATH, DEFAULT_I2C_DEVICE_PATH);
+    if (context->sys_i2c_handle != nullptr) {
+        context->sys_i2c_handle = std::unique_ptr<cp_i2c_t>(cp_i2c_new());
+    } else {
+        throw std::runtime_error("There already is an existing i2c handle that is open for this context");
+    }
+
     std::string devicePath = UcgI2CProvider::buildI2CDevicePath(context);
+
     printDebugInfo(context);
-    if (cp_i2c_open(m_I2C.get(), devicePath.c_str()) < 0) {
-        const char *errmsg = cp_i2c_errmsg(m_I2C.get());
+
+    if (cp_i2c_open(context->sys_i2c_handle.get(), devicePath.c_str()) < 0) {
+        const char *errmsg = cp_i2c_errmsg(context->sys_i2c_handle.get());
         std::stringstream ss;
         ss << "cp_i2c_open() : Failed to open i2c device: " << std::string(devicePath);
         throw I2COpenException(ss.str());
@@ -57,11 +55,11 @@ int UcgCperI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
     return 0;
 }
 
-int UcgCperI2CProvider::write(unsigned short address, const uint8_t *buffer, unsigned short length) {
+int UcgCperI2CProvider::write(const std::shared_ptr<ucgd_t>& context, unsigned short address, const uint8_t *buffer, unsigned short length) {
     struct i2c_msg i2cMsg = {.addr = address, .flags = 0, .len = length, .buf = const_cast<__u8 *>(buffer)};
     int retval;
-    if ((retval = cp_i2c_transfer(m_I2C.get(), &i2cMsg, 1)) < 0) {
-        const char *errmsg = cp_i2c_errmsg(m_I2C.get());
+    if ((retval = cp_i2c_transfer(context->sys_i2c_handle.get(), &i2cMsg, 1)) < 0) {
+        const char *errmsg = cp_i2c_errmsg(context->sys_i2c_handle.get());
         std::stringstream ss;
         ss << "Failed to write to i2c device: " << std::string(errmsg);
         throw I2CWriteException(ss.str());
@@ -69,17 +67,17 @@ int UcgCperI2CProvider::write(unsigned short address, const uint8_t *buffer, uns
     return retval;
 }
 
-int UcgCperI2CProvider::close() {
-    return _close();
+int UcgCperI2CProvider::close(const std::shared_ptr<ucgd_t>& context) {
+    return _close(context);
 }
 
 UcgCperipheryProvider *UcgCperI2CProvider::getProvider() {
     return dynamic_cast<UcgCperipheryProvider *>(UcgProviderBase::getProvider());
 }
 
-int UcgCperI2CProvider::_close() {
-    int retval = cp_i2c_close(m_I2C.get());
-    cp_i2c_free(m_I2C.get());
-    m_I2C.reset();
+int UcgCperI2CProvider::_close(const std::shared_ptr<ucgd_t>& context) {
+    int retval = cp_i2c_close(context->sys_i2c_handle.get());
+    cp_i2c_free(context->sys_i2c_handle.get());
+    context->sys_i2c_handle.reset();
     return retval;
 }

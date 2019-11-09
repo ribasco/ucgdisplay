@@ -38,16 +38,14 @@ public:
 
     int open(const std::shared_ptr<ucgd_t>& context) override;
 
-    int close() override;
+    int close(const std::shared_ptr<ucgd_t>& context) override;
 
-    int write(unsigned short address, const uint8_t *buffer, unsigned short length) override;
+    int write(const std::shared_ptr<ucgd_t>& context, unsigned short address, const uint8_t *buffer, unsigned short length) override;
 
     UcgCperipheryProvider *getProvider() override;
 
 private:
-    std::shared_ptr<cp_i2c_t> m_I2C;
-
-    int _close();
+    int _close(const std::shared_ptr<ucgd_t>& context);
 };
 
 

@@ -40,16 +40,11 @@ public:
 
     void open(const std::shared_ptr<ucgd_t>& context) override;
 
-    int write(uint8_t *buffer, int count) override;
+    int write(const std::shared_ptr<ucgd_t> &context, uint8_t *buffer, int count) override;
 
-    void close() override;
+    void close(const std::shared_ptr<ucgd_t> &context) override;
 
     UcgCperipheryProvider *getProvider() override;
-
-private:
-    std::unique_ptr<cp_spi_t>  m_SPI;
-
-    void _close();
 };
 
 #endif //UCGD_MOD_GRAPHICS_UCGCPERSPIPROVIDER_H

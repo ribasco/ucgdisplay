@@ -37,16 +37,16 @@ public:
 
     int open(const std::shared_ptr<ucgd_t> &context) override;
 
-    int close() override;
+    int close(const std::shared_ptr<ucgd_t>& context) override;
 
-    int write(unsigned short address, const uint8_t *buffer, unsigned short length) override;
+    int write(const std::shared_ptr<ucgd_t>& context, unsigned short address, const uint8_t *buffer, unsigned short length) override;
 
     UcgPigpiodProvider *getProvider() override;
 
 private:
     int m_PigpioHandle;
-    int m_Handle;
-    int _close();
+    //int m_Handle;
+    int _close(const std::shared_ptr<ucgd_t>& context);
     std::string _get_errmsg(int val);
 };
 

@@ -29,24 +29,19 @@
 #include <sstream>
 #include <iostream>
 
-struct cp_spi_handle {
-    int fd;
-
-    struct {
-        int c_errno;
-        char errmsg[96];
-    } error;
-};
-
 UcgCperSpiProvider::UcgCperSpiProvider(UcgIOProvider *provider) : UcgSpiProvider(provider) {
-    m_SPI = std::unique_ptr<cp_spi_t>(cp_spi_new());
 }
 
-UcgCperSpiProvider::~UcgCperSpiProvider() {
-    _close();
-};
+UcgCperSpiProvider::~UcgCperSpiProvider() = default;
 
-void UcgCperSpiProvider::open(const std::shared_ptr<ucgd_t>& context) {
+void UcgCperSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
+
+    if (context->sys_spi_handle != nullptr) {
+        throw SpiOpenException("SPI device is already open");
+    }
+
+    context->sys_spi_handle = std::unique_ptr<cp_spi_t>(cp_spi_new());
+
     printDebugInfo(context);
 
     std::string devicePath = UcgSpiProvider::buildSPIDevicePath(context);
@@ -64,17 +59,17 @@ void UcgCperSpiProvider::open(const std::shared_ptr<ucgd_t>& context) {
     }
 
     //mode = 0,1,2,3
-    if (cp_spi_open_advanced(m_SPI.get(), devicePath.c_str(), mode, speed, bit_order, bits_per_word, flags) < 0) {
+    if (cp_spi_open_advanced(context->sys_spi_handle.get(), devicePath.c_str(), mode, speed, bit_order, bits_per_word, flags) < 0) {
         std::stringstream ss;
-        ss << "open() : Error initializing spi device. Reason: " << std::string(cp_spi_errmsg(m_SPI.get()));
+        ss << "open() : Error initializing spi device. Reason: " << std::string(cp_spi_errmsg(context->sys_spi_handle.get()));
         throw SpiOpenException(ss.str());
     }
 }
 
-int UcgCperSpiProvider::write(uint8_t *buffer, int count) {
+int UcgCperSpiProvider::write(const std::shared_ptr<ucgd_t> &context, uint8_t *buffer, int count) {
     int retval;
-    if ((retval = cp_spi_transfer(m_SPI.get(), buffer, buffer, count)) < 0) {
-        throw SpiWriteException(std::string("write() : Failed to write to spi device. Reason: \"") + std::string(cp_spi_errmsg(m_SPI.get())) + std::string("\""));
+    if ((retval = cp_spi_transfer(context->sys_spi_handle.get(), buffer, buffer, count)) < 0) {
+        throw SpiWriteException(std::string("write() : Failed to write to spi device. Reason: \"") + std::string(cp_spi_errmsg(context->sys_spi_handle.get())) + std::string("\""));
     }
     return retval;
 }
@@ -83,15 +78,11 @@ UcgCperipheryProvider *UcgCperSpiProvider::getProvider() {
     return dynamic_cast<UcgCperipheryProvider *>(UcgProviderBase::getProvider());
 }
 
-void UcgCperSpiProvider::close() {
-    _close();
-}
-
-void UcgCperSpiProvider::_close() {
-    if (m_SPI != nullptr) {
-        cp_spi_close(m_SPI.get());
-        cp_spi_free(m_SPI.get());
-        m_SPI.reset();
-        m_SPI = nullptr;
+void UcgCperSpiProvider::close(const std::shared_ptr<ucgd_t> &context) {
+    if (context->sys_spi_handle != nullptr) {
+        cp_spi_close(context->sys_spi_handle.get());
+        cp_spi_free(context->sys_spi_handle.get());
+        context->sys_spi_handle.reset();
+        context->sys_spi_handle = nullptr;
     }
 }

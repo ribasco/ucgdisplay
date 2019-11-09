@@ -67,9 +67,9 @@ public:
 
     virtual int open(const std::shared_ptr<ucgd_t> &context) {};
 
-    virtual int close() {};
+    virtual int close(const std::shared_ptr<ucgd_t>& context) {};
 
-    virtual int write(unsigned short address, const uint8_t *buffer, unsigned short length) {};
+    virtual int write(const std::shared_ptr<ucgd_t>& context, unsigned short address, const uint8_t *buffer, unsigned short length) {};
 
 protected:
 

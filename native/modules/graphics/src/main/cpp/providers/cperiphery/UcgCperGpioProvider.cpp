@@ -59,26 +59,20 @@ UcgCperGpioProvider::~UcgCperGpioProvider() {
 void UcgCperGpioProvider::init(const std::shared_ptr<ucgd_t> &context, int pin, UcgGpioProvider::GpioMode mode) {
     if (pin < 0)
         return;
+
     UcgGpioProvider::init(context, pin, mode);
-
-    //TODO: device path removed, need to do automatic translation the gpio number to a path
-    //std::string devicePath = getOptionValueString(OPT_DEVICE_GPIO_PATH, DEFAULT_GPIO_DEVICE_PATH);
-
     std::string devicePath = UcgGpioProvider::buildGpioDevicePath(context);
 
     //TODO: Validate path
-
     log.debug("init() : [C-PERIPHERY] Initializing GPIO (Pin: {}, Mode: {}, Device Path: {})", pin, std::to_string(mode), devicePath);
 
     std::shared_ptr<gpio_t> gpio = findOrCreateGpioLine(pin);
-
     int retval = cp_gpio_open(gpio.get(), devicePath.c_str(), pin, GPIO_DIR_OUT);
     if (retval < 0) {
         std::stringstream ss;
         ss << "Failed to initialize gpio pin: " << std::to_string(pin) << " with mode '" << std::to_string(mode) << ", Reason: " << std::string(cp_gpio_errmsg(gpio.get()));
         throw GpioInitException(ss.str());
     }
-
     log.debug("init_gpio() : [C-PERIPHERY] Pin = {}, Mode = {}", pin, std::to_string(mode));
 }
 
@@ -117,7 +111,7 @@ bool UcgCperGpioProvider::isModeSupported(const UcgGpioProvider::GpioMode &mode)
     return true;
 }
 
-std::shared_ptr<gpio_t> UcgCperGpioProvider::findOrCreateGpioLine(int pin) {
+const std::shared_ptr<gpio_t>& UcgCperGpioProvider::findOrCreateGpioLine(int pin) {
     if (pin < 0)
         throw GpioException(std::string("findOrCreateGpioLine() : Invalid pin number: ") + std::to_string(pin));
     auto it = m_GpioLineCache.find(pin);
@@ -126,6 +120,5 @@ std::shared_ptr<gpio_t> UcgCperGpioProvider::findOrCreateGpioLine(int pin) {
         return it->second;
     }
     //found nothing, create new
-    auto res = m_GpioLineCache.insert(std::make_pair(pin, std::shared_ptr<gpio_t>(cp_gpio_new())));
-    return res.first->second;
+    return m_GpioLineCache.insert(std::make_pair(pin, std::shared_ptr<gpio_t>(cp_gpio_new()))).first->second;
 }

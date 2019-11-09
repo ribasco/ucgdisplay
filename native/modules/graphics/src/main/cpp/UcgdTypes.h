@@ -190,6 +190,31 @@ class UcgGpioProvider;
 
 struct ucgd_t;
 
+#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+
+struct cp_spi_handle {
+    int fd;
+
+    struct {
+        int c_errno;
+        char errmsg[96];
+    } error;
+};
+
+struct cp_i2c_handle {
+    int fd;
+
+    struct {
+        int c_errno;
+        char errmsg[96];
+    } error;
+};
+
+#include <spi.h>
+#include <i2c.h>
+
+#endif
+
 typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;
 
 typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
@@ -248,10 +273,16 @@ struct ucgd_t {
         return (uintptr_t) u8g2.get();
     }
 
-//Only available on ARM 32/64 bit platforms
+    //Only available on ARM 32/64 bit platforms
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
-    int spi_handle = -1;
-    int i2c_handle = -1;
+    //spi handle for third-party providers
+    int tp_spi_handle = -1;
+    //i2c handle for third party providers
+    int tp_i2c_handle = -1;
+    //the system spi handle (c-periphery)
+    std::unique_ptr<cp_spi_t> sys_spi_handle;
+    //the system i2c handle (c-periphery)
+    std::unique_ptr<cp_i2c_t> sys_i2c_handle;
     std::shared_ptr<UcgIOProvider> provider;
     std::map<std::string, std::any> options;
 
@@ -285,8 +316,8 @@ struct ucgd_t {
             return defaultVal;
         }
     }
+
 #endif
 };
-
 
 #endif //UCGD_MOD_GRAPHICS_TYPES_H

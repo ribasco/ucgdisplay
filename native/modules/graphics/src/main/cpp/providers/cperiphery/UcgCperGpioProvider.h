@@ -50,7 +50,7 @@ protected:
 
 private:
     std::map<int, std::shared_ptr<gpio_t>> m_GpioLineCache;
-    std::shared_ptr<gpio_t> findOrCreateGpioLine(int pin);
+    const std::shared_ptr<gpio_t>& findOrCreateGpioLine(int pin);
     int _close();
 };
 

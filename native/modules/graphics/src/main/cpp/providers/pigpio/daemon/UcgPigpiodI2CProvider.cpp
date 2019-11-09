@@ -28,11 +28,9 @@
 #include <sstream>
 #include <UcgPigpioCommon.h>
 
-UcgPigpiodI2CProvider::UcgPigpiodI2CProvider(UcgIOProvider *provider) : UcgI2CProvider(provider), m_PigpioHandle(-1), m_Handle(-1) {}
+UcgPigpiodI2CProvider::UcgPigpiodI2CProvider(UcgIOProvider *provider) : UcgI2CProvider(provider), m_PigpioHandle(-1) {}
 
-UcgPigpiodI2CProvider::~UcgPigpiodI2CProvider() {
-    _close();
-};
+UcgPigpiodI2CProvider::~UcgPigpiodI2CProvider() = default;;
 
 int UcgPigpiodI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
     printDebugInfo(context);
@@ -46,20 +44,20 @@ int UcgPigpiodI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
     int flags = context->getOptionInt(OPT_I2C_FLAGS);
 
     //Note: Returns a handle (>=0) if OK, otherwise PI_BAD_I2C_BUS, PI_BAD_I2C_ADDR, PI_BAD_FLAGS, PI_NO_HANDLE, or PI_I2C_OPEN_FAILED.
-    m_Handle = i2c_open(m_PigpioHandle, busNumber, address, flags);
+    context->tp_i2c_handle = i2c_open(m_PigpioHandle, busNumber, address, flags);
 
-    if (m_Handle < 0) {
+    if (context->tp_i2c_handle < 0) {
         std::stringstream ss;
-        ss << "Failed to open I2C device. Reason: " << _get_errmsg(m_Handle);
+        ss << "Failed to open I2C device. Reason: " << _get_errmsg(context->tp_i2c_handle);
         throw I2COpenException(ss.str());
     }
 
-    return m_Handle;
+    return context->tp_i2c_handle;
 }
 
-int UcgPigpiodI2CProvider::write(unsigned short address, const uint8_t *buffer, unsigned short length) {
+int UcgPigpiodI2CProvider::write(const std::shared_ptr<ucgd_t>& context, unsigned short address, const uint8_t *buffer, unsigned short length) {
     int retval = -1;
-    retval = i2c_write_device(m_PigpioHandle, m_Handle, (char *) buffer, length);
+    retval = i2c_write_device(m_PigpioHandle, context->tp_i2c_handle, (char *) buffer, length);
     if (retval < 0) {
         std::stringstream ss;
         ss << "Failed to write to I2C device. Reason: " << _get_errmsg(retval);
@@ -68,23 +66,24 @@ int UcgPigpiodI2CProvider::write(unsigned short address, const uint8_t *buffer, 
     return retval;
 }
 
-int UcgPigpiodI2CProvider::close() {
-    return _close();
+int UcgPigpiodI2CProvider::close(const std::shared_ptr<ucgd_t>& context) {
+    return _close(context);
 }
 
 UcgPigpiodProvider *UcgPigpiodI2CProvider::getProvider() {
     return dynamic_cast<UcgPigpiodProvider *>(UcgProviderBase::getProvider());
 }
 
-int UcgPigpiodI2CProvider::_close() {
-    int retval = i2c_close(m_PigpioHandle, m_Handle);
+int UcgPigpiodI2CProvider::_close(const std::shared_ptr<ucgd_t>& context) {
+    int retval = i2c_close(m_PigpioHandle, context->tp_i2c_handle);
     if (retval < 0) {
         std::stringstream ss;
         ss << "Failed to close I2C device. Reason: " << UcgPigpioCommon::getErrorMsg(retval);
         throw I2CException(ss.str());
     }
     m_PigpioHandle = -1;
-    m_Handle = -1;
+    //m_Handle = -1;
+    context->tp_i2c_handle = -1;
     return retval;
 }
 

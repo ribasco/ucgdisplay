@@ -41,16 +41,14 @@ public:
 
     void open(const std::shared_ptr<ucgd_t> &context) override;
 
-    int write(uint8_t *buffer, int count) override;
+    int write(const std::shared_ptr<ucgd_t> &context, uint8_t *buffer, int count) override;
 
-    void close() override;
+    void close(const std::shared_ptr<ucgd_t> &context) override;
 
     UcgPigpioProvider *getProvider() override;
 
 private:
-    int m_Handle;
-
-    void _close();
+    void _close(const std::shared_ptr<ucgd_t> &context);
 };
 
 

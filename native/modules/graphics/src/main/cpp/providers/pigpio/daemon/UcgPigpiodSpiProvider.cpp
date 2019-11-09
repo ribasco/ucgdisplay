@@ -29,17 +29,15 @@
 #include <iostream>
 #include <pigpiod_if2.h>
 
-UcgPigpiodSpiProvider::UcgPigpiodSpiProvider(UcgIOProvider *provider) : UcgSpiProvider(provider), m_PigpioHandle(-1), m_Handle(-1) {
+UcgPigpiodSpiProvider::UcgPigpiodSpiProvider(UcgIOProvider *provider) : UcgSpiProvider(provider), m_PigpioHandle(-1) {
 
 }
 
-UcgPigpiodSpiProvider::~UcgPigpiodSpiProvider() {
-    _close();
-};
+UcgPigpiodSpiProvider::~UcgPigpiodSpiProvider() = default;;
 
 void UcgPigpiodSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
-    if (m_Handle >= 0)
-        throw SpiOpenException(std::string("SPI device is already open: ") + std::to_string(m_Handle));
+    if (context->tp_spi_handle >= 0)
+        throw SpiOpenException(std::string("SPI device is already open: ") + std::to_string(context->tp_spi_handle));
 
     if (m_PigpioHandle <= -1) {
         m_PigpioHandle = this->getProvider()->getHandle();
@@ -69,15 +67,15 @@ void UcgPigpiodSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
                                                flags
     );
 
-    this->m_Handle = spi_open(m_PigpioHandle, channel, speed, flags);
+    context->tp_spi_handle = spi_open(m_PigpioHandle, channel, speed, flags);
 
-    if (this->m_Handle < 0) {
+    if (context->tp_spi_handle < 0) {
         std::stringstream ss;
         ss << "Failed to open spi device (channel: " << std::to_string(channel)
            << ", speed: " << std::to_string(speed)
            << ", flags: " << std::to_string(flags)
            << ", handle: " << std::to_string(this->getProvider()->getHandle())
-           << ", Code: " << std::to_string(m_Handle) << ")";
+           << ", Code: " << std::to_string(context->tp_spi_handle) << ")";
         throw SpiOpenException(ss.str());
     }
 
@@ -86,11 +84,11 @@ void UcgPigpiodSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
     log.debug("spi_open() : [PIGPIOD] Successfully opened SPI device");
 }
 
-int UcgPigpiodSpiProvider::write(uint8_t *buffer, int count) {
-    if (this->m_Handle < 0) {
+int UcgPigpiodSpiProvider::write(const std::shared_ptr<ucgd_t> &context, uint8_t *buffer, int count) {
+    if (context->tp_spi_handle < 0) {
         throw SpiWriteException("write() : [PIGPIOD] SPI device not open");
     }
-    int retval = spi_write(this->getProvider()->getHandle(), this->m_Handle, (char *) buffer, count);
+    int retval = spi_write(this->getProvider()->getHandle(), context->tp_spi_handle, (char *) buffer, count);
     if (retval < 0) {
         std::string reason;
         switch (retval) {
@@ -117,12 +115,12 @@ UcgPigpiodProvider *UcgPigpiodSpiProvider::getProvider() {
     return dynamic_cast<UcgPigpiodProvider *>(UcgProviderBase::getProvider());
 }
 
-void UcgPigpiodSpiProvider::close() {
-    _close();
+void UcgPigpiodSpiProvider::close(const std::shared_ptr<ucgd_t> &context) {
+    _close(context);
 }
 
-void UcgPigpiodSpiProvider::_close() {
-    spi_close(this->m_PigpioHandle, this->m_Handle);
+void UcgPigpiodSpiProvider::_close(const std::shared_ptr<ucgd_t> &context) {
+    spi_close(this->m_PigpioHandle, context->tp_spi_handle);
     m_PigpioHandle = -1;
-    m_Handle = -1;
+    context->tp_spi_handle = -1;
 }
