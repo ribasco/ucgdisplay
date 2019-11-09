@@ -97,7 +97,7 @@ uint8_t *U8g2hal_GetFontByName(const std::string &font_name) {
  */
 uint8_t cb_byte_spi_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
 
-    std::shared_ptr<UcgSpiProvider> spi = info->provider->getSpiProvider();
+    const std::shared_ptr<UcgSpiProvider>& spi = info->provider->getSpiProvider();
 
     switch (msg) {
         case U8X8_MSG_BYTE_INIT: {
@@ -181,7 +181,7 @@ uint8_t cb_gpio_delay(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t
             break;
         }
         case U8X8_MSG_DELAY_MILLI: {                    // delay arg_int * 1 milli second
-            usleep(arg_int * 1);
+            usleep(arg_int * 1000);
             break;
         }
         case U8X8_MSG_DELAY_I2C: {                      // arg_int is the I2C speed in 100KHz, e.g. 4 = 400 KHz
@@ -260,34 +260,6 @@ uint8_t cb_gpio_delay(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t
     return 1;
 }
 
-bool tryGetAndInitProvider(const std::shared_ptr<ucgd_t> &context, const std::string& providerName, std::shared_ptr<UcgIOProvider>& provider) {
-    Log log = ServiceLocator::getInstance().getLogger();
-    std::unique_ptr<ProviderManager> &pMan = ServiceLocator::getInstance().getProviderManager();
-
-    //Try and retrieve provider for configuring special pin modes specific to the Raspberry Pi
-    std::shared_ptr<UcgIOProvider>& tmpProvider = pMan->getProvider(providerName);
-
-    //Check if installed
-    if (!tmpProvider->isAvailable()) {
-        log.debug("tryGetAndInitProvider() : Provider '{}' not installed on the system", providerName);
-        return false;
-    }
-
-    //Try to initialize
-    if (!tmpProvider->isInitialized()) {
-        try {
-            tmpProvider->initialize(context);
-        } catch (std::runtime_error& e) {
-            log.warn("tryGetAndInitProvider() : Provider '{}' failed to start (Reason: {})", providerName, std::string(e.what()));
-            return false;
-        }
-    }
-
-    provider = tmpProvider;
-
-    return true;
-}
-
 /**
  * Perform special initialization procedures for supported SoC devices
  * @param info The ucgdisplay descriptor
@@ -308,25 +280,29 @@ void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<U
         //If this is a raspberry pi system, we will TRY use the pigpio provider to initialize the hardware specific mode sets.
         //This assumes that you are using a Pi model with the Standard J8 header (would not bother supporting the older versions)
         if (is_soc_raspberrypi()) {
-            log.debug("Detected a raspberry pi system. Trying to automatically configure pins for hardware capability");
+            log.debug("hal_init_gpio() : Raspberry Pi system detected. Attempting to automatically configure pins for hardware capability");
             std::unique_ptr<ProviderManager> &pMan = ServiceLocator::getInstance().getProviderManager();
 
             //Try and retrieve provider for configuring special pin modes specific to the Raspberry Pi
             std::shared_ptr<UcgIOProvider> pigpioProvider;
 
-            //Attempt #1: Try Pigpio Daemon mode
-            log.debug("hal_init_gpio() : Attempting to retrieve and connect to the Pigpio daemon...");
-            bool havePigpiod = tryGetAndInitProvider(info, PROVIDER_PIGPIOD, pigpioProvider);
+            //If the user selected pigpio as the default provider, it should already be initialized
+            if (gpio->getProvider()->getName() == PROVIDER_PIGPIO || gpio->getProvider()->getName() == PROVIDER_PIGPIOD) {
+                log.debug("hal_init_gpio() : Using existing pigpio provider for configuring pin modes");
+                pigpioProvider = pMan->getProvider(gpio->getProvider()->getName());
+            } else {
+                //Attempt #1: Try Pigpio Daemon mode
+                log.debug("hal_init_gpio() : Attempting to retrieve and connect to the Pigpio daemon...");
 
-            if (!havePigpiod) {
-                //Attempt #2: Try Pigpio Standalone mode
-                log.debug("hal_init_gpio() : Looks like PIGPIO Daemon is unavailable, trying Pigpio standalone...");
-                bool havePigpio = tryGetAndInitProvider(info, PROVIDER_PIGPIO, pigpioProvider);
+                if (!tryGetAndInitProvider(info, PROVIDER_PIGPIOD, pigpioProvider)) {
+                    //Attempt #2: Try Pigpio Standalone mode
+                    log.debug("hal_init_gpio() : Looks like PIGPIO Daemon is unavailable, trying Pigpio standalone...");
 
-                if (!havePigpio) {
-                    //Attempt no fucks given: Do nothing
-                    log.warn("hal_init_gpio() : Failed to retrieve/initialize both pigpio daemon and standalone. Falling back to default routine.");
-                    return;
+                    if (!tryGetAndInitProvider(info, PROVIDER_PIGPIO, pigpioProvider)) {
+                        //Attempt no fucks given: Do nothing
+                        log.warn("hal_init_gpio() : Failed to retrieve/initialize both pigpio daemon and standalone. Falling back to default routine.");
+                        return;
+                    }
                 }
             }
 
@@ -401,6 +377,34 @@ void initializeGpioAllOut(const std::shared_ptr<ucgd_t> &info, const std::shared
     gpio->init(info, info->pin_map.cs, UcgGpioProvider::GpioMode::MODE_OUTPUT);
     gpio->init(info, info->pin_map.cs1, UcgGpioProvider::GpioMode::MODE_OUTPUT);
     gpio->init(info, info->pin_map.cs2, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+}
+
+bool tryGetAndInitProvider(const std::shared_ptr<ucgd_t> &context, const std::string& providerName, std::shared_ptr<UcgIOProvider>& provider) {
+    Log log = ServiceLocator::getInstance().getLogger();
+    std::unique_ptr<ProviderManager> &pMan = ServiceLocator::getInstance().getProviderManager();
+
+    //Try and retrieve provider for configuring special pin modes specific to the Raspberry Pi
+    std::shared_ptr<UcgIOProvider>& tmpProvider = pMan->getProvider(providerName);
+
+    //Check if installed
+    if (!tmpProvider->isAvailable()) {
+        log.debug("tryGetAndInitProvider() : Provider '{}' not installed on the system", providerName);
+        return false;
+    }
+
+    //Try to initialize
+    if (!tmpProvider->isInitialized()) {
+        try {
+            tmpProvider->initialize(context);
+        } catch (std::runtime_error& e) {
+            log.warn("tryGetAndInitProvider() : Provider '{}' failed to start (Reason: {})", providerName, std::string(e.what()));
+            return false;
+        }
+    }
+
+    provider = tmpProvider;
+
+    return true;
 }
 
 #else

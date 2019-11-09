@@ -38,11 +38,13 @@
 #include <DeviceManager.h>
 
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+
 #include <Utils.h>
 #include <UcgLibgpiodProvider.h>
 #include <UcgPigpioProvider.h>
 #include <UcgCperipheryProvider.h>
 #include <UcgPigpiodProvider.h>
+
 #endif
 
 static std::map<int, std::string> pinNameIndexMap; //NOLINT
@@ -159,17 +161,17 @@ u8g2_msg_func_info_t U8g2Util_GetByteCb(int commInt, int commType) {
     return nullptr;
 }
 
-std::shared_ptr<ucgd_t>& U8g2Util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, option_map_t &options, bool virtualMode) {
+std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, option_map_t &options, bool virtualMode) {
     JNIEnv *env;
     GETENV(env);
 
-    Log& log = ServiceLocator::getInstance().getLogger();
+    Log &log = ServiceLocator::getInstance().getLogger();
 
-    const std::unique_ptr<DeviceManager>& devMgr = ServiceLocator::getInstance().getDeviceManager();
-    std::shared_ptr<ucgd_t>& context = devMgr->createDevice();
+    const std::unique_ptr<DeviceManager> &devMgr = ServiceLocator::getInstance().getDeviceManager();
+    std::shared_ptr<ucgd_t> &context = devMgr->createDevice();
 
     //read this: https://floating.io/2017/07/lambda-shared_ptr-memory-leak/
-    std::weak_ptr<ucgd_t> weak_context(context);
+    //std::weak_ptr<ucgd_t> weak_context(context);
 
     //Store all device specific properties to the context
     context->pin_map = pin_config;
@@ -231,8 +233,7 @@ std::shared_ptr<ucgd_t>& U8g2Util_SetupAndInitDisplay(const std::string &setup_p
     }
 
     //Configure Byte callback
-    context->byte_cb = [cb_byte, weak_context, &virtualMode](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
-        auto context = weak_context.lock();
+    context->byte_cb = [cb_byte, context, virtualMode](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
         if (virtualMode) {
             JNIEnv *lenv;
             GETENV(lenv);
@@ -262,8 +263,7 @@ std::shared_ptr<ucgd_t>& U8g2Util_SetupAndInitDisplay(const std::string &setup_p
     };
 
     //Configure Gpio callback
-    context->gpio_cb = [virtualMode, weak_context](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
-        auto context = weak_context.lock();
+    context->gpio_cb = [virtualMode, context](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
         if (virtualMode) {
             JNIEnv *lenv;
             GETENV(lenv);
@@ -286,7 +286,7 @@ std::shared_ptr<ucgd_t>& U8g2Util_SetupAndInitDisplay(const std::string &setup_p
     context->setup_cb(pU8g2, rotation, U8g2Util_ByteCallbackWrapper, U8g2Util_GpioCallbackWrapper);
 
     //Initialize the display
-    log.debug("setup_display() : Starting u8g2 startup sequence for '{}'", std::to_string(context->address()));
+    log.debug("setup_display() : Executing u8g2 startup sequence for '{}'", std::to_string(context->address()));
     u8g2_InitDisplay(pU8g2);
     u8g2_SetPowerSave(pU8g2, 0);
     u8g2_ClearDisplay(pU8g2);
@@ -297,13 +297,13 @@ std::shared_ptr<ucgd_t>& U8g2Util_SetupAndInitDisplay(const std::string &setup_p
 
 uint8_t U8g2Util_ByteCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    std::shared_ptr<ucgd_t>& info = ServiceLocator::getInstance().getDeviceManager()->getDevice(addr);
+    std::shared_ptr<ucgd_t> &info = ServiceLocator::getInstance().getDeviceManager()->getDevice(addr);
     return info->byte_cb(u8x8, msg, arg_int, arg_ptr);
 }
 
 uint8_t U8g2Util_GpioCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    std::shared_ptr<ucgd_t>& info = ServiceLocator::getInstance().getDeviceManager()->getDevice(addr);
+    std::shared_ptr<ucgd_t> &info = ServiceLocator::getInstance().getDeviceManager()->getDevice(addr);
     return info->gpio_cb(u8x8, msg, arg_int, arg_ptr);
 }
 
