@@ -1,7 +1,7 @@
 // the configured options and settings for UCGDisplay
 #define UCGD_VERSION_MAJOR @UCGD_VERSION_MAJOR@
 #define UCGD_VERSION_MINOR @UCGD_VERSION_MINOR@
+#define UCGD_VERSION_PATCH @UCGD_VERSION_PATCH@
+#define UCGD_VERSION_QUALIFIER @UCGD_VERSION_QUALIFIER@
 
-#cmakedefine USE_PIGPIO
-#cmakedefine USE_LIBGPIOD
-#cmakedefine USE_CPERIPHERY
+#cmakedefine UCGD_DEBUG
