@@ -25,6 +25,11 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.utils;
 
+/**
+ * Represents a decoded X-Bitmap resource
+ *
+ * @author Rafael Ibasco
+ */
 public class XBMData {
     private int width;
 

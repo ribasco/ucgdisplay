@@ -9,12 +9,11 @@
 **1.5.0-alpha**
 
 - Migrated to JDK 11
-- Fixed 'symbol lookup error' (Issue: #22)
-- Added support for multiple I/O peripheral providers ([libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/), [pigpiod](https://github.com/joan2937/pigpio), [c-periphery](https://github.com/vsergeev/c-periphery)) (Issue #24)
+- Fixed 'symbol lookup error' (Issue: [#22](https://github.com/ribasco/ucgdisplay/issues/22))
+- Added support for multiple I/O peripheral providers ([libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/), [pigpiod](https://github.com/joan2937/pigpio), [c-periphery](https://github.com/vsergeev/c-periphery)) (Issue [#24](https://github.com/ribasco/ucgdisplay/issues/24))
 - 32 bit and 64 bit architectures are now fully supported for ARM and x86. Note that 32 bit support for OSX platform may be removed in the future versions.
-- Added native logging capability for improved traceability (native routes to SLF4J)
+- Added native logging capability for improved traceability (all native logging is routed to SLF4J)
 - On Raspberry Pi platforms, GPIO pins are now automatically configured internally by the native library.
-- Added more options for different I/O peripheral providers
 - Introduced API changes for [GlcdConfigBuilder](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/GlcdConfigBuilder.java). 
 
 ### Features
@@ -23,7 +22,6 @@
 
 ##### General features
 
-* Easy to use API
 * Supports both Character and Graphics/Dot-Matrix display devices
 * Support for multiple I/O peripheral providers
   * [Libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/)
@@ -31,7 +29,7 @@
   * [C-Periphery](https://github.com/vsergeev/c-periphery) (Based on the linux kernel)
 * JDK 11 Compatible (Available for both 32 and 64 bit architectures)
 * Provides native bindings via JNI to the popular U8g2 library for graphics displays.
-* Introspection capability
+* Introspection capability. Allows you to examine the low-level communication data flow of the display device.
 
 ##### Display drivers
 
@@ -99,7 +97,7 @@
 1. From maven repository
 
     ```xml
-    <dependencies>
+    <dependencies>HD44780
         <!-- Character display driver (HD44780) -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
@@ -198,20 +196,14 @@ public class HD44780Example {
 
 ```
 
-######  Graphic LCD Example (ST7920)
+######  Graphic LCD Example (ST7920 SPI Hardware)
 
-Simple hello world example for `ST7920` display controller using RPi's SPI Hardware capability.
+Example for`ST7920` display controller using RPi's SPI Hardware capability ([Source Code](https://github.com/ribasco/ucgdisplay/blob/master/examples/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/examples/glcd/GlcdST7920HWExample.java)).
 
->  **Note:** For I2C/SPI hardware capability, there is no need to map the pins. Doing so might result into 'operation is not permitted' errors.  
-
-
-
-See [ST7920 Example Code](https://github.com/ribasco/ucgdisplay/blob/master/examples/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/examples/glcd/GlcdST7920Example.java)
+>  **Note:** For I2C/SPI hardware capability, there is no need to map the pins explicitly. 
 
 
 ```java
-package com.ibasco.ucgdisplay.examples;
-
 import com.ibasco.ucgdisplay.drivers.glcd.*;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
 import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMData;
@@ -222,24 +214,30 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.Objects;
 
-public class GlcdST7920Example {
+/**
+ * ST7920 Example - Hardware SPI
+ */
+public class GlcdST7920HWExample {
+
+    private static final Logger log = LoggerFactory.getLogger(GlcdST7920HWExample.class);
+
     public static void main(String[] args) throws Exception {
-        new GlcdST7920Example().run();
+        new GlcdST7920HWExample().run();
     }
-    
+
     private void drawU8G2Logo(int offset, GlcdDriver driver) {
         driver.setFontMode(1);
 
         driver.setFontDirection(0);
-        driver.setFont(GlcdFont.FONT_INB16_MF);
+        driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
         driver.drawString(offset, 22, "U");
 
         driver.setFontDirection(1);
-        driver.setFont(GlcdFont.FONT_INB19_MN);
+        driver.setFont(GlcdFont.FONT_INB19_MN); //u8g2_font_inb19_mn
         driver.drawString(offset + 14, 8, "8");
 
         driver.setFontDirection(0);
-        driver.setFont(GlcdFont.FONT_INB16_MF);
+        driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
         driver.drawString(offset + 36, 22, "g");
         driver.drawString(offset + 48, 22, "2");
 
@@ -248,36 +246,35 @@ public class GlcdST7920Example {
         driver.drawVLine(offset + 32, 22, 12);
         driver.drawVLine(offset + 33, 23, 12);
     }
-    
+
     private void run() throws Exception {
         //SPI HW 4-Wire config for ST7920
-        
-        //NOTE: On Raspberry Pi systems, you do not need 
-        //to explicitly map the pins when hardware capability is 
-        //activated for SPI, I2C or UART peripherals. 
-        //Pins are automatically configured internally for these interfaces.
 
-        //Pinout for Main SPI Peripheral (Raspberry Pi / J8 Header)
+        //NOTE: On Raspberry Pi systems, pins can be automatically configured for hardware 		   capability (setting pin modes to ALT*).
+        //For automatic configuration to work, pigpio needs to be installed on the system         and set as the default provider.
+
+        //Pinout for Main SPI Peripheral 
         // - MOSI = 10
         // - SCLK = 11
         // - CE1 = 7
-
         GlcdConfig config = GlcdConfigBuilder
-            	//Use ST7920 - 128 x 64 display, SPI 4-wire Hardware
+                //Use ST7920 - 128 x 64 display, SPI 4-wire Hardware
                 .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
-            	//Set to 180 rotation
+                //Set to 180 rotation
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
-            	//Using system/c-periphery provider
+                //Using system/c-periphery provider
                 .option(GlcdOption.PROVIDER, Provider.SYSTEM)
-            	//Set to 800,000 bits per second
-                .option(GlcdOption.DEVICE_SPEED, 800000)
-            	//Use CE1 or Chip Select 1 on Main SPI peripheral
+                //Set to 1,000,000 Hz/bps (1.00 MHz)
+                .option(GlcdOption.BUS_SPEED, 1000000)
+                //The SPI Bus (RPI as two SPI buses available, the Main and Auxillary)
+                .option(GlcdOption.SPI_BUS, SpiBus.MAIN)
+                //Use CE1 or Chip Select 1 on Main SPI peripheral/bus
                 .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
-                .build();       
-        
+                .build();
+
         GlcdDriver driver = new GlcdDriver(config);
 
-        //Set the Font (This is required for drawing strings)
+        //Set the Font (This is required when drawing strings)
         driver.setFont(GlcdFont.FONT_6X12_MR);
 
         //Get the maximum character height
@@ -290,7 +287,7 @@ public class GlcdST7920Example {
         XBMData xbmData = XBMUtils.decodeXbmFile(getClass().getResourceAsStream("/ironman.xbm"));
 
         int offset = 50;
-        
+
         for (int i = 1000; i >= 0; i--) {
             //Clear the GLCD buffer
             driver.clearBuffer();
@@ -312,59 +309,160 @@ public class GlcdST7920Example {
             //Send all buffered data to the display
             driver.sendBuffer();
 
-            Thread.sleep(1);
+            //Thread.sleep(1);
         }
 
         //Clear the display
         driver.clearDisplay();
         long endTime = System.currentTimeMillis() - startMillis;
 
-        log.info("Done in {} seconds", Duration.ofMillis(endTime).toSeconds());        
+        log.info("Done in {} seconds", Duration.ofMillis(endTime).toSeconds());
     }
 }
 
 ```
 
-**Manually Setting pin mode with wiring pi**
+###### Graphic LCD Example (ST7920 SPI Software)
 
-This is no longer needed in version 1.5.x  or above.
+Here is an alternative version of the above example using bit-bang method. ([Source Code](https://github.com/ribasco/ucgdisplay/blob/master/examples/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/examples/glcd/GlcdST7920SWExample.java))
 
-```bash
-gpio mode 12 alt0 && gpio mode 13 alt0 && gpio mode 14 alt0 && gpio mode 10 alt0 && gpio readall
+```java
+import com.ibasco.ucgdisplay.drivers.glcd.*;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
+import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMData;
+import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+import java.util.Objects;
+
+/**
+ * ST7920 Example - SPI Software Bit-Bang.
+ *
+ * Note: This is ALOT slower than SPI HW
+ */
+public class GlcdST7920SWExample {
+
+    private static final Logger log = LoggerFactory.getLogger(GlcdST7920SWExample.class);
+
+    public static void main(String[] args) throws Exception {
+        new GlcdST7920SWExample().run();
+    }
+
+    private void drawU8G2Logo(int offset, GlcdDriver driver) {
+        driver.setFontMode(1);
+
+        driver.setFontDirection(0);
+        driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
+        driver.drawString(offset, 22, "U");
+
+        driver.setFontDirection(1);
+        driver.setFont(GlcdFont.FONT_INB19_MN); //u8g2_font_inb19_mn
+        driver.drawString(offset + 14, 8, "8");
+
+        driver.setFontDirection(0);
+        driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
+        driver.drawString(offset + 36, 22, "g");
+        driver.drawString(offset + 48, 22, "2");
+
+        driver.drawHLine(offset + 2, 25, 34);
+        driver.drawHLine(offset + 3, 26, 34);
+        driver.drawVLine(offset + 32, 22, 12);
+        driver.drawVLine(offset + 33, 23, 12);
+    }
+
+    private void run() throws Exception {
+        //SPI Software config for ST7920
+
+        //NOTE: On Raspberry Pi systems, pins can be automatically configured for hardware         capability (setting pin modes to ALT*).
+        //For automatic configuration to work, pigpio needs to be installed on the system         and set as the default provider.
+
+        //Pinout for Main SPI Peripheral 
+        // - MOSI = 10
+        // - SCLK = 11
+        // - CE1 = 7
+        GlcdConfig config = GlcdConfigBuilder
+                //Use ST7920 - 128 x 64 display, SPI Software
+                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_SW_4WIRE_ST7920)
+                //Set to 180 rotation
+                .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
+                //Using system/c-periphery provider
+                .option(GlcdOption.PROVIDER, Provider.SYSTEM)
+                //Map GlcdPin to BCM pin number
+                .mapPin(GlcdPin.SPI_MOSI, 10)
+                .mapPin(GlcdPin.SPI_CLOCK, 11)
+                .mapPin(GlcdPin.CS, 7)
+                .build();
+
+        GlcdDriver driver = new GlcdDriver(config);
+
+        //Set the Font (This is required when drawing strings)
+        driver.setFont(GlcdFont.FONT_6X12_MR);
+
+        //Get the maximum character height
+        int maxHeight = driver.getMaxCharHeight();
+
+        long startMillis = System.currentTimeMillis();
+
+        log.debug("Starting display loop");
+
+        XBMData xbmData = XBMUtils.decodeXbmFile(getClass().getResourceAsStream("/ironman.xbm"));
+
+        int offset = 50;
+
+        for (int i = 1000; i >= 0; i--) {
+            //Clear the GLCD buffer
+            driver.clearBuffer();
+
+            if (offset >= 128) {
+                offset = 0;
+            }
+
+            drawU8G2Logo(offset++, driver);
+
+            driver.drawXBM(0, 0, 45, 64, Objects.requireNonNull(xbmData).getData());
+
+            //Write Operations to the GLCD buffer
+            driver.setFont(GlcdFont.FONT_6X12_MR);
+            driver.drawString(55, maxHeight * 3, "ucgdisplay");
+            driver.drawString(55, maxHeight * 4, "1.5.0-alpha");
+            driver.drawString(100, maxHeight * 5, String.valueOf(i));
+
+            //Send all buffered data to the display
+            driver.sendBuffer();
+
+            //Thread.sleep(1);
+        }
+
+        //Clear the display
+        driver.clearDisplay();
+        long endTime = System.currentTimeMillis() - startMillis;
+
+        log.info("Done in {} seconds", Duration.ofMillis(endTime).toSeconds());
+    }
+}
 ```
 
-**Verify**
+###### Configuration options (All available options in GlcdOption enum)
 
-use `gpio readall` to verify that we have set the correct mode (`ALT0`) for `MOSI`, `SCLK` and `CE1` (Chip-Select)
-
-```bash
- +-----+-----+---------+------+---+---Pi 2---+---+------+---------+-----+-----+
- | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
- +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
- |     |     |    3.3v |      |   |  1 || 2  |   |      | 5v      |     |     |
- |   2 |   8 |   SDA.1 | ALT0 | 1 |  3 || 4  |   |      | 5v      |     |     |
- |   3 |   9 |   SCL.1 | ALT0 | 1 |  5 || 6  |   |      | 0v      |     |     |
- |   4 |   7 | GPIO. 7 |   IN | 1 |  7 || 8  | 1 | ALT0 | TxD     | 15  | 14  |
- |     |     |      0v |      |   |  9 || 10 | 1 | ALT0 | RxD     | 16  | 15  |
- |  17 |   0 | GPIO. 0 |   IN | 0 | 11 || 12 | 0 | IN   | GPIO. 1 | 1   | 18  |
- |  27 |   2 | GPIO. 2 |   IN | 0 | 13 || 14 |   |      | 0v      |     |     |
- |  22 |   3 | GPIO. 3 |   IN | 0 | 15 || 16 | 0 | IN   | GPIO. 4 | 4   | 23  |
- |     |     |    3.3v |      |   | 17 || 18 | 1 | IN   | GPIO. 5 | 5   | 24  |
- |  10 |  12 |    MOSI | ALT0 | 0 | 19 || 20 |   |      | 0v      |     |     |
- |   9 |  13 |    MISO | ALT0 | 0 | 21 || 22 | 1 | OUT  | GPIO. 6 | 6   | 25  |
- |  11 |  14 |    SCLK | ALT0 | 0 | 23 || 24 | 1 | OUT  | CE0     | 10  | 8   |
- |     |     |      0v |      |   | 25 || 26 | 1 | OUT  | CE1     | 11  | 7   |
- |   0 |  30 |   SDA.0 |   IN | 1 | 27 || 28 | 1 | IN   | SCL.0   | 31  | 1   |
- |   5 |  21 | GPIO.21 |   IN | 1 | 29 || 30 |   |      | 0v      |     |     |
- |   6 |  22 | GPIO.22 |   IN | 1 | 31 || 32 | 0 | IN   | GPIO.26 | 26  | 12  |
- |  13 |  23 | GPIO.23 |   IN | 0 | 33 || 34 |   |      | 0v      |     |     |
- |  19 |  24 | GPIO.24 |   IN | 0 | 35 || 36 | 0 | IN   | GPIO.27 | 27  | 16  |
- |  26 |  25 | GPIO.25 |   IN | 0 | 37 || 38 | 0 | OUT  | GPIO.28 | 28  | 20  |
- |     |     |      0v |      |   | 39 || 40 | 0 | IN   | GPIO.29 | 29  | 21  |
- +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
- | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
- +-----+-----+---------+------+---+---Pi 2---+---+------+---------+-----+-----+
-```
+| Option Name        | Raw Type | **Enum**                                                     | **Description**                                              | **Category** |
+| ------------------ | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------ |
+| PROVIDER           | String   | [Provider](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/enums/Provider.java) | The default provider to use for communicating with the display. Available providers are `libgpiod`, `pigpio`, `pigpiod` and `cperiphery`. | General      |
+| BUS_SPEED          | Integer  | N/A                                                          | The SPI/I2C bus speed in Hz                                  | SPI/I2C      |
+| GPIO_CHIP          | Integer  | [GpioChip](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/enums/GpioChip.java) | GPIO chip number. Will be translated to the actual GPIO device path. | GPIO         |
+| SPI_CHANNEL        | Integer  | [SpiChannel](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/enums/SpiChannel.java) | The SPI channel (Chip-Select). In raspberry pi, we have `CE0 `and `CE1` for Main SPI and `CE0`, `CE1`, `CE2` for Auxiliary. | SPI          |
+| SPI_BUS            | Integer  | [SpiBus](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/enums/SpiBus.java) | The primary bus to be used for SPI communication. In raspberry pi, there are two SPI peripherals available, the main and the auxillary. | SPI          |
+| SPI_MODE           | Integer  | [SpiMode](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/enums/SpiMode.java) | SPI mode. Mode 0, 1, 2 or 3. Check source documentation for more info. (Default: 0) | SPI          |
+| SPI_BIT_ORDER      | Integer  | [SpiBitOrder](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/enums/SpiBitOrder.java) | SPI Bit Order. Can be either 0 = `MSB First` or 1 = `LSB First`. (Default: 0) | SPI          |
+| SPI_BITS_PER_WORD  | Integer  | N/A                                                          | SPI Bits per word. (Default: 8)                              | SPI          |
+| SPI_FLAGS          | Integer  | N/A                                                          | Provider specific SPI flags. Only use this if you know what you are doing. Read more information on the provider's website (Default: 0). | SPI          |
+| I2C_DEVICE_ADDRESS | Integer  | N/A                                                          | The address of the display device on the I2C bus.            | I2C          |
+| I2C_BUS            | Integer  | [I2CBus](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/enums/I2CBus.java) | The primary bus to be used for I2C communication.            | I2C          |
+| I2C_FLAGS          | Integer  | N/A                                                          | Provider specific I2C flags.                                 | I2C          |
+| ROTATION           | Integer  | [GlcdRotation](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/enums/GlcdRotation.java) | The default rotation to set for the display.                 | General      |
+| PIGPIO_ADDRESS     | String   | N/A                                                          | The IP address of the pigpio daemon. (Default: 127.0.0.1)    | General      |
+| PIGPIO_PORT        | Integer  | N/A                                                          | The port number of the pigpio daemon. (Default: 8888)        | General      |
 
 ### Limitations
 

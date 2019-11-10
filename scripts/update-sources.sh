@@ -61,7 +61,7 @@ echo ===========================================
 
 ./ucgd-code ${BASE_DIR} -a
 
-if [ -z "${TRAVIS_JOB_NUMBER}" ]
+if [[ -z "${TRAVIS_JOB_NUMBER}" ]]
 then
       echo "You are not on Travis Build System. Skipping auto-commit"
       exit 0

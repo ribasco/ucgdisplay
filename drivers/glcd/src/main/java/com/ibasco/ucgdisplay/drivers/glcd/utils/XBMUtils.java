@@ -32,8 +32,36 @@ import org.apache.commons.codec.binary.Hex;
 import java.io.*;
 import java.nio.ByteBuffer;
 
+/**
+ * Utility class for XBM file format (X-Bitmap)
+ *
+ * @author Rafael Ibasco
+ */
 public class XBMUtils {
 
+    public static XBMData decodeXbmFile(File file) throws XBMDecodeException {
+        try {
+            if (file == null)
+                throw new IllegalArgumentException("File cannot be null");
+            if (!file.exists())
+                throw new FileNotFoundException("Could not find file: " + file.getName());
+            return decodeXbmFile(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new XBMDecodeException("Problem encountered while trying to decode file", e);
+        }
+    }
+
+    /**
+     * Decodes X-Bitmap file formats
+     *
+     * @param inputStream
+     *         The resource pointing to the x-bitmap file
+     *
+     * @return The decoded x-bitmap data
+     *
+     * @throws XBMDecodeException
+     *         if the decoding operation fails
+     */
     public static XBMData decodeXbmFile(InputStream inputStream) throws XBMDecodeException {
         try {
             StringBuilder data = new StringBuilder();
@@ -61,6 +89,7 @@ public class XBMUtils {
             }
             bb.rewind();
 
+            //TODO: Should also be able to parse the width and height from the XBM file
             if (bb.hasRemaining()) {
                 byte[] tmp = new byte[bb.remaining()];
                 bb.get(tmp);
@@ -69,18 +98,6 @@ public class XBMUtils {
             return null;
         } catch (IOException | DecoderException e) {
             throw new XBMDecodeException("Problem encountered while trying to decode input stream", e);
-        }
-    }
-
-    public static XBMData decodeXbmFile(File file) throws XBMDecodeException {
-        try {
-            if (file == null)
-                throw new IllegalArgumentException("File cannot be null");
-            if (!file.exists())
-                throw new FileNotFoundException("Could not find file: " + file.getName());
-            return decodeXbmFile(new FileInputStream(file));
-        } catch (FileNotFoundException e) {
-            throw new XBMDecodeException("Problem encountered while trying to decode file", e);
         }
     }
 }

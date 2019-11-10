@@ -49,17 +49,17 @@ public class GlcdST7920SWExample {
     }
 
     private void drawU8G2Logo(int offset, GlcdDriver driver) {
-        driver.setFontMode(1);
+        driver.setFontMode(GlcdFontMode.TRANSPARENT);
 
-        driver.setFontDirection(0);
+        driver.setFontDirection(GlcdFontDirection.LEFT_TO_RIGHT);
         driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
         driver.drawString(offset, 22, "U");
 
-        driver.setFontDirection(1);
+        driver.setFontDirection(GlcdFontDirection.TOP_TO_DOWN);
         driver.setFont(GlcdFont.FONT_INB19_MN); //u8g2_font_inb19_mn
         driver.drawString(offset + 14, 8, "8");
 
-        driver.setFontDirection(0);
+        driver.setFontDirection(GlcdFontDirection.LEFT_TO_RIGHT);
         driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
         driver.drawString(offset + 36, 22, "g");
         driver.drawString(offset + 48, 22, "2");
@@ -87,9 +87,9 @@ public class GlcdST7920SWExample {
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
                 //Using system/c-periphery provider
                 .option(GlcdOption.PROVIDER, Provider.SYSTEM)
-                //Map pins
-                .mapPin(GlcdPin.SPI_MOSI, 10)
-                .mapPin(GlcdPin.SPI_CLOCK, 11)
+                //Map GlcdPin to BCM pin number
+                .mapPin(GlcdPin.SPI_MOSI, 10) //Same as GlcdPin.D1
+                .mapPin(GlcdPin.SPI_CLOCK, 11) //Same as GlcdPin.D0
                 .mapPin(GlcdPin.CS, 7)
                 .build();
 
@@ -103,35 +103,22 @@ public class GlcdST7920SWExample {
 
         long startMillis = System.currentTimeMillis();
 
-        log.debug("Starting display loop");
+        log.debug("Displaying ");
 
         XBMData xbmData = XBMUtils.decodeXbmFile(getClass().getResourceAsStream("/ironman.xbm"));
 
-        int offset = 50;
+        drawU8G2Logo(50, driver);
 
-        for (int i = 1000; i >= 0; i--) {
-            //Clear the GLCD buffer
-            driver.clearBuffer();
+        driver.drawXBM(0, 0, 45, 64, Objects.requireNonNull(xbmData).getData());
 
-            if (offset >= 128) {
-                offset = 0;
-            }
+        //Write Operations to the GLCD buffer
+        driver.setFont(GlcdFont.FONT_6X12_MR);
+        driver.drawString(55, maxHeight * 4, "ucgdisplay");
 
-            drawU8G2Logo(offset++, driver);
+        //Send all buffered data to the display
+        driver.sendBuffer();
 
-            driver.drawXBM(0, 0, 45, 64, Objects.requireNonNull(xbmData).getData());
-
-            //Write Operations to the GLCD buffer
-            driver.setFont(GlcdFont.FONT_6X12_MR);
-            driver.drawString(55, maxHeight * 3, "ucgdisplay");
-            driver.drawString(55, maxHeight * 4, "1.5.0-alpha");
-            driver.drawString(100, maxHeight * 5, String.valueOf(i));
-
-            //Send all buffered data to the display
-            driver.sendBuffer();
-
-            //Thread.sleep(1);
-        }
+        Thread.sleep(10000);
 
         //Clear the display
         driver.clearDisplay();

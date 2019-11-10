@@ -27,8 +27,7 @@ package com.ibasco.ucgdisplay.drivers.glcd;
 
 import com.ibasco.ucgdisplay.core.u8g2.U8g2EventDispatcher;
 import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdDriverException;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.XBMDecodeException;
 import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMData;
@@ -79,21 +78,6 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     public void drawBox(int x, int y, int width, int height) {
         checkRequirements();
         U8g2Graphics.drawBox(_id, x, y, width, height);
-    }
-
-    @Override
-    @Deprecated
-    public void drawBitmap(int count, int height, byte[] bitmap) {
-        checkRequirements();
-        drawBitmap(x, y, count, height, bitmap);
-    }
-
-    @Override
-    @Deprecated
-    public void drawBitmap(int x, int y, int count, int height, byte[] bitmap) {
-        checkRequirements();
-        setCursor(x, y);
-        U8g2Graphics.drawBitmap(_id, x, y, count, height, bitmap);
     }
 
     @Override
@@ -249,6 +233,9 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     public void drawString(int x, int y, String value) {
         checkRequirements();
         setCursor(x, y);
+        if (value == null) {
+            value = "";
+        }
         U8g2Graphics.drawString(_id, x, y, value);
     }
 
@@ -325,15 +312,15 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     }
 
     @Override
-    public void setFontMode(int mode) {
+    public void setFontMode(GlcdFontMode mode) {
         checkRequirements();
-        U8g2Graphics.setFontMode(_id, mode);
+        U8g2Graphics.setFontMode(_id, mode.getValue());
     }
 
     @Override
-    public void setFontDirection(int direction) {
+    public void setFontDirection(GlcdFontDirection direction) {
         checkRequirements();
-        U8g2Graphics.setFontDirection(_id, direction);
+        U8g2Graphics.setFontDirection(_id, direction.getValue());
     }
 
     @Override
@@ -391,9 +378,9 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     }
 
     @Override
-    public void setDrawColor(int color) {
+    public void setDrawColor(GlcdDrawColor color) {
         checkRequirements();
-        U8g2Graphics.setDrawColor(_id, color);
+        U8g2Graphics.setDrawColor(_id, color.getValue());
     }
 
     @Override
@@ -487,16 +474,15 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     }
 
     @Override
-    public int setAutoPageClear(int mode) {
+    public int setAutoPageClear(boolean clear) {
         checkRequirements();
-        return U8g2Graphics.setAutoPageClear(_id, mode);
+        return U8g2Graphics.setAutoPageClear(_id, clear ? 1 : 0);
     }
 
-    //TODO: Replace int parameter with an enumeration type
     @Override
-    public void setBitmapMode(int mode) {
+    public void setBitmapMode(GlcdBitmapMode mode) {
         checkRequirements();
-        U8g2Graphics.setBitmapMode(_id, mode);
+        U8g2Graphics.setBitmapMode(_id, mode.getValue());
     }
 
     @Override

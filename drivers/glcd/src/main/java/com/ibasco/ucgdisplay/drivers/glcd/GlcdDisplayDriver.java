@@ -2,8 +2,8 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Graphics LCD driver
- * Filename: U8g2DisplayDriver.java
- *
+ * Filename: GlcdDisplayDriver.java
+ * 
  * ---------------------------------------------------------
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
@@ -12,12 +12,12 @@
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -26,13 +26,9 @@
 package com.ibasco.ucgdisplay.drivers.glcd;
 
 import com.ibasco.ucgdisplay.common.drivers.DisplayDriver;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdDrawColor;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
 
 import java.io.File;
-
-//TODO: Make this a generic graphics display interface. All U8g2 specific options/parameters/methods should be removed/replaced with a generic type suitable for the library
 
 /**
  * Graphics Display Driver interface based on the U8G2 Interface.
@@ -41,7 +37,7 @@ import java.io.File;
  * @see <a href="https://github.com/olikraus/u8g2/wiki/u8g2reference#drawbox">U8G2 Reference</a>
  */
 @SuppressWarnings("unused")
-public interface U8g2DisplayDriver extends DisplayDriver {
+public interface GlcdDisplayDriver extends DisplayDriver {
     /**
      * <p>Draw a box (filled frame), starting at x/y position (upper left edge). The box has width w and height h.
      * Parts of the box can be outside of the display boundaries. This procedure will use the current color
@@ -75,42 +71,6 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      *         Height of the box.
      */
     void drawBox(int x, int y, int width, int height);
-
-    /**
-     * <p>Draw a bitmap at the specified x/y position (upper left corner of the bitmap). Parts of the bitmap may be
-     * outside the display boundaries.The bitmap is specified by the array bitmap. A cleared bit means: Do not draw a
-     * pixel. A set bit inside the array means: Write pixel with the current color index.For a monochrome display, the
-     * color index 0 will clear a pixel (in solid mode) and the color index 1 will set a pixel.</p>
-     *
-     * @param count
-     *         Number of bytes of the bitmap in horizontal direction. The width of the bitmap is count * 8
-     * @param height
-     *         Height of the bitmap.
-     * @param bitmap
-     *         Bitmap data
-     *
-     * @see #drawBitmap(int, int, int, int, byte[])
-     */
-    void drawBitmap(int count, int height, byte[] bitmap);
-
-    /**
-     * <p>Draw a bitmap at the specified x/y position (upper left corner of the bitmap). Parts of the bitmap may be
-     * outside the display boundaries.The bitmap is specified by the array bitmap. A cleared bit means: Do not draw a
-     * pixel. A set bit inside the array means: Write pixel with the current color index.For a monochrome display, the
-     * color index 0 will clear a pixel (in solid mode) and the color index 1 will set a pixel.</p>
-     *
-     * @param x
-     *         X-position (left position of the bitmap).
-     * @param y
-     *         Y-position (upper position of the bitmap).
-     * @param count
-     *         Number of bytes of the bitmap in horizontal direction. The width of the bitmap is count * 8
-     * @param height
-     *         Height of the bitmap.
-     * @param bitmap
-     *         Bitmap data
-     */
-    void drawBitmap(int x, int y, int count, int height, byte[] bitmap);
 
     /**
      * <p>Draw a circle with radus rad at position (x0, y0). The diameter of the circle is 2*rad+1. Depending on opt,
@@ -183,7 +143,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * </ul>
      * <p>
      * These values can be combined with the | operator. This procedure will use the current color ({@link
-     * #setDrawColor(int)}) for drawing.</p>
+     * #setDrawColor(GlcdDrawColor)}) for drawing.</p>
      *
      * @param radius
      *         Defines the size of the circle: Radus = rad.
@@ -207,7 +167,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * </ul>
      * <p>
      * These values can be combined with the | operator. This procedure will use the current color ({@link
-     * #setDrawColor(int)}) for drawing.</p>
+     * #setDrawColor(GlcdDrawColor)}) for drawing.</p>
      *
      * @param x
      *         X-Position of the center of the disc.
@@ -612,7 +572,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
      *
      * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. By default, drawXBM will draw solid
-     * bitmaps, use {@link #setBitmapMode(int)} to switch between modes (solid or transparent). The
+     * bitmaps, use {@link #setBitmapMode(GlcdBitmapMode)} to switch between modes (solid or transparent). The
      * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
      * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
      * (external link). The result will look like this:</p>
@@ -633,7 +593,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
      *
      * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. By default, drawXBM will draw solid
-     * bitmaps, use {@link #setBitmapMode(int)} to switch between modes (solid or transparent). The
+     * bitmaps, use {@link #setBitmapMode(GlcdBitmapMode)} to switch between modes (solid or transparent). The
      * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
      * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
      * (external link). The result will look like this:</p>
@@ -658,7 +618,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
      *
      * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. By default, drawXBM will draw solid
-     * bitmaps, use {@link #setBitmapMode(int)} to switch between modes (solid or transparent). The
+     * bitmaps, use {@link #setBitmapMode(GlcdBitmapMode)} to switch between modes (solid or transparent). The
      * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
      * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
      * (external link). The result will look like this:</p>
@@ -679,7 +639,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * corner of the bitmap. XBM contains monochrome, 1-bit bitmaps.</p>
      *
      * <p>The current color index is used for drawing <strike>(see setColorIndex)</strike> pixel values 1. By default, drawXBM will draw solid
-     * bitmaps, use {@link #setBitmapMode(int)} to switch between modes (solid or transparent). The
+     * bitmaps, use {@link #setBitmapMode(GlcdBitmapMode)} to switch between modes (solid or transparent). The
      * XBMP version of this procedure expects the bitmap to be in PROGMEM area (AVR only). Many tools (including GIMP)
      * can save a bitmap as XBM. A nice step by step instruction is <a href="https://sandhansblog.wordpress.com/2017/04/16/interfacing-displaying-a-custom-graphic-on-an-0-96-i2c-oled/">here</a>
      * (external link). The result will look like this:</p>
@@ -829,7 +789,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * @see #setDrawColor
      * @see #setFont
      */
-    void setFontMode(int mode);
+    void setFontMode(GlcdFontMode mode);
 
     /**
      * <p>The arguments defines the drawing direction of all strings or glyphs.</p>
@@ -872,7 +832,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      *
      * @see #drawString(int, int, String)
      */
-    void setFontDirection(int direction);
+    void setFontDirection(GlcdFontDirection direction);
 
     /**
      * <p>Change the reference position for the glyph and string draw functions. By default the reference position is
@@ -1037,102 +997,13 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * </table>
      *
      * @param color
-     *         0 (clear pixel value in the display RAM), 1 (set pixel value) or 2 (XOR mode)
-     *
-     * @see #drawBox(int, int, int, int)
-     * @see #drawGlyph(int, int, short)
-     * @see #setFontMode(int)
-     */
-    void setDrawColor(int color);
-
-    /**
-     * <p>Defines the bit value (color index) for all drawing functions. All drawing function will change the display
-     * memory to this bit value. Default value is 1. For example the {@link #drawBox(int, int, int, int)} procedure will
-     * set all pixels for the defined area to the bit value, provided here. The color value 2 will activate
-     * the XOR mode. Exceptions:</p>
-     *
-     * <p>Both functions will always set the buffer to the pixel value 0. The color argument of setDrawColor is
-     * ignored.</p>
-     * <p>
-     * <br /> Note: Not all graphics procedures will support XOR mode. Especially XOR mode is not supported by
-     * drawCircle, drawDisc, drawEllipse and drawFilledEllipse.</p>
-     * <p>
-     * <br />
-     * <strong>Exceptions:</strong>
-     *
-     * <ul>
-     * <li>{@link #clear()}, {@link #clearBuffer()}: Both functions will always set the buffer to the pixel value 0.
-     * The color argument of setDrawColor is ignored.</li>
-     * <li>drawGlyph: All font drawing procedures will use this color argument as foreground color. In none-transparent
-     * (solid) mode (setFontMode) the complement of the color value will be the background color and is set to 0 for
-     * color value 2 (However, suggestion is not to use solid and XOR mode together):</li>
-     * </ul>
-     *
-     * <table border="1">
-     * <thead>
-     * <tr>
-     * <th>Font Mode</th>
-     * <th>Draw Color</th>
-     * <th>Glyph Foreground Color</th>
-     * <th>Glyph Background Color</th>
-     * </tr>
-     * </thead>
-     * <tbody>
-     * <tr>
-     * <td>0: solid</td>
-     * <td>0</td>
-     * <td>0</td>
-     * <td>1</td>
-     * </tr>
-     * <tr>
-     * <td>0: solid</td>
-     * <td>1</td>
-     * <td>1</td>
-     * <td>0</td>
-     * </tr>
-     * <tr>
-     * <td>0: solid</td>
-     * <td>2</td>
-     * <td>XOR</td>
-     * <td>0</td>
-     * </tr>
-     * <tr>
-     * <td>1: transparent</td>
-     * <td>0</td>
-     * <td>0</td>
-     * <td>-</td>
-     * </tr>
-     * <tr>
-     * <td>1: transparent</td>
-     * <td>1</td>
-     * <td>1</td>
-     * <td>-</td>
-     * </tr>
-     * <tr>
-     * <td>1: transparent</td>
-     * <td>2</td>
-     * <td>XOR</td>
-     * <td>-</td>
-     * </tr>
-     * </tbody>
-     * </table>
-     *
-     * @param color
      *         The {@link GlcdDrawColor} value
      *
      * @see #drawBox(int, int, int, int)
      * @see #drawGlyph(int, int, short)
-     * @see #setFontMode(int)
+     * @see #setFontMode(GlcdFontMode)
      */
-    default void setDrawColor(GlcdDrawColor color) {
-        setDrawColor(color.getValue());
-    }
-
-    /**
-     * <p>Puts the cursor for the print function into the upper left corner. Parts of the text might be invisible after
-     * this command if the glyph reference is not at the top of the characters..</p>
-     */
-    //void home();
+    void setDrawColor(GlcdDrawColor color);
 
     /**
      * <p> Reset and configure the display. This procedure must be called before any other procedures draw something on
@@ -1196,7 +1067,7 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      *
      * @return The largest width of any glyph in the font.
      *
-     * @see #getMaxCharHeight()
+     * @see #getMaxCharHeight
      */
     int getMaxCharWidth();
 
@@ -1287,27 +1158,25 @@ public interface U8g2DisplayDriver extends DisplayDriver {
      * situation where the background is rendered manually through a direct manipulation of the pixel buffer (see
      * DirectAccess.ino example).</p>
      *
-     * @param mode
-     *         0, to turn off automatic clearing of the internal pixel buffer. Default value is 1.
+     * @param clear
+     *         Set to <code>false</code> to turn off automatic clearing of the internal pixel buffer. Default value is <code>true</code>.
      *
      * @return The width of the buffer in tiles.
      *
      * @see #getBuffer
      */
-    int setAutoPageClear(int mode);
+    int setAutoPageClear(boolean clear);
 
     /**
-     * <p> Defines, whether the bitmap functions will write the background color (mode 0/solid, mode = 0) or
-     * not (mode 1/transparent, mode = 1). Default mode is 0 (solid mode).</p>
+     * <p> Defines, whether the bitmap functions will write the background color to solid or transparent. Default mode is {@link GlcdBitmapMode#SOLID}.</p>
      *
      * @param mode
-     *         Enable (1) or disable (0) transparent mode.
+     *         Use {@link GlcdBitmapMode#SOLID} for a solid bitmap background or {@link GlcdBitmapMode#TRANSPARENT} for transparent.
      *
-     * @see #drawBitmap
      * @see #drawXBM
+     * @see <a href="https://github.com/olikraus/u8g2/wiki/u8g2reference#setbitmapmode">U8g2 - setBitmapMode</a>
      */
-    void setBitmapMode(int mode);
-
+    void setBitmapMode(GlcdBitmapMode mode);
 
     /**
      * <p>Set the contrast or brightness for the display (if supported). Range for 'value': 0 (no contrast) to 255
@@ -1399,18 +1268,26 @@ public interface U8g2DisplayDriver extends DisplayDriver {
     void setDisplayRotation(GlcdRotation rotation);
 
     /**
-     * <p>Return the address of the start of the buffer. This is a also the address of the leftmost tile of the current
-     * page (Byte 0 in the above memory structure). The total memory size of the buffer is 8 *
+     * <p>Return the contents of the display buffer. The total memory size of the buffer is 8 *
      * ({@link #getBufferTileHeight()} * {@link #getBufferTileWidth()}). The buffer can be erased with {@link
      * #clearBuffer()}.</p>
      *
-     * @return Address of the internal page buffer.
+     * @return The contents of th
      *
      * @see #getBufferTileHeight
      * @see #getBufferTileWidth
      * @see #clearBuffer
      */
     byte[] getBuffer();
+
+    /**
+     * Returns the total size of the internal display buffer
+     *
+     * @return The buffer size in bytes
+     */
+    default int getBufferSize() {
+        return 8 * (getBufferTileHeight() * getBufferTileWidth());
+    }
 
     /**
      * <p>Return the width of the page buffer in tiles (One tile has a width of 8 pixel).</p>

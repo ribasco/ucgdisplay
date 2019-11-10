@@ -113,38 +113,6 @@ class GlcdDriverTest {
     }
 
     @Test
-    void drawBitmap() {
-        updateValidConfig(config);
-        GlcdDriver driver = new GlcdDriver(config, true, mockEventHandler, mockDriverAdapter);
-        assertDoesNotThrow(() -> driver.drawBitmap(3, 10, new byte[]{0, 5, 127}));
-
-        ArgumentCaptor<Integer> countCaptor = ArgumentCaptor.forClass(Integer.class);
-
-        verify(mockDriverAdapter).drawBitmap(countCaptor.capture(), heightCaptor.capture(), byteArrayCaptor.capture());
-
-        assertEquals(3, countCaptor.getValue().intValue());
-        assertEquals(10, heightCaptor.getValue().intValue());
-        assertArrayEquals(new byte[]{0, 5, 127}, byteArrayCaptor.getValue());
-    }
-
-    @Test
-    void drawBitmap1() {
-        updateValidConfig(config);
-        GlcdDriver driver = new GlcdDriver(config, true, mockEventHandler, mockDriverAdapter);
-        assertDoesNotThrow(() -> driver.drawBitmap(0, 5, 3, 10, new byte[]{0, 5, 127}));
-
-        ArgumentCaptor<Integer> countCaptor = ArgumentCaptor.forClass(Integer.class);
-
-        verify(mockDriverAdapter).drawBitmap(xCaptor.capture(), yCaptor.capture(), countCaptor.capture(), heightCaptor.capture(), byteArrayCaptor.capture());
-
-        assertEquals(0, xCaptor.getValue().intValue());
-        assertEquals(5, yCaptor.getValue().intValue());
-        assertEquals(3, countCaptor.getValue().intValue());
-        assertEquals(10, heightCaptor.getValue().intValue());
-        assertArrayEquals(new byte[]{0, 5, 127}, byteArrayCaptor.getValue());
-    }
-
-    @Test
     void drawCircle() {
         updateValidConfig(config);
         GlcdDriver driver = new GlcdDriver(config, true, mockEventHandler, mockDriverAdapter);

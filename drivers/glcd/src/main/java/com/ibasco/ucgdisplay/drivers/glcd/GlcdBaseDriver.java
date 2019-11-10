@@ -28,15 +28,11 @@ package com.ibasco.ucgdisplay.drivers.glcd;
 import com.ibasco.ucgdisplay.core.u8g2.U8g2ByteEvent;
 import com.ibasco.ucgdisplay.core.u8g2.U8g2EventDispatcher;
 import com.ibasco.ucgdisplay.core.u8g2.U8g2GpioEvent;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusType;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdConfigException;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdDriverException;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdNotInitializedException;
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,12 +41,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * Base graphics display driver implementation
+ * Base class for the graphics display driver
  *
  * @author Rafael Ibasco
  */
 @SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
-abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
+abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
 
     private static final Logger log = LoggerFactory.getLogger(GlcdBaseDriver.class);
 
@@ -262,20 +258,6 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     public void drawBox(int x, int y, int width, int height) {
         checkRequirements();
         adapter.drawBox(x, y, width, height);
-    }
-
-    @Override
-    @Deprecated
-    public void drawBitmap(int count, int height, byte[] bitmap) {
-        checkRequirements();
-        adapter.drawBitmap(count, height, bitmap);
-    }
-
-    @Override
-    @Deprecated
-    public void drawBitmap(int x, int y, int count, int height, byte[] bitmap) {
-        checkRequirements();
-        adapter.drawBitmap(x, y, count, height, bitmap);
     }
 
     @Override
@@ -501,13 +483,13 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     }
 
     @Override
-    public void setFontMode(int mode) {
+    public void setFontMode(GlcdFontMode mode) {
         checkRequirements();
         adapter.setFontMode(mode);
     }
 
     @Override
-    public void setFontDirection(int direction) {
+    public void setFontDirection(GlcdFontDirection direction) {
         checkRequirements();
         adapter.setFontDirection(direction);
     }
@@ -567,7 +549,7 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     }
 
     @Override
-    public void setDrawColor(int color) {
+    public void setDrawColor(GlcdDrawColor color) {
         checkRequirements();
         adapter.setDrawColor(color);
     }
@@ -662,14 +644,13 @@ abstract public class GlcdBaseDriver implements U8g2DisplayDriver {
     }
 
     @Override
-    public int setAutoPageClear(int mode) {
+    public int setAutoPageClear(boolean clear) {
         checkRequirements();
-        return adapter.setAutoPageClear(mode);
+        return adapter.setAutoPageClear(clear);
     }
 
-    //TODO: Replace int parameter with an enumeration type
     @Override
-    public void setBitmapMode(int mode) {
+    public void setBitmapMode(GlcdBitmapMode mode) {
         checkRequirements();
         adapter.setBitmapMode(mode);
     }

@@ -35,6 +35,7 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
  *
  * @author Rafael Ibasco
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class GlcdOption<T> {
 
     /**
@@ -75,7 +76,7 @@ public class GlcdOption<T> {
     public static final GlcdOption<SpiChannel> SPI_CHANNEL = createOption("spi_channel");
 
     /**
-     * The SPI Peripheral device. For raspberry pi systems, there are two SPI peripherals available, the main and
+     * The primary bus to be used for SPI communication. For raspberry pi, there are two SPI peripherals available, the main and
      * the auxillary.
      */
     public static final GlcdOption<SpiBus> SPI_BUS = createOption("spi_bus_number");
@@ -102,26 +103,27 @@ public class GlcdOption<T> {
     public static final GlcdOption<Integer> SPI_BITS_PER_WORD = createOption("spi_bits_per_word");
 
     /**
-     * The I2C bus number to be used by the native layer for communication.
+     * The primary bus to be used for I2C communication
      * <p>
      * Note: This is only required if you choose pigpio as your I2C provider and the I/O implementation is Hardware.
      */
     public static final GlcdOption<I2CBus> I2C_BUS = createOption("i2c_bus_number");
 
     /**
-     * The i2c device address.
+     * The I2C address of the display
      */
     public static final GlcdOption<Integer> I2C_DEVICE_ADDRESS = createOption("i2c_address");
 
     /**
-     * Custom SPI flags. Only for advanced users.
+     * Provider specific SPI flags Only for advanced users. More information on the provider's website.
      *
-     * @see <a href="http://abyz.me.uk/rpi/pigpio/pdif2.html#spi_open">SPI Flags</a>
+     * @see <a href="http://abyz.me.uk/rpi/pigpio/pdif2.html#spi_open">PIGPIO SPI Flags</a>
+     * @see <a href="https://github.com/vsergeev/c-periphery/blob/master/docs/spi.md">C-Periphery (Extra Flags)</a>
      */
     public static final GlcdOption<Integer> SPI_FLAGS = createOption("spi_flags");
 
     /**
-     * Custom I2C flags. Only for advanced users.
+     * Provider specific I2C flags. Only for advanced users. More information on the provider's website.
      */
     public static final GlcdOption<Integer> I2C_FLAGS = createOption("i2c_flags");
 

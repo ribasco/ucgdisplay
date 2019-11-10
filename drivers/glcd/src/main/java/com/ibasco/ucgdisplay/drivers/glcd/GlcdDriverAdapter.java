@@ -25,6 +25,6 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-public interface GlcdDriverAdapter extends U8g2DisplayDriver {
+public interface GlcdDriverAdapter extends GlcdDisplayDriver {
     void initialize(GlcdConfig config, boolean virtual);
 }

@@ -2,8 +2,8 @@
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Graphics LCD driver
- * Filename: GlcdDriver.java
- *
+ * Filename: GlcdFontDirection.java
+ * 
  * ---------------------------------------------------------
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
@@ -12,53 +12,49 @@
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-package com.ibasco.ucgdisplay.drivers.glcd;
-
-import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdDriverException;
+package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
 /**
- * A concrete implementation of the base graphics driver
+ * Enumeration thaat defines the drawing direction of all strings or glyphs
  *
  * @author Rafael Ibasco
  */
-public class GlcdDriver extends GlcdBaseDriver {
+public enum GlcdFontDirection {
     /**
-     * @throws GlcdDriverException
-     *         When driver initialization fails
+     * 0 Degrees String Rotation
      */
-    public GlcdDriver(GlcdConfig config) throws GlcdDriverException {
-        this(config, false);
+    LEFT_TO_RIGHT(0),
+    /**
+     * 90 Degrees String Rotation
+     */
+    TOP_TO_DOWN(1),
+    /**
+     * 180 Degrees String Rotation
+     */
+    RIGHT_TO_LEFT(2),
+    /**
+     * 270 Degreees String Rotation
+     */
+    DOWN_TO_TOP(3);
+
+    private int value;
+
+    GlcdFontDirection(int value) {
+        this.value = value;
     }
 
-    /**
-     * @throws GlcdDriverException
-     *         When driver initialization fails
-     */
-    public GlcdDriver(GlcdConfig config, boolean virtual) throws GlcdDriverException {
-        this(config, virtual, null);
-    }
-
-    /**
-     * @throws GlcdDriverException
-     *         When driver initialization fails
-     */
-    public GlcdDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler) throws GlcdDriverException {
-        this(config, virtual, handler, null);
-    }
-
-    public GlcdDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler, GlcdDriverAdapter driverAdapter) {
-        super(config, virtual, handler, driverAdapter);
-        initialize();
+    public int getValue() {
+        return value;
     }
 }
