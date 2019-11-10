@@ -1,62 +1,5 @@
 # Guide to cross-compiling the native project
 
-### Native project directory structure
-
-```bash
-├── native
-│   ├── cmake (Cmake Modules)
-│   │   └── external (Third-party libraries)
-│   ├── include
-│   │   └── jdk (JDK Include Files)
-│   ├── modules
-│   │   ├── graphics (Graphics Module)
-│   │   │   └── src
-│   │   │       └── main
-│   │   │           ├── cpp                        (Graphics C++/CMake Project)
-│   │   │           │   ├── providers              (All the supported providers)
-│   │   │           │   │   ├── cperiphery
-│   │   │           │   │   ├── libgpiod
-│   │   │           │   │   └── pigpio
-│   │   │           │   ├── test                   (A C++ test executable project)
-│   │   │           │   └── utils (Util project for code-generation / C++ version)
-│   │   │           └── java (Graphics Java Project)
-│   │   │               └── com
-│   │   │                   └── ibasco
-│   │   │                       └── ucgdisplay
-│   │   │                           ├── core        (The core u8g2 java bindings)
-│   │   │                           │   └── u8g2
-│   │   │                           │       ├── exceptions
-│   │   │                           │       └── utils
-│   │   │                           └── utils      (Code-generation / Java Version)
-│   │   │                               └── codegen
-│   │   └── input (Input Module)
-│   │       └── src
-│   │           └── main
-│   │               ├── cpp                        (Input C++/CMake Project)
-│   │               └── java                       (Input Java Project)
-│   │                   └── com
-│   │                       └── ibasco
-│   │                           └── ucgdisplay
-│   │                               └── core
-│   │                                   └── input
-│   └── tools
-         ├── osxcross (Mac OSX Cross-compile toolchain built by osxcross)
-         │   ├── bin
-         │   ├── SDK (contains all the packaged sdks for this project)
-         │   │   ├── MacOSX10.13.sdk  (Packaged from XCode 9.4.1  Mac OS 10.13 SDK)
-         │   │   ├── MacOSX10.14.sdk  (Packaged from XCode 10.1   Mac OS 10.14 SDK)
-         │   │   └── MacOSX10.15.sdk  (Packaged from XCode 11.1   Mac OS 10.15 SDK)
-         └── rpi-tools (Raspberry Pi toolchain built by crosstools-ng)
-             ├── configs
-             ├── gcc10-linaro-arm-linux-gnueabihf-raspbian
-             ├── gcc10-linaro-arm-linux-gnueabi-raspbian-x64
-             ├── gcc7-linaro-arm-linux-gnueabihf-raspbian
-             ├── gcc7-linaro-arm-linux-gnueabihf-raspbian-ns
-             ├── gcc7-linaro-arm-linux-gnueabi-raspbian-x64
-             └── gcc7-linaro-arm-linux-gnueabi-raspbian-x64-ns
-
-```
-
 ### 1. Prerequisites
 
 Refer to the links under References for more information about these packages
@@ -152,7 +95,7 @@ git clone --recurse-submodules --branch 1.5.0-alpha-dev -j4 https://github.com/r
 
 ### 5. Building the project 
 
-#### Cross-compiling with Maven (Java + Native)
+#### Cross-compiling with Maven (Java + Native) [RECOMMENDED]
 
 If you compile with maven, you will compile all Java sources including the native libraries of all supported platforms. For the `buildType` parameter, the possible values are `Debug`, `Release`, `RelWithDebInfo` and `MinSizeRel`.
 

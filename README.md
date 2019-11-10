@@ -14,7 +14,7 @@
 - 32 bit and 64 bit architectures are now fully supported for ARM and x86. Note that 32 bit support for OSX platform may be removed in the future versions.
 - Added native logging capability for improved traceability (all native logging is routed to SLF4J)
 - On Raspberry Pi platforms, GPIO pins are now automatically configured internally by the native library.
-- Introduced API changes for [GlcdConfigBuilder](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/GlcdConfigBuilder.java). 
+- API changes on [GlcdConfigBuilder](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/GlcdConfigBuilder.java). 
 
 ### Features
 
@@ -198,7 +198,7 @@ public class HD44780Example {
 
 ######  Graphic LCD Example (ST7920 SPI Hardware)
 
-Example for`ST7920` display controller using RPi's SPI Hardware capability ([Source Code](https://github.com/ribasco/ucgdisplay/blob/master/examples/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/examples/glcd/GlcdST7920HWExample.java)).
+Example for`ST7920` display controller using RPi's SPI Hardware capability ([Other Examples](https://github.com/ribasco/ucgdisplay/blob/master/examples/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/examples/glcd/GlcdST7920HWExample.java)).
 
 >  **Note:** For I2C/SPI hardware capability, there is no need to map the pins explicitly. 
 
@@ -324,7 +324,7 @@ public class GlcdST7920HWExample {
 
 ###### Graphic LCD Example (ST7920 SPI Software)
 
-Here is an alternative version of the above example using bit-bang method. ([Source Code](https://github.com/ribasco/ucgdisplay/blob/master/examples/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/examples/glcd/GlcdST7920SWExample.java))
+Here is an alternative version of the above example using bit-bang method. ([Other Examples](https://github.com/ribasco/ucgdisplay/blob/master/examples/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/examples/glcd/GlcdST7920SWExample.java))
 
 ```java
 import com.ibasco.ucgdisplay.drivers.glcd.*;
