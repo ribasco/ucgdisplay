@@ -70,6 +70,8 @@ public:
 
     [[nodiscard]] bool supportsI2C() const override;
 
+    void close() override;
+
 private:
     int m_Handle;
     std::string address;

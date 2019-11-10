@@ -58,6 +58,8 @@ public:
 
     auto isRegistered(const uintptr_t& addr) -> bool;
 
+    auto getAllDevices() -> const std::map<uintptr_t, std::shared_ptr<ucgd_t>>&;
+
 private:
     std::map<uintptr_t, std::shared_ptr<ucgd_t>> m_DeviceMap;
 };

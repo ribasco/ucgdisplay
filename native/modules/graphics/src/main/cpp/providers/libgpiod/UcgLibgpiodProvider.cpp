@@ -82,3 +82,7 @@ bool UcgLibgpiodProvider::supportsSPI() const {
 bool UcgLibgpiodProvider::supportsI2C() const {
     return false;
 }
+
+void UcgLibgpiodProvider::close() {
+
+}

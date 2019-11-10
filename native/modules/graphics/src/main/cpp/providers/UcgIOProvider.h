@@ -125,6 +125,8 @@ public:
         return m_i2cProvider != nullptr;
     }
 
+    virtual void close() = 0;
+
     virtual bool isProvided() {
         return false;
     }

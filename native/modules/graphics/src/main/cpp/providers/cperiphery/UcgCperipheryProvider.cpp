@@ -83,3 +83,7 @@ const std::shared_ptr<UcgGpioProvider> &UcgCperipheryProvider::getGpioProvider()
 bool UcgCperipheryProvider::isProvided() {
     return true;
 }
+
+void UcgCperipheryProvider::close() {
+
+}

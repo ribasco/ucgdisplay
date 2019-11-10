@@ -51,6 +51,8 @@ public:
     [[nodiscard]] bool supportsSPI() const override;
 
     [[nodiscard]] bool supportsI2C() const override;
+
+    void close() override;
 };
 
 #endif //UCGD_MOD_GRAPHICS_UCGCPERIPHERYPROVIDER_H

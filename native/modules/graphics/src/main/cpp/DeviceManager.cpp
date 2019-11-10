@@ -54,6 +54,10 @@ auto DeviceManager::isRegistered(const uintptr_t &addr) -> bool {
     return m_DeviceMap.find(addr) != m_DeviceMap.end();
 }
 
+auto DeviceManager::getAllDevices() -> const std::map<uintptr_t, std::shared_ptr<ucgd_t>>&{
+    return m_DeviceMap;
+}
+
 uintptr_t DeviceNotFoundException::getAddress() const {
     return address;
 }

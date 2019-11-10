@@ -53,6 +53,8 @@ public:
 
     [[nodiscard]] bool supportsI2C() const override;
 
+    void close() override;
+
 private:
     std::shared_ptr<gpiod::chip> m_Chip;
 };

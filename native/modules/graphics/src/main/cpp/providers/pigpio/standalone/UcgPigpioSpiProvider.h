@@ -48,7 +48,7 @@ public:
     UcgPigpioProvider *getProvider() override;
 
 private:
-    void _close(const std::shared_ptr<ucgd_t> &context);
+    static void _close(const std::shared_ptr<ucgd_t> &context);
 };
 
 

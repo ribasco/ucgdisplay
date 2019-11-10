@@ -31,9 +31,14 @@
 #include <UcgPigpioI2CProvider.h>
 #include <UcgPigpioGpioProvider.h>
 #include <unistd.h>
+#include <Global.h>
 
 UcgPigpioProvider::UcgPigpioProvider() : UcgPigpioProviderBase(PROVIDER_PIGPIO, PigpioType::TYPE_STANDALONE) {
 
+}
+
+void pigpioSignalIntHandler(int signal, void* data) {
+    gpioTerminate();
 }
 
 void UcgPigpioProvider::initialize(const std::shared_ptr<ucgd_t> &context) {
@@ -46,6 +51,13 @@ void UcgPigpioProvider::initialize(const std::shared_ptr<ucgd_t> &context) {
 
         if (gpioInitialise() <= PI_INIT_FAILED)
             throw PigpioInitException("init_pigpio() : Failed to initialize pigpio (STANDALONE)");
+
+        void* data = (void*) context.get();
+        gpioSetSignalFuncEx(2, pigpioSignalIntHandler, data);
+        gpioSetSignalFuncEx(15, pigpioSignalIntHandler, data);
+        gpioSetSignalFuncEx(11, pigpioSignalIntHandler, data);
+
+        log.debug("init_pigpio() : [PIGPIO] Registered signal interrupt handler");
 
         log.debug("init_pigpio() : [PIGPIO] Initialized pigpio standalone mode");
         setInitialized(true);
@@ -102,4 +114,8 @@ bool UcgPigpioProvider::supportsSPI() const {
 
 bool UcgPigpioProvider::supportsI2C() const {
     return true;
+}
+
+void UcgPigpioProvider::close() {
+    setInitialized(false);
 }
