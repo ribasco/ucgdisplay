@@ -391,6 +391,10 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawRoundedFrame(JNIEnv *
 
 //long id, int x, int y, String value
 void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawString(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jstring value) {
+    if (value == nullptr) {
+        JNI_ThrowNativeLibraryException(env, "drawString() : Value is null");
+        return;
+    }
     if (!check_validity(env, id))
         return;
     if (!get_font_flag(env, id)) {
