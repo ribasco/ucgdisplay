@@ -31,14 +31,38 @@
 #include <UcgPigpioI2CProvider.h>
 #include <UcgPigpioGpioProvider.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <Global.h>
 
 UcgPigpioProvider::UcgPigpioProvider() : UcgPigpioProviderBase(PROVIDER_PIGPIO, PigpioType::TYPE_STANDALONE) {
 
 }
 
-void pigpioSignalIntHandler(int signal, void* data) {
+extern "C" void pigpioSignalIntHandler(int signal, void* data) {
     gpioTerminate();
+}
+
+// Returns:
+// (positive) PID of instance of daemon already running!
+// 0 if there is no lockfile
+// -1 if there is a lockfile but cannot make sense of contents
+extern "C" int checkPigpiod(void)
+{
+    int fd;
+    int count;
+    int pid = 0;
+    char str[20];
+
+    fd = open( PI_LOCKFILE, O_RDONLY );
+    if( fd != -1 ) {
+        pid = -1;
+        count = read(fd, str, sizeof(str)-1);
+        if( count ) {
+            pid = atoi( str );
+        }
+        close( fd );
+    }
+    return pid;
 }
 
 void UcgPigpioProvider::initialize(const std::shared_ptr<ucgd_t> &context) {
@@ -47,6 +71,17 @@ void UcgPigpioProvider::initialize(const std::shared_ptr<ucgd_t> &context) {
 
         if (getuid()) {
             throw std::runtime_error("You need to be running as ROOT to use the Standalone mode of PIGPIO");
+        }
+
+        int lockFilePid = checkPigpiod();
+        if( lockFilePid > 0 ) {
+            std::string msg = std::string("init_pigpio() : [PIGPIO] An instance of pigpiod is already running (Process: ") + std::to_string(lockFilePid) + std::string("). Please shutdown the daemon and try again.");
+            log.warn(msg);
+            throw PigpioInitException(msg);
+        }
+        else if( lockFilePid == -1 ) {
+            log.warn("An instance of pigpio daemon is already running. Please shutdown the daemon and try again.");
+            throw PigpioInitException("init_pigpio() : [PIGPIO] An instance of pigpio daemon is already running. Please shutdown the daemon and try again.");
         }
 
         if (gpioInitialise() <= PI_INIT_FAILED)
