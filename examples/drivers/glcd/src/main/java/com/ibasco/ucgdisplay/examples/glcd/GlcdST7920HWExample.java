@@ -47,6 +47,10 @@ public class GlcdST7920HWExample {
 
     private int bannerOffset = 0;
 
+    private class TickMonitor {
+
+    }
+
     private static class XbmEntry {
         private int width = 0;
         private int height = 0;
@@ -135,6 +139,12 @@ public class GlcdST7920HWExample {
     }
 
     private void run() throws Exception {
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            log.debug("Shutdown request detected");
+            shutdown.set(true);
+        }));
+
         //SPI HW 4-Wire config for ST7920
 
         //NOTE: On Raspberry Pi systems, pins can be automatically configured for hardware capability.
@@ -150,7 +160,7 @@ public class GlcdST7920HWExample {
                 //Set to 180 rotation
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
                 //Using system/c-periphery provider
-                .option(GlcdOption.PROVIDER, Provider.PIGPIO_STANDALONE)
+                .option(GlcdOption.PROVIDER, Provider.SYSTEM)
                 //Set to 1,000,000 Hz/bps (1.00 MHz)
                 .option(GlcdOption.BUS_SPEED, 1000000)
                 //The SPI Bus (RPI as two SPI buses available, the Main and Auxillary)
