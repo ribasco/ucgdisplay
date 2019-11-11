@@ -23,7 +23,7 @@
 
     <groupId>com.ibasco.ucgdisplay</groupId>
     <artifactId>ucg-display</artifactId>
-    <version>1.5.0-alpha</version>
+    <version>1.5.0-alpha-SNAPSHOT</version>
     <name>UCGDisplay</name>
     <url>https://github.com/ribasco/ucgdisplay</url>
     <packaging>pom</packaging>
