@@ -68,6 +68,10 @@ public:
     [[nodiscard]] bool supportsI2C() const override;
 
     void close() override;
+private:
+    static int checkPigpioDaemonStatus();
+
+    static void _close();
 };
 
 
