@@ -299,7 +299,7 @@ bool deviceInputFilter(int fd, const string &path) {
 void deviceInputEventHandler(device_input_event event) {
 
     JNIEnv *env;
-    cachedJVM->GetEnv((void **) &env, JNI_VERSION);
+    g_CachedJVM->GetEnv((void **) &env, JNI_VERSION);
 
     jobject *jInputDevice = nullptr;
 
@@ -338,7 +338,7 @@ void deviceInputEventHandler(device_input_event event) {
     env->DeleteLocalRef(jCodeName);
     env->DeleteLocalRef(jTypeName);
     env->DeleteLocalRef(jRawInputEvent);
-    //cachedJVM->DetachCurrentThread();*/
+    //g_CachedJVM->DetachCurrentThread();*/
 }
 
 /**
@@ -459,7 +459,7 @@ void onDeviceAdded(device_entry *entry) {
     //cout << "Device added: " << entry->path << endl;
     if (deviceInfoCache.count(entry->path) == 0) {
         JNIEnv *env;
-        cachedJVM->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
+        g_CachedJVM->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
         jobject deviceInfo = createInputDeviceInfo(env, entry->evt->ev_fd, entry->path);
         if (deviceInfo != nullptr) {
             deviceInfoCache.insert(make_pair(entry->path, deviceInfo));
@@ -476,7 +476,7 @@ void onDeviceRemoved(int fd, const string &path) {
     auto res = deviceInfoCache.find(path);
     if (res != deviceInfoCache.end()) {
         JNIEnv *env;
-        cachedJVM->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
+        g_CachedJVM->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
         //invoke callback before we delete from cache
         invokeDeviceStateCallback(env, path, "remove");
 
@@ -520,14 +520,14 @@ void refreshDevices() {
  */
 void inputMonitorFunction(future<void> futureObj) {
     JNIEnv *env;
-    cachedJVM->AttachCurrentThread((void **) &env, &jAttachArgs);
+    g_CachedJVM->AttachCurrentThread((void **) &env, &jAttachArgs);
     //Start monitoring for input
     eventManager->startMonitor();
     futureObj.wait();
 
     initialized = false;
     stopping = false;
-    cachedJVM->DetachCurrentThread();
+    g_CachedJVM->DetachCurrentThread();
 }
 
 /**
@@ -609,7 +609,7 @@ void deviceStateMonitor(future<void> futureObj) {
     int fd = udev_monitor_get_fd(mon);
 
     JNIEnv *env;
-    cachedJVM->AttachCurrentThread((void **) &env, &jAttachArgs);
+    g_CachedJVM->AttachCurrentThread((void **) &env, &jAttachArgs);
 
     timeval timeout = {1, 0};
 
@@ -635,8 +635,8 @@ void deviceStateMonitor(future<void> futureObj) {
         }
     }
 
-    if (cachedJVM != nullptr)
-        cachedJVM->DetachCurrentThread();
+    if (g_CachedJVM != nullptr)
+        g_CachedJVM->DetachCurrentThread();
 }
 #else
 
@@ -653,7 +653,7 @@ void deviceStateMonitor(future<void> futureObj) {
     }
 
     JNIEnv *env;
-    cachedJVM->AttachCurrentThread((void **) &env, &jAttachArgs);
+    g_CachedJVM->AttachCurrentThread((void **) &env, &jAttachArgs);
 
     wd = inotify_add_watch(fd, DEVINPUT_DIR_PATH, IN_ATTRIB);
     auto pfd = pollfd{fd, POLLIN, 0};
@@ -700,8 +700,8 @@ void deviceStateMonitor(future<void> futureObj) {
     (void) inotify_rm_watch(fd, wd);
     (void) close(fd);
 
-    if (cachedJVM != nullptr)
-        cachedJVM->DetachCurrentThread();
+    if (g_CachedJVM != nullptr)
+        g_CachedJVM->DetachCurrentThread();
 }
 
 #endif
