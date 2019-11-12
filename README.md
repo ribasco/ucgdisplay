@@ -97,7 +97,7 @@
 1. From maven repository
 
     ```xml
-    <dependencies>HD44780
+    <dependencies>
         <!-- Character display driver (HD44780) -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
