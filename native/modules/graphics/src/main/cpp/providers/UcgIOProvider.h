@@ -68,15 +68,10 @@ public:
 };
 
 class UcgIOProvider {
+    friend class UcgProviderBase;
+
 public:
-    explicit UcgIOProvider(const std::string &name) :
-            m_Name(name),
-            m_Initialized(false),
-            log(ServiceLocator::getInstance().getLogger()),
-            m_spiProvider(nullptr),
-            m_gpioProvider(nullptr),
-            m_i2cProvider(nullptr) {
-    }
+    explicit UcgIOProvider(std::string name);
 
     virtual ~UcgIOProvider() = default;
 
@@ -90,9 +85,7 @@ public:
      *
      * @return true if the provider is available
      */
-    bool isAvailable() {
-        return m_Available;
-    }
+    bool isAvailable();
 
     /**
      * Get the library name of this provider
@@ -101,55 +94,31 @@ public:
      */
     virtual std::string getLibraryName() = 0;
 
-    virtual const std::shared_ptr<UcgSpiProvider> &getSpiProvider() {
-        return m_spiProvider;
-    }
+    virtual const std::shared_ptr<UcgSpiProvider> &getSpiProvider();
 
-    virtual const std::shared_ptr<UcgI2CProvider> &getI2CProvider() {
-        return m_i2cProvider;
-    }
+    virtual const std::shared_ptr<UcgI2CProvider> &getI2CProvider();
 
-    virtual const std::shared_ptr<UcgGpioProvider> &getGpioProvider() {
-        return m_gpioProvider;
-    }
+    virtual const std::shared_ptr<UcgGpioProvider> &getGpioProvider();
 
-    virtual bool supportsGpio() const {
-        return m_gpioProvider != nullptr;
-    }
+    virtual bool supportsGpio() const;
 
-    virtual bool supportsSPI() const {
-        return m_spiProvider != nullptr;
-    }
+    virtual bool supportsSPI() const;
 
-    virtual bool supportsI2C() const {
-        return m_i2cProvider != nullptr;
-    }
+    virtual bool supportsI2C() const;
 
-    virtual void close() = 0;
+    virtual void close();
 
-    virtual bool isProvided() {
-        return false;
-    }
+    virtual bool isProvided();
 
-    std::string &getName() {
-        return m_Name;
-    }
+    std::string &getName();
 
-    bool isInitialized() const {
-        return m_Initialized;
-    }
+    bool isInitialized() const;
 
-    void markAvailable() {
-        m_Available = true;
-    }
+    void markAvailable();
 
-    void markUnavailable() {
-        m_Available = false;
-    }
+    void markUnavailable();
 
-    void setInitialized(bool initialized) {
-        m_Initialized = initialized;
-    }
+    void setInitialized(bool initialized);
 
 protected:
     Log &log;
@@ -157,17 +126,11 @@ protected:
     std::shared_ptr<UcgI2CProvider> m_i2cProvider;
     std::shared_ptr<UcgGpioProvider> m_gpioProvider;
 
-    void setSPIProvider(const std::shared_ptr<UcgSpiProvider> &spiProvider) {
-        m_spiProvider = spiProvider;
-    }
+    void setSPIProvider(const std::shared_ptr<UcgSpiProvider> &spiProvider);
 
-    void setI2CProvider(const std::shared_ptr<UcgI2CProvider> &i2cProvider) {
-        m_i2cProvider = i2cProvider;
-    }
+    void setI2CProvider(const std::shared_ptr<UcgI2CProvider> &i2cProvider);
 
-    void setGPIOProvider(const std::shared_ptr<UcgGpioProvider> &gpioProvider) {
-        m_gpioProvider = gpioProvider;
-    }
+    void setGPIOProvider(const std::shared_ptr<UcgGpioProvider> &gpioProvider);
 
 private:
     std::string m_Name;

@@ -20,6 +20,9 @@ set(TOOLS_DIR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tools)
 get_filename_component(PROJ_INCLUDE_DIR "" REALPATH BASE_DIR "${PROJECT_SOURCE_DIR}/../../../../../include")
 set(JDK_INCLUDE_DIR ${PROJ_INCLUDE_DIR})
 
+# This allows you to catch exceptions thrown from a C function
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fexceptions")
+
 # Fix link errors when compiling executable binaries
 set(CMAKE_INSTALL_RPATH "$ORIGIN")
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)

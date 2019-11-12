@@ -480,7 +480,6 @@
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
             <!-- Javadoc Plugin -->
-            <!-- damn this isn't working on jdk 11 -->
  <!--           <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>

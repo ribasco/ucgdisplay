@@ -48,11 +48,11 @@ enum SpiFlags : int {
     SPI_FLAG_AUX_WORDSIZE,               //bbbbbb           = defines the word size in bits (0-32). The default (0) sets 8 bits per word. Auxiliary SPI only                                                 (Bit 16-21)
 };
 
-UcgPigpioSpiProvider::UcgPigpioSpiProvider(UcgIOProvider *provider) : UcgSpiProvider(provider) {
+UcgPigpioSpiProvider::UcgPigpioSpiProvider(UcgIOProvider *provider) : UcgSpiProvider(provider) {}
 
-}
-
-UcgPigpioSpiProvider::~UcgPigpioSpiProvider() = default;;
+UcgPigpioSpiProvider::~UcgPigpioSpiProvider() {
+    UcgProviderBase::close();
+};
 
 void UcgPigpioSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
     if (context->tp_spi_handle >= 0)
@@ -75,14 +75,13 @@ void UcgPigpioSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
     }
 
     log.debug("open() : [PIGPIO] SPI Params: Provider = {}, Peripheral = {}, Speed = {}, Channel = {}, Flags = {}",
-                                               this->getProvider()->getName(),
-                                               peripheral,
-                                               speed,
-                                               channel,
-                                               flags
+              this->getProvider()->getName(),
+              peripheral,
+              speed,
+              channel,
+              flags
     );
 
-    //TODO: spi handle should be placed on the context object
     context->tp_spi_handle = spiOpen(channel, speed, flags);
 
     if (context->tp_spi_handle < 0) {
@@ -94,12 +93,15 @@ void UcgPigpioSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
         throw SpiOpenException(ss.str());
     }
 
+    registerDevice(context);
+
     log.debug("open() : [PIGPIO] Successfully opened SPI device");
 }
 
 int UcgPigpioSpiProvider::write(const std::shared_ptr<ucgd_t> &context, uint8_t *buffer, int count) {
     if (context->tp_spi_handle < 0) {
-        throw SpiWriteException("write() : [PIGPIO] SPI device not open");
+        //throw SpiWriteException("write() : [PIGPIO] SPI device not open");
+        return -1;
     }
 
     int retval = spiWrite(context->tp_spi_handle, (char *) buffer, count);
@@ -135,7 +137,7 @@ void UcgPigpioSpiProvider::close(const std::shared_ptr<ucgd_t> &context) {
 }
 
 void UcgPigpioSpiProvider::_close(const std::shared_ptr<ucgd_t> &context) {
-    if (context->tp_spi_handle > -1) {
+    if (context != nullptr && context->tp_spi_handle > -1) {
         spiClose(context->tp_spi_handle);
         context->tp_spi_handle = -1;
     }

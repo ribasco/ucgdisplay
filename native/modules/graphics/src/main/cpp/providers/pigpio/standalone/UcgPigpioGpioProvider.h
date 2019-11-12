@@ -39,8 +39,6 @@ public:
 
     void write(int pin, uint8_t value) override;
 
-    void close() override;
-
     UcgPigpioProvider *getProvider() override;
 
 protected:

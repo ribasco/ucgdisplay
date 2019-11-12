@@ -69,7 +69,11 @@ if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
             "${PROVIDER_DIR_PATH}/UcgI2CProvider.h"
             "ProviderManager.h"
             )
-    list(APPEND UCGDISP_SRC "ProviderManager.cpp")
+    list(APPEND UCGDISP_SRC
+            "${PROVIDER_DIR_PATH}/UcgProviderBase.cpp"
+            "${PROVIDER_DIR_PATH}/UcgIOProvider.cpp"
+            "ProviderManager.cpp"
+            )
 
     # LIBGPIOD
     include(external/libgpiod)

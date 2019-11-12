@@ -286,7 +286,9 @@ void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<U
             //Try and retrieve provider for configuring special pin modes specific to the Raspberry Pi
             std::shared_ptr<UcgIOProvider> pigpioProvider;
 
-            //If the user selected pigpio as the default provider, it should already be initialized
+            bool closeOnFinish = false;
+
+            //If the default provider is pigpio, use it.
             if (gpio->getProvider()->getName() == PROVIDER_PIGPIO || gpio->getProvider()->getName() == PROVIDER_PIGPIOD) {
                 log.debug("hal_init_gpio() : Using existing pigpio provider for configuring pin modes");
                 pigpioProvider = pMan->getProvider(gpio->getProvider()->getName());
@@ -304,40 +306,55 @@ void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<U
                         return;
                     }
                 }
+                //Since pigpio is not our default provider, we close it after
+                closeOnFinish = true;
             }
 
             std::shared_ptr<UcgGpioProvider> pigpioGpio = pigpioProvider->getGpioProvider();
 
-            //Check which hardware peripheral device we need to configure
-            if (comm_int == COMINT_3WSPI || comm_int == COMINT_4WSPI || comm_int == COMINT_ST7920SPI) {
-                int spi_bus_number = info->getOptionInt(OPT_SPI_BUS);
-                if (spi_bus_number == SPI_PERIPHERAL_MAIN) {
-                    pigpioGpio->init(info, SPI_RPI_PIN_MAIN_MISO, UcgGpioProvider::GpioMode::MODE_ALT0); //MISO
-                    pigpioGpio->init(info, SPI_RPI_PIN_MAIN_MOSI, UcgGpioProvider::GpioMode::MODE_ALT0); //MOSI
-                    pigpioGpio->init(info, SPI_RPI_PIN_MAIN_SCLK, UcgGpioProvider::GpioMode::MODE_ALT0); //SCLK
-                    pigpioGpio->init(info, SPI_RPI_PIN_MAIN_CE1, UcgGpioProvider::GpioMode::MODE_ALT0); //CE1
-                    pigpioGpio->init(info, SPI_RPI_PIN_MAIN_CE0, UcgGpioProvider::GpioMode::MODE_ALT0); //CE0
-                    log.debug("hal_init_gpio() : Pins initialized for MAIN SPI Hardware Peripheral");
-                } else if (spi_bus_number == SPI_PERIPHERAL_AUX) {
-                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_MISO, UcgGpioProvider::GpioMode::MODE_ALT4); //MISO
-                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_MOSI, UcgGpioProvider::GpioMode::MODE_ALT4); //MOSI
-                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_SCLK, UcgGpioProvider::GpioMode::MODE_ALT4); //SCLK
-                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE0, UcgGpioProvider::GpioMode::MODE_ALT4); //CE0
-                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE1, UcgGpioProvider::GpioMode::MODE_ALT4); //CE1
-                    pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE2, UcgGpioProvider::GpioMode::MODE_ALT4); //CE2
-                    log.debug("hal_init_gpio() : Pins initialized for AUXILLARY SPI Hardware Peripheral");
+            try {
+                //Check which hardware peripheral device we need to configure
+                if (comm_int == COMINT_3WSPI || comm_int == COMINT_4WSPI || comm_int == COMINT_ST7920SPI) {
+                    int spi_bus_number = info->getOptionInt(OPT_SPI_BUS);
+                    if (spi_bus_number == SPI_PERIPHERAL_MAIN) {
+                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_MISO, UcgGpioProvider::GpioMode::MODE_ALT0); //MISO
+                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_MOSI, UcgGpioProvider::GpioMode::MODE_ALT0); //MOSI
+                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_SCLK, UcgGpioProvider::GpioMode::MODE_ALT0); //SCLK
+                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_CE1, UcgGpioProvider::GpioMode::MODE_ALT0); //CE1
+                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_CE0, UcgGpioProvider::GpioMode::MODE_ALT0); //CE0
+                        log.debug("hal_init_gpio() : Pins initialized for MAIN SPI Hardware Peripheral");
+                    } else if (spi_bus_number == SPI_PERIPHERAL_AUX) {
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_MISO, UcgGpioProvider::GpioMode::MODE_ALT4); //MISO
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_MOSI, UcgGpioProvider::GpioMode::MODE_ALT4); //MOSI
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_SCLK, UcgGpioProvider::GpioMode::MODE_ALT4); //SCLK
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE0, UcgGpioProvider::GpioMode::MODE_ALT4); //CE0
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE1, UcgGpioProvider::GpioMode::MODE_ALT4); //CE1
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE2, UcgGpioProvider::GpioMode::MODE_ALT4); //CE2
+                        log.debug("hal_init_gpio() : Pins initialized for AUXILLARY SPI Hardware Peripheral");
+                    } else {
+                        throw std::runtime_error("hal_init_gpio() : SPI bus number not supported");
+                    }
+                } else if (comm_int == COMINT_I2C) {
+                    pigpioGpio->init(info, I2C_RPI_PIN_SDA, UcgGpioProvider::GpioMode::MODE_ALT0); //Data / SDA
+                    pigpioGpio->init(info, I2C_RPI_PIN_SCL, UcgGpioProvider::GpioMode::MODE_ALT0); //Clock / SCL
+                } else if (comm_int == COMINT_UART) {
+                    pigpioGpio->init(info, UART_RPI_PIN_TXD, UcgGpioProvider::GpioMode::MODE_ALT0); //Transmit / TXD
+                    pigpioGpio->init(info, UART_RPI_PIN_RXD, UcgGpioProvider::GpioMode::MODE_ALT0); //Receive / RXD
                 } else {
-                    throw std::runtime_error("hal_init_gpio() : SPI bus number not supported");
+                    //Other implementations, just init everything to OUT
+                    initializeGpioAllOut(info, gpio);
                 }
-            } else if (comm_int == COMINT_I2C) {
-                pigpioGpio->init(info, I2C_RPI_PIN_SDA, UcgGpioProvider::GpioMode::MODE_ALT0); //Data / SDA
-                pigpioGpio->init(info, I2C_RPI_PIN_SCL, UcgGpioProvider::GpioMode::MODE_ALT0); //Clock / SCL
-            } else if (comm_int == COMINT_UART) {
-                pigpioGpio->init(info, UART_RPI_PIN_TXD, UcgGpioProvider::GpioMode::MODE_ALT0); //Transmit / TXD
-                pigpioGpio->init(info, UART_RPI_PIN_RXD, UcgGpioProvider::GpioMode::MODE_ALT0); //Receive / RXD
-            } else {
-                //Other implementations, just init everything to OUT
-                initializeGpioAllOut(info, gpio);
+
+                if (closeOnFinish) {
+                    log.debug("hal_init_gpio() : Closing pigpio provider");
+                    pigpioProvider->close();
+                }
+            } catch (std::exception& e) {
+                if (closeOnFinish) {
+                    log.debug("hal_init_gpio() : Closing pigpio provider");
+                    pigpioProvider->close();
+                }
+                throw e;
             }
         } else {
             log.warn("hal_init_gpio() : Unrecognized system. Using default provider for initializing all GPIO pins to OUT.");

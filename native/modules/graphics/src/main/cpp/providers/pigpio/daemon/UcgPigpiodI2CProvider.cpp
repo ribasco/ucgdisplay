@@ -32,7 +32,7 @@ UcgPigpiodI2CProvider::UcgPigpiodI2CProvider(UcgIOProvider *provider) : UcgI2CPr
 
 UcgPigpiodI2CProvider::~UcgPigpiodI2CProvider() = default;;
 
-int UcgPigpiodI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
+void UcgPigpiodI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
     printDebugInfo(context);
 
     if (m_PigpioHandle <= -1) {
@@ -52,7 +52,7 @@ int UcgPigpiodI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
         throw I2COpenException(ss.str());
     }
 
-    return context->tp_i2c_handle;
+    registerDevice(context);
 }
 
 int UcgPigpiodI2CProvider::write(const std::shared_ptr<ucgd_t>& context, unsigned short address, const uint8_t *buffer, unsigned short length) {
@@ -66,8 +66,8 @@ int UcgPigpiodI2CProvider::write(const std::shared_ptr<ucgd_t>& context, unsigne
     return retval;
 }
 
-int UcgPigpiodI2CProvider::close(const std::shared_ptr<ucgd_t>& context) {
-    return _close(context);
+void UcgPigpiodI2CProvider::close(const std::shared_ptr<ucgd_t>& context) {
+    _close(context);
 }
 
 UcgPigpiodProvider *UcgPigpiodI2CProvider::getProvider() {

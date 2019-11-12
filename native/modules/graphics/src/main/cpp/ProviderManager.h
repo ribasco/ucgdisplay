@@ -57,6 +57,10 @@ public:
 
     auto isRegistered(const std::string &name) -> bool;
 
+    auto getAllProviders() -> const std::map<std::string, std::shared_ptr<UcgIOProvider>>&;
+
+    auto release() -> void;
+
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
     auto initializeProvider(const std::string& name, const std::shared_ptr<ucgd_t>& context = nullptr) -> void;
 

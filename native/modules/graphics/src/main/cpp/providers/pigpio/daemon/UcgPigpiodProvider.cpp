@@ -56,13 +56,13 @@ void UcgPigpiodProvider::initialize(const std::shared_ptr<ucgd_t> &context) {
         if (!this->port.empty())
             cPort = const_cast<char *>(this->port.c_str());
 
-        log.debug("init_pigpiod() : [PIGPIOD] Connecting to daemon (Address: {}, Port: {})", cAddr, cPort);
+        log.debug("init_pigpiod() : [PIGPIOD] Connecting to daemon (Address: {}, Port: {})", cAddr == nullptr ? PI_DEFAULT_SOCKET_ADDR_STR : cAddr, cPort == nullptr ? PI_DEFAULT_SOCKET_PORT_STR : cPort);
 
         //Connect to pigpio daemon
         this->m_Handle = pigpio_start(cAddr, cPort);
 
         if (this->m_Handle < 0)
-            throw PigpiodInitException("init_pigpiod() : [PIGPIOD] Failed to initialize pigpio (DAEMON)");
+            throw PigpiodInitException("init_pigpiod() : [PIGPIOD] Failed to connect to pigpio daemon");
 
         log.debug("init_pigpiod() : [PIGPIOD] Successfully connected to daemon (Address: {}, Port: {}, Handle: {})", cAddr, cPort, this->m_Handle);
 

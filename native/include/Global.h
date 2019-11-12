@@ -32,6 +32,7 @@
 #include <string>
 #include <map>
 #include <Utils.h>
+#include <csignal>
 
 #define GPIOUS_CONSUMER "ucgdisplay"
 
@@ -50,6 +51,7 @@
 #define CLS_NativeLibraryException "com/ibasco/ucgdisplay/common/exceptions/NativeLibraryException"
 #define CLS_U8g2EventDispatcher "com/ibasco/ucgdisplay/core/u8g2/U8g2EventDispatcher"
 #define CLS_U8g2GpioEvent "com/ibasco/ucgdisplay/core/u8g2/U8g2GpioEvent"
+#define CLS_SignalInterruptedException "com/ibasco/ucgdisplay/common/exceptions/SignalInterruptedException"
 
 #define CLS_INPUT_DEVICE "com/ibasco/ucgdisplay/core/input/InputDevice"
 #define CLS_INPUT_EVENT_TYPE "com/ibasco/ucgdisplay/core/input/InputEventType"
@@ -72,9 +74,39 @@
 
 #define JNI_VERSION JNI_VERSION_10
 
-#define GETENV(e) cachedJVM->GetEnv((void **) &e, JNI_VERSION);
+#define GETENV(e) g_CachedJVM->GetEnv((void **) &e, JNI_VERSION);
 
-extern JavaVM *cachedJVM;
+#define THROW_JNI_EXCEPTION(msg) JNIEnv *jniExEnv; \
+                                 GETENV(jniExEnv); \
+                                 JNI_ThrowNativeLibraryException(jniExEnv, msg);
+
+#define BEGIN_CATCH  try {
+#define END_CATCH   } catch (SignalInterruptedException& e) {\
+                        JNI_ThrowSignalInterruptedException(env, std::string(e.what()) + std::string(" (Signal: ") + std::to_string(e.getSignal()) + std::string(")")); \
+                        release_resources(); \
+                    } \
+                    catch (std::exception& e) { \
+                        JNI_ThrowNativeLibraryException(env, std::string(e.what())); \
+                    }
+
+extern volatile sig_atomic_t g_SignalStatus;
+extern JavaVM *g_CachedJVM;
+
+class SignalInterruptedException : public std::runtime_error {
+public:
+    explicit SignalInterruptedException(int signal, const std::string &arg) : m_Signal(signal), runtime_error(arg) {};
+
+    explicit SignalInterruptedException(int signal, const char *string) : m_Signal(signal), runtime_error(string) {}
+
+    explicit SignalInterruptedException(int signal, const runtime_error &error) : m_Signal(signal), runtime_error(error) {}
+
+    int getSignal() {
+        return m_Signal;
+    }
+
+private:
+    int m_Signal;
+};
 
 /**
  * Initialize global references
@@ -94,7 +126,7 @@ void JNI_Unload(JavaVM *vm);
  *
  * @param msg The exception message
  */
-void JNI_ThrowNativeLibraryException(const std::string& msg);
+void JNI_ThrowNativeLibraryException(const std::string &msg);
 
 /**
  * Throws a NativeLibraryException to java
@@ -102,14 +134,22 @@ void JNI_ThrowNativeLibraryException(const std::string& msg);
  * @param env JNIEnv instance
  * @param msg The exception message
  */
-void JNI_ThrowNativeLibraryException(JNIEnv *env, const std::string& msg);
+void JNI_ThrowNativeLibraryException(JNIEnv *env, const std::string &msg);
+
+/**
+ * Throws a SignalInterruptedException to java
+ *
+ * @param env JNIEnv instance
+ * @param msg The exception message
+ */
+void JNI_ThrowSignalInterruptedException(JNIEnv *env, const std::string &msg);
 
 /**
  * Throws an IOException to java
  * @param env JNIEnv instance
  * @param msg The exception message
  */
-void JNI_ThrowIOException(JNIEnv *env, const std::string& msg);
+void JNI_ThrowIOException(JNIEnv *env, const std::string &msg);
 
 /**
  * Creates a JNIEnv instance from the cached JVM
@@ -125,7 +165,7 @@ void JNI_GetEnv(JNIEnv *env);
  */
 void JNI_MakeGlobal(JNIEnv *env, const char *name, jclass &cls);
 
-void JNI_MakeGlobal(JNIEnv *env, jobject& localObj, jobject& globalObj);
+void JNI_MakeGlobal(JNIEnv *env, jobject &localObj, jobject &globalObj);
 
 /**
  * Copy jByteArray to a byte buffer
@@ -150,6 +190,8 @@ void JNI_CopyJIntArray(JNIEnv *env, jintArray arr, int *buffer, int length);
 void InputDevManager_Load(JNIEnv *env);
 
 void InputDevManager_UnLoad(JNIEnv *env);
+
+std::string Backtrace(int skip = 1);
 
 /*
 string getBinaryString(unsigned int u) {

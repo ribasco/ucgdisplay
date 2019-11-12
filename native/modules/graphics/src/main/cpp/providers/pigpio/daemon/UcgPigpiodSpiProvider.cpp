@@ -81,6 +81,8 @@ void UcgPigpiodSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
 
     printDebugInfo(context);
 
+    registerDevice(context);
+
     log.debug("spi_open() : [PIGPIOD] Successfully opened SPI device");
 }
 

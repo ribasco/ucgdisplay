@@ -117,7 +117,3 @@ bool UcgLibgpiodGpioProvider::isModeSupported(const UcgGpioProvider::GpioMode &m
             return false;
     }
 }
-
-void UcgLibgpiodGpioProvider::close() {
-
-}

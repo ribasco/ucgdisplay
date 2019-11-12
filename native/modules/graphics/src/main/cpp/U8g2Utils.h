@@ -135,12 +135,12 @@ std::shared_ptr<ucgd_t>& U8g2Util_SetupAndInitDisplay(const std::string &setup_p
 /**
  * Byte callback wrapper for u8g2 setup procedures
  */
-uint8_t U8g2Util_ByteCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+extern "C" uint8_t U8g2Util_ByteCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Gpio callback wrapper for u8g2 setup procedures
  */
-uint8_t U8g2Util_GpioCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
+extern "C" uint8_t U8g2Util_GpioCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 /**
  * Fires a GpioEvent to the attached listeners

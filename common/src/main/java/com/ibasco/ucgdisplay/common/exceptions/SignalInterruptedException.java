@@ -1,8 +1,8 @@
 /*-
  * ========================START=================================
  * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Native :: Graphics
- * Filename: UcgPigpiodGpioProvider.h
+ * Project: UCGDisplay :: Common
+ * Filename: SignalInterruptedException.java
  * 
  * ---------------------------------------------------------
  * %%
@@ -23,29 +23,30 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-#ifndef UCGD_MOD_GRAPHICS_UCGPIGPIODGPIOPROVIDER_H
-#define UCGD_MOD_GRAPHICS_UCGPIGPIODGPIOPROVIDER_H
+package com.ibasco.ucgdisplay.common.exceptions;
 
-#include <UcgGpioProvider.h>
-#include "UcgPigpiodProvider.h"
+/**
+ * Called by the native library when a signal event occurs.
+ *
+ * @author Rafael Ibasco
+ */
+public class SignalInterruptedException extends NativeLibraryException {
+    public SignalInterruptedException() {
+    }
 
-class UcgPigpiodGpioProvider : public UcgGpioProvider {
-public:
-    explicit UcgPigpiodGpioProvider(UcgIOProvider *provider);
+    public SignalInterruptedException(String message) {
+        super(message);
+    }
 
-    ~UcgPigpiodGpioProvider() override;
+    public SignalInterruptedException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    void init(const std::shared_ptr<ucgd_t> &context, int pin, GpioMode direction) override;
+    public SignalInterruptedException(Throwable cause) {
+        super(cause);
+    }
 
-    void write(int pin, uint8_t value) override;
-
-    UcgPigpiodProvider *getProvider() override;
-
-protected:
-    bool isModeSupported(const GpioMode &mode) override;
-
-private:
-    void checkHandle();
-};
-
-#endif //UCGD_MOD_GRAPHICS_UCGPIGPIODGPIOPROVIDER_H
+    public SignalInterruptedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+}

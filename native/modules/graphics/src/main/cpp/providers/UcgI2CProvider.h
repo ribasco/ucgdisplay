@@ -65,10 +65,6 @@ public:
 
     ~UcgI2CProvider() override = default;;
 
-    virtual int open(const std::shared_ptr<ucgd_t> &context) {};
-
-    virtual int close(const std::shared_ptr<ucgd_t>& context) {};
-
     virtual int write(const std::shared_ptr<ucgd_t>& context, unsigned short address, const uint8_t *buffer, unsigned short length) {};
 
 protected:

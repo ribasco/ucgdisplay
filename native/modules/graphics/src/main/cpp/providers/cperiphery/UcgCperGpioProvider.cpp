@@ -88,21 +88,6 @@ void UcgCperGpioProvider::write(int pin, uint8_t value) {
     }
 }
 
-void UcgCperGpioProvider::close() {
-    _close();
-}
-
-int UcgCperGpioProvider::_close() {
-    for (auto &it : m_GpioLineCache) {
-        std::shared_ptr<gpio_t> ptr = it.second;
-        int retval = cp_gpio_close(ptr.get());
-        if (retval == 0) {
-            cp_gpio_free(ptr.get());
-        }
-    }
-    return 0;
-}
-
 UcgCperipheryProvider *UcgCperGpioProvider::getProvider() {
     return dynamic_cast<UcgCperipheryProvider *>(UcgProviderBase::getProvider());
 }
@@ -121,4 +106,18 @@ const std::shared_ptr<gpio_t>& UcgCperGpioProvider::findOrCreateGpioLine(int pin
     }
     //found nothing, create new
     return m_GpioLineCache.insert(std::make_pair(pin, std::shared_ptr<gpio_t>(cp_gpio_new()))).first->second;
+}
+
+void UcgCperGpioProvider::close(const std::shared_ptr<ucgd_t> &context) {
+    _close();
+}
+
+void UcgCperGpioProvider::_close() {
+    for (auto &it : m_GpioLineCache) {
+        std::shared_ptr<gpio_t> ptr = it.second;
+        int retval = cp_gpio_close(ptr.get());
+        if (retval == 0) {
+            cp_gpio_free(ptr.get());
+        }
+    }
 }

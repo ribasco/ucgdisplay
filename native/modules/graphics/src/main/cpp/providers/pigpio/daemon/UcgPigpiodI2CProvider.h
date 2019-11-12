@@ -35,9 +35,9 @@ public:
 
     ~UcgPigpiodI2CProvider() override;
 
-    int open(const std::shared_ptr<ucgd_t> &context) override;
+    void open(const std::shared_ptr<ucgd_t> &context) override;
 
-    int close(const std::shared_ptr<ucgd_t>& context) override;
+    void close(const std::shared_ptr<ucgd_t>& context) override;
 
     int write(const std::shared_ptr<ucgd_t>& context, unsigned short address, const uint8_t *buffer, unsigned short length) override;
 

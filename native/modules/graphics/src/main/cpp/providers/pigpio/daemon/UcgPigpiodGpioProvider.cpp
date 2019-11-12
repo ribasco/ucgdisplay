@@ -99,7 +99,3 @@ bool UcgPigpiodGpioProvider::isModeSupported(const UcgGpioProvider::GpioMode &mo
 UcgPigpiodProvider *UcgPigpiodGpioProvider::getProvider() {
     return dynamic_cast<UcgPigpiodProvider *>(UcgProviderBase::getProvider());
 }
-
-void UcgPigpiodGpioProvider::close() {
-    //no-op
-}

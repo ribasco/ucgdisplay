@@ -35,11 +35,11 @@ UcgCperI2CProvider::~UcgCperI2CProvider() {
     //_close();
 };
 
-int UcgCperI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
+void UcgCperI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
     if (context->sys_i2c_handle != nullptr) {
         context->sys_i2c_handle = std::unique_ptr<cp_i2c_t>(cp_i2c_new());
     } else {
-        throw std::runtime_error("There already is an existing i2c handle that is open for this context");
+        throw I2COpenException("There already is an existing i2c handle that is open for this context");
     }
 
     std::string devicePath = UcgI2CProvider::buildI2CDevicePath(context);
@@ -52,10 +52,14 @@ int UcgCperI2CProvider::open(const std::shared_ptr<ucgd_t> &context) {
         ss << "cp_i2c_open() : Failed to open i2c device: " << std::string(devicePath);
         throw I2COpenException(ss.str());
     }
-    return 0;
+
+    registerDevice(context);
 }
 
 int UcgCperI2CProvider::write(const std::shared_ptr<ucgd_t>& context, unsigned short address, const uint8_t *buffer, unsigned short length) {
+    if (context->sys_i2c_handle == nullptr) {
+        return -1;
+    }
     struct i2c_msg i2cMsg = {.addr = address, .flags = 0, .len = length, .buf = const_cast<__u8 *>(buffer)};
     int retval;
     if ((retval = cp_i2c_transfer(context->sys_i2c_handle.get(), &i2cMsg, 1)) < 0) {
@@ -67,8 +71,8 @@ int UcgCperI2CProvider::write(const std::shared_ptr<ucgd_t>& context, unsigned s
     return retval;
 }
 
-int UcgCperI2CProvider::close(const std::shared_ptr<ucgd_t>& context) {
-    return _close(context);
+void UcgCperI2CProvider::close(const std::shared_ptr<ucgd_t>& context) {
+    _close(context);
 }
 
 UcgCperipheryProvider *UcgCperI2CProvider::getProvider() {

@@ -88,8 +88,6 @@ public:
         }
     };
 
-    virtual void close() = 0;
-
     virtual void write(int pin, uint8_t value) = 0;
 
     static std::string buildGpioDevicePath(const std::shared_ptr<ucgd_t>& context) {

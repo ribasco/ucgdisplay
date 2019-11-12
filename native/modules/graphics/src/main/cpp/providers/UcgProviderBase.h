@@ -35,17 +35,27 @@ class UcgProviderBase {
 public:
     explicit UcgProviderBase(UcgIOProvider *provider) : m_Provider(provider), log(ServiceLocator::getInstance().getLogger()) {}
 
-    virtual ~UcgProviderBase() = default;
+    virtual ~UcgProviderBase();
 
-    virtual UcgIOProvider *getProvider() {
-        return m_Provider;
-    }
+    virtual UcgIOProvider *getProvider();
+
+    virtual void open(const std::shared_ptr<ucgd_t> &context) {};
+
+    virtual void close(const std::shared_ptr<ucgd_t> &context) {};
+
+    auto getDevices() -> const std::vector<std::shared_ptr<ucgd_t>> &;
+
+    auto registerDevice(const std::shared_ptr<ucgd_t> &context) -> void;
+
+    auto close() -> void;
 
 protected:
     Log log;
 
 private:
     UcgIOProvider *m_Provider;
+
+    std::vector<std::shared_ptr<ucgd_t>> m_OpenDevices;
 };
 
 #endif

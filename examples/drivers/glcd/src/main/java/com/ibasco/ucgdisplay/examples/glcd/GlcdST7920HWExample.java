@@ -24,6 +24,8 @@ package com.ibasco.ucgdisplay.examples.glcd;/*-
  * =========================END==================================
  */
 
+import com.ibasco.ucgdisplay.common.exceptions.NativeLibraryException;
+import com.ibasco.ucgdisplay.common.exceptions.SignalInterruptedException;
 import com.ibasco.ucgdisplay.drivers.glcd.*;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.XBMDecodeException;
@@ -33,9 +35,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * ST7920 Example - Hardware SPI
@@ -45,10 +50,58 @@ public class GlcdST7920HWExample {
 
     private static final Logger log = LoggerFactory.getLogger(GlcdST7920HWExample.class);
 
-    private int bannerOffset = 0;
+    private final AtomicInteger bannerOffset = new AtomicInteger();
+    private final AtomicInteger fpsCtr = new AtomicInteger();
+    private final AtomicInteger lastFpsValue = new AtomicInteger();
+    private final AtomicInteger imageIndex = new AtomicInteger();
+    private final AtomicInteger bannerIndex = new AtomicInteger();
 
-    private class TickMonitor {
+    /**
+     * A simple object oriented approach for the "blink without delay pattern"
+     */
+    private static class TickMonitor {
 
+        private static class TickEntry {
+            private long previousMillis;
+
+            private long interval;
+
+            private Consumer<Void> callbackPassCond;
+
+            private Consumer<Void> callbackFailCond;
+
+            private TickEntry(long interval, Consumer<Void> cbPassCondition, Consumer<Void> cbFailCondition) {
+                this.previousMillis = 0;
+                this.interval = interval;
+                this.callbackPassCond = cbPassCondition;
+                this.callbackFailCond = cbFailCondition;
+            }
+        }
+
+        private ArrayList<TickEntry> entries = new ArrayList<>();
+
+        private void register(Duration interval, Consumer<Void> passCondition) {
+            entries.add(new TickEntry(interval.toMillis(), passCondition, null));
+        }
+
+
+        private void register(Duration interval, Consumer<Void> passCondition, Consumer<Void> failCondition) {
+            entries.add(new TickEntry(interval.toMillis(), passCondition, failCondition));
+        }
+
+        private void processTick() {
+            long currentMillis = System.currentTimeMillis();
+            for (TickEntry entry : entries) {
+                if (currentMillis - entry.previousMillis >= entry.interval) {
+                    entry.previousMillis = currentMillis;
+                    entry.callbackPassCond.accept(null);
+                } else {
+                    if (entry.callbackFailCond == null)
+                        return;
+                    entry.callbackFailCond.accept(null);
+                }
+            }
+        }
     }
 
     private static class XbmEntry {
@@ -69,6 +122,10 @@ public class GlcdST7920HWExample {
     }
 
     private List<XbmEntry> xbmImages = Arrays.asList(
+            createXbmEntry(128, 54, "metallica.xbm"),
+            createXbmEntry(123, 64, "slayer.xbm"),
+            createXbmEntry(128, 54, "sepultura.xbm"),
+            createXbmEntry(128, 28, "soulfly.xbm"),
             createXbmEntry(45, 64, "ironman.xbm"),
             createXbmEntry(50, 64, "raspberrypi.xbm"),
             createXbmEntry(48, 64, "punisher.xbm"),
@@ -130,7 +187,7 @@ public class GlcdST7920HWExample {
 
     private void drawScrollingBanner(GlcdDriver driver, int index) {
         Banner banner = banners.get(index);
-        banner.drawBanner(bannerOffset, driver);
+        banner.drawBanner(bannerOffset.getAndIncrement(), driver);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -138,10 +195,42 @@ public class GlcdST7920HWExample {
         return new XbmEntry(width, height, XBMUtils.decodeXbmFile(GlcdST7920HWExample.class.getResourceAsStream("/" + fileName)));
     }
 
+    private void registerMonitorEntries(TickMonitor monitor) {
+        //Record FPS count every second
+        monitor.register(Duration.ofSeconds(1), aVoid -> {
+            lastFpsValue.set(fpsCtr.get());
+            fpsCtr.set(0);
+        }, aVoid -> fpsCtr.getAndIncrement());
+
+        //Update image index every 5 seconds
+        monitor.register(Duration.ofSeconds(5), aVoid -> {
+            imageIndex.getAndIncrement();
+            if (imageIndex.get() > (xbmImages.size() - 1)) {
+                imageIndex.set(0);
+            }
+        });
+
+        //Update banner index every 5 secs
+        monitor.register(Duration.ofSeconds(5), aVoid -> {
+            bannerIndex.getAndIncrement();
+            if (bannerIndex.get() > (banners.size() - 1)) {
+                bannerIndex.set(0);
+            }
+        });
+
+        //Banner scroll: Update banner offset every 300 ms
+        monitor.register(Duration.ofMillis(300), aVoid -> {
+            bannerOffset.getAndIncrement();
+            if (bannerOffset.get() >= 128)
+                bannerOffset.set(0);
+        });
+    }
+
     private void run() throws Exception {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            log.debug("Shutdown request detected");
+            //Perform necessary clean-up operations here in case the program abruptly stops
+            log.debug("Shutdown requested. Attempting to gracefully exit the program");
             shutdown.set(true);
         }));
 
@@ -179,74 +268,43 @@ public class GlcdST7920HWExample {
 
         long startMillis = System.currentTimeMillis();
 
-        log.debug("Starting display loop");
+        log.debug("Starting display loop. Press Ctrl+C to exit.");
 
-        int imageIndex = 0;
-        int bannerIndex = 0;
-        long previousMillisImage = 0;
-        long previousMillisBanner = 0;
-        long previousMillisBannerOffset = 0;
-        long previousMillisFps = 0;
-        long imageInterval = 3000;
-        long bannerChangeInterval = 30000;
-        long bannerScrollInterval = 100;
-        long fpsInterval = 1000;
-        int fpsCtr = 0;
-        int lastFpsValue = 0;
+        TickMonitor monitor = new TickMonitor();
 
-        while (!shutdown.get()) {
-            long currentMillis = System.currentTimeMillis();
+        registerMonitorEntries(monitor);
 
-            //Clear the GLCD buffer
-            driver.clearBuffer();
+        try {
+            while (!shutdown.get()) {
+                //Clear the GLCD buffer
+                driver.clearBuffer();
 
-            //Change display image every 3 seconds
-            if (currentMillis - previousMillisImage >= imageInterval) {
-                previousMillisImage = currentMillis;
-                imageIndex++;
-                if (imageIndex > (xbmImages.size() - 1)) {
-                    imageIndex = 0;
+                //Process tick, check each entry if it has reached the target interval
+                monitor.processTick();
+
+                drawStaticImage(driver, imageIndex.get(), 0, 0);
+
+                //Show these nodes only when image index is > 3
+                if (imageIndex.get() > 3) {
+                    drawScrollingBanner(driver, bannerIndex.get());
+                    //Write Operations to the GLCD buffer
+                    driver.setFont(GlcdFont.FONT_6X12_MR);
+                    driver.drawString(65, maxHeight * 4, "ucgdisplay");
+                    driver.drawString(80, maxHeight * 5, "FPS: " + lastFpsValue);
                 }
+
+                //Send all buffered data to the display
+                driver.sendBuffer();
             }
 
-            //Change banner every 5 seconds
-            if (currentMillis - previousMillisBanner >= bannerChangeInterval) {
-                previousMillisBanner = currentMillis;
-                bannerIndex++;
-                if (bannerIndex > (banners.size() - 1)) {
-                    bannerIndex = 0;
-                }
-            }
-
-            //Scroll banner every 300 milliseconds
-            if (currentMillis - previousMillisBannerOffset >= bannerScrollInterval) {
-                previousMillisBannerOffset = currentMillis;
-                bannerOffset++;
-                if (bannerOffset >= 128)
-                    bannerOffset = 0;
-            }
-
-            if (currentMillis - previousMillisFps >= fpsInterval) {
-                previousMillisFps = currentMillis;
-                lastFpsValue = fpsCtr;
-                fpsCtr = 0;
-            } else {
-                fpsCtr++;
-            }
-
-            drawScrollingBanner(driver, bannerIndex);
-            drawStaticImage(driver, imageIndex, 0, 0);
-
-            //Write Operations to the GLCD buffer
-            driver.setFont(GlcdFont.FONT_6X12_MR);
-            driver.drawString(65, maxHeight * 4, "ucgdisplay");
-            driver.drawString(80, maxHeight * 5, "FPS: " + lastFpsValue);
-            //Send all buffered data to the display
-            driver.sendBuffer();
+            //Clear the display
+            driver.clearDisplay();
+        } catch (SignalInterruptedException e) {
+            log.warn("Signal interrupt detected: {}", e.getMessage());
+        } catch (NativeLibraryException e) {
+            log.error("An error occured in the native layer", e);
         }
 
-        //Clear the display
-        driver.clearDisplay();
         long endTime = System.currentTimeMillis() - startMillis;
 
         log.info("Done in {} seconds", Duration.ofMillis(endTime).toSeconds());

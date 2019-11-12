@@ -72,10 +72,6 @@ public:
 
     ~UcgSpiProvider() = default;
 
-    virtual void open(const std::shared_ptr<ucgd_t> &context) = 0;
-
-    virtual void close(const std::shared_ptr<ucgd_t> &context) = 0;
-
     virtual int write(const std::shared_ptr<ucgd_t> &context, uint8_t *buffer, int count) = 0;
 
 protected:

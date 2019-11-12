@@ -70,6 +70,21 @@ auto ProviderManager::getProvider(const std::string &name) -> std::shared_ptr<Uc
         return it->second;
     throw ProviderNotFoundException("Provider " + name + " not found");
 }
+
+auto ProviderManager::getAllProviders() -> const std::map<std::string, std::shared_ptr<UcgIOProvider>> & {
+    return m_Providers;
+}
+
+auto ProviderManager::release() -> void {
+    //Close all initialized providers
+    for (auto const& [key, val] : m_Providers) {
+        if (val->isInitialized()) {
+            log.debug("release() : Releasing all provider's resources: {}", std::string(val->getName()));
+            val->close();
+        }
+    }
+}
+
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
 auto ProviderManager::getProvider(const std::shared_ptr<ucgd_t> &context) -> std::shared_ptr<UcgIOProvider> & {
     std::string defaultProvider = context->getOptionString(OPT_PROVIDER);

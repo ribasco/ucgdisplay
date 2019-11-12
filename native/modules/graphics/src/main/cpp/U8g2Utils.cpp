@@ -180,7 +180,6 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
     context->comm_int = commInt;
     context->comm_type = commType;
 
-
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
     context->options = std::map(options);
     context->provider = ServiceLocator::getInstance().getProviderManager()->getProvider(context);
@@ -254,11 +253,14 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
             return 1;
         }
         try {
+            if (g_SignalStatus) {
+                throw SignalInterruptedException(g_SignalStatus, "Caught signal interrupt");
+            }
             return cb_byte(context, u8x8, msg, arg_int, arg_ptr);
-        } catch (std::exception &e) {
-            std::stringstream ss;
-            ss << "byte_cb() : " << std::string(e.what()) << std::endl;
-            throw UcgdByteCallbackException(ss.str());
+         } catch (SignalInterruptedException& e) {
+            throw e;
+         } catch (std::exception &e) {
+            throw UcgdByteCallbackException(std::string("context->byte_cb() : Error thrown from the Byte Callback. Reason: ") + std::string(e.what()));
         }
     };
 
@@ -270,13 +272,16 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
             JNI_FireGpioEvent(lenv, context->address(), msg, arg_int);
             return 1;
         }
-        try {
+       try {
+            if (g_SignalStatus) {
+                throw SignalInterruptedException(g_SignalStatus, "Caught signal interrupt");
+            }
             return cb_gpio_delay(context, u8x8, msg, arg_int, arg_ptr);
-        } catch (std::exception &e) {
-            std::stringstream ss;
-            ss << "gpio_cb() : " << std::string(e.what()) << std::endl;
-            throw UcgdGpioCallbackException(ss.str());
-        }
+       } catch (SignalInterruptedException& e) {
+            throw e;
+       } catch (std::exception &e) {
+            throw UcgdGpioCallbackException(std::string("context->gpio_cb() : Error thrown from the Gpio Callback. Reason: ") + std::string(e.what()));
+       }
     };
 
     //Obtain the u8g2 raw pointer
@@ -331,7 +336,7 @@ std::string U8g2Util_GetPinIndexDesc(int index) {
         _pins_initialized = true;
     }
     if (index > 15) {
-        return nullptr;
+        return std::string();
     }
     return pinNameIndexMap.at(index);
 }

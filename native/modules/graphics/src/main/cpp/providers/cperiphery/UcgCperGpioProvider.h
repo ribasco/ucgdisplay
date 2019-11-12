@@ -43,15 +43,14 @@ public:
 
     void write(int pin, uint8_t value) override;
 
-    void close() override;
-
+    void close(const std::shared_ptr<ucgd_t> &context) override;
 protected:
     bool isModeSupported(const GpioMode &mode) override;
 
 private:
     std::map<int, std::shared_ptr<gpio_t>> m_GpioLineCache;
     const std::shared_ptr<gpio_t>& findOrCreateGpioLine(int pin);
-    int _close();
+    void _close();
 };
 
 

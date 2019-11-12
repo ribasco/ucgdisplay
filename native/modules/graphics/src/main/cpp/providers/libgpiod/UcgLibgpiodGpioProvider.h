@@ -41,8 +41,6 @@ public:
 
     void write(int pin, uint8_t value) override;
 
-    void close() override;
-
     UcgLibgpiodProvider *getProvider() override {
         return dynamic_cast<UcgLibgpiodProvider *>(UcgProviderBase::getProvider());
     }

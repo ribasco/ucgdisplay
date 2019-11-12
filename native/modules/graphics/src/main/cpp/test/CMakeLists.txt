@@ -14,7 +14,9 @@ list(APPEND TEST_SOURCES
 list(APPEND TEST_SOURCES
         "${ucgd-mod-graphics_SOURCE_DIR}/UcgdTypes.h"
         "${PROVIDER_DIR_PATH}/UcgProviderBase.h"
+        "${PROVIDER_DIR_PATH}/UcgProviderBase.cpp"
         "${PROVIDER_DIR_PATH}/UcgIOProvider.h"
+        "${PROVIDER_DIR_PATH}/UcgIOProvider.cpp"
         "${PROVIDER_DIR_PATH}/UcgSpiProvider.h"
         "${PROVIDER_DIR_PATH}/UcgGpioProvider.h"
         "${PROVIDER_DIR_PATH}/UcgI2CProvider.h"

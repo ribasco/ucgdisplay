@@ -64,6 +64,8 @@ void UcgCperSpiProvider::open(const std::shared_ptr<ucgd_t> &context) {
         ss << "open() : Error initializing spi device. Reason: " << std::string(cp_spi_errmsg(context->sys_spi_handle.get()));
         throw SpiOpenException(ss.str());
     }
+
+    registerDevice(context);
 }
 
 int UcgCperSpiProvider::write(const std::shared_ptr<ucgd_t> &context, uint8_t *buffer, int count) {

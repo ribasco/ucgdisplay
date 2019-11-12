@@ -31,9 +31,7 @@
 ServiceLocator::ServiceLocator() : m_Logger(nullptr) {
 }
 
-ServiceLocator::~ServiceLocator() {
-    //std::cerr << "UcgdServiceLocator :: SERVICE LOCATOR DESTRUCTING" << std::endl;
-}
+ServiceLocator::~ServiceLocator() = default;
 
 auto ServiceLocator::getInstance() -> ServiceLocator & {
     static auto instance = std::unique_ptr<ServiceLocator>(nullptr);
