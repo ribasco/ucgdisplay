@@ -31,9 +31,9 @@ MVN_PROPS="-Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTes
 
 echo "[INSTALL] Build Type = ${BUILD_TYPE}, Cross Compile = ${CROSS_COMPILE}, Properties = ${MVN_PROPS}"
 
-# Only cross-compile on linux (x86_64/amd64) environment
+# Cross-compile for all platforms only on linux (x86_64/amd64) environment
 if [[ ${CROSS_COMPILE} == 'yes' ]]; then
     mvn --settings scripts/settings.xml install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all ${MVN_PROPS}
 else
-    mvn --settings scripts/settings.xml install -Dcompile.native=false ${MVN_PROPS}
+    mvn --settings scripts/settings.xml install -Dcompile.native=true ${MVN_PROPS}
 fi
