@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -93,7 +94,10 @@ class GlcdDriverIT {
         driver.drawString("Hello");
         driver.sendBuffer();
 
-        assertDoesNotThrow((Executable) latch::await);
+        assertDoesNotThrow(() -> {
+            latch.await(10, TimeUnit.SECONDS);
+        });
+
         assertTrue(called.get());
     }
 

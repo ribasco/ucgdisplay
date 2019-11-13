@@ -50,9 +50,8 @@
         <rxjava.version>2.1.5</rxjava.version>
         <mockito.version>2.23.0</mockito.version>
         <powermock.version>1.7.3</powermock.version>
-        <sysoutslf4j.version>1.0.2</sysoutslf4j.version>
         <native.lib.loader.version>2.3.4</native.lib.loader.version>
-        <ant.version>1.10.5</ant.version>
+        <ant.version>1.10.7</ant.version>
         <ant-contrib.version>1.0b3</ant-contrib.version>
         <project.prefix>UCGDisplay ::</project.prefix>
         <main.basedir>${project.basedir}</main.basedir>
@@ -100,20 +99,6 @@
         <system>github</system>
     </issueManagement>
 
-    <!-- Distribution management -->
-    <distributionManagement>
-        <repository>
-            <id>${dm.repo.id}</id>
-            <name>${dm.repo.name}</name>
-            <url>${dm.repo.release.url}</url>
-        </repository>
-        <snapshotRepository>
-            <id>${dm.repo.id}</id>
-            <name>${dm.repo.snapshots.name}</name>
-            <url>${dm.repo.snapshots.url}</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <!-- Continuous Integration -->
     <ciManagement>
         <system>Travis CI</system>
@@ -122,93 +107,51 @@
 
     <!-- Profiles -->
     <profiles>
-        <!-- Disable doclint for java 8 -->
-       <!-- <profile>
-            <id>disable-java8-doclint</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <source>8</source>
-                            <additionalOptions>-Xdoclint:none</additionalOptions>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <source>8</source>
-                            <additionalOptions>-Xdoclint:none</additionalOptions>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>-->
+        <!-- Deploy to Sonatype -->
+        <profile>
+            <id>deploy-sonatype</id>
+            <properties>
+            </properties>
+            <distributionManagement>
+                <repository>
+                    <id>ossrh</id>
+                    <name>Sonatype Release Repository</name>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <name>Sonatype Snapshots Repository</name>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    <uniqueVersion>false</uniqueVersion>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+
+        <!-- Deploy to Github -->
+        <profile>
+            <id>deploy-github</id>
+            <properties>
+            </properties>
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub ribasco Apache Maven Release Repository</name>
+                    <url>https://maven.pkg.github.com/ribasco/ucgdisplay</url>
+                </repository>
+                <snapshotRepository>
+                    <id>github</id>
+                    <name>GitHub ribasco Apache Maven Snapshots Repository</name>
+                    <url>https://maven.pkg.github.com/ribasco/ucgdisplay</url>
+                    <uniqueVersion>false</uniqueVersion>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+
         <!-- Only activate these plugins on release (source, javadoc, gpg) -->
         <profile>
             <id>release</id>
             <build>
                 <plugins>
-                    <!-- SOURCE Plugin -->
-<!--                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>aggregate-sources</id>
-                                <goals>
-                                    <goal>aggregate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <includes>
-                                <include>**/*.java</include>
-                            </includes>
-                            <excludes>
-                                <exclude>native/modules/graphics/src/main/cpp/**</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>-->
-                    <!-- JAVADOC Plugin -->
-<!--                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>aggregate-javadocs</id>
-                                <goals>
-                                    <goal>aggregate-jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <excludes>
-                                <exclude>native/modules/graphics/src/main/cpp/**</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>-->
                     <!-- GPG Plugin -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -479,14 +422,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
-            <!-- Javadoc Plugin -->
- <!--           <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                </configuration>
-            </plugin>-->
             <!-- Failsafe plugin (integration testing) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -514,14 +449,17 @@
                         </goals>
                         <phase>process-sources</phase>
                         <configuration>
+                            <ignoreNoFileToScan>true</ignoreNoFileToScan>
                             <licenseName>lgpl_v3</licenseName>
                             <descriptionTemplate>${main.basedir}/scripts/license/template.ftl</descriptionTemplate>
                             <canUpdateCopyright>true</canUpdateCopyright>
                             <canUpdateDescription>true</canUpdateDescription>
                             <canUpdateLicense>true</canUpdateLicense>
                             <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-                            <processStartTag>========================START=================================</processStartTag>
-                            <processEndTag>=========================END==================================</processEndTag>
+                            <processStartTag>========================START=================================
+                            </processStartTag>
+                            <processEndTag>=========================END==================================
+                            </processEndTag>
                             <excludes>
                                 <exclude>*.sh</exclude>
                                 <exclude>src/main/cpp/lib/**</exclude>
@@ -543,29 +481,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                <!--<executions>
-                    <execution>
-                        <id>update-project-license</id>
-                        <goals>
-                            <goal>update-project-license</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <licenseName>lgpl_v3</licenseName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>append-license-file-headers</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <descriptionTemplate>${project.basedir}/scripts/license/template.ftl</descriptionTemplate>
-                        </configuration>
-                    </execution>
-                </executions>
-                <inherited>false</inherited>-->
             </plugin>
             <!-- ENFORCER Plugin -->
             <plugin>
@@ -581,24 +496,11 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <requireProperty>
-                                    <property>dm.repo.id</property>
-                                    <message>[DISTRIBUTION MANAGEMENT] Repository ID (dm.repo.id) has not been
-                                        specified.
-                                    </message>
-                                </requireProperty>
-                                <requireProperty>
-                                    <property>dm.repo.release.url</property>
-                                    <message>[DISTRIBUTION MANAGEMENT] Release URL (dm.repo.release.url) has not been
-                                        specified
-                                    </message>
-                                </requireProperty>
-                                <requireProperty>
-                                    <property>dm.repo.snapshots.url</property>
-                                    <message>[DISTRIBUTION MANAGEMENT] Snapshots URL (dm.repo.snapshots.url) has not
-                                        been specified
-                                    </message>
-                                </requireProperty>
+                                <requireActiveProfile>
+                                    <profiles>deploy-sonatype,deploy-github</profiles>
+                                    <message>At least one of the profiles should be activated during deploy (deploy-sonatype or deploy-github)</message>
+                                    <all>false</all>
+                                </requireActiveProfile>
                             </rules>
                         </configuration>
                     </execution>
@@ -612,7 +514,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>[3.0,)</version>
+                                    <version>[3.5,)</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -746,12 +648,6 @@
                 <artifactId>powermock-api-mockito2</artifactId>
                 <version>${powermock.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/uk.org.lidalia/sysout-over-slf4j -->
-            <dependency>
-                <groupId>uk.org.lidalia</groupId>
-                <artifactId>sysout-over-slf4j</artifactId>
-                <version>${sysoutslf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.scijava</groupId>

@@ -22,21 +22,27 @@ License along with this program.  If not, see
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <activeProfiles>
+        <activeProfile>global</activeProfile>
+        <activeProfile>github</activeProfile>
+    </activeProfiles>
     <profiles>
         <profile>
-            <id>global-props</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+            <id>global</id>
             <properties>
                 <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-                <dm.repo.id>ossrh</dm.repo.id>
-                <dm.repo.name>Sonatype Release Repository</dm.repo.name>
-                <dm.repo.release.url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</dm.repo.release.url>
-                <dm.repo.snapshots.name>Sonatype Snapshots Repository</dm.repo.snapshots.name>
-                <dm.repo.snapshots.url>https://oss.sonatype.org/content/repositories/snapshots</dm.repo.snapshots.url>
             </properties>
             <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>https://repo1.maven.org/maven2</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
                 <repository>
                     <id>ossrh</id>
                     <name>Sonatype OSS Maven Repository</name>
@@ -46,6 +52,16 @@ License along with this program.  If not, see
                         <updatePolicy>always</updatePolicy>
                         <checksumPolicy>fail</checksumPolicy>
                     </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>github</id>
+            <repositories>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub ribasco Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/ribasco</url>
                 </repository>
             </repositories>
         </profile>

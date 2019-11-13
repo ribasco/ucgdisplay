@@ -270,23 +270,17 @@
 
     <!-- Initialize osxcross toolchain -->
     <target name="init-native-tools-osx" depends="tools-check-osxcross" unless="osx.tools.dir.valid">
-        <echo>Initializing OSXCross toolchain</echo>
-        <!--<echo>Deleting existing OSX toolchain directory (if applicable)</echo>
-        <delete dir="${cpp.tools.osx.dir}" failonerror="false"/>
-        <echo>Extracting toolchain contents from the archive</echo>
-        <exec executable="tar" dir="${cpp.tools.dir}" failonerror="true">
-            <arg line="xzf"/>
-            <arg line="${cpp.tools.osx.archive}"/>
+        <echo>Initializing OSXCross git submodule</echo>
+        <exec executable="git" dir="${root.dir}" failonerror="false">
+            <arg line="submodule update --init --remote ${cpp.tools.osx.dir}"/>
         </exec>
-        <echo>Moving extracted contents to ${cpp.tools.osx.dir}</echo>
-        <move file="${cpp.tools.dir}/target" tofile="${cpp.tools.osx.dir}"/>-->
     </target>
 
     <!-- Initialize RPi/ARM toolchain -->
     <target name="init-native-tools-rpi" depends="tools-check-rpi" unless="rpi.tools.dir.valid">
-        <echo>Updating git submodules</echo>
+        <echo>Initializing RPI tools git submodule</echo>
         <exec executable="git" dir="${root.dir}" failonerror="false">
-            <arg line="submodule update --recursive --remote"/>
+            <arg line="submodule update --init --remote ${cpp.tools.rpi.dir}"/>
         </exec>
     </target>
 

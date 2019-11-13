@@ -48,7 +48,7 @@ public enum SpiChannel implements GlcdOptionValue<Integer>, GlcdUserDefinedOptio
     CHANNEL_2(2),
 
     /**
-     * A custom chip select channel. Use this if your device has an SPI channel > 2.
+     * A custom chip select channel. Use this if your device has an SPI channel &gt; 2.
      * <br />
      * <br />
      * Example:

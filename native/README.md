@@ -97,27 +97,25 @@ git clone --recurse-submodules --branch 1.5.0-alpha-dev -j4 https://github.com/r
 
 #### Cross-compiling with Maven (Java + Native) [RECOMMENDED]
 
-If you compile with maven, you will compile all Java sources including the native libraries of all supported platforms. For the `buildType` parameter, the possible values are `Debug`, `Release`, `RelWithDebInfo` and `MinSizeRel`.
+If you compile with maven, you will compile all Java sources including the native libraries of all supported platforms.
 
-<u>Compile Everything</u>
+<u>Maven Compile Parameters</u>
 
-```bash
-mvn clean install -P'cross-compile' -DbuildType=Debug -DskipTests=true -Dgpg.skip
-```
-
-<u>Compiling a specific target architecture</u>
-
->  **Note**: See 'List of available ANT Build Targets' below for the list of targets
+* Set `compile.native` to true to tell maven that we also want to compile the native c++ library. Without this property set, the `graphics.target` will have no effect and only the java sources will be compiled.
+* Use the target `native-build-cc-all` to cross-compile for all supported platforms
+* The possible values for the `build.type` are `Debug`, `Release`, `RelWithDebInfo` and `MinSizeRel` ([More Info](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html)).
 
 ```bash
-mvn clean compile -P'cross-compile' -DbuildType=<buildType> -Dgraphics-build-target=<ant build target>
+mvn clean install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dbuild.type=Debug
 ```
+
+> **Note:** All available ANT targets are listed below.
 
 #### Cross-compiling with Apache ANT (Native Only)
 
 With ant, you can select a specific c++ module to cross-compile. 
 
-> Note: Build files are located under root 'scripts' directory 
+> **Note**: Build files are located under root 'scripts' directory 
 
 Building only the C++ graphics library for all supported platforms
 

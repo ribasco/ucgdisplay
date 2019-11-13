@@ -33,26 +33,15 @@
 
     <properties>
         <main.basedir>${project.parent.basedir}</main.basedir>
-        <buildType>Debug</buildType>
-        <crossCompile>false</crossCompile>
+        <build.type>Debug</build.type>
+        <compile.native>false</compile.native>
+        <skip.native.build>false</skip.native.build>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.ibasco.ucgdisplay</groupId>
             <artifactId>ucgd-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>uk.org.lidalia</groupId>
-            <artifactId>sysout-over-slf4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.scijava</groupId>
@@ -73,45 +62,6 @@
     </dependencies>
 
     <profiles>
-        <!-- Cross-compile profile (can only run under 64 bit linux os) -->
-        <profile>
-            <id>cross-compile</id>
-            <properties>
-                <current-os>linux</current-os>
-                <current-arch>amd64</current-arch>
-                <crossCompile>true</crossCompile>
-                <graphics-build-target>native-build-cc-all</graphics-build-target>
-            </properties>
-            <build>
-                <plugins>
-                    <!-- Enforcer: Make sure this can only be run from the Linux OS -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>enforce-os</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requireOS>
-                                            <name>Linux</name>
-                                            <family>unix</family>
-                                            <arch>amd64</arch>
-                                        </requireOS>
-                                    </rules>
-                                    <failFast>true</failFast>
-                                    <fail>true</fail>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
         <!-- BUILD PROFILE: Linux - x86_64/amd64 -->
         <profile>
             <id>build-linux-x86_64</id>
@@ -122,15 +72,16 @@
                     <arch>amd64</arch>
                 </os>
                 <property>
-                    <!-- activate only if crossCompile is false, otherwise a duplicate build step will take place -->
-                    <name>crossCompile</name>
-                    <value>false</value>
+                    <name>compile.native</name>
+                    <value>true</value>
                 </property>
             </activation>
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>amd64</current-arch>
-                <graphics-build-target>native-build-linux-x86_64</graphics-build-target>
+                <!-- native-build-cc-all -->
+                <graphics.target>native-build-linux-x86_64</graphics.target>
+                <skip.native.build>false</skip.native.build>
             </properties>
         </profile>
 
@@ -143,11 +94,16 @@
                     <family>unix</family>
                     <arch>arm</arch>
                 </os>
+                <property>
+                    <name>compile.native</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>arm</current-arch>
-                <graphics-build-target>native-build-linux-arm32</graphics-build-target>
+                <graphics.build.target>native-build-linux-arm32</graphics.build.target>
+                <skip.native.build>false</skip.native.build>
             </properties>
         </profile>
 
@@ -159,11 +115,16 @@
                     <family>windows</family>
                     <arch>amd64</arch>
                 </os>
+                <property>
+                    <name>compile.native</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <current-os>windows</current-os>
                 <current-arch>amd64</current-arch>
-                <graphics-build-target>native-build-windows-x86_64</graphics-build-target>
+                <graphics.build.target>native-build-windows-x86_64</graphics.build.target>
+                <skip.native.build>false</skip.native.build>
             </properties>
         </profile>
 
@@ -176,11 +137,16 @@
                     <arch>x86_64</arch>
                     <name>mac os x</name>
                 </os>
+                <property>
+                    <name>compile.native</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <current-os>macosx</current-os>
                 <current-arch>amd64</current-arch>
-                <graphics-build-target>native-build-macosx-x86_64</graphics-build-target>
+                <graphics.build.target>native-build-macosx-x86_64</graphics.build.target>
+                <skip.native.build>false</skip.native.build>
             </properties>
         </profile>
     </profiles>
@@ -196,8 +162,6 @@
                         <arg>-h</arg>
                         <arg>target/headers</arg>
                     </compilerArgs>
-                    <source>11</source>
-                    <target>11</target>
                 </configuration>
             </plugin>
 
@@ -214,14 +178,15 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
+                            <skip>${skip.native.build}</skip>
                             <target>
                                 <!-- Pass maven properties to ant -->
-                                <echo>Building native GRAPHICS library (CROSS-COMPILE: ${crossCompile}, OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${graphics-build-target}, BUILD TYPE: ${buildType})</echo>
+                                <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch}, BUILD TARGET: ${graphics.target}, BUILD TYPE: ${build.type})</echo>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.."/>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${graphics-build-target}">
-                                    <property name="cpp.build.type" value="${buildType}"/>
+                                <ant antfile="${root.dir}/scripts/build-graphics.xml" target="${graphics.target}">
+                                    <property name="cpp.build.type" value="${build.type}"/>
                                 </ant>
                             </target>
                         </configuration>
@@ -285,7 +250,6 @@
                     </excludes>
                     <archive>
                         <manifest>
-                            <!--<addClasspath>true</addClasspath>-->
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>

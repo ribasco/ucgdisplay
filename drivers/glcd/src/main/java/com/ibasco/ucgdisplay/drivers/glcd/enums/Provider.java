@@ -52,8 +52,8 @@ public enum Provider implements GlcdOptionValue<String> {
      */
     PIGPIO_DAEMON("pigpiod"),
     /**
-     * Makes use of built-in peripheral I/O interfaces provided by the linux kernel. No external dependencies/packages are required to be installed on the SoC.
-     * Fully Supports I2C, GPIO (character device & sysfs) and SPI.
+     * <p>Makes use of built-in peripheral I/O interfaces provided by the linux kernel. No external dependencies/packages are required to be installed on the SoC.
+     * Fully Supports I2C, GPIO (character device and sysfs) and SPI.</p>
      *
      * @see <a href="https://github.com/vsergeev/c-periphery">C-periphery website</a>
      */

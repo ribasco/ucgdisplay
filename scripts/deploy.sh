@@ -16,5 +16,9 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]] && [[ ${TRAVIS_PULL_REQUEST} == 'false' ]] &
     echo " |_____/  |______| |_|      |______|  \____/     |_|   "
     echo "                                                       "
 
-    mvn deploy -Dmaven.antrun.skip=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
+    # Deploy to SONATYPE repository
+    mvn deploy -Pdeploy-sonatype -Dmaven.antrun.skip=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
+
+    # Deploy to GITHUB repository
+    mvn deploy -Pdeploy-github -Dmaven.antrun.skip=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
 fi

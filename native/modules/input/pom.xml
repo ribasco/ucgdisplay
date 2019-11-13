@@ -16,7 +16,8 @@
   ~ License along with this program.  If not, see
   ~ <http://www.gnu.org/licenses/lgpl-3.0.html>.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ucg-display</artifactId>
         <groupId>com.ibasco.ucgdisplay</groupId>
@@ -31,28 +32,15 @@
 
     <properties>
         <main.basedir>${project.parent.basedir}</main.basedir>
-        <lib-output-filename>libucginput.so</lib-output-filename>
-        <cmake-generator-arg>-G 'CodeBlocks - Unix Makefiles'</cmake-generator-arg>
-        <cmake.module.path>${project.basedir}/../../cmake</cmake.module.path>
-        <buildType>Debug</buildType>
+        <build.type>Debug</build.type>
+        <compile.native>false</compile.native>
+        <skip.native.build>false</skip.native.build>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.ibasco.ucgdisplay</groupId>
             <artifactId>ucgd-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>uk.org.lidalia</groupId>
-            <artifactId>sysout-over-slf4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.scijava</groupId>
@@ -74,45 +62,6 @@
 
     <!-- Build Profiles for different platforms -->
     <profiles>
-        <!-- Cross-compile profile (can only be ran under linux os) -->
-        <profile>
-            <id>cross-compile</id>
-            <properties>
-                <current-os>linux</current-os>
-                <current-arch>amd64</current-arch>
-                <crossCompile>true</crossCompile>
-                <input-build-target>native-build-cc-all</input-build-target>
-            </properties>
-            <build>
-                <plugins>
-                    <!-- Enforcer: Make sure this can only be run from the Linux OS -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>enforce-os</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requireOS>
-                                            <name>Linux</name>
-                                            <family>unix</family>
-                                            <arch>amd64</arch>
-                                        </requireOS>
-                                    </rules>
-                                    <failFast>true</failFast>
-                                    <fail>true</fail>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
         <!-- BUILD PROFILE: Linux - x86_64/amd64 -->
         <profile>
             <id>build-linux-x86_64</id>
@@ -122,11 +71,16 @@
                     <family>unix</family>
                     <arch>amd64</arch>
                 </os>
+                <property>
+                    <name>compile.native</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>amd64</current-arch>
-                <input-build-target>native-build-linux-x86_64</input-build-target>
+                <input.target>native-build-linux-x86_64</input.target>
+                <skip.native.build>false</skip.native.build>
             </properties>
         </profile>
 
@@ -139,11 +93,16 @@
                     <family>unix</family>
                     <arch>arm</arch>
                 </os>
+                <property>
+                    <name>compile.native</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>arm</current-arch>
-                <input-build-target>native-build-linux-arm32</input-build-target>
+                <skip.native.build>false</skip.native.build>
+                <input.target>native-build-linux-arm32</input.target>
             </properties>
         </profile>
 
@@ -156,11 +115,16 @@
                     <family>unix</family>
                     <arch>aarch64</arch>
                 </os>
+                <property>
+                    <name>compile.native</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>aarch64</current-arch>
-                <input-build-target>native-build-linux-arm64</input-build-target>
+                <skip.native.build>false</skip.native.build>
+                <input.target>native-build-linux-arm64</input.target>
             </properties>
         </profile>
 
@@ -172,11 +136,16 @@
                     <family>windows</family>
                     <arch>amd64</arch>
                 </os>
+                <property>
+                    <name>compile.native</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <current-os>windows</current-os>
                 <current-arch>amd64</current-arch>
-                <input-build-target>skip-build</input-build-target>
+                <skip.native.build>false</skip.native.build>
+                <input.target>skip-build</input.target>
             </properties>
         </profile>
 
@@ -189,11 +158,16 @@
                     <arch>x86_64</arch>
                     <name>mac os x</name>
                 </os>
+                <property>
+                    <name>compile.native</name>
+                    <value>true</value>
+                </property>
             </activation>
             <properties>
                 <current-os>macosx</current-os>
                 <current-arch>amd64</current-arch>
-                <input-build-target>skip-build</input-build-target>
+                <skip.native.build>false</skip.native.build>
+                <input.target>skip-build</input.target>
             </properties>
         </profile>
     </profiles>
@@ -213,14 +187,15 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
+                            <skip>${skip.native.build}</skip>
                             <target>
                                 <!-- Pass maven properties to ant -->
-                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${input-build-target}, BUILD TYPE: ${buildType}})</echo>
+                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${input.target}, BUILD TYPE: ${build.type})</echo>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <property name="root.dir" location="../../.." />
+                                <property name="root.dir" location="../../.."/>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <ant antfile="${root.dir}/scripts/build-input.xml" target="${input-build-target}">
-                                    <property name="cpp.build.type" value="${buildType}" />
+                                <ant antfile="${root.dir}/scripts/build-input.xml" target="${input.target}">
+                                    <property name="cpp.build.type" value="${build.type}"/>
                                 </ant>
                             </target>
                         </configuration>
