@@ -17,8 +17,8 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]] && [[ ${TRAVIS_PULL_REQUEST} == 'false' ]] &
     echo "                                                       "
 
     # Deploy to SONATYPE repository
-    mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
+    mvn deploy -P'deploy-sonatype' -Dcompile.native=true -Dmaven.antrun.skip=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
 
     # Deploy to GITHUB repository
-    mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
+    mvn deploy -P'deploy-github' -Dcompile.native=true -Dmaven.antrun.skip=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
 fi

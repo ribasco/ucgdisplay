@@ -487,23 +487,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
-                    <!-- Enforce: Required properties (Deploy phase) -->
-                    <execution>
-                        <id>enforce</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireActiveProfile>
-                                    <profiles>deploy-sonatype,deploy-github</profiles>
-                                    <message>At least one of the profiles should be activated during deploy (deploy-sonatype or deploy-github)</message>
-                                    <all>false</all>
-                                </requireActiveProfile>
-                            </rules>
-                        </configuration>
-                    </execution>
                     <!-- Enforce: Required maven version (Validate phase) -->
                     <execution>
                         <id>enforce-maven</id>
