@@ -102,7 +102,7 @@
             <properties>
                 <current-os>linux</current-os>
                 <current-arch>arm</current-arch>
-                <graphics.build.target>native-build-linux-arm32</graphics.build.target>
+                <graphics.target>native-build-linux-arm32</graphics.target>
                 <skip.native.build>false</skip.native.build>
             </properties>
         </profile>
@@ -123,7 +123,7 @@
             <properties>
                 <current-os>windows</current-os>
                 <current-arch>amd64</current-arch>
-                <graphics.build.target>native-build-windows-x86_64</graphics.build.target>
+                <graphics.target>native-build-windows-x86_64</graphics.target>
                 <skip.native.build>false</skip.native.build>
             </properties>
         </profile>
@@ -145,7 +145,7 @@
             <properties>
                 <current-os>macosx</current-os>
                 <current-arch>amd64</current-arch>
-                <graphics.build.target>native-build-macosx-x86_64</graphics.build.target>
+                <graphics.target>native-build-macosx-x86_64</graphics.target>
                 <skip.native.build>false</skip.native.build>
             </properties>
         </profile>
