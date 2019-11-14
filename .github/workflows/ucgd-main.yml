@@ -23,7 +23,7 @@ env:
 
 jobs:
   build-graphics:
-    name: Build character and graphics module
+    name: Character and Graphics Display Module
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
@@ -75,7 +75,7 @@ jobs:
         run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
 
   build-input:
-    name: Build input module
+    name: Device Input Module
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
