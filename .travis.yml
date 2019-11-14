@@ -54,7 +54,7 @@ matrix:
 before_install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-deps.sh; fi
+  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-deps-bin.sh; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/import-gpg.sh; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo echo "JAVA_HOME=${JAVA_HOME}"; fi
 

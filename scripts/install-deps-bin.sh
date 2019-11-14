@@ -14,6 +14,8 @@ ls -l ${LIBTAPI_PATH}
 
 echo "Creating a symlink to /usr/local/lib/libtapi.so"
 sudo ln -s ${LIBTAPI_PATH}/lib/libtapi.so.6.0.1 /usr/local/lib/libtapi.so
+sudo ln -s ${LIBTAPI_PATH}/lib/libtapi.so.6 /usr/local/lib/libtapi.so.6
+sudo ln -s ${LIBTAPI_PATH}/lib/libtapi.so.6.0.1 /usr/local/lib/libtapi.so.6.0.1
 
 ls -l /usr/local/lib/libtapi.so
 
@@ -27,6 +29,7 @@ ls -l ${LIBXAR_PATH}
 
 echo "Creating a symlink to /usr/local/lib/libxar.so"
 sudo ln -s ${LIBXAR_PATH}/lib/libxar.so.1 /usr/local/lib/libxar.so
+sudo ln -s ${LIBXAR_PATH}/lib/libxar.so.1 /usr/local/lib/libxar.so.1
 sudo ln -s ${LIBXAR_PATH}/lib/libxar.a /usr/local/lib/libxar.a
 sudo ln -s ${LIBXAR_PATH}/lib/libxar.la /usr/local/lib/libxar.la
 
