@@ -3,7 +3,6 @@
 if [ -z "$GPG_DECRYPT_PASSPHRASE" ]
 then
       echo "GPG decrypt passphrase not found"
-      ls -l
       exit 1
 fi
 

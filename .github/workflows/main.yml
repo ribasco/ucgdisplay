@@ -44,4 +44,10 @@ jobs:
 
       env:
         LD_LIBRARY_PATH: /usr/lib/llvm-9/lib
+        GH_USERNAME: ${{ secrets.GH_USERNAME }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         # PATH: /usr/bin:/usr/local/bin:${PATH}
