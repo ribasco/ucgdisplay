@@ -122,6 +122,6 @@ jobs:
         if: github.event_name != 'pull_request'
         run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
 
-      - name: Deploy to Github
-        if: github.event_name != 'pull_request'
-        run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
+      #- name: Deploy to Github
+      #  if: github.event_name != 'pull_request'
+      #  run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
