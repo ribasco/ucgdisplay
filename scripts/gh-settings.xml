@@ -34,16 +34,6 @@ License along with this program.  If not, see
             </properties>
             <repositories>
                 <repository>
-                    <id>central</id>
-                    <url>https://repo1.maven.org/maven2</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-                <repository>
                     <id>ossrh</id>
                     <name>Sonatype OSS Maven Repository</name>
                     <url>https://oss.sonatype.org/content/groups/public</url>
@@ -57,7 +47,24 @@ License along with this program.  If not, see
         </profile>
         <profile>
             <id>github</id>
+            <properties>
+                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+            </properties>
             <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>https://repo1.maven.org/maven2</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>fail</checksumPolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>fail</checksumPolicy>
+                    </snapshots>
+                </repository>
                 <repository>
                     <id>github</id>
                     <name>GitHub ribasco Apache Maven Packages</name>
