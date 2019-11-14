@@ -33,7 +33,7 @@ jobs:
       run: sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang && sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++
 
     - name: Install third-party dependencies
-      run: scripts/install-deps.sh
+      run: scripts/install-deps-bin.sh
 
     - name: Import GPG key
       run: scripts/gh-import-gpg.sh
@@ -41,7 +41,7 @@ jobs:
         GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-    - name: Build with Maven
+    - name: Build Graphics Module (Maven)
       run: mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=Debug -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V --settings scripts/gh-settings.xml --file pom.xml
       env:
         LD_LIBRARY_PATH: /usr/lib/llvm-9/lib
@@ -49,4 +49,3 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-        # PATH: /usr/bin:/usr/local/bin:${PATH}
