@@ -6,7 +6,6 @@ jobs:
   build:
 
     runs-on: ubuntu-18.04
-
     steps:
     - uses: actions/checkout@v1
     - name: Set up JDK 11
@@ -41,8 +40,6 @@ jobs:
       env:
         GPG_DECRYPT_PASSPHRASE: ${{ secrets.GPG_DECRYPT_PASSPHRASE }}
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
 
     - name: Build with Maven
       run: mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=Debug -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V --settings scripts/gh-settings.xml --file pom.xml
@@ -50,4 +47,6 @@ jobs:
         LD_LIBRARY_PATH: /usr/lib/llvm-9/lib
         GH_USERNAME: ${{ secrets.GH_USERNAME }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         # PATH: /usr/bin:/usr/local/bin:${PATH}
