@@ -28,7 +28,7 @@ jobs:
       run: sudo apt update
 
     - name: Install required packages
-      run: sudo apt install mingw-w64 autoconf-archive llvm-9 llvm-9-dev clang-9 gcc-7 g++-7 gcc-multilib g++-multilib libssl1.0-dev
+      run: sudo apt install gnupg2 mingw-w64 autoconf-archive llvm-9 llvm-9-dev clang-9 gcc-7 g++-7 gcc-multilib g++-multilib libssl1.0-dev
 
     - name: Add clang-9 path to /usr/local/bin
       run: sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang && sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++
