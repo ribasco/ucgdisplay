@@ -58,7 +58,7 @@ jobs:
         run: scripts/gh-import-gpg.sh
 
       - name: Build Project (Java + Native)
-        run: mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V --settings scripts/gh-settings.xml --file pom.xml -pl '!com.ibasco.ucgdisplay:ucgd-native-input'
+        run: mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=skip-build -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V --settings scripts/gh-settings.xml --file pom.xml -pl '!com.ibasco.ucgdisplay:ucgd-native-input'
 
       - name: Unit Test
         run: mvn -Dcompile.native=true test
