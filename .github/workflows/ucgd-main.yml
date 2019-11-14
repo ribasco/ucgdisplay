@@ -67,12 +67,12 @@ jobs:
         run: mvn -Dcompile.native=true verify
 
       - name: Deploy to Sonatype
-        if: github.event_name != "pull_request"
-        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
+        if: github.event_name != 'pull_request'
+        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
 
       - name: Deploy to Github
-        if: github.event_name != "pull_request"
-        run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
+        if: github.event_name != 'pull_request'
+        run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
 
   build-input:
     name: Build input module
@@ -120,8 +120,8 @@ jobs:
 
       - name: Deploy to Sonatype
         if: github.event_name != "pull_request"
-        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
+        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
 
       - name: Deploy to Github
         if: github.event_name != "pull_request"
-        run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/settings.xml
+        run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
