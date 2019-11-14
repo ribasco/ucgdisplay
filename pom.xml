@@ -110,8 +110,6 @@
         <!-- Deploy to Sonatype -->
         <profile>
             <id>deploy-sonatype</id>
-            <properties>
-            </properties>
             <distributionManagement>
                 <repository>
                     <id>ossrh</id>
@@ -130,8 +128,6 @@
         <!-- Deploy to Github -->
         <profile>
             <id>deploy-github</id>
-            <properties>
-            </properties>
             <distributionManagement>
                 <repository>
                     <id>github</id>
@@ -142,7 +138,7 @@
                     <id>github</id>
                     <name>GitHub ribasco Apache Maven Snapshots Repository</name>
                     <url>https://maven.pkg.github.com/ribasco/ucgdisplay</url>
-                    <uniqueVersion>false</uniqueVersion>
+                    <uniqueVersion>true</uniqueVersion>
                 </snapshotRepository>
             </distributionManagement>
         </profile>
