@@ -138,7 +138,6 @@
                     <id>github</id>
                     <name>GitHub ribasco Apache Maven Snapshots Repository</name>
                     <url>https://maven.pkg.github.com/ribasco/ucgdisplay</url>
-                    <uniqueVersion>true</uniqueVersion>
                 </snapshotRepository>
             </distributionManagement>
         </profile>
