@@ -143,6 +143,15 @@
         <echo message="============================================================================"/>
     </target>
 
+    <!-- Cross-compile all ARM 32 and 64bit binaries (Can only be run from a 64-bit Linux machine) -->
+    <target name="native-build-cc-arm-all" depends="ucgd-build-common.os-check-linux-x86_64, native-build-cc-linux-arm32, native-build-cc-linux-arm64" if="os.linux.x86_64">
+        <echo message="============================================================================"/>
+        <echo message=" "/>
+        <echo>ARM 32 and 64bit Cross-compilation complete</echo>
+        <echo message=" "/>
+        <echo message="============================================================================"/>
+    </target>
+
     <!-- Cross-compile for Linux - ARM 32bit (applicable only in linux) -->
     <target name="native-build-cc-linux-arm32" depends="ucgd-build-common.os-check-linux-x86_64, ucgd-build-common.init-native-tools-rpi, ucgd-build-common.generate-native-sources-linux-arm" if="os.linux.x86_64">
         <!-- Build Linux/ARM -->

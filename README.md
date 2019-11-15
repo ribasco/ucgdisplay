@@ -128,13 +128,27 @@
     cd ucgdisplay
     ```
 
-    Install to your local maven repository
-
-    ```bash
-    mvn install
-    ```
+    Install to your local maven repository (choose between the two)
     
-    > **Note:** To cross compile native library please check out the project [cross-compilation guide](https://github.com/ribasco/ucgdisplay/tree/master/native)
+    * Installing from a Linux ARM 32/64 bit platform
+    
+        ```bash
+        mvn install
+        ```
+    
+    * Installing from a `Linux x86_64` platform for `ARM` architecture 32 and 64 bit versions
+    
+        ```bash
+        mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-arm-all -Dinput.target=native-build-cc-arm-all -Dbuild.type=Debug
+        ```
+   
+    * Installing from a `Linux x86_64` platform for all supported platforms (Please read cross-compilation guide)
+    
+        ```bash
+        mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=Debug
+        ```   
+   
+    > **Note:** Please see the [cross-compilation guide](https://github.com/ribasco/ucgdisplay/tree/master/native) for more details
 
 ### Usage examples
 
