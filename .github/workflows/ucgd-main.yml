@@ -1,4 +1,4 @@
-name: Main (CI / Testing / Deployment)
+name: CI / Testing / Deployment
 
 on:
   push:
@@ -65,6 +65,6 @@ jobs:
       - name: Integration Test
         run: mvn verify
 
-      - name: Deploy to Sonatype
+      - name: Deploy snapshots to Sonatype
         if: github.event_name != 'pull_request' && github.event_name != 'release'
         run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
