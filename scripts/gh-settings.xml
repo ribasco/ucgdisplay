@@ -60,7 +60,7 @@ License along with this program.  If not, see
                         <checksumPolicy>fail</checksumPolicy>
                     </releases>
                     <snapshots>
-                        <enabled>true</enabled>
+                        <enabled>false</enabled>
                         <updatePolicy>always</updatePolicy>
                         <checksumPolicy>fail</checksumPolicy>
                     </snapshots>
