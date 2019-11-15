@@ -1,17 +1,11 @@
-name: Main (CI / Testing / Deployment)
+name: Release Deployment
 
 on:
-  push:
-    branches:
-      - master
-    tags:
-      - '!refs/tags/*'
-  pull_request:
-    branches:
-      - master
+  release:
+    types: [published, created, edited]
 
 env:
-  BUILD_TYPE: Debug
+  BUILD_TYPE: Release
   LD_LIBRARY_PATH: /usr/lib/llvm-9/lib
   GH_USERNAME: ${{ secrets.GH_USERNAME }}
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -22,7 +16,7 @@ env:
 
 jobs:
   build-graphics:
-    name: 'Cross-Compile Build (All)'
+    name: 'Build amd Release'
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
@@ -59,12 +53,8 @@ jobs:
       - name: Build Project (Java + Native)
         run: mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true -B -V --settings scripts/gh-settings.xml --file pom.xml
 
-      - name: Unit Test
-        run: mvn test
+      - name: Deploy to Sonatype Staging
+        run: mvn deploy -P'deploy-sonatype,release' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
 
-      - name: Integration Test
-        run: mvn verify
-
-      - name: Deploy to Sonatype
-        if: github.event_name != 'pull_request' && github.event_name != 'release'
-        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
+      - name: Deploy to Github
+        run: mvn deploy -P'deploy-github,release' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
