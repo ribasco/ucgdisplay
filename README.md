@@ -131,9 +131,9 @@
     Install to your local maven repository (choose between the two)
     
     * Installing from a Linux ARM 32/64 bit platform
-    
+        
         ```bash
-        mvn install
+        mvn install -Dcompile.native=true
         ```
     
     * Installing from a `Linux x86_64` platform for `ARM` architecture 32 and 64 bit versions

@@ -62,15 +62,15 @@ jobs:
         run: mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true -B -V --settings scripts/gh-settings.xml --file pom.xml
 
       - name: Unit Test
-        run: mvn -Dcompile.native=true test
+        run: mvn test
 
       - name: Integration Test
-        run: mvn -Dcompile.native=true verify
+        run: mvn verify
 
       - name: Deploy to Sonatype
         if: github.event_name != 'pull_request' && github.event_name != 'release'
-        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
+        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
 
-      #- name: Deploy to Github
-      #  if: github.event_name != 'pull_request'
-      #  run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
+      - name: Deploy to Github
+        if: github.event_name != 'pull_request'
+        run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
