@@ -130,7 +130,7 @@
 
     Install to your local maven repository
     
-    * Installing from a Linux ARM 32/64 bit platform
+    * Installing from a Linux ARM 32/64 bit architecture
         
         ```bash
         mvn install -Dcompile.native=true
@@ -142,7 +142,7 @@
         mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-arm-all -Dinput.target=native-build-cc-arm-all -Dbuild.type=Debug
         ```
    
-    * Installing from a `Linux x86_64` platform for all supported platforms (Please read cross-compilation guide)
+    * Installing from a `Linux x86_64` platform for all supported architectures (Please read cross-compilation guide)
     
         ```bash
         mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=Debug
