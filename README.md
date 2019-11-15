@@ -139,6 +139,8 @@
 ### Usage examples
 
 ---
+Simple hello world examples
+
 ######  Character LCD Example (HD44780)
 
 Simple hello world example demonstrating the use of different LCD adapters.
@@ -225,28 +227,6 @@ public class GlcdST7920HWExample {
         new GlcdST7920HWExample().run();
     }
 
-    private void drawU8G2Logo(int offset, GlcdDriver driver) {
-        driver.setFontMode(1);
-
-        driver.setFontDirection(0);
-        driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
-        driver.drawString(offset, 22, "U");
-
-        driver.setFontDirection(1);
-        driver.setFont(GlcdFont.FONT_INB19_MN); //u8g2_font_inb19_mn
-        driver.drawString(offset + 14, 8, "8");
-
-        driver.setFontDirection(0);
-        driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
-        driver.drawString(offset + 36, 22, "g");
-        driver.drawString(offset + 48, 22, "2");
-
-        driver.drawHLine(offset + 2, 25, 34);
-        driver.drawHLine(offset + 3, 26, 34);
-        driver.drawVLine(offset + 32, 22, 12);
-        driver.drawVLine(offset + 33, 23, 12);
-    }
-
     private void run() throws Exception {
         //SPI HW 4-Wire config for ST7920
 
@@ -274,49 +254,20 @@ public class GlcdST7920HWExample {
 
         GlcdDriver driver = new GlcdDriver(config);
 
-        //Set the Font (This is required when drawing strings)
+        log.debug("Executing draw procedures");
+
+        //Clear the GLCD buffer
+        driver.clearBuffer();
+
+        //Write Operations to the GLCD buffer
         driver.setFont(GlcdFont.FONT_6X12_MR);
-
-        //Get the maximum character height
-        int maxHeight = driver.getMaxCharHeight();
-
-        long startMillis = System.currentTimeMillis();
-
-        log.debug("Starting display loop");
-
-        XBMData xbmData = XBMUtils.decodeXbmFile(getClass().getResourceAsStream("/ironman.xbm"));
-
-        int offset = 50;
-
-        for (int i = 1000; i >= 0; i--) {
-            //Clear the GLCD buffer
-            driver.clearBuffer();
-
-            if (offset >= 128) {
-                offset = 0;
-            }
-
-            drawU8G2Logo(offset++, driver);
-
-            driver.drawXBM(0, 0, 45, 64, Objects.requireNonNull(xbmData).getData());
-
-            //Write Operations to the GLCD buffer
-            driver.setFont(GlcdFont.FONT_6X12_MR);
-            driver.drawString(55, maxHeight * 3, "ucgdisplay");
-            driver.drawString(55, maxHeight * 4, "1.5.0-alpha");
-            driver.drawString(100, maxHeight * 5, String.valueOf(i));
-
-            //Send all buffered data to the display
-            driver.sendBuffer();
-
-            //Thread.sleep(1);
-        }
+        driver.drawString(10, 10, "Hello World");
+            
+        //Send all buffered data to the display
+        driver.sendBuffer();
 
         //Clear the display
         driver.clearDisplay();
-        long endTime = System.currentTimeMillis() - startMillis;
-
-        log.info("Done in {} seconds", Duration.ofMillis(endTime).toSeconds());
     }
 }
 
@@ -324,7 +275,9 @@ public class GlcdST7920HWExample {
 
 ###### Graphic LCD Example (ST7920 SPI Software)
 
-Here is an alternative version of the above example using bit-bang method. ([Other Examples](https://github.com/ribasco/ucgdisplay/blob/master/examples/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/examples/glcd/GlcdST7920SWExample.java))
+Here is an alternative version of the above example using bit-bang method.  ([Other Examples](https://github.com/ribasco/ucgdisplay/blob/master/examples/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/examples/glcd/GlcdST7920SWExample.java))
+
+>  **Note:** This is slower than SPI Hardware
 
 ```java
 import com.ibasco.ucgdisplay.drivers.glcd.*;
@@ -348,28 +301,6 @@ public class GlcdST7920SWExample {
 
     public static void main(String[] args) throws Exception {
         new GlcdST7920SWExample().run();
-    }
-
-    private void drawU8G2Logo(int offset, GlcdDriver driver) {
-        driver.setFontMode(1);
-
-        driver.setFontDirection(0);
-        driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
-        driver.drawString(offset, 22, "U");
-
-        driver.setFontDirection(1);
-        driver.setFont(GlcdFont.FONT_INB19_MN); //u8g2_font_inb19_mn
-        driver.drawString(offset + 14, 8, "8");
-
-        driver.setFontDirection(0);
-        driver.setFont(GlcdFont.FONT_INB16_MF); //u8g2_font_inb16_mf
-        driver.drawString(offset + 36, 22, "g");
-        driver.drawString(offset + 48, 22, "2");
-
-        driver.drawHLine(offset + 2, 25, 34);
-        driver.drawHLine(offset + 3, 26, 34);
-        driver.drawVLine(offset + 32, 22, 12);
-        driver.drawVLine(offset + 33, 23, 12);
     }
 
     private void run() throws Exception {
@@ -397,49 +328,15 @@ public class GlcdST7920SWExample {
 
         GlcdDriver driver = new GlcdDriver(config);
 
-        //Set the Font (This is required when drawing strings)
+        //Clear the GLCD buffer
+        driver.clearBuffer();
+
+        //Write Operations to the GLCD buffer
         driver.setFont(GlcdFont.FONT_6X12_MR);
-
-        //Get the maximum character height
-        int maxHeight = driver.getMaxCharHeight();
-
-        long startMillis = System.currentTimeMillis();
-
-        log.debug("Starting display loop");
-
-        XBMData xbmData = XBMUtils.decodeXbmFile(getClass().getResourceAsStream("/ironman.xbm"));
-
-        int offset = 50;
-
-        for (int i = 1000; i >= 0; i--) {
-            //Clear the GLCD buffer
-            driver.clearBuffer();
-
-            if (offset >= 128) {
-                offset = 0;
-            }
-
-            drawU8G2Logo(offset++, driver);
-
-            driver.drawXBM(0, 0, 45, 64, Objects.requireNonNull(xbmData).getData());
-
-            //Write Operations to the GLCD buffer
-            driver.setFont(GlcdFont.FONT_6X12_MR);
-            driver.drawString(55, maxHeight * 3, "ucgdisplay");
-            driver.drawString(55, maxHeight * 4, "1.5.0-alpha");
-            driver.drawString(100, maxHeight * 5, String.valueOf(i));
-
-            //Send all buffered data to the display
-            driver.sendBuffer();
-
-            //Thread.sleep(1);
-        }
-
-        //Clear the display
-        driver.clearDisplay();
-        long endTime = System.currentTimeMillis() - startMillis;
-
-        log.info("Done in {} seconds", Duration.ofMillis(endTime).toSeconds());
+        driver.drawString(10, 10, "Hello World");
+            
+        //Send all buffered data to the display
+        driver.sendBuffer();
     }
 }
 ```
