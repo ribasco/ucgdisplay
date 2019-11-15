@@ -34,14 +34,6 @@ jobs:
           java-version: '11.0.5'
           architecture: x64
 
-      - name: Generate build number
-        uses: einaregilsson/build-number@v1
-        with:
-          token: $GH_TOKEN
-
-      - name: Print new build number
-        run: echo Build number is ${BUILD_NUMBER}
-
       - name: Add LLVM gpg key
         run: wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 
