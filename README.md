@@ -321,7 +321,7 @@ public class GlcdST7920SWExample {
         //SPI Software config for ST7920
 
         //NOTE: On Raspberry Pi systems, pins can be automatically configured for hardware         capability (setting pin modes to ALT*).
-        //For automatic configuration to work, pigpio needs to be installed on the system         and set as the default provider.
+        //For automatic configuration to work, pigpio needs to be installed on the system.
 
         //Pinout for Main SPI Peripheral 
         // - MOSI = 10
