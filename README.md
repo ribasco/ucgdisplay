@@ -128,7 +128,7 @@
     cd ucgdisplay
     ```
 
-    Install to your local maven repository (choose between the two)
+    Install to your local maven repository
     
     * Installing from a Linux ARM 32/64 bit platform
         
