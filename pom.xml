@@ -359,7 +359,9 @@
                         <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>release</releaseProfiles>
                         <preparationGoals>clean install</preparationGoals>
-                        <arguments>-Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=Release</arguments>
+                        <arguments>-Dcompile.native=true -Dgraphics.target=native-build-cc-all
+                            -Dinput.target=native-build-cc-all -Dbuild.type=Release
+                        </arguments>
                         <tagNameFormat>ucgdisplay-@{project.version}</tagNameFormat>
                         <checkModificationExcludes>
                             <checkModificationExclude>pom.xml</checkModificationExclude>
@@ -455,6 +457,11 @@
 
         <!-- Parent plugins -->
         <plugins>
+            <!-- Flatten plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+            </plugin>
             <!-- Source Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
