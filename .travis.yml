@@ -56,17 +56,21 @@ before_install:
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/install-deps-bin.sh; fi
   - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then scripts/import-gpg.sh; fi
-  - if [[ $TRAVIS_OS_NAME == 'linux' ]]; then sudo echo "JAVA_HOME=${JAVA_HOME}"; fi
 
 install:
   - scripts/install.sh Debug
   - scripts/verify-builds.sh
 
 script:
-  - mvn -Dcompile.native=true test && mvn -Dcompile.native=true verify
+  - mvn -Dcompile.native=true test
+  - mvn -Dcompile.native=true verify
 
 before_deploy:
   - cp scripts/settings.xml $HOME/.m2/settings.xml
 
-after_success:
-  - scripts/deploy.sh
+deploy:
+  provider: script
+  script: scripts/deploy.sh
+  on:
+    branch: master
+    tags: true

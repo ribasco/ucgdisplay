@@ -1,10 +1,11 @@
-name: ucgdisplay
+name: Main (CI / Testing / Deployment)
 
 on:
   push:
-    # Sequence of patterns matched against refs/heads
     branches:
-      - master         # Push events on master branch
+      - master
+    tags:
+      - '!refs/tags/*'
   pull_request:
     branches:
       - master
@@ -23,7 +24,7 @@ env:
 
 jobs:
   build-graphics:
-    name: Character and Graphics Display Module
+    name: 'Cross-Compile Build (All)'
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
@@ -32,6 +33,14 @@ jobs:
         with:
           java-version: '11.0.5'
           architecture: x64
+
+      - name: Generate build number
+        uses: einaregilsson/build-number@v1
+        with:
+          token: ${GH_TOKEN}
+
+      - name: Print new build number
+        run: echo Build number is ${BUILD_NUMBER}
 
       - name: Add LLVM gpg key
         run: wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
@@ -58,7 +67,7 @@ jobs:
         run: scripts/gh-import-gpg.sh
 
       - name: Build Project (Java + Native)
-        run: mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=skip-build -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V --settings scripts/gh-settings.xml --file pom.xml -pl '!com.ibasco.ucgdisplay:ucgd-native-input'
+        run: mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true -B -V --settings scripts/gh-settings.xml --file pom.xml
 
       - name: Unit Test
         run: mvn -Dcompile.native=true test
@@ -67,61 +76,9 @@ jobs:
         run: mvn -Dcompile.native=true verify
 
       - name: Deploy to Sonatype
-        if: github.event_name != 'pull_request'
-        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
+        if: github.event_name != 'pull_request' && github.event_name != 'release'
+        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
 
       #- name: Deploy to Github
       #  if: github.event_name != 'pull_request'
-      #  run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
-
-  build-input:
-    name: Device Input Module
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v1
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: '11.0.5'
-          architecture: x64
-
-      - name: Add LLVM gpg key
-        run: wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-
-      - name: Add LLVM toolchain to sources.list.d
-        run: echo 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main' | sudo tee -a /etc/apt/sources.list.d/llvm.list
-
-      - name: Add ubuntu toolchain ppa
-        run: sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-
-      - name: Update the package cache
-        run: sudo apt update
-
-      - name: Install required packages
-        run: sudo apt install gnupg2 mingw-w64 autoconf-archive llvm-9 llvm-9-dev clang-9 gcc-7 g++-7 gcc-multilib g++-multilib libssl1.0-dev
-
-      - name: Add clang-9 path to /usr/local/bin
-        run: sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang && sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++
-
-      - name: Install third-party dependencies
-        run: scripts/install-deps-bin.sh
-
-      - name: Import GPG key
-        run: scripts/gh-import-gpg.sh
-
-      - name: Build Project (Java + Native)
-        run: mvn install -Dcompile.native=true -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V --settings scripts/gh-settings.xml --file pom.xml -pl '!com.ibasco.ucgdisplay:ucgd-native-graphics,!com.ibasco.ucgdisplay:ucgd-drivers-clcd, !com.ibasco.ucgdisplay:ucgd-drivers-glcd, !com.ibasco.ucgdisplay:ucgd-examples-drivers-clcd, !com.ibasco.ucgdisplay:ucgd-examples-drivers-glcd'
-
-      - name: Unit Test
-        run: mvn -Dcompile.native=true test
-
-      - name: Integration Test
-        run: mvn -Dcompile.native=true verify
-
-      - name: Deploy to Sonatype
-        if: github.event_name != 'pull_request'
-        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
-
-      #- name: Deploy to Github
-      #  if: github.event_name != 'pull_request'
-      #  run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
+      #  run: mvn deploy -P'deploy-github' -Dmaven.antrun.skip=true -Dcompile.native=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml

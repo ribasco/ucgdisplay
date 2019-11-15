@@ -11,7 +11,7 @@
 - Migrated to JDK 11
 - Fixed 'symbol lookup error' (Issue: [#22](https://github.com/ribasco/ucgdisplay/issues/22))
 - Added support for multiple I/O peripheral providers ([libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/), [pigpiod](https://github.com/joan2937/pigpio), [c-periphery](https://github.com/vsergeev/c-periphery)) (Issue [#24](https://github.com/ribasco/ucgdisplay/issues/24))
-- 32 bit and 64 bit architectures are now fully supported for ARM and x86. Note that 32 bit support for OSX platform may be removed in the future versions.
+- 64 bit architectures are now fully supported for ARM and x86. Note that 32 bit support for OSX platform may be removed in the future versions.
 - Added native logging capability for improved traceability (all native logging is routed to SLF4J)
 - On Raspberry Pi platforms, GPIO pins are now automatically configured internally by the native library.
 - API changes on [GlcdConfigBuilder](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/GlcdConfigBuilder.java). 

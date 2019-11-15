@@ -3,7 +3,7 @@
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Graphics LCD driver
  * Filename: Provider.java
- * 
+ *
  * ---------------------------------------------------------
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
@@ -12,12 +12,12 @@
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -40,14 +40,19 @@ public enum Provider implements GlcdOptionValue<String> {
      */
     LIBGPIOD("libgpiod"),
     /**
-     * Uses the third-party pigpiod library. Standalone mode (no daemon needed). Supports I2C/GPIO and SPI interfaces.
+     * Uses the third-party pigpio library. Standalone mode (no daemon needed).
+     * The program is linked against the pigpio library, this means that only ONE program can be running at a time when using this mode.
+     * Supports I2C/GPIO and SPI interfaces.
      *
+     * @see <a href="https://github.com/joan2937/pigpio/issues/129">Difference between pigpio and pigpiod_if2</a>
      * @see <a href="https://github.com/joan2937/pigpio">Pigpio Website</a>
      */
     PIGPIO_STANDALONE("pigpio"),
     /**
-     * Uses the third-party pigpiod library. Requires the pigpio daemon to be installed and running on the target system. Supports I2C/GPIO and SPI interfaces.
+     * Uses the third-party pigpiod_if2 library. Requires the pigpio daemon to be installed and running on the target system. Multiple programs are allowed to run at the same time.
+     * Supports I2C/GPIO and SPI interfaces. Communication with the daemon is done via Socket Interface, which is much slower than the {@link #PIGPIO_STANDALONE} mode.
      *
+     * @see <a href="https://github.com/joan2937/pigpio/issues/129">Difference between pigpio and pigpiod_if2</a>
      * @see <a href="https://github.com/joan2937/pigpio">Pigpio Website</a>
      */
     PIGPIO_DAEMON("pigpiod"),

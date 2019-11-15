@@ -23,7 +23,7 @@
 
     <groupId>com.ibasco.ucgdisplay</groupId>
     <artifactId>ucg-display</artifactId>
-    <version>1.5.0-alpha-SNAPSHOT</version>
+    <version>${revision}</version>
     <name>UCGDisplay</name>
     <url>https://github.com/ribasco/ucgdisplay</url>
     <packaging>pom</packaging>
@@ -35,6 +35,7 @@
 
     <!-- Project properties -->
     <properties>
+        <revision>1.5.0-alpha-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -120,7 +121,6 @@
                     <id>ossrh</id>
                     <name>Sonatype Snapshots Repository</name>
                     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                    <uniqueVersion>false</uniqueVersion>
                 </snapshotRepository>
             </distributionManagement>
         </profile>
@@ -181,6 +181,31 @@
         <!-- Plugin management -->
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>1.1.0</version>
+                    <configuration>
+                        <updatePomFile>true</updatePomFile>
+                        <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>flatten</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>flatten.clean</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -297,6 +322,23 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>3.0.0-M2</version>
+                    <executions>
+                        <!-- Enforce: Required maven version (Validate phase) -->
+                        <execution>
+                            <id>enforce-maven</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <phase>validate</phase>
+                            <configuration>
+                                <rules>
+                                    <requireMavenVersion>
+                                        <version>[3.5,)</version>
+                                    </requireMavenVersion>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -311,12 +353,13 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.5.3</version>
                     <configuration>
+                        <goals>deploy</goals>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
                         <useReleaseProfile>false</useReleaseProfile>
                         <releaseProfiles>release</releaseProfiles>
                         <preparationGoals>clean install</preparationGoals>
-                        <arguments>-P'cross-compile,!build-linux-x86_64'</arguments>
+                        <arguments>-Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=Release</arguments>
                         <tagNameFormat>ucgdisplay-@{project.version}</tagNameFormat>
                         <checkModificationExcludes>
                             <checkModificationExclude>pom.xml</checkModificationExclude>
@@ -481,34 +524,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <!-- Enforce: Required maven version (Validate phase) -->
-                    <execution>
-                        <id>enforce-maven</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <phase>validate</phase>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>[3.5,)</version>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <!-- RELEASE Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <releaseProfiles>release</releaseProfiles>
-                    <goals>deploy</goals>
-                </configuration>
             </plugin>
             <!-- VERSIONS Plugin -->
             <plugin>

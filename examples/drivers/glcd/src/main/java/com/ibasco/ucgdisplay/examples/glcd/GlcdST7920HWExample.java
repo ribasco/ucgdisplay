@@ -70,25 +70,35 @@ public class GlcdST7920HWExample {
 
             private Consumer<Void> callbackFailCond;
 
-            private TickEntry(long interval, Consumer<Void> cbPassCondition, Consumer<Void> cbFailCondition) {
+            private TickEntry(long interval, Consumer<Void> passCallback, Consumer<Void> failCallback) {
                 this.previousMillis = 0;
                 this.interval = interval;
-                this.callbackPassCond = cbPassCondition;
-                this.callbackFailCond = cbFailCondition;
+                this.callbackPassCond = passCallback;
+                this.callbackFailCond = failCallback;
             }
         }
 
         private ArrayList<TickEntry> entries = new ArrayList<>();
 
-        private void register(Duration interval, Consumer<Void> passCondition) {
-            entries.add(new TickEntry(interval.toMillis(), passCondition, null));
+        /**
+         * Register callbacks to be called for a specified interval
+         *
+         * @param interval
+         *         The interval
+         * @param passCallback
+         *         The callback to be used when the interval has been reached
+         */
+        private void register(Duration interval, Consumer<Void> passCallback) {
+            entries.add(new TickEntry(interval.toMillis(), passCallback, null));
         }
 
-
-        private void register(Duration interval, Consumer<Void> passCondition, Consumer<Void> failCondition) {
-            entries.add(new TickEntry(interval.toMillis(), passCondition, failCondition));
+        private void register(Duration interval, Consumer<Void> passCallback, Consumer<Void> failCallback) {
+            entries.add(new TickEntry(interval.toMillis(), passCallback, failCallback));
         }
 
+        /**
+         * Call this inside the main ui-loop
+         */
         private void processTick() {
             long currentMillis = System.currentTimeMillis();
             for (TickEntry entry : entries) {
@@ -282,6 +292,7 @@ public class GlcdST7920HWExample {
                 //Process tick, check each entry if it has reached the target interval
                 monitor.processTick();
 
+                //Draw our XBM images
                 drawStaticImage(driver, imageIndex.get(), 0, 0);
 
                 //Show these nodes only when image index is > 3
@@ -302,7 +313,7 @@ public class GlcdST7920HWExample {
         } catch (SignalInterruptedException e) {
             log.warn("Signal interrupt detected: {}", e.getMessage());
         } catch (NativeLibraryException e) {
-            log.error("An error occured in the native layer", e);
+            log.error("An unexpected error occured in the native layer", e);
         }
 
         long endTime = System.currentTimeMillis() - startMillis;
