@@ -89,6 +89,30 @@
 
 > **IMPORTANT:** For libgpiod, make sure the c++ bindings are included when you install from source (--enable-bindings-cxx)
 
+### Downloading Snapshots from Sonatype
+
+---
+
+To be able to download snapshots from Sonatype, add the following profile entry to your `.m2/settings.xml` file and activate with  `mvn -P sonatype install <....>`.
+
+```xml
+<profile>
+    <id>sonatype</id>
+    <repositories>
+        <repository>
+            <id>ossrh</id>
+            <name>Sonatype OSS Maven Repository</name>
+            <url>https://oss.sonatype.org/content/groups/public</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+</profile>
+```
+
 ### Installation
 
 ---
@@ -131,7 +155,7 @@
     Install to your local maven repository
     
     * Installing from a Linux system with ARM 32/64 bit architecture
-        
+      
         ```bash
         mvn install -Dcompile.native=true
         ```
@@ -141,12 +165,12 @@
         ```bash
         mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-arm-all -Dinput.target=native-build-cc-arm-all -Dbuild.type=Debug
         ```
-   
+      
     * Installing from a 64-bit `Linux` system for all supported architectures (Please read cross-compilation guide)
     
         ```bash
         mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=Debug
-        ```   
+        ```
    
     > **Note:** Please see the [cross-compilation guide](https://github.com/ribasco/ucgdisplay/tree/master/native) for more details
 
@@ -244,7 +268,7 @@ public class GlcdST7920HWExample {
     private void run() throws Exception {
         //SPI HW 4-Wire config for ST7920
 
-        //NOTE: On Raspberry Pi systems, pins can be automatically configured for hardware 		   capability (setting pin modes to ALT*).
+        //NOTE: On Raspberry Pi, pins can be automatically configured for hardware 		   capability (setting pin modes to ALT*).
         //For automatic configuration to work, pigpio needs to be installed on the system.
 
         //Pinout for Main SPI Peripheral 
@@ -320,7 +344,7 @@ public class GlcdST7920SWExample {
     private void run() throws Exception {
         //SPI Software config for ST7920
 
-        //NOTE: On Raspberry Pi systems, pins can be automatically configured for hardware         capability (setting pin modes to ALT*).
+        //NOTE: On Raspberry Pi, pins can be automatically configured for hardware         capability (setting pin modes to ALT*).
         //For automatic configuration to work, pigpio needs to be installed on the system.
 
         //Pinout for Main SPI Peripheral 
