@@ -130,19 +130,19 @@
 
     Install to your local maven repository
     
-    * Installing from a Linux ARM 32/64 bit architecture
+    * Installing from a Linux system with ARM 32/64 bit architecture
         
         ```bash
         mvn install -Dcompile.native=true
         ```
     
-    * Installing from a `Linux x86_64` platform for `ARM` architecture 32 and 64 bit versions
+    * Installing from a 64-bit `Linux` system for `ARM` architecture 32 and 64 bit versions
     
         ```bash
         mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-arm-all -Dinput.target=native-build-cc-arm-all -Dbuild.type=Debug
         ```
    
-    * Installing from a `Linux x86_64` platform for all supported architectures (Please read cross-compilation guide)
+    * Installing from a 64-bit `Linux` system for all supported architectures (Please read cross-compilation guide)
     
         ```bash
         mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=Debug
