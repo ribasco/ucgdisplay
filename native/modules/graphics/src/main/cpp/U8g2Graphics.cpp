@@ -523,6 +523,7 @@ jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getUTF8Width(JNIEnv *env,
     const char *c = env->GetStringUTFChars(text, nullptr);
     return u8g2_GetUTF8Width(toU8g2(id), c);
     END_CATCH
+    return -1;
 }
 
 //long id, byte[] data
@@ -686,6 +687,7 @@ jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_nextPage(JNIEnv *env, jcl
     BEGIN_CATCH
     return u8g2_NextPage(toU8g2(id));
     END_CATCH
+    return -1;
 }
 
 jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getAscent(JNIEnv *env, jclass cls, jlong id) {
@@ -694,6 +696,7 @@ jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getAscent(JNIEnv *env, jc
     BEGIN_CATCH
     return u8g2_GetAscent(toU8g2(id));
     END_CATCH
+    return -1;
 }
 
 jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getDescent(JNIEnv *env, jclass cls, jlong id) {
@@ -702,6 +705,7 @@ jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getDescent(JNIEnv *env, j
     BEGIN_CATCH
     return u8g2_GetDescent(toU8g2(id));
     END_CATCH
+    return -1;
 }
 
 jint Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_getMaxCharWidth(JNIEnv *env, jclass cls, jlong id) {
