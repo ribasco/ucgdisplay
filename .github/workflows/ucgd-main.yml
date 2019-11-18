@@ -37,6 +37,9 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
 
+      - name: Output branch name
+        run: echo ${{ steps.extract_branch.outputs.branch }}
+
       - name: Add LLVM gpg key
         run: wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 
