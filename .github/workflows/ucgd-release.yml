@@ -2,7 +2,7 @@ name: Release Deployment
 
 on:
   release:
-    types: [published, created]
+    types: [published]
 
 env:
   BUILD_TYPE: Release
@@ -16,7 +16,7 @@ env:
 
 jobs:
   build-graphics:
-    name: 'Build amd Release'
+    name: 'Build and Release'
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1

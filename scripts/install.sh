@@ -27,7 +27,7 @@ else
     CROSS_COMPILE=no
 fi
 
-MVN_PROPS="-Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V"
+MVN_PROPS="-Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dgpg.skip=true -Dmaven.javadoc.skip=true -B -V"
 
 echo "[INSTALL] Build Type = ${BUILD_TYPE}, Cross Compile = ${CROSS_COMPILE}, Properties = ${MVN_PROPS}"
 
