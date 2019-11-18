@@ -62,6 +62,34 @@
     </dependencies>
 
     <profiles>
+        <profile>
+            <id>generate-native-headers</id>
+            <build>
+                <plugins>
+                    <!-- Compiler Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>generate-headers</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <compilerArgs>
+                                        <arg>-h</arg>
+                                        <arg>${project.build.directory}/native-headers</arg>
+                                    </compilerArgs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <!-- BUILD PROFILE: Linux - x86_64/amd64 -->
         <profile>
             <id>build-linux-x86_64</id>
@@ -153,18 +181,6 @@
 
     <build>
         <plugins>
-            <!-- Compiler Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <compilerArgs>
-                        <arg>-h</arg>
-                        <arg>target/headers</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-
             <!-- Ant-Run Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
