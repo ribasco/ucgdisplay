@@ -200,7 +200,6 @@ public class GlcdST7920HWExample {
         banner.drawBanner(bannerOffset.getAndIncrement(), driver);
     }
 
-    @SuppressWarnings("SameParameterValue")
     private static XbmEntry createXbmEntry(int width, int height, String fileName) throws XBMDecodeException {
         return new XbmEntry(width, height, XBMUtils.decodeXbmFile(GlcdST7920HWExample.class.getResourceAsStream("/" + fileName)));
     }
@@ -238,11 +237,11 @@ public class GlcdST7920HWExample {
 
     private void run() throws Exception {
 
-        /*Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             //Perform necessary clean-up operations here in case the program abruptly stops
             log.debug("Shutdown requested. Attempting to gracefully exit the program");
             shutdown.set(true);
-        }));*/
+        }));
 
         //SPI HW 4-Wire config for ST7920
 
@@ -267,7 +266,7 @@ public class GlcdST7920HWExample {
                 //Use CE1 or Chip Select 1 on Main SPI peripheral/bus
                 .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
                 //Enable extra debug info
-                .option(GlcdOption.EXTRA_DEBUG_INFO, false)
+                .option(GlcdOption.EXTRA_DEBUG_INFO, true)
                 .build();
 
         GlcdDriver driver = new GlcdDriver(config);
@@ -283,7 +282,6 @@ public class GlcdST7920HWExample {
         TickMonitor monitor = new TickMonitor();
 
         registerMonitorEntries(monitor);
-        int ctr = 0;
 
         try {
             while (!shutdown.get()) {
@@ -308,10 +306,6 @@ public class GlcdST7920HWExample {
                 //Send all buffered data to the display
                 driver.sendBuffer();
             }
-
-            //Clear the display
-            log.debug("Clearing the display");
-            driver.clearDisplay();
         } catch (SignalInterruptedException e) {
             log.warn("Signal interrupt detected: {}", e.getMessage());
         } catch (NativeLibraryException e) {
