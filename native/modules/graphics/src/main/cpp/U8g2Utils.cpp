@@ -238,10 +238,9 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
     //Configure Byte callback
     context->byte_cb = [cb_byte, weak_context, virtualMode](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
         auto context = weak_context.lock();
-        if (!context) {
-            debug("byte_cb() : Context out of scope");
-            return 0;
-        }
+
+        if (!context)
+            throw UcgdByteCallbackException("context->byte_cb() : Context out of scope");
 
         if (virtualMode) {
             JNIEnv *lenv;
@@ -263,9 +262,9 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
             return 1;
         }
         try {
-            if (g_SignalStatus) {
+            if (g_SignalStatus)
                 throw SignalInterruptedException(g_SignalStatus, "Caught signal interrupt");
-            }
+
             return cb_byte(context, u8x8, msg, arg_int, arg_ptr);
          } catch (SignalInterruptedException& e) {
             throw e;
@@ -277,10 +276,9 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
     //Configure Gpio callback
     context->gpio_cb = [virtualMode, weak_context](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
         auto context = weak_context.lock();
-        if (!context) {
-            debug("gpio_cb() : Context out of scope");
-            return 0;
-        }
+
+        if (!context)
+            throw UcgdGpioCallbackException("context->gpio_cb() : Context out of scope");
 
         if (virtualMode) {
             JNIEnv *lenv;
@@ -290,9 +288,9 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
         }
 
        try {
-            if (g_SignalStatus) {
+            if (g_SignalStatus)
                 throw SignalInterruptedException(g_SignalStatus, "Caught signal interrupt");
-            }
+
             return cb_gpio_delay(context, u8x8, msg, arg_int, arg_ptr);
        } catch (SignalInterruptedException& e) {
             throw e;
