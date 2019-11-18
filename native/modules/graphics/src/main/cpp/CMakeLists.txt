@@ -62,16 +62,16 @@ set(PROVIDER_PIGPIOD_DAEMON_DIR_PATH "${PROVIDER_PIGPIO_DIR_PATH}/daemon")
 
 if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
     list(APPEND UCGDISP_HDR
-            "${PROVIDER_DIR_PATH}/UcgProviderBase.h"
-            "${PROVIDER_DIR_PATH}/UcgIOProvider.h"
-            "${PROVIDER_DIR_PATH}/UcgGpioProvider.h"
-            "${PROVIDER_DIR_PATH}/UcgSpiProvider.h"
-            "${PROVIDER_DIR_PATH}/UcgI2CProvider.h"
+            "${PROVIDER_DIR_PATH}/UcgdPeripheral.h"
+            "${PROVIDER_DIR_PATH}/UcgdProvider.h"
+            "${PROVIDER_DIR_PATH}/UcgdGpioPeripheral.h"
+            "${PROVIDER_DIR_PATH}/UcgdSpiPeripheral.h"
+            "${PROVIDER_DIR_PATH}/UcgdI2CPeripheral.h"
             "ProviderManager.h"
             )
     list(APPEND UCGDISP_SRC
-            "${PROVIDER_DIR_PATH}/UcgProviderBase.cpp"
-            "${PROVIDER_DIR_PATH}/UcgIOProvider.cpp"
+            "${PROVIDER_DIR_PATH}/UcgdPeripheral.cpp"
+            "${PROVIDER_DIR_PATH}/UcgdProvider.cpp"
             "ProviderManager.cpp"
             )
 
@@ -79,11 +79,11 @@ if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
     include(external/libgpiod)
     if (TARGET libgpiod)
         list(APPEND UCGDISP_HDR
-                "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgLibgpiodProvider.h"
-                "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgLibgpiodGpioProvider.h")
+                "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgdLibgpiodProvider.h"
+                "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgdLibgpiodGpioPeripheral.h")
         list(APPEND UCGDISP_SRC
-                "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgLibgpiodProvider.cpp"
-                "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgLibgpiodGpioProvider.cpp")
+                "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgdLibgpiodProvider.cpp"
+                "${PROVIDER_LIBGPIOD_DIR_PATH}/UcgdLibgpiodGpioPeripheral.cpp")
         target_link_libraries(ucgdisp libgpiod)
     endif ()
 
@@ -92,38 +92,38 @@ if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
     if (TARGET pigpio)
         # PIGPIO - Common Files
         list(APPEND UCGDISP_HDR
-                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioCommon.h"
-                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioProviderBase.h"
+                "${PROVIDER_PIGPIO_DIR_PATH}/UcgdPigpioCommon.h"
+                "${PROVIDER_PIGPIO_DIR_PATH}/UcgdPigpioProviderBase.h"
                 )
         list(APPEND UCGDISP_SRC
-                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioCommon.cpp"
-                "${PROVIDER_PIGPIO_DIR_PATH}/UcgPigpioProviderBase.cpp"
+                "${PROVIDER_PIGPIO_DIR_PATH}/UcgdPigpioCommon.cpp"
+                "${PROVIDER_PIGPIO_DIR_PATH}/UcgdPigpioProviderBase.cpp"
                 )
 
         # PIGPIO - Standalone
         list(APPEND UCGDISP_HDR
-                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioProvider.h"
-                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioGpioProvider.h"
-                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioSpiProvider.h"
-                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioI2CProvider.h")
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgdPigpioGpioPeripheral.h"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgdPigpioI2CPeripheral.h"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgdPigpioProvider.h"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgdPigpioSpiPeripheral.h")
         list(APPEND UCGDISP_SRC
-                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioProvider.cpp"
-                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioGpioProvider.cpp"
-                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioSpiProvider.cpp"
-                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgPigpioI2CProvider.cpp")
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgdPigpioGpioPeripheral.cpp"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgdPigpioI2CPeripheral.cpp"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgdPigpioProvider.cpp"
+                "${PROVIDER_PIGPIO_STANDALN_DIR_PATH}/UcgdPigpioSpiPeripheral.cpp")
         target_link_libraries(ucgdisp pigpio)
 
         # PIGPIO - Daemon
         list(APPEND UCGDISP_HDR
-                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodProvider.h"
-                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodGpioProvider.h"
-                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodSpiProvider.h"
-                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodI2CProvider.h")
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgdPigpiodGpioPeripheral.h"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgdPigpiodI2CPeripheral.h"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgdPigpiodProvider.h"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgdPigpiodSpiPeripheral.h")
         list(APPEND UCGDISP_SRC
-                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodProvider.cpp"
-                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodGpioProvider.cpp"
-                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodSpiProvider.cpp"
-                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgPigpiodI2CProvider.cpp")
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgdPigpiodGpioPeripheral.cpp"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgdPigpiodI2CPeripheral.cpp"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgdPigpiodProvider.cpp"
+                "${PROVIDER_PIGPIOD_DAEMON_DIR_PATH}/UcgdPigpiodSpiPeripheral.cpp")
         target_link_libraries(ucgdisp pigpiod_if2)
     endif ()
 
@@ -131,15 +131,15 @@ if (UNIX AND (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm"))
     include(external/c-periphery)
     if (TARGET cperiphery)
         list(APPEND UCGDISP_HDR
-                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgCperipheryProvider.h"
-                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgCperGpioProvider.h"
-                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgCperSpiProvider.h"
-                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgCperI2CProvider.h")
+                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgdCperipheryProvider.h"
+                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgdCperGpioPeripheral.h"
+                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgdCperSpiPeripheral.h"
+                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgdCperI2CPeripheral.h")
         list(APPEND UCGDISP_SRC
-                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgCperipheryProvider.cpp"
-                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgCperGpioProvider.cpp"
-                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgCperSpiProvider.cpp"
-                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgCperI2CProvider.cpp")
+                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgdCperipheryProvider.cpp"
+                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgdCperGpioPeripheral.cpp"
+                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgdCperSpiPeripheral.cpp"
+                "${PROVIDER_CPERIPHERY_DIR_PATH}/UcgdCperI2CPeripheral.cpp")
         target_link_libraries(ucgdisp cperiphery)
     endif ()
 endif ()
@@ -165,6 +165,11 @@ target_compile_options(ucgdisp PRIVATE -Wno-write-strings)
 
 add_subdirectory(test)
 add_subdirectory(utils)
+
+if(EXISTS scratch)
+    add_subdirectory(scratch)
+endif()
+
 # add_subdirectory(scratch)
 
 if (WIN32)

@@ -40,6 +40,8 @@ Log::Log(jobject source) :
 
 }
 
-Log::~Log() = default;
+Log::~Log() {
+    //::debug("Log: destructor");
+};
 
 #endif

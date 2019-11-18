@@ -4,10 +4,9 @@
 #include <string>
 #include <cassert>
 #include <UcgdConfig.h>
+#include <iostream>
 
 #ifdef UCGD_DEBUG
-
-#include <iostream>
 
 /**
  * A JNI wrapper to use Slf4j facility.

@@ -26,6 +26,7 @@
 #ifndef UCGDISP_GLOBAL_H
 #define UCGDISP_GLOBAL_H
 
+#define UCGD_DEBUG_LOG
 #define UCGD_VERSION "1.5.0-alpha"
 
 #include <jni.h>
@@ -41,6 +42,7 @@
 #define CLS_ARRAYLIST "java/util/ArrayList"
 #define CLS_HASHMAP  "java/util/HashMap"
 #define CLS_INTEGER "java/lang/Integer"
+#define CLS_BOOLEAN "java/lang/Boolean"
 #define CLS_THREADGROUP "java/lang/ThreadGroup"
 #define CLS_SET "java/util/Set"
 #define CLS_ITERATOR "java/util/Iterator"
@@ -83,12 +85,12 @@
 #define BEGIN_CATCH  try {
 #define END_CATCH   } catch (SignalInterruptedException& e) {\
                         JNI_ThrowSignalInterruptedException(env, std::string(e.what()) + std::string(" (Signal: ") + std::to_string(e.getSignal()) + std::string(")")); \
-                        release_resources(); \
                     } \
                     catch (std::exception& e) { \
                         JNI_ThrowNativeLibraryException(env, std::string(e.what())); \
                     }
 
+extern bool g_ShowExtraDebugInfo;
 extern volatile sig_atomic_t g_SignalStatus;
 extern JavaVM *g_CachedJVM;
 
@@ -107,6 +109,8 @@ public:
 private:
     int m_Signal;
 };
+
+void debug(const std::string& msg);
 
 /**
  * Initialize global references

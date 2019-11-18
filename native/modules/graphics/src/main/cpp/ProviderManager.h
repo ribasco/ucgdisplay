@@ -30,7 +30,7 @@
 #include <map>
 
 //Forward declarations
-class UcgIOProvider;
+class UcgdProvider;
 
 struct ucgd_t;
 
@@ -51,28 +51,28 @@ public:
 
     ~ProviderManager();
 
-    auto registerProvider(std::unique_ptr<UcgIOProvider> provider, bool system = false) -> bool;
+    auto registerProvider(const std::shared_ptr<UcgdProvider>& provider, bool system = false) -> bool;
 
-    auto getProvider(const std::string &name) -> std::shared_ptr<UcgIOProvider> &;
+    auto getProvider(const std::string &name) -> std::shared_ptr<UcgdProvider> &;
 
     auto isRegistered(const std::string &name) -> bool;
 
-    auto getAllProviders() -> const std::map<std::string, std::shared_ptr<UcgIOProvider>>&;
-
-    auto release() -> void;
+    auto getAllProviders() -> const std::map<std::string, std::shared_ptr<UcgdProvider>>&;
 
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
     auto initializeProvider(const std::string& name, const std::shared_ptr<ucgd_t>& context = nullptr) -> void;
 
-    auto getProvider(const std::shared_ptr<ucgd_t>& context) -> std::shared_ptr<UcgIOProvider>&;
+    auto closeProvider(const std::string& name) -> void;
+
+    auto getProvider(const std::shared_ptr<ucgd_t>& context) -> std::shared_ptr<UcgdProvider>&;
 
     auto isInstalled(const std::string& providerName) -> bool;
 
-    auto isInstalled(std::shared_ptr<UcgIOProvider>&) -> bool;
+    auto isInstalled(std::shared_ptr<UcgdProvider>&) -> bool;
 #endif
 
 private:
-    std::map<std::string, std::shared_ptr<UcgIOProvider>> m_Providers;
+    std::map<std::string, std::shared_ptr<UcgdProvider>> m_Providers;
     Log &log;
 };
 

@@ -26,7 +26,9 @@
 #include "DeviceManager.h"
 #include <UcgdTypes.h>
 
-DeviceManager::~DeviceManager() = default;
+DeviceManager::~DeviceManager() {
+    ::debug("DeviceManager : destructor");
+};
 
 DeviceManager::DeviceManager() = default;
 

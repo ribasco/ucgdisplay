@@ -25,14 +25,16 @@
  */
 #include "ProviderManager.h"
 
-#include <UcgIOProvider.h>
+#include <UcgdProvider.h>
 #include <Utils.h>
 
 ProviderManager::ProviderManager() : log(ServiceLocator::getInstance().getLogger()) {};
 
-ProviderManager::~ProviderManager() = default;
+ProviderManager::~ProviderManager() {
+    debug("ProviderManager: destructor");
+};
 
-auto ProviderManager::registerProvider(std::unique_ptr<UcgIOProvider> provider, bool system) -> bool {
+auto ProviderManager::registerProvider(const std::shared_ptr<UcgdProvider>& provider, bool system) -> bool {
     if (provider == nullptr)
         return false;
     std::string &name = provider->getName();
@@ -44,7 +46,7 @@ auto ProviderManager::registerProvider(std::unique_ptr<UcgIOProvider> provider, 
         log.warn("Provider {} has already been registered. Skipping.", name);
         return false;
     }
-    auto it = m_Providers.insert(std::make_pair(provider->getName(), std::move(provider)));
+    auto it = m_Providers.insert(std::make_pair(provider->getName(), provider));
     auto& prov = it.first->second;
     if (prov->isProvided() || isInstalled(prov)) {
         prov->markAvailable();
@@ -57,36 +59,26 @@ auto ProviderManager::registerProvider(std::unique_ptr<UcgIOProvider> provider, 
 
 auto ProviderManager::isRegistered(const std::string &name) -> bool {
     try {
-        std::shared_ptr<UcgIOProvider> &a = getProvider(name);
+        std::shared_ptr<UcgdProvider> &a = getProvider(name);
         return a->getName() == name;
     } catch (ProviderNotFoundException &e) {
         return false;
     }
 }
 
-auto ProviderManager::getProvider(const std::string &name) -> std::shared_ptr<UcgIOProvider> & {
+auto ProviderManager::getProvider(const std::string &name) -> std::shared_ptr<UcgdProvider> & {
     auto it = this->m_Providers.find(name);
     if (it != m_Providers.end())
         return it->second;
     throw ProviderNotFoundException("Provider " + name + " not found");
 }
 
-auto ProviderManager::getAllProviders() -> const std::map<std::string, std::shared_ptr<UcgIOProvider>> & {
+auto ProviderManager::getAllProviders() -> const std::map<std::string, std::shared_ptr<UcgdProvider>> & {
     return m_Providers;
 }
 
-auto ProviderManager::release() -> void {
-    //Close all initialized providers
-    for (auto const& [key, val] : m_Providers) {
-        if (val->isInitialized()) {
-            log.debug("release() : Releasing all provider's resources: {}", std::string(val->getName()));
-            val->close();
-        }
-    }
-}
-
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
-auto ProviderManager::getProvider(const std::shared_ptr<ucgd_t> &context) -> std::shared_ptr<UcgIOProvider> & {
+auto ProviderManager::getProvider(const std::shared_ptr<ucgd_t> &context) -> std::shared_ptr<UcgdProvider> & {
     std::string defaultProvider = context->getOptionString(OPT_PROVIDER);
     if (defaultProvider.empty() || !isInstalled(defaultProvider)) {
         log.warn("get_default_provider() : Provider not specified or is not install on your system. Falling back to default system provider '{}'", PROVIDER_DEFAULT);
@@ -95,7 +87,7 @@ auto ProviderManager::getProvider(const std::shared_ptr<ucgd_t> &context) -> std
     return getProvider(defaultProvider);
 }
 
-auto ProviderManager::isInstalled(std::shared_ptr<UcgIOProvider> &provider) -> bool {
+auto ProviderManager::isInstalled(std::shared_ptr<UcgdProvider> &provider) -> bool {
     return isInstalled(provider->getName());
 }
 
@@ -105,7 +97,7 @@ auto ProviderManager::isInstalled(const std::string &providerName) -> bool {
         return false;
     }
     try {
-        std::shared_ptr<UcgIOProvider> & p = getProvider(providerName);
+        std::shared_ptr<UcgdProvider> & p = getProvider(providerName);
         if (p->isProvided())
             return true;
         if (p->getLibraryName().empty()) {
@@ -122,10 +114,14 @@ auto ProviderManager::initializeProvider(const std::string &name, const std::sha
     auto provider = getProvider(name);
     if (!provider->isInitialized()) {
         log.debug("Initializing provider '{}'", name);
-        provider->initialize(context);
+        provider->open(context);
     } else {
         log.warn("Provider '{}' has already been initialized", name);
     }
+}
+
+auto ProviderManager::closeProvider(const std::string &name) -> void {
+    m_Providers.erase(name);
 }
 
 #endif

@@ -34,9 +34,9 @@
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
 
 #include <ProviderManager.h>
-#include <UcgSpiProvider.h>
-#include <UcgI2CProvider.h>
-#include <UcgGpioProvider.h>
+#include <UcgdSpiPeripheral.h>
+#include <UcgdI2CPeripheral.h>
+#include <UcgdGpioPeripheral.h>
 #include <system_error>
 
 #endif
@@ -44,11 +44,11 @@
 static u8g2_setup_func_map_t u8g2_setup_functions; //NOLINT
 static u8g2_lookup_font_map_t u8g2_font_map; //NOLINT
 
-void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio);
+void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgdGpioPeripheral> &gpio);
 
-void initializeGpioAllOut(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio);
+void initializeGpioAllOut(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgdGpioPeripheral> &gpio);
 
-bool tryGetAndInitProvider(const std::shared_ptr<ucgd_t> &context, const std::string& providerName, std::shared_ptr<UcgIOProvider>& provider);
+bool tryGetAndInitProvider(const std::shared_ptr<ucgd_t> &context, const std::string& providerName, std::shared_ptr<UcgdProvider>& provider);
 
 /**
  * Initialize the HAL
@@ -97,7 +97,7 @@ uint8_t *U8g2hal_GetFontByName(const std::string &font_name) {
  */
 uint8_t cb_byte_spi_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
 
-    const std::shared_ptr<UcgSpiProvider>& spi = info->provider->getSpiProvider();
+    const std::shared_ptr<UcgdSpiPeripheral>& spi = info->getDefaultProvider()->getSpiProvider();
 
     switch (msg) {
         case U8X8_MSG_BYTE_INIT: {
@@ -133,7 +133,7 @@ uint8_t cb_byte_spi_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_
  */
 uint8_t cb_byte_i2c_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     uint8_t *data;
-    const std::shared_ptr<UcgI2CProvider> &i2c = info->provider->getI2CProvider();
+    const std::shared_ptr<UcgdI2CPeripheral> &i2c = info->getDefaultProvider()->getI2CProvider();
 
     switch (msg) {
         case U8X8_MSG_BYTE_INIT: {
@@ -161,7 +161,7 @@ uint8_t cb_byte_i2c_hw(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_
  * GPIO and Delay Procedure Routine (ARM)
 */
 uint8_t cb_gpio_delay(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, U8X8_UNUSED void *arg_ptr) {
-    std::shared_ptr<UcgGpioProvider> gpio = info->provider->getGpioProvider();
+    std::shared_ptr<UcgdGpioPeripheral>& gpio = info->getDefaultProvider()->getGpioProvider();
 
     switch (msg) {
         case U8X8_MSG_GPIO_AND_DELAY_INIT: {
@@ -265,7 +265,7 @@ uint8_t cb_gpio_delay(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t
  * @param info The ucgdisplay descriptor
  * @param gpio The default gpio provider
  */
-void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio) {
+void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgdGpioPeripheral> &gpio) {
     Log log = ServiceLocator::getInstance().getLogger();
 
     int &comm_int = info->comm_int;
@@ -280,11 +280,12 @@ void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<U
         //If this is a raspberry pi system, we will TRY use the pigpio provider to initialize the hardware specific mode sets.
         //This assumes that you are using a Pi model with the Standard J8 header (would not bother supporting the older versions)
         if (is_soc_raspberrypi()) {
-            log.debug("hal_init_gpio() : Raspberry Pi system detected. Attempting to automatically configure pins for hardware capability");
+            log.debug("hal_init_gpio() : Raspberry Pi system detected. Attempting to configure pins for hardware capability");
             std::unique_ptr<ProviderManager> &pMan = ServiceLocator::getInstance().getProviderManager();
 
             //Try and retrieve provider for configuring special pin modes specific to the Raspberry Pi
-            std::shared_ptr<UcgIOProvider> pigpioProvider;
+            std::shared_ptr<UcgdProvider> pigpioProvider;
+            std::string providerName;
 
             bool closeOnFinish = false;
 
@@ -301,7 +302,6 @@ void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<U
                     log.debug("hal_init_gpio() : Looks like PIGPIO Daemon is unavailable, trying Pigpio standalone...");
 
                     if (!tryGetAndInitProvider(info, PROVIDER_PIGPIO, pigpioProvider)) {
-                        //Attempt no fucks given: Do nothing
                         log.warn("hal_init_gpio() : Failed to retrieve/initialize both pigpio daemon and standalone. Falling back to default routine.");
                         return;
                     }
@@ -310,49 +310,54 @@ void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<U
                 closeOnFinish = true;
             }
 
-            std::shared_ptr<UcgGpioProvider> pigpioGpio = pigpioProvider->getGpioProvider();
+            providerName = pigpioProvider->getName();
+            std::shared_ptr<UcgdGpioPeripheral>& pigpioGpio = pigpioProvider->getGpioProvider();
 
             try {
                 //Check which hardware peripheral device we need to configure
                 if (comm_int == COMINT_3WSPI || comm_int == COMINT_4WSPI || comm_int == COMINT_ST7920SPI) {
                     int spi_bus_number = info->getOptionInt(OPT_SPI_BUS);
                     if (spi_bus_number == SPI_PERIPHERAL_MAIN) {
-                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_MISO, UcgGpioProvider::GpioMode::MODE_ALT0); //MISO
-                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_MOSI, UcgGpioProvider::GpioMode::MODE_ALT0); //MOSI
-                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_SCLK, UcgGpioProvider::GpioMode::MODE_ALT0); //SCLK
-                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_CE1, UcgGpioProvider::GpioMode::MODE_ALT0); //CE1
-                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_CE0, UcgGpioProvider::GpioMode::MODE_ALT0); //CE0
+                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_MISO, UcgdGpioPeripheral::GpioMode::MODE_ALT0); //MISO
+                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_MOSI, UcgdGpioPeripheral::GpioMode::MODE_ALT0); //MOSI
+                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_SCLK, UcgdGpioPeripheral::GpioMode::MODE_ALT0); //SCLK
+                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_CE1, UcgdGpioPeripheral::GpioMode::MODE_ALT0); //CE1
+                        pigpioGpio->init(info, SPI_RPI_PIN_MAIN_CE0, UcgdGpioPeripheral::GpioMode::MODE_ALT0); //CE0
                         log.debug("hal_init_gpio() : Pins initialized for MAIN SPI Hardware Peripheral");
                     } else if (spi_bus_number == SPI_PERIPHERAL_AUX) {
-                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_MISO, UcgGpioProvider::GpioMode::MODE_ALT4); //MISO
-                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_MOSI, UcgGpioProvider::GpioMode::MODE_ALT4); //MOSI
-                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_SCLK, UcgGpioProvider::GpioMode::MODE_ALT4); //SCLK
-                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE0, UcgGpioProvider::GpioMode::MODE_ALT4); //CE0
-                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE1, UcgGpioProvider::GpioMode::MODE_ALT4); //CE1
-                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE2, UcgGpioProvider::GpioMode::MODE_ALT4); //CE2
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_MISO, UcgdGpioPeripheral::GpioMode::MODE_ALT4); //MISO
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_MOSI, UcgdGpioPeripheral::GpioMode::MODE_ALT4); //MOSI
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_SCLK, UcgdGpioPeripheral::GpioMode::MODE_ALT4); //SCLK
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE0, UcgdGpioPeripheral::GpioMode::MODE_ALT4); //CE0
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE1, UcgdGpioPeripheral::GpioMode::MODE_ALT4); //CE1
+                        pigpioGpio->init(info, SPI_RPI_PIN_AUX_CE2, UcgdGpioPeripheral::GpioMode::MODE_ALT4); //CE2
                         log.debug("hal_init_gpio() : Pins initialized for AUXILLARY SPI Hardware Peripheral");
                     } else {
                         throw std::runtime_error("hal_init_gpio() : SPI bus number not supported");
                     }
                 } else if (comm_int == COMINT_I2C) {
-                    pigpioGpio->init(info, I2C_RPI_PIN_SDA, UcgGpioProvider::GpioMode::MODE_ALT0); //Data / SDA
-                    pigpioGpio->init(info, I2C_RPI_PIN_SCL, UcgGpioProvider::GpioMode::MODE_ALT0); //Clock / SCL
+                    pigpioGpio->init(info, I2C_RPI_PIN_SDA, UcgdGpioPeripheral::GpioMode::MODE_ALT0); //Data / SDA
+                    pigpioGpio->init(info, I2C_RPI_PIN_SCL, UcgdGpioPeripheral::GpioMode::MODE_ALT0); //Clock / SCL
                 } else if (comm_int == COMINT_UART) {
-                    pigpioGpio->init(info, UART_RPI_PIN_TXD, UcgGpioProvider::GpioMode::MODE_ALT0); //Transmit / TXD
-                    pigpioGpio->init(info, UART_RPI_PIN_RXD, UcgGpioProvider::GpioMode::MODE_ALT0); //Receive / RXD
+                    pigpioGpio->init(info, UART_RPI_PIN_TXD, UcgdGpioPeripheral::GpioMode::MODE_ALT0); //Transmit / TXD
+                    pigpioGpio->init(info, UART_RPI_PIN_RXD, UcgdGpioPeripheral::GpioMode::MODE_ALT0); //Receive / RXD
                 } else {
                     //Other implementations, just init everything to OUT
                     initializeGpioAllOut(info, gpio);
                 }
 
                 if (closeOnFinish) {
-                    log.debug("hal_init_gpio() : Closing pigpio provider");
-                    pigpioProvider->close();
+                    log.debug("hal_init_gpio() : Closing pigpio provider '{}'", providerName);
+                    pMan->closeProvider(providerName);
+                    pigpioGpio = nullptr;
+                    pigpioProvider = nullptr;
                 }
             } catch (std::exception& e) {
                 if (closeOnFinish) {
-                    log.debug("hal_init_gpio() : Closing pigpio provider");
-                    pigpioProvider->close();
+                    log.error("hal_init_gpio() : Error occured. Closing pigpio provider");
+                    pMan->closeProvider(providerName);
+                    pigpioGpio = nullptr;
+                    pigpioProvider = nullptr;
                 }
                 throw e;
             }
@@ -375,33 +380,33 @@ void initializeGpio(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<U
  * @param info The ucgdisplay descriptor
  * @param gpio The default gpio provider
  */
-void initializeGpioAllOut(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgGpioProvider> &gpio) {
+void initializeGpioAllOut(const std::shared_ptr<ucgd_t> &info, const std::shared_ptr<UcgdGpioPeripheral> &gpio) {
     Log &log = ServiceLocator::getInstance().getLogger();
     log.debug("Initializing all gpio lines to OUTPUT for Comm Int = {}, Comm Type = {}, Provider: {} ", info->comm_int, info->comm_type, gpio->getProvider()->getName());
 
     // called once during init phase of u8g2/u8x8, can be used to setup pins
-    gpio->init(info, info->pin_map.d0, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.d1, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.sda, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.scl, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.d2, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.d3, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.d4, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.d5, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.d6, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.d7, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.dc, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.cs, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.cs1, UcgGpioProvider::GpioMode::MODE_OUTPUT);
-    gpio->init(info, info->pin_map.cs2, UcgGpioProvider::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d0, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d1, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.sda, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.scl, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d2, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d3, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d4, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d5, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d6, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.d7, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.dc, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.cs, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.cs1, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
+    gpio->init(info, info->pin_map.cs2, UcgdGpioPeripheral::GpioMode::MODE_OUTPUT);
 }
 
-bool tryGetAndInitProvider(const std::shared_ptr<ucgd_t> &context, const std::string& providerName, std::shared_ptr<UcgIOProvider>& provider) {
+bool tryGetAndInitProvider(const std::shared_ptr<ucgd_t> &context, const std::string& providerName, std::shared_ptr<UcgdProvider>& provider) {
     Log log = ServiceLocator::getInstance().getLogger();
     std::unique_ptr<ProviderManager> &pMan = ServiceLocator::getInstance().getProviderManager();
 
     //Try and retrieve provider for configuring special pin modes specific to the Raspberry Pi
-    std::shared_ptr<UcgIOProvider>& tmpProvider = pMan->getProvider(providerName);
+    std::shared_ptr<UcgdProvider>& tmpProvider = pMan->getProvider(providerName);
 
     //Check if installed
     if (!tmpProvider->isAvailable()) {
@@ -409,10 +414,10 @@ bool tryGetAndInitProvider(const std::shared_ptr<ucgd_t> &context, const std::st
         return false;
     }
 
-    //Try to initialize
+    //Initialize if needed
     if (!tmpProvider->isInitialized()) {
         try {
-            tmpProvider->initialize(context);
+            tmpProvider->open(context);
         } catch (std::runtime_error& e) {
             log.warn("tryGetAndInitProvider() : Provider '{}' failed to start (Reason: {})", providerName, std::string(e.what()));
             return false;

@@ -3,7 +3,6 @@
 
 #include <string>
 #include <memory>
-#include <Log.h>
 
 std::string exec(const char *cmd);
 

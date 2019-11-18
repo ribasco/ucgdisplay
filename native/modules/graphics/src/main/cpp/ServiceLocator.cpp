@@ -31,7 +31,9 @@
 ServiceLocator::ServiceLocator() : m_Logger(nullptr) {
 }
 
-ServiceLocator::~ServiceLocator() = default;
+ServiceLocator::~ServiceLocator() {
+    debug("ServiceLocator: destructor");
+};
 
 auto ServiceLocator::getInstance() -> ServiceLocator & {
     static auto instance = std::unique_ptr<ServiceLocator>(nullptr);

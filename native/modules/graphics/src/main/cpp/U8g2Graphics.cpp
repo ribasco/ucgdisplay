@@ -3,7 +3,7 @@
  * Organization: Universal Character/Graphics display library
  * Project: UCGDisplay :: Native :: Graphics
  * Filename: U8g2Graphics.cpp
- * 
+ *
  * ---------------------------------------------------------
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
@@ -12,12 +12,12 @@
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -43,10 +43,10 @@
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
 
 #include <ProviderManager.h>
-#include <UcgCperipheryProvider.h>
-#include <UcgPigpioProvider.h>
-#include <UcgPigpiodProvider.h>
-#include <UcgLibgpiodProvider.h>
+#include <UcgdCperipheryProvider.h>
+#include <UcgdPigpioProvider.h>
+#include <UcgdPigpiodProvider.h>
+#include <UcgdLibgpiodProvider.h>
 
 #endif
 
@@ -54,28 +54,18 @@
 #pragma clang diagnostic ignored "-Wunused-parameter"
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 
-void release_resources() {
-#if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
-    //Close all initialized providers
-    ServiceLocator::getInstance().getProviderManager()->release();
-#endif
-}
-
 void uncaught_exception_handler() {
     Log& log = ServiceLocator::getInstance().getLogger();
     log.debug("An uncaught exception has been thrown from the native library. Terminating program");
-
-    release_resources();
-    //std::cerr << Backtrace() << std::endl;
-    abort();
+    std::cerr << Backtrace() << std::endl;
+    abort(); //sigabrt
 }
 
 void signal_handler (int sig) {
     g_SignalStatus = sig;
 }
 
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
-
+void registerSignalHandlers() {
 #if !defined(_WIN32) && !defined(_WIN64)
     struct sigaction act;
     memset (&act, '\0', sizeof(act));
@@ -88,8 +78,13 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     sigaction(SIGTERM, &act, nullptr);
     sigaction(SIGINT, &act, nullptr);
     sigaction(SIGABRT, &act, nullptr);
-    sigaction(SIGSEGV, &act, nullptr);
+    //sigaction(SIGSEGV, &act, nullptr);
 #endif
+}
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
+
+    registerSignalHandlers();
 
     //Load global references
     JNI_Load(jvm);
@@ -98,7 +93,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
     jvm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION);
 
     //Unaught exception handler
-    //std::set_terminate(uncaught_exception_handler);
+    std::set_terminate(uncaught_exception_handler);
 
     //Initialize Utils
     U8gUtils_Load(env);
@@ -143,9 +138,11 @@ void update_key_value_store(JNIEnv *env, std::string key, jobject &value, option
     jclass clsString = env->FindClass(CLS_STRING);
     jclass clsObj = env->GetObjectClass(value);
     jclass clsInteger = env->FindClass(CLS_INTEGER);
+    jclass clsBoolean = env->FindClass(CLS_BOOLEAN);
     jclass clsNativeUtils = env->FindClass(CLS_NativeUtils);
     jmethodID midToInteger = env->GetStaticMethodID(clsNativeUtils, "toInteger", "(Ljava/lang/Object;)I");
     jmethodID midToString = env->GetMethodID(clsString, "toString", "()Ljava/lang/String;");
+    jmethodID midToBoolean = env->GetMethodID(clsBoolean, "booleanValue", "()Z");
 
     if (clsObj == nullptr) {
         map.insert(std::make_pair(key, nullptr));
@@ -155,6 +152,9 @@ void update_key_value_store(JNIEnv *env, std::string key, jobject &value, option
     } else if (env->IsInstanceOf(value, clsInteger)) {
         jint intValue = env->CallStaticIntMethod(clsNativeUtils, midToInteger, value);
         map.insert(std::make_pair(key, intValue));
+    } else if (env->IsInstanceOf(value, clsBoolean)) {
+        bool boolValue = (bool) env->CallBooleanMethod(value, midToBoolean);
+        map.insert(std::make_pair(key, boolValue));
     } else {
         throw std::runtime_error(std::string("Unsupported value type for key: \"") + key + std::string("\""));
     }
@@ -294,6 +294,10 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
         locator.setDeviceManager(std::make_unique<DeviceManager>());
 
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+        if (mapOptions[OPT_EXTRA_DEBUG_INFO].has_value()) {
+            g_ShowExtraDebugInfo = std::any_cast<bool>(mapOptions[OPT_EXTRA_DEBUG_INFO]);
+        }
+
         //Initialize Providers
         locator.setProviderManager(std::make_unique<ProviderManager>());
         auto &pMan = locator.getProviderManager();
@@ -303,13 +307,13 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
 
         //Register supported providers
         if (!pMan->isRegistered(PROVIDER_CPERIPHERY))
-            pMan->registerProvider(std::make_unique<UcgCperipheryProvider>());
+            pMan->registerProvider(std::make_shared<UcgdCperipheryProvider>());
         if (!pMan->isRegistered(PROVIDER_PIGPIO))
-            pMan->registerProvider(std::make_unique<UcgPigpioProvider>());
+            pMan->registerProvider(std::make_shared<UcgdPigpioProvider>());
         if (!pMan->isRegistered(PROVIDER_PIGPIOD))
-            pMan->registerProvider(std::make_unique<UcgPigpiodProvider>(pigAddr, pigPort));
+            pMan->registerProvider(std::make_shared<UcgdPigpiodProvider>(pigAddr, pigPort));
         if (!pMan->isRegistered(PROVIDER_LIBGPIOD))
-            pMan->registerProvider(std::make_unique<UcgLibgpiodProvider>());
+            pMan->registerProvider(std::make_shared<UcgdLibgpiodProvider>());
 #endif
         initialized = true;
     }
@@ -317,7 +321,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     //7. Setup and Initialize the Display
     try {
         std::shared_ptr<ucgd_t> &context = U8g2Util_SetupAndInitDisplay(setup_proc_name, commInt, commType, _rotation, *pinMap, mapOptions, virtualMode);
-        locator.getLogger().debug("setup() : Returning to java caller");
+        locator.getLogger().debug("setup() : Returning to java land");
         return context->address();
     } catch (std::exception &e) {
         JNI_ThrowNativeLibraryException(env, std::string("Failed to initialize the display device. Reason: \"") + std::string(e.what()) + std::string("\""));

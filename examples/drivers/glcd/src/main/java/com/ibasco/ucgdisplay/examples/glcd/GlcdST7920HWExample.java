@@ -238,11 +238,11 @@ public class GlcdST7920HWExample {
 
     private void run() throws Exception {
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        /*Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             //Perform necessary clean-up operations here in case the program abruptly stops
             log.debug("Shutdown requested. Attempting to gracefully exit the program");
             shutdown.set(true);
-        }));
+        }));*/
 
         //SPI HW 4-Wire config for ST7920
 
@@ -259,13 +259,15 @@ public class GlcdST7920HWExample {
                 //Set to 180 rotation
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
                 //Using system/c-periphery provider
-                .option(GlcdOption.PROVIDER, Provider.SYSTEM)
+                .option(GlcdOption.PROVIDER, Provider.PIGPIO_STANDALONE)
                 //Set to 1,000,000 Hz/bps (1.00 MHz)
                 .option(GlcdOption.BUS_SPEED, 1000000)
                 //The SPI Bus (RPI as two SPI buses available, the Main and Auxillary)
                 .option(GlcdOption.SPI_BUS, SpiBus.MAIN)
                 //Use CE1 or Chip Select 1 on Main SPI peripheral/bus
                 .option(GlcdOption.SPI_CHANNEL, SpiChannel.CHANNEL_1)
+                //Enable extra debug info
+                .option(GlcdOption.EXTRA_DEBUG_INFO, false)
                 .build();
 
         GlcdDriver driver = new GlcdDriver(config);
@@ -276,13 +278,12 @@ public class GlcdST7920HWExample {
         //Get the maximum character height
         int maxHeight = driver.getMaxCharHeight();
 
-        long startMillis = System.currentTimeMillis();
-
         log.debug("Starting display loop. Press Ctrl+C to exit.");
 
         TickMonitor monitor = new TickMonitor();
 
         registerMonitorEntries(monitor);
+        int ctr = 0;
 
         try {
             while (!shutdown.get()) {
@@ -309,15 +310,12 @@ public class GlcdST7920HWExample {
             }
 
             //Clear the display
+            log.debug("Clearing the display");
             driver.clearDisplay();
         } catch (SignalInterruptedException e) {
             log.warn("Signal interrupt detected: {}", e.getMessage());
         } catch (NativeLibraryException e) {
             log.error("An unexpected error occured in the native layer", e);
         }
-
-        long endTime = System.currentTimeMillis() - startMillis;
-
-        log.info("Done in {} seconds", Duration.ofMillis(endTime).toSeconds());
     }
 }

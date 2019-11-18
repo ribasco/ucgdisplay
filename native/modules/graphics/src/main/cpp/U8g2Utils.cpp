@@ -40,10 +40,10 @@
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
 
 #include <Utils.h>
-#include <UcgLibgpiodProvider.h>
-#include <UcgPigpioProvider.h>
-#include <UcgCperipheryProvider.h>
-#include <UcgPigpiodProvider.h>
+#include <UcgdLibgpiodProvider.h>
+#include <UcgdPigpioProvider.h>
+#include <UcgdCperipheryProvider.h>
+#include <UcgdPigpiodProvider.h>
 
 #endif
 
@@ -171,7 +171,7 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
     std::shared_ptr<ucgd_t> &context = devMgr->createDevice();
 
     //read this: https://floating.io/2017/07/lambda-shared_ptr-memory-leak/
-    //std::weak_ptr<ucgd_t> weak_context(context);
+    std::weak_ptr<ucgd_t> weak_context(context);
 
     //Store all device specific properties to the context
     context->pin_map = pin_config;
@@ -181,23 +181,27 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
     context->comm_type = commType;
 
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
+    std::string defaultProviderName = context->getOptionString(OPT_PROVIDER);
     context->options = std::map(options);
-    context->provider = ServiceLocator::getInstance().getProviderManager()->getProvider(context);
-    log.debug("setup_display() : Initializing default provider '{}'", context->provider->getName());
-    context->provider->initialize(context);
+    context->setDefaultProvider(ServiceLocator::getInstance().getProviderManager()->getProvider(context));
+    auto defaultProvider = context->getDefaultProvider();
+
+    log.debug("setup_display() : Initializing default provider '{}'", defaultProvider->getName());
+    if (!defaultProvider->isInitialized())
+        defaultProvider->open(context);
 
     //Make sure the provider supports the current configuration setup
     //e.g. SPI & I2C capability
     if (commType == COMTYPE_HW) {
-        if ((commInt == COMINT_4WSPI || commInt == COMINT_3WSPI || commInt == COMINT_ST7920SPI) && !context->provider->supportsSPI()) {
-            throw UcgdSetupException(std::string("Your current setup is configured for Hardware SPI but the provider you selected '") + context->provider->getName() + std::string("' does not have hardware SPI capability"));
-        } else if ((commInt == COMINT_I2C) && !context->provider->supportsI2C()) {
-            throw UcgdSetupException(std::string("Your current setup is configured for Hardware I2C but the provider you selected '") + context->provider->getName() + std::string("' does not have hardware I2C capability"));
+        if ((commInt == COMINT_4WSPI || commInt == COMINT_3WSPI || commInt == COMINT_ST7920SPI) && !defaultProvider->supportsSPI()) {
+            throw UcgdSetupException(std::string("Your current setup is configured for Hardware SPI but the provider you selected '") + defaultProvider->getName() + std::string("' does not have hardware SPI capability"));
+        } else if ((commInt == COMINT_I2C) && !defaultProvider->supportsI2C()) {
+            throw UcgdSetupException(std::string("Your current setup is configured for Hardware I2C but the provider you selected '") + defaultProvider->getName() + std::string("' does not have hardware I2C capability"));
         }
     } else if (commType == COMTYPE_SW) {
         //make sure the current provider supports GPIO for bit-bang implementations
-        if (!context->provider->supportsGpio()) {
-            throw UcgdSetupException(std::string("Your current setup is configured for software bit-bang implementation but the provider you selected does '") + context->provider->getName() + std::string("' not have GPIO capability"));
+        if (!defaultProvider->supportsGpio()) {
+            throw UcgdSetupException(std::string("Your current setup is configured for software bit-bang implementation but the provider you selected does '") + defaultProvider->getName() + std::string("' not have GPIO capability"));
         }
     }
 
@@ -232,7 +236,13 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
     }
 
     //Configure Byte callback
-    context->byte_cb = [cb_byte, context, virtualMode](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+    context->byte_cb = [cb_byte, weak_context, virtualMode](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+        auto context = weak_context.lock();
+        if (!context) {
+            debug("byte_cb() : Context out of scope");
+            return 0;
+        }
+
         if (virtualMode) {
             JNIEnv *lenv;
             GETENV(lenv);
@@ -265,13 +275,20 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
     };
 
     //Configure Gpio callback
-    context->gpio_cb = [virtualMode, context](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+    context->gpio_cb = [virtualMode, weak_context](u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) -> uint8_t {
+        auto context = weak_context.lock();
+        if (!context) {
+            debug("gpio_cb() : Context out of scope");
+            return 0;
+        }
+
         if (virtualMode) {
             JNIEnv *lenv;
             GETENV(lenv);
             JNI_FireGpioEvent(lenv, context->address(), msg, arg_int);
             return 1;
         }
+
        try {
             if (g_SignalStatus) {
                 throw SignalInterruptedException(g_SignalStatus, "Caught signal interrupt");
@@ -302,14 +319,14 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
 
 uint8_t U8g2Util_ByteCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    std::shared_ptr<ucgd_t> &info = ServiceLocator::getInstance().getDeviceManager()->getDevice(addr);
-    return info->byte_cb(u8x8, msg, arg_int, arg_ptr);
+    std::shared_ptr<ucgd_t> &context = ServiceLocator::getInstance().getDeviceManager()->getDevice(addr);
+    return context->byte_cb(u8x8, msg, arg_int, arg_ptr);
 }
 
 uint8_t U8g2Util_GpioCallbackWrapper(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr) {
     auto addr = (uintptr_t) u8x8;
-    std::shared_ptr<ucgd_t> &info = ServiceLocator::getInstance().getDeviceManager()->getDevice(addr);
-    return info->gpio_cb(u8x8, msg, arg_int, arg_ptr);
+    std::shared_ptr<ucgd_t> &context = ServiceLocator::getInstance().getDeviceManager()->getDevice(addr);
+    return context->gpio_cb(u8x8, msg, arg_int, arg_ptr);
 }
 
 std::string U8g2Util_GetPinIndexDesc(int index) {

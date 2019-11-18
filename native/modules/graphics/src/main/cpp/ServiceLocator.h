@@ -28,7 +28,7 @@
 
 #include <memory>
 #include <iostream>
-
+#include <Global.h>
 #include <Log.h>
 #include <DeviceManager.h>
 
@@ -57,6 +57,7 @@ private:
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
     std::unique_ptr<ProviderManager> m_ProviderManager;
 #endif
+
 public:
     // Return a reference to not allow client code
     // to delete object.
@@ -69,11 +70,13 @@ public:
     auto getDeviceManager() -> std::unique_ptr<DeviceManager> &;
 
     void setDeviceManager(std::unique_ptr<DeviceManager> mDeviceManager);
+
 #if (defined(__arm__) || defined(__aarch64__)) && defined(__linux__)
     auto getProviderManager() -> std::unique_ptr<ProviderManager> &;
 
     void setProviderManager(std::unique_ptr<ProviderManager> mProviderManager);
 #endif
+
 };
 
 #endif //UCGD_MOD_GRAPHICS_SERVICELOCATOR_H

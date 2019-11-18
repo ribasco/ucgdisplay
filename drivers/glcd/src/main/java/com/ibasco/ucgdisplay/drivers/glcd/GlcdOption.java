@@ -146,6 +146,11 @@ public class GlcdOption<T> {
      */
     public static final GlcdOption<Integer> PIGPIO_PORT = createOption("pigpio_port");
 
+    /**
+     * Show additional debug information on the console
+     */
+    public static final GlcdOption<Boolean> EXTRA_DEBUG_INFO = createOption("extra_debug_info");
+
     private String name;
 
     /**

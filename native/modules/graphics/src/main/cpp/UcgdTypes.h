@@ -31,8 +31,9 @@
 #include <map>
 #include <iostream>
 #include <Log.h>
+#include <Global.h>
 
-#if defined(__APPLE__)  && !defined(__AVAILABILITY__)
+#if defined(__APPLE__) && !defined(__AVAILABILITY__)
 #include <Availability.h>
 #endif
 
@@ -41,7 +42,9 @@
 #include <experimental/any>
 typedef std::map<std::string, std::experimental::any> option_map_t;
 #else
+
 #include <any>
+
 typedef std::map<std::string, std::any> option_map_t;
 #endif
 
@@ -98,6 +101,9 @@ extern "C" {
 #define OPT_PIGPIO_TYPE "pigpio_mode"
 #define OPT_PIGPIO_ADDR "pigpio_addr"
 #define OPT_PIGPIO_PORT "pigpio_port"
+
+//Misc options
+#define OPT_EXTRA_DEBUG_INFO "extra_debug_info"
 
 /*
  * -------------------------------------------------------------------------------------------------------------
@@ -180,13 +186,13 @@ public:
 };
 
 //Forward declarations
-class UcgIOProvider;
+class UcgdProvider;
 
-class UcgSpiProvider;
+class UcgdSpiPeripheral;
 
-class UcgI2CProvider;
+class UcgdI2CPeripheral;
 
-class UcgGpioProvider;
+class UcgdGpioPeripheral;
 
 struct ucgd_t;
 
@@ -217,13 +223,15 @@ struct cp_i2c_handle {
 
 typedef std::function<uint8_t(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_t;
 
-typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb, u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
+typedef std::function<void(u8g2_t *u8g2, const u8g2_cb_t *rotation, u8x8_msg_cb byte_cb,
+                           u8x8_msg_cb gpio_and_delay_cb)> u8g2_setup_func_t;
 
 typedef std::map<std::string, u8g2_setup_func_t> u8g2_setup_func_map_t;
 
 typedef std::map<std::string, const uint8_t *> u8g2_lookup_font_map_t;
 
-typedef std::function<uint8_t(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)> u8g2_msg_func_info_t;
+typedef std::function<uint8_t(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8_t msg, uint8_t arg_int,
+                              void *arg_ptr)> u8g2_msg_func_info_t;
 
 typedef struct {
     //pin configuration
@@ -269,6 +277,10 @@ struct ucgd_t {
     int comm_type; //communications type
     bool debug;
 
+    ~ucgd_t() {
+        ::debug(std::string("ucgd_t : Device closed: ") + std::to_string(address()));
+    }
+
     uintptr_t address() {
         return (uintptr_t) u8g2.get();
     }
@@ -283,8 +295,19 @@ struct ucgd_t {
     std::unique_ptr<cp_spi_t> sys_spi_handle;
     //the system i2c handle (c-periphery)
     std::unique_ptr<cp_i2c_t> sys_i2c_handle;
-    std::shared_ptr<UcgIOProvider> provider;
+    //options associated with this context
     std::map<std::string, std::any> options;
+
+    auto setDefaultProvider(std::shared_ptr<UcgdProvider> &provider) -> void {
+        this->provider = provider;
+    }
+
+    auto getDefaultProvider() -> std::shared_ptr<UcgdProvider> {
+        auto prov = provider.lock();
+        if (prov)
+            return prov;
+        throw std::runtime_error("Provider no longer available");
+    }
 
     std::any &getOption(const std::string &key) {
         auto it = this->options.find(key);
@@ -317,6 +340,8 @@ struct ucgd_t {
         }
     }
 
+private:
+    std::weak_ptr<UcgdProvider> provider;
 #endif
 };
 

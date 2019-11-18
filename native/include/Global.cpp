@@ -38,12 +38,20 @@
 #include <sstream>
 #endif
 
+bool g_ShowExtraDebugInfo;
 volatile sig_atomic_t g_SignalStatus;
 JavaVM *g_CachedJVM;
 jclass clsNativeLibraryException;
 jclass clsSignalInterruptedException;
 
 static std::vector<jobject> globalReferences;
+
+void debug(const std::string& msg) {
+#ifdef UCGD_DEBUG_LOG
+    if (g_ShowExtraDebugInfo)
+        std::cout << "[native] : " << msg << std::endl;
+#endif
+}
 
 void JNI_Load(JavaVM *jvm) {
     g_CachedJVM = jvm;

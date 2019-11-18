@@ -5,11 +5,11 @@
 #include <unistd.h>
 #include <chrono>
 #include <csignal>
-#include <UcgPigpiodProvider.h>
-#include <UcgLibgpiodProvider.h>
-#include <UcgCperipheryProvider.h>
-#include <UcgSpiProvider.h>
-#include <UcgPigpioProvider.h>
+#include <UcgdPigpiodProvider.h>
+#include <UcgdLibgpiodProvider.h>
+#include <UcgdCperipheryProvider.h>
+#include <UcgdSpiPeripheral.h>
+#include <UcgdPigpioProvider.h>
 #include "U8g2TestHal.h"
 #include <sstream>
 
@@ -93,13 +93,13 @@ void initializeProviders() {
 
     //Register supported providers
     if (!pMan->isRegistered(PROVIDER_CPERIPHERY))
-        pMan->registerProvider(std::make_unique<UcgCperipheryProvider>());
+        pMan->registerProvider(std::make_unique<UcgdCperipheryProvider>());
     if (!pMan->isRegistered(PROVIDER_PIGPIO))
-        pMan->registerProvider(std::make_unique<UcgPigpioProvider>());
+        pMan->registerProvider(std::make_unique<UcgdPigpioProvider>());
     if (!pMan->isRegistered(PROVIDER_PIGPIOD))
-        pMan->registerProvider(std::make_unique<UcgPigpiodProvider>("", ""));
+        pMan->registerProvider(std::make_unique<UcgdPigpiodProvider>("", ""));
     if (!pMan->isRegistered(PROVIDER_LIBGPIOD))
-        pMan->registerProvider(std::make_unique<UcgLibgpiodProvider>());
+        pMan->registerProvider(std::make_unique<UcgdLibgpiodProvider>());
 }
 
 u8g2_msg_func_info_t U8g2Util_GetByteCb(int commInt, int commType) {
@@ -192,7 +192,7 @@ u8g2_t *setupDisplay(const std::string &provider) {
     info->options[OPT_I2C_BUS] = 1;
     info->options[OPT_PROVIDER] = provider;
     info->provider = ServiceLocator::getInstance().getProviderManager()->getProvider(info);
-    info->provider->initialize(info);
+    info->provider->open(info);
 
     //Make sure the provider supports the current configuration setup
     //e.g. SPI & I2C capability
