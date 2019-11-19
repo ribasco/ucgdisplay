@@ -266,10 +266,9 @@
                         <exclude>**/utils/codegen/**</exclude>
                     </excludes>
                     <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
+                        <manifestEntries>
+                            <Automatic-Module-Name>${project.groupId}.ucgd.nativ.graphics</Automatic-Module-Name>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

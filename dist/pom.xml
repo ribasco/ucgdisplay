@@ -70,12 +70,14 @@
                                         <exclude>org/**</exclude>
                                         <exclude>META-INF/LICENSE.txt</exclude>
                                         <exclude>META-INF/NOTICE.txt</exclude>
-                                        <exclude>META-INF/maven/commons-**</exclude>
+                                        <exclude>META-INF/maven/commons-codec/**</exclude>
+                                        <exclude>META-INF/maven/commons-io/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <createSourcesJar>true</createSourcesJar>
+
                             <artifactSet>
                                 <excludes>
                                     <exclude>com.pi4j:*</exclude>

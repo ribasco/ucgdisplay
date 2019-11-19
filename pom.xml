@@ -360,7 +360,11 @@
                         <archive>
                             <manifest>
                                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                             </manifest>
+                            <manifestEntries>
+                                <Url>${project.url}</Url>
+                            </manifestEntries>
                         </archive>
                     </configuration>
                 </plugin>
