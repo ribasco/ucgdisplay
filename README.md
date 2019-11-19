@@ -118,7 +118,22 @@ To be able to download snapshots from Sonatype, add the following profile entry 
 ---
 
 
-1. From maven repository
+1. From maven repository - All in one package
+
+    ```xml
+    <dependencies>
+        <!-- Ucgdisplay Uber Jar -->
+         <dependency>
+             <groupId>com.ibasco.ucgdisplay</groupId>
+             <artifactId>ucg-display</artifactId>
+             <version>1.5.0-alpha</version>
+         </dependency>
+    </dependencies>
+    ```
+    
+    
+    
+2. From maven repository - Specific module
 
     ```xml
     <dependencies>
@@ -137,8 +152,8 @@ To be able to download snapshots from Sonatype, add the following profile entry 
          </dependency>
     </dependencies>
     ```
-    
-2. From source
+
+3. From source
 
     Clone from Github (Sub-modules included)
 
@@ -153,25 +168,25 @@ To be able to download snapshots from Sonatype, add the following profile entry 
     ```
 
     Install to your local maven repository
-    
+
     * Installing from a Linux system with ARM 32/64 bit architecture
       
         ```bash
         mvn install -Dcompile.native=true
         ```
-    
+
     * Installing from a 64-bit `Linux` system for `ARM` architecture 32 and 64 bit versions
-    
+
         ```bash
         mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-arm-all -Dinput.target=native-build-cc-arm-all -Dbuild.type=Debug
         ```
       
     * Installing from a 64-bit `Linux` system for all supported architectures (Please read cross-compilation guide)
-    
+
         ```bash
         mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=Debug
         ```
-   
+
     > **Note:** Please see the [cross-compilation guide](https://github.com/ribasco/ucgdisplay/tree/master/native) for more details
 
 ### Usage examples

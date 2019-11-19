@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ibasco.ucgdisplay</groupId>
-    <artifactId>ucg-display</artifactId>
+    <artifactId>ucgd-parent</artifactId>
     <version>${revision}</version>
     <name>UCGDisplay</name>
     <url>https://github.com/ribasco/ucgdisplay</url>
@@ -35,7 +35,8 @@
 
     <!-- Project properties -->
     <properties>
-        <revision>1.5.0-alpha-SNAPSHOT</revision>
+        <release>1.5.0-alpha</release>
+        <revision>${release}-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -57,6 +58,21 @@
         <project.prefix>UCGDisplay ::</project.prefix>
         <main.basedir>${project.basedir}</main.basedir>
     </properties>
+
+    <!-- Repositories -->
+    <repositories>
+        <repository>
+            <id>oss-snapshots-repo</id>
+            <name>Sonatype OSS Maven Repository</name>
+            <url>https://oss.sonatype.org/content/groups/public</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <!-- License Information -->
     <licenses>
@@ -108,6 +124,59 @@
 
     <!-- Profiles -->
     <profiles>
+        <profile>
+            <id>update-license-header</id>
+            <build>
+                <plugins>
+                    <!-- Generate license file -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>append-license-file-headers</id>
+                                <goals>
+                                    <goal>update-file-header</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <ignoreNoFileToScan>true</ignoreNoFileToScan>
+                                    <licenseName>lgpl_v3</licenseName>
+                                    <descriptionTemplate>${main.basedir}/scripts/license/template.ftl
+                                    </descriptionTemplate>
+                                    <canUpdateCopyright>true</canUpdateCopyright>
+                                    <canUpdateDescription>true</canUpdateDescription>
+                                    <canUpdateLicense>true</canUpdateLicense>
+                                    <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                                    <processStartTag>========================START=================================
+                                    </processStartTag>
+                                    <processEndTag>=========================END==================================
+                                    </processEndTag>
+                                    <excludes>
+                                        <exclude>*.sh</exclude>
+                                        <exclude>src/main/cpp/lib/**</exclude>
+                                        <exclude>src/main/cpp/include/**</exclude>
+                                        <exclude>U8g2LookupFonts.cpp</exclude>
+                                        <exclude>U8g2LookupSetup.cpp</exclude>
+                                        <exclude>controllers.h</exclude>
+                                    </excludes>
+                                    <includes>
+                                        <include>**/*.java</include>
+                                        <include>*.cpp</include>
+                                        <include>*.h</include>
+                                    </includes>
+                                    <roots>
+                                        <root>src/main/java</root>
+                                        <root>src/test</root>
+                                        <root>src/main/cpp</root>
+                                    </roots>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <!-- Deploy to Sonatype -->
         <profile>
             <id>deploy-sonatype</id>
@@ -175,12 +244,18 @@
         <module>native/modules/input</module>
         <module>examples/drivers/clcd</module>
         <module>examples/drivers/glcd</module>
+        <module>dist</module>
     </modules>
 
     <build>
         <!-- Plugin management -->
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.2.1</version>
+                </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
@@ -281,6 +356,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.1.2</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -358,7 +440,7 @@
                         <arguments>-Dcompile.native=true -Dgraphics.target=native-build-cc-all
                             -Dinput.target=native-build-cc-all -Dbuild.type=Release
                         </arguments>
-                        <tagNameFormat>ucgdisplay-@{project.version}</tagNameFormat>
+                        <tagNameFormat>@{project.version}</tagNameFormat>
                         <checkModificationExcludes>
                             <checkModificationExclude>pom.xml</checkModificationExclude>
                         </checkModificationExcludes>
@@ -387,9 +469,14 @@
                         <includes>
                             <include>**/*.java</include>
                         </includes>
+                        <defaultManifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</defaultManifestFile>
+                        <useDefaultManifestFile>true</useDefaultManifestFile>
                         <excludes>
                             <exclude>native/modules/graphics/src/main/cpp/utils/build/**</exclude>
+                            <exclude>native/modules/graphics/src/main/cpp/build/**</exclude>
                             <exclude>native/modules/graphics/src/main/cpp/**</exclude>
+                            <exclude>native/modules/input/src/main/cpp/build/**</exclude>
+                            <exclude>native/modules/input/src/main/cpp/**</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
@@ -413,10 +500,9 @@
                         </execution>
                     </executions>
                     <configuration>
+                        <!-- Note: temporarily disable javadocs until issue has been resolved -->
+                        <skip>true</skip>
                         <source>8</source>
-                        <excludes>
-                            <exclude>native/modules/graphics/src/main/cpp/utils/build/**</exclude>
-                        </excludes>
                         <additionalOptions>-Xdoclint:none</additionalOptions>
                     </configuration>
                 </plugin>
@@ -453,75 +539,19 @@
 
         <!-- Parent plugins -->
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+            </plugin>
             <!-- Flatten plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
             </plugin>
-            <!-- Source Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-            <!-- Failsafe plugin (integration testing) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-            </plugin>
-            <!-- Surefire plugin (unit-testing) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
-            <!-- Build helper plugin -->
+            <!-- Build helper plugin - Add test sources -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-            </plugin>
-            <!-- Generate license file -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>append-license-file-headers</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <ignoreNoFileToScan>true</ignoreNoFileToScan>
-                            <licenseName>lgpl_v3</licenseName>
-                            <descriptionTemplate>${main.basedir}/scripts/license/template.ftl</descriptionTemplate>
-                            <canUpdateCopyright>true</canUpdateCopyright>
-                            <canUpdateDescription>true</canUpdateDescription>
-                            <canUpdateLicense>true</canUpdateLicense>
-                            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-                            <processStartTag>========================START=================================
-                            </processStartTag>
-                            <processEndTag>=========================END==================================
-                            </processEndTag>
-                            <excludes>
-                                <exclude>*.sh</exclude>
-                                <exclude>src/main/cpp/lib/**</exclude>
-                                <exclude>src/main/cpp/include/**</exclude>
-                                <exclude>U8g2LookupFonts.cpp</exclude>
-                                <exclude>U8g2LookupSetup.cpp</exclude>
-                                <exclude>controllers.h</exclude>
-                            </excludes>
-                            <includes>
-                                <include>**/*.java</include>
-                                <include>*.cpp</include>
-                                <include>*.h</include>
-                            </includes>
-                            <roots>
-                                <root>src/main/java</root>
-                                <root>src/test</root>
-                                <root>src/main/cpp</root>
-                            </roots>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <!-- ENFORCER Plugin -->
             <plugin>

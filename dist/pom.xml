@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ucgd-parent</artifactId>
+        <groupId>com.ibasco.ucgdisplay</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>ucg-display</artifactId>
+    <name>${project.prefix} Distribution</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ibasco.ucgdisplay</groupId>
+            <artifactId>ucgd-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ibasco.ucgdisplay</groupId>
+            <artifactId>ucgd-drivers-glcd</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ibasco.ucgdisplay</groupId>
+            <artifactId>ucgd-drivers-clcd</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ibasco.ucgdisplay</groupId>
+            <artifactId>ucgd-native-graphics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ibasco.ucgdisplay</groupId>
+            <artifactId>ucgd-native-input</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- JAR Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <!-- Source Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <!-- JAVADOC plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <!-- Shade Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>org/**</exclude>
+                                        <exclude>META-INF/LICENSE.txt</exclude>
+                                        <exclude>META-INF/NOTICE.txt</exclude>
+                                        <exclude>META-INF/maven/commons-**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <createSourcesJar>true</createSourcesJar>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>com.pi4j:*</exclude>
+                                    <exclude>org.apache.*:*</exclude>
+                                    <exclude>org.slf4j:*</exclude>
+                                    <exclude>org.scijava:*</exclude>
+                                </excludes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

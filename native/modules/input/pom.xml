@@ -19,7 +19,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>ucg-display</artifactId>
+        <artifactId>ucgd-parent</artifactId>
         <groupId>com.ibasco.ucgdisplay</groupId>
         <version>${revision}</version>
         <relativePath>../../../pom.xml</relativePath>
@@ -190,7 +190,9 @@
                             <skip>${skip.native.build}</skip>
                             <target>
                                 <!-- Pass maven properties to ant -->
-                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET: ${input.target}, BUILD TYPE: ${build.type})</echo>
+                                <echo>Building native INPUT library (OS: ${current-os}, ARCH: ${current-arch}, TARGET:
+                                    ${input.target}, BUILD TYPE: ${build.type})
+                                </echo>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <property name="root.dir" location="../../.."/>
                                 <!--suppress UnresolvedMavenProperty -->
@@ -201,6 +203,30 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Failsafe plugin (integration testing) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+
+            <!-- Surefire plugin (unit-testing) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+
+            <!-- JAR Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+
+            <!-- Source Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
             </plugin>
 
             <!-- Clean Plugin: Remove the native build directory during clean operation -->
@@ -215,6 +241,12 @@
                         </fileset>
                     </filesets>
                 </configuration>
+            </plugin>
+
+            <!-- JAVADOC plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
