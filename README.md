@@ -180,7 +180,7 @@ To be able to download snapshots from Sonatype, add the following profile entry 
         mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-arm-all -Dinput.target=native-build-cc-arm-all -Dbuild.type=Debug
         ```
       
-    * Installing from a 64-bit `Linux` system for all supported architectures (Please read cross-compilation guide)
+    * Installing from a 64-bit `Linux` system for all supported architectures
 
         ```bash
         mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=Debug
@@ -283,7 +283,7 @@ public class GlcdST7920HWExample {
         //SPI HW 4-Wire config for ST7920
 
         //NOTE: On Raspberry Pi, pins can be automatically configured for hardware 		   capability (setting pin modes to ALT*).
-        //For automatic configuration to work, pigpio needs to be installed on the system.
+        //Automatic pin configuration for special modes will only take place if PIGPIO is installed
 
         //Pinout for Main SPI Peripheral 
         // - MOSI = 10
@@ -305,8 +305,6 @@ public class GlcdST7920HWExample {
                 .build();
 
         GlcdDriver driver = new GlcdDriver(config);
-
-        log.debug("Executing draw procedures");
 
         //Clear the GLCD buffer
         driver.clearBuffer();
@@ -358,15 +356,14 @@ public class GlcdST7920SWExample {
     private void run() throws Exception {
         //SPI Software config for ST7920
 
-        //NOTE: On Raspberry Pi, pins can be automatically configured for hardware         capability (setting pin modes to ALT*).
-        //For automatic configuration to work, pigpio needs to be installed on the system.
+        //NOTE: For software/bit-bang implementation, pin modes will be automatically configured to OUTPUT by the native module
 
         //Pinout for Main SPI Peripheral 
         // - MOSI = 10
         // - SCLK = 11
         // - CE1 = 7
         GlcdConfig config = GlcdConfigBuilder
-                //Use ST7920 - 128 x 64 display, SPI Software
+                //Use ST7920 - 128 x 64 display, SPI Software implementation
                 .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_SW_4WIRE_ST7920)
                 //Set to 180 rotation
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
@@ -412,14 +409,15 @@ public class GlcdST7920SWExample {
 | ROTATION           | Integer  | [GlcdRotation](https://github.com/ribasco/ucgdisplay/blob/master/drivers/glcd/src/main/java/com/ibasco/ucgdisplay/drivers/glcd/enums/GlcdRotation.java) | The default rotation to set for the display.                 | General      |
 | PIGPIO_ADDRESS     | String   | N/A                                                          | The IP address of the pigpio daemon. (Default: 127.0.0.1)    | General      |
 | PIGPIO_PORT        | Integer  | N/A                                                          | The port number of the pigpio daemon. (Default: 8888)        | General      |
+| EXTRA_DEBUG_INFO   | Boolean  | N/A                                                          | Enable/Disable extra debug information to be displayed on the console (Default: false) | General      |
 
 ### Limitations
 
 ---
 * Works only on linux kernel v4.8 or higher
 * The adapters for character lcd driver `Mcp23008LcdAdapter` and `Pcf8574TLcdAdapter` are not yet implemented. 
-* Due to lack of hardware availability, I am currently unable to test the `SPI`, `I2C` and bit-bang interfaces for most of the display controllers. The code implementation for these interfaces are complete, so In theory, they should work but it is not confirmed whether they are working or not. I am going to rely on your feedback for this and I will do my best to support any issues you may encounter.
-* As of JDK 11, javadocs won't be available for the meantime due to issues encountered during the build process. 
+* Due to lack of hardware availability, I am currently unable to test the `SPI`, `I2C` and bit-bang interfaces for most of the display controllers. The code implementation for these interfaces are complete, so In theory, they should work but it not confirmed. I am going to rely on your feedback for this and I will do my best to support any issues you may encounter.
+* As of version 1.5.0 above, javadocs won't be available due to known issues with the JDK
 
 ### Contribution
 

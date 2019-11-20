@@ -75,9 +75,9 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <!--<shadedArtifactAttached>false</shadedArtifactAttached>-->
                             <createSourcesJar>true</createSourcesJar>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <generateUniqueDependencyReducedPom>true</generateUniqueDependencyReducedPom>
                             <artifactSet>
                                 <excludes>
                                     <exclude>com.pi4j:*</exclude>
