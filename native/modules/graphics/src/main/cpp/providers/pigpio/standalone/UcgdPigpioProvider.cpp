@@ -89,6 +89,8 @@ void UcgdPigpioProvider::open(const std::shared_ptr<ucgd_t> &context) {
 
         //Don't use the signal handler of pigpio, it prevents our main signal handler from getting called.
         gpioCfgSetInternals(PI_CFG_NOSIGHANDLER); // NOLINT(hicpp-signed-bitwise)
+        //disable all other interface
+        gpioCfgInterfaces(PI_DISABLE_SOCK_IF | PI_LOCALHOST_SOCK_IF); //PI_DISABLE_FIFO_IF
 
         if (gpioInitialise() <= PI_INIT_FAILED)
             throw PigpioInitException("init_pigpio() : Failed to initialize pigpio (STANDALONE)");
