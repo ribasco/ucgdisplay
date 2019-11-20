@@ -78,7 +78,6 @@
 ---
 * [Snapshot Builds](https://oss.sonatype.org/content/repositories/snapshots/com/ibasco/ucgdisplay/) - Builds from the latest development branch
 * [Release Builds](https://oss.sonatype.org/content/repositories/releases/com/ibasco/ucgdisplay) - All release builds
-* [Display Controller Status](https://goo.gl/5GNQmy) - A spreadsheet containing the status of all supported GLCD.
 
 ### Pre-requisites
 
@@ -420,7 +419,7 @@ public class GlcdST7920SWExample {
 * Works only on linux kernel v4.8 or higher
 * The adapters for character lcd driver `Mcp23008LcdAdapter` and `Pcf8574TLcdAdapter` are not yet implemented. 
 * Due to lack of hardware availability, I am currently unable to test the `SPI`, `I2C` and bit-bang interfaces for most of the display controllers. The code implementation for these interfaces are complete, so In theory, they should work but it is not confirmed whether they are working or not. I am going to rely on your feedback for this and I will do my best to support any issues you may encounter.
-* As of JDK 11, javadocs won't be available for the meantime due to issues encountered during the build process. Still working into resolving this issue, but for now it remains disabled.
+* As of JDK 11, javadocs won't be available for the meantime due to issues encountered during the build process. 
 
 ### Contribution
 
