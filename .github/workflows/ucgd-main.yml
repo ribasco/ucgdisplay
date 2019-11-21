@@ -26,10 +26,10 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: '11.0.5'
+          java-version: '1.8'
           architecture: x64
 
       - name: Extract branch name
@@ -65,7 +65,7 @@ jobs:
         run: ./.github/scripts/import-gpg.sh
 
       - name: Build Project (Java + Native)
-        run: mvn install -P'release' -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings ./.github/scripts/settings.xml
+        run: mvn install -P'release' -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -B -V --settings ./.github/scripts/settings.xml
 
       - name: Unit Tests
         run: mvn test

@@ -38,8 +38,8 @@
         <release>1.5.0-alpha</release>
         <revision>${release}</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <pi4j.version>1.2</pi4j.version>
         <commons.io.version>2.6</commons.io.version>
         <commons.lang3.version>3.6</commons.lang3.version>
@@ -505,8 +505,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <!-- Note: temporarily disable javadocs until issue has been resolved -->
-                        <skip>true</skip>
+                        <skip>false</skip>
                         <source>8</source>
                         <additionalOptions>-Xdoclint:none</additionalOptions>
                     </configuration>

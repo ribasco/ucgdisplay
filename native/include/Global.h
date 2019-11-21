@@ -74,7 +74,7 @@
 #define MIDSIG_HASHMAP_CTR "()V"
 #define MIDSIG_DEVSTATEVT_CTR "(Lcom/ibasco/ucgdisplay/core/input/InputDevice;Ljava/lang/String;)V"
 
-#define JNI_VERSION JNI_VERSION_10
+#define JNI_VERSION JNI_VERSION_1_8 // JNI_VERSION_10
 
 #define GETENV(e) g_CachedJVM->GetEnv((void **) &e, JNI_VERSION);
 

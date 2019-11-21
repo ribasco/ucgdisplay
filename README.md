@@ -8,7 +8,6 @@
 
 **1.5.0-alpha**
 
-- Migrated to JDK 11
 - Fixed 'symbol lookup error' (Issue: [#22](https://github.com/ribasco/ucgdisplay/issues/22))
 - Added support for multiple I/O peripheral providers ([libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/), [pigpiod](https://github.com/joan2937/pigpio), [c-periphery](https://github.com/vsergeev/c-periphery)) (Issue [#24](https://github.com/ribasco/ucgdisplay/issues/24))
 - 64 bit architectures are now fully supported for ARM and x86. Note that 32 bit support for OSX platform may be removed in the future versions.
@@ -27,7 +26,6 @@
   * [Libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/)
   * [Pigpio](https://github.com/joan2937/pigpio) (Daemon or Standalone)
   * [C-Periphery](https://github.com/vsergeev/c-periphery) (Based on the linux kernel)
-* JDK 11 Compatible (Available for both 32 and 64 bit architectures)
 * Provides native bindings via JNI to the popular U8g2 library for graphics displays.
 * Introspection capability. Allows you to examine the low-level communication data flow of the display device.
 
@@ -417,7 +415,6 @@ public class GlcdST7920SWExample {
 * Works only on linux kernel v4.8 or higher
 * The adapters for character lcd driver `Mcp23008LcdAdapter` and `Pcf8574TLcdAdapter` are not yet implemented. 
 * Due to lack of hardware availability, I am currently unable to test the `SPI`, `I2C` and bit-bang interfaces for most of the display controllers. The code implementation for these interfaces are complete, so In theory, they should work but it not confirmed. I am going to rely on your feedback for this and I will do my best to support any issues you may encounter.
-* As of version 1.5.0 above, javadocs won't be available due to known issues with the JDK
 
 ### Contribution
 

@@ -122,8 +122,5 @@ public class GlcdST7920SWExample {
 
         //Clear the display
         driver.clearDisplay();
-        long endTime = System.currentTimeMillis() - startMillis;
-
-        log.info("Done in {} seconds", Duration.ofMillis(endTime).toSeconds());
     }
 }
