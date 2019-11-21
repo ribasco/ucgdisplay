@@ -62,7 +62,7 @@ jobs:
         run: mvn install -P'release' -Drevision=${{ steps.extract_branch.outputs.branch }} -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings ./.github/scripts/settings.xml
 
       - name: Deploy to Sonatype Staging
-        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml
+        run: mvn deploy -P'deploy-sonatype' -Drevision=${{ steps.extract_branch.outputs.branch }} -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml
 
       - name: Deploy to Github
-        run: mvn deploy -P'deploy-github' -Dmaven.wagon.http.pool=false -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml
+        run: mvn deploy -P'deploy-github' -Drevision=${{ steps.extract_branch.outputs.branch }} -Dmaven.wagon.http.pool=false -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml
