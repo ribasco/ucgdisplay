@@ -50,10 +50,10 @@ jobs:
         run: sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 
       - name: Update the package cache
-        run: sudo apt update
+        run: sudo apt-get update
 
       - name: Install required packages
-        run: sudo apt install gnupg2 mingw-w64 autoconf-archive llvm-9 llvm-9-dev clang-9 gcc-7 g++-7 gcc-multilib g++-multilib libssl1.0-dev
+        run: sudo apt-get install gnupg2 mingw-w64 autoconf-archive llvm-9 llvm-9-dev clang-9 gcc-7 g++-7 gcc-multilib g++-multilib libssl1.0-dev
 
       - name: Add clang-9 path to /usr/local/bin
         run: sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang && sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++
@@ -62,17 +62,17 @@ jobs:
         run: scripts/install-deps-bin.sh
 
       - name: Import GPG key
-        run: scripts/gh-import-gpg.sh
+        run: ./.github/scripts/import-gpg.sh
 
       - name: Build Project (Java + Native)
-        run: mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings scripts/gh-settings.xml --file pom.xml
+        run: mvn install -P'release' -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings ./.github/scripts/settings.xml
 
-      - name: Unit Test
+      - name: Unit Tests
         run: mvn test
 
-      - name: Integration Test
+      - name: Integration Tests
         run: mvn verify
 
       - name: Deploy snapshots to Sonatype
         if: github.event_name != 'pull_request' && github.event_name != 'release'
-        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings scripts/gh-settings.xml
+        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml

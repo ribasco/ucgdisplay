@@ -28,7 +28,7 @@ jobs:
 
       - name: Extract branch name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/tags/})"
         id: extract_branch
 
       - name: Output branch name
@@ -44,10 +44,10 @@ jobs:
         run: sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 
       - name: Update the package cache
-        run: sudo apt update
+        run: sudo apt-get update
 
       - name: Install required packages
-        run: sudo apt install gnupg2 mingw-w64 autoconf-archive llvm-9 llvm-9-dev clang-9 gcc-7 g++-7 gcc-multilib g++-multilib libssl1.0-dev
+        run: sudo apt-get install gnupg2 mingw-w64 autoconf-archive llvm-9 llvm-9-dev clang-9 gcc-7 g++-7 gcc-multilib g++-multilib libssl1.0-dev
 
       - name: Add clang-9 path to /usr/local/bin
         run: sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang && sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++
@@ -56,4 +56,13 @@ jobs:
         run: scripts/install-deps-bin.sh
 
       - name: Import GPG key
-        run: scripts/gh-import-gpg.sh
+        run: ./.github/scripts/import-gpg.sh
+
+      - name: Build Project (Java + Native)
+        run: mvn install -P'release' -Drevision=${{ steps.extract_branch.outputs.branch }} -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings ./.github/scripts/settings.xml
+
+      - name: Deploy to Sonatype Staging
+        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml
+
+      - name: Deploy to Github
+        run: mvn deploy -P'deploy-github' -Dmaven.wagon.http.pool=false -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml

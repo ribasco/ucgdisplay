@@ -118,8 +118,8 @@
 
     <!-- Continuous Integration -->
     <ciManagement>
-        <system>Travis CI</system>
-        <url>https://travis-ci.org/ribasco/ucgdisplay</url>
+        <system>Github Actions</system>
+        <url>https://github.com/ribasco/ucgdisplay/actions</url>
     </ciManagement>
 
     <!-- Profiles -->
@@ -177,6 +177,7 @@
                 </plugins>
             </build>
         </profile>
+
         <!-- Deploy to Sonatype -->
         <profile>
             <id>deploy-sonatype</id>
