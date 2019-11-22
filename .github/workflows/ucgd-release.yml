@@ -64,5 +64,5 @@ jobs:
       - name: Deploy to Sonatype Staging
         run: mvn deploy -P'deploy-sonatype,release' -Drevision=${{ steps.extract_branch.outputs.branch }} -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml
 
-      - name: Deploy to Github
-        run: mvn deploy -P'deploy-github,release' -Drevision=${{ steps.extract_branch.outputs.branch }} -Dmaven.wagon.http.pool=false -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml
+      #- name: Deploy to Github
+      #  run: mvn deploy -P'deploy-github,release' -Drevision=${{ steps.extract_branch.outputs.branch }} -Dmaven.wagon.http.pool=false -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml
