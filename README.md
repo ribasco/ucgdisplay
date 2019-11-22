@@ -6,7 +6,7 @@
 
 ### Change Log
 
-**1.5.0-alpha**
+**1.5.1-alpha**
 
 - Fixed 'symbol lookup error' (Issue: [#22](https://github.com/ribasco/ucgdisplay/issues/22))
 - Added support for multiple I/O peripheral providers ([libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/), [pigpiod](https://github.com/joan2937/pigpio), [c-periphery](https://github.com/vsergeev/c-periphery)) (Issue [#24](https://github.com/ribasco/ucgdisplay/issues/24))
@@ -123,7 +123,7 @@ To be able to download snapshots from Sonatype, add the following profile entry 
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucg-display</artifactId>
-             <version>1.5.0-alpha</version>
+             <version>1.5.1-alpha</version>
          </dependency>
     </dependencies>
     ```
@@ -138,14 +138,14 @@ To be able to download snapshots from Sonatype, add the following profile entry 
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-clcd</artifactId>
-             <version>1.5.0-alpha</version>
+             <version>1.5.1-alpha</version>
          </dependency>
       
          <!-- Graphics display driver -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-glcd</artifactId>
-             <version>1.5.0-alpha</version>
+             <version>1.5.1-alpha</version>
          </dependency>
     </dependencies>
     ```
