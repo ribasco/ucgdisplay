@@ -65,7 +65,7 @@ jobs:
         run: ./.github/scripts/import-gpg.sh
 
       - name: Build Project (Java + Native)
-        run: mvn install -P'release' -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -B -V --settings ./.github/scripts/settings.xml
+        run: mvn install -P'release' -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true -B -V --settings ./.github/scripts/settings.xml
 
       - name: Unit Tests
         run: mvn test
@@ -75,4 +75,4 @@ jobs:
 
       - name: Deploy snapshots to Sonatype
         if: github.event_name != 'pull_request' && github.event_name != 'release'
-        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true --settings ./.github/scripts/settings.xml
+        run: mvn deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true -Dmaven.javadoc.skip=true --settings ./.github/scripts/settings.xml
