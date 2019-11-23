@@ -6,7 +6,11 @@
 
 ### Change Log
 
-**1.5.1-alpha**
+**1.5.2-alpha (11/23/2019)** 
+
+- Fixed missing dependencies in the aggregate jar
+
+**1.5.1-alpha (11/22/2019)**
 
 - Fixed 'symbol lookup error' (Issue: [#22](https://github.com/ribasco/ucgdisplay/issues/22))
 - Added support for multiple I/O peripheral providers ([libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/), [pigpiod](https://github.com/joan2937/pigpio), [c-periphery](https://github.com/vsergeev/c-periphery)) (Issue [#24](https://github.com/ribasco/ucgdisplay/issues/24))
@@ -80,7 +84,7 @@
 ### Pre-requisites
 
 ---
-* Java JDK 11 (See [AdoptOpenJDK](https://adoptopenjdk.net/))
+* Java JDK 1.8+ (See [AdoptOpenJDK](https://adoptopenjdk.net/))
 * (Optional) [Libgpiod](https://github.com/brgl/libgpiod) (v1.4.1 or higher) - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device).
 * (Optional) [Pigpio](https://github.com/joan2937/pigpio) (v71 above) - pigpio is a C library for the Raspberry which allows control of the General Purpose Input Outputs (GPIO). 
 
@@ -123,7 +127,7 @@ To be able to download snapshots from Sonatype, add the following profile entry 
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucg-display</artifactId>
-             <version>1.5.1-alpha</version>
+             <version>1.5.2-alpha</version>
          </dependency>
     </dependencies>
     ```
@@ -138,14 +142,14 @@ To be able to download snapshots from Sonatype, add the following profile entry 
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-clcd</artifactId>
-             <version>1.5.1-alpha</version>
+             <version>1.5.2-alpha</version>
          </dependency>
       
          <!-- Graphics display driver -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-glcd</artifactId>
-             <version>1.5.1-alpha</version>
+             <version>1.5.2-alpha</version>
          </dependency>
     </dependencies>
     ```
