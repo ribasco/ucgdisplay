@@ -760,7 +760,7 @@
         <option name="classesDirectory" />
         <option name="hostname" value="192.168.1.22" />
         <option name="keyPath" value="" />
-        <option name="password" value="***REMOVED***" />
+        <option name="password" value="**REMOVED**" />
         <option name="port" value="1234" />
         <option name="programArguments" value="" />
         <option name="runAsRoot" value="true" />
@@ -779,7 +779,7 @@
         <option name="classesDirectory" />
         <option name="hostname" value="192.168.1.22" />
         <option name="keyPath" value="" />
-        <option name="password" value="***REMOVED***" />
+        <option name="password" value="**REMOVED**" />
         <option name="port" value="1234" />
         <option name="programArguments" value="" />
         <option name="runAsRoot" value="false" />
