@@ -75,6 +75,7 @@
                             <includeDependencySources>true</includeDependencySources>
                             <dependencySourceExcludes>
                                 <dependencySourceExclude>com.ibasco.ucgdisplay.examples:*</dependencySourceExclude>
+                                <dependencySourceExclude>org.slf4j:*</dependencySourceExclude>
                             </dependencySourceExcludes>
                         </configuration>
                     </execution>
