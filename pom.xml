@@ -35,7 +35,7 @@
 
     <!-- Project properties -->
     <properties>
-        <release>1.5.2-alpha</release>
+        <release>1.5.3-alpha</release>
         <revision>${release}-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
