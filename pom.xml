@@ -123,60 +123,6 @@
 
     <!-- Profiles -->
     <profiles>
-        <profile>
-            <id>update-license-header</id>
-            <build>
-                <plugins>
-                    <!-- Generate license file -->
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>license-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>append-license-file-headers</id>
-                                <goals>
-                                    <goal>update-file-header</goal>
-                                </goals>
-                                <phase>process-sources</phase>
-                                <configuration>
-                                    <ignoreNoFileToScan>true</ignoreNoFileToScan>
-                                    <licenseName>lgpl_v3</licenseName>
-                                    <descriptionTemplate>${main.basedir}/scripts/license/template.ftl
-                                    </descriptionTemplate>
-                                    <canUpdateCopyright>true</canUpdateCopyright>
-                                    <canUpdateDescription>true</canUpdateDescription>
-                                    <canUpdateLicense>true</canUpdateLicense>
-                                    <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-                                    <processStartTag>========================START=================================
-                                    </processStartTag>
-                                    <processEndTag>=========================END==================================
-                                    </processEndTag>
-                                    <excludes>
-                                        <exclude>*.sh</exclude>
-                                        <exclude>src/main/cpp/lib/**</exclude>
-                                        <exclude>src/main/cpp/include/**</exclude>
-                                        <exclude>U8g2LookupFonts.cpp</exclude>
-                                        <exclude>U8g2LookupSetup.cpp</exclude>
-                                        <exclude>controllers.h</exclude>
-                                    </excludes>
-                                    <includes>
-                                        <include>**/*.java</include>
-                                        <include>*.cpp</include>
-                                        <include>*.h</include>
-                                    </includes>
-                                    <roots>
-                                        <root>src/main/java</root>
-                                        <root>src/test</root>
-                                        <root>src/main/cpp</root>
-                                    </roots>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
         <!-- Deploy to Sonatype -->
         <profile>
             <id>deploy-sonatype</id>
@@ -551,6 +497,50 @@
                 <artifactId>maven-scm-plugin</artifactId>
                 <configuration>
                     <goals>install</goals>
+                </configuration>
+            </plugin>
+            <!-- Generate license file -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>append-license-file-headers</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <ignoreNoFileToScan>true</ignoreNoFileToScan>
+                    <licenseName>lgpl_v3</licenseName>
+                    <canUpdateCopyright>true</canUpdateCopyright>
+                    <canUpdateDescription>true</canUpdateDescription>
+                    <canUpdateLicense>true</canUpdateLicense>
+                    <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                    <processStartTag>========================START=================================
+                    </processStartTag>
+                    <processEndTag>=========================END==================================
+                    </processEndTag>
+                    <excludes>
+                        <exclude>*.sh</exclude>
+                        <exclude>src/main/cpp/lib/**</exclude>
+                        <exclude>src/main/cpp/include/**</exclude>
+                        <exclude>U8g2LookupFonts.cpp</exclude>
+                        <exclude>U8g2LookupSetup.cpp</exclude>
+                        <exclude>controllers.h</exclude>
+                    </excludes>
+                    <includes>
+                        <include>**/*.java</include>
+                        <include>*.cpp</include>
+                        <include>*.h</include>
+                    </includes>
+                    <roots>
+                        <root>src/main/java</root>
+                        <root>src/test</root>
+                        <root>src/main/cpp</root>
+                    </roots>
                 </configuration>
             </plugin>
         </plugins>

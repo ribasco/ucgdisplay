@@ -1,10 +1,6 @@
 /*-
  * ========================START=================================
- * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Native :: Graphics
- * Filename: DeviceManager.cpp
- * 
- * ---------------------------------------------------------
+ * UCGDisplay :: Native :: Graphics
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%

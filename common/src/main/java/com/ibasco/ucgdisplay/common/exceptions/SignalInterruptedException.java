@@ -1,10 +1,6 @@
 /*-
  * ========================START=================================
- * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Common
- * Filename: SignalInterruptedException.java
- * 
- * ---------------------------------------------------------
+ * UCGDisplay :: Common
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%

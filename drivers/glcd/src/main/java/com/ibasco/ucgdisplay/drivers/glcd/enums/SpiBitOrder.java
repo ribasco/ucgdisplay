@@ -1,10 +1,6 @@
 /*-
  * ========================START=================================
- * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Graphics LCD driver
- * Filename: SpiBitOrder.java
- * 
- * ---------------------------------------------------------
+ * UCGDisplay :: Graphics LCD driver
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%

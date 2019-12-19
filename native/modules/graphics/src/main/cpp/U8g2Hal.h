@@ -1,10 +1,6 @@
 /*-
  * ========================START=================================
- * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Native :: Graphics
- * Filename: U8g2Hal.h
- * 
- * ---------------------------------------------------------
+ * UCGDisplay :: Native :: Graphics
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%

@@ -1,10 +1,6 @@
 package com.ibasco.ucgdisplay.examples.glcd;/*-
  * ========================START=================================
- * Organization: Universal Character/Graphics display library
- * Project: UCGDisplay :: Graphics LCD driver examples
- * Filename: GlcdST7920SWExample.java
- * 
- * ---------------------------------------------------------
+ * UCGDisplay :: Graphics LCD driver examples
  * %%
  * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
  * %%
