@@ -52,6 +52,8 @@ jclass clsU8g2EventDispatcher;
 jmethodID midU8g2EventDispatcher_onGpioEvent;
 jmethodID midU8g2EventDispatcher_onByteEvent;
 jmethodID midU8g2GpioEventCtr;
+jmethodID midU8g2EventDispatcher_hasGpioListeners;
+jmethodID midU8g2EventDispatcher_hasByteListeners;
 
 void U8gUtils_Load(JNIEnv *env) {
     //START: Cache Class/methods
@@ -60,6 +62,8 @@ void U8gUtils_Load(JNIEnv *env) {
     midU8g2EventDispatcher_onGpioEvent = env->GetStaticMethodID(clsU8g2EventDispatcher, "onGpioEvent", "(JII)V");
     midU8g2EventDispatcher_onByteEvent = env->GetStaticMethodID(clsU8g2EventDispatcher, "onByteEvent", "(JII)V");
     midU8g2GpioEventCtr = env->GetMethodID(clsU8g2GpioEvent, "<init>", "(II)V");
+    midU8g2EventDispatcher_hasByteListeners = env->GetMethodID(clsU8g2EventDispatcher, "hasByteListeners", "()Z");
+    midU8g2EventDispatcher_hasGpioListeners = env->GetMethodID(clsU8g2EventDispatcher, "hasGpioListeners", "()Z");
     //END
 }
 
@@ -69,6 +73,14 @@ void JNI_FireGpioEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value) {
 
 void JNI_FireByteEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value) {
     env->CallStaticVoidMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_onByteEvent, (jlong) id, msg, value);
+}
+
+bool JNI_HasGpioListeners(JNIEnv *env) {
+    return env->CallStaticBooleanMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_hasGpioListeners);
+}
+
+bool JNI_HasByteListeners(JNIEnv *env) {
+    return env->CallStaticBooleanMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_hasByteListeners);
 }
 
 u8g2_cb_t *U8g2Util_ToRotation(int rotation) {
@@ -241,6 +253,10 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
         if (virtualMode) {
             JNIEnv *lenv;
             GETENV(lenv);
+
+            if (!JNI_HasByteListeners(lenv))
+                return 1;
+
             if (msg == U8X8_MSG_BYTE_SEND) {
                 uint8_t value;
                 uint8_t size = arg_int;
@@ -279,6 +295,8 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
         if (virtualMode) {
             JNIEnv *lenv;
             GETENV(lenv);
+            if (!JNI_HasGpioListeners(lenv))
+                return 1;
             JNI_FireGpioEvent(lenv, context->address(), msg, arg_int);
             return 1;
         }

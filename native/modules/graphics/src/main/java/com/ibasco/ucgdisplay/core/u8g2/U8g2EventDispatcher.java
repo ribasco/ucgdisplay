@@ -100,6 +100,14 @@ public class U8g2EventDispatcher {
         byteEventListeners.remove(driver);
     }
 
+    private static boolean hasGpioListeners() {
+        return gpioEventListeners.size() > 0;
+    }
+
+    private static boolean hasByteListeners() {
+        return byteEventListeners.size() > 0;
+    }
+
     private static U8g2GpioEventListener findGpioListenerById(long id) {
         for (Map.Entry<DisplayDriver, U8g2GpioEventListener> entry : gpioEventListeners.entrySet()) {
             if (id == entry.getKey().getId())
