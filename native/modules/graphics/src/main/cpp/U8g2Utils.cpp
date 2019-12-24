@@ -62,8 +62,8 @@ void U8gUtils_Load(JNIEnv *env) {
     midU8g2EventDispatcher_onGpioEvent = env->GetStaticMethodID(clsU8g2EventDispatcher, "onGpioEvent", "(JII)V");
     midU8g2EventDispatcher_onByteEvent = env->GetStaticMethodID(clsU8g2EventDispatcher, "onByteEvent", "(JII)V");
     midU8g2GpioEventCtr = env->GetMethodID(clsU8g2GpioEvent, "<init>", "(II)V");
-    midU8g2EventDispatcher_hasByteListeners = env->GetMethodID(clsU8g2EventDispatcher, "hasByteListeners", "()Z");
-    midU8g2EventDispatcher_hasGpioListeners = env->GetMethodID(clsU8g2EventDispatcher, "hasGpioListeners", "()Z");
+    midU8g2EventDispatcher_hasByteListeners = env->GetStaticMethodID(clsU8g2EventDispatcher, "hasByteListeners", "()Z");
+    midU8g2EventDispatcher_hasGpioListeners = env->GetStaticMethodID(clsU8g2EventDispatcher, "hasGpioListeners", "()Z");
     //END
 }
 
@@ -76,11 +76,11 @@ void JNI_FireByteEvent(JNIEnv *env, uintptr_t id, uint8_t msg, uint8_t value) {
 }
 
 bool JNI_HasGpioListeners(JNIEnv *env) {
-    return env->CallStaticBooleanMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_hasGpioListeners);
+    return (bool)env->CallStaticBooleanMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_hasGpioListeners);
 }
 
 bool JNI_HasByteListeners(JNIEnv *env) {
-    return env->CallStaticBooleanMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_hasByteListeners);
+    return (bool)env->CallStaticBooleanMethod(clsU8g2EventDispatcher, midU8g2EventDispatcher_hasByteListeners);
 }
 
 u8g2_cb_t *U8g2Util_ToRotation(int rotation) {
