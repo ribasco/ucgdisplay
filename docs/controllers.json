@@ -16,7 +16,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_UART",
-                  "value": 0
+                  "value": 64
                 }
               ]
             }
@@ -40,11 +40,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 }
               ]
             }
@@ -68,11 +68,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 }
               ]
             }
@@ -91,11 +91,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 }
               ]
             }
@@ -119,15 +119,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -151,15 +151,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -183,7 +183,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_KS0108",
-                  "value": 0
+                  "value": 128
                 }
               ]
             }
@@ -202,7 +202,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_KS0108",
-                  "value": 0
+                  "value": 128
                 }
               ]
             }
@@ -226,7 +226,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 }
               ]
             }
@@ -245,7 +245,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 }
               ]
             }
@@ -264,7 +264,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 }
               ]
             }
@@ -283,7 +283,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 }
               ]
             }
@@ -307,7 +307,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 }
               ]
             },
@@ -317,7 +317,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -341,7 +341,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 }
               ]
             }
@@ -365,7 +365,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 }
               ]
             }
@@ -389,7 +389,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 }
               ]
             }
@@ -413,7 +413,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 }
               ]
             }
@@ -432,7 +432,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 }
               ]
             }
@@ -451,7 +451,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 }
               ]
             }
@@ -475,15 +475,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -507,11 +507,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 }
               ]
             }
@@ -535,11 +535,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 }
               ]
             }
@@ -563,11 +563,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -586,11 +586,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -614,7 +614,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_SED1520",
-                  "value": 0
+                  "value": 256
                 }
               ]
             }
@@ -638,11 +638,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -666,7 +666,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_SED1520",
-                  "value": 0
+                  "value": 256
                 }
               ]
             }
@@ -690,23 +690,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -716,7 +716,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -735,23 +735,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -761,7 +761,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -780,23 +780,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -806,7 +806,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -825,23 +825,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -851,7 +851,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -870,23 +870,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -896,7 +896,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -920,23 +920,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -946,7 +946,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -965,23 +965,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -991,7 +991,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1010,23 +1010,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1036,7 +1036,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1055,23 +1055,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1081,7 +1081,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1100,23 +1100,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1126,7 +1126,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1150,23 +1150,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1176,7 +1176,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1200,23 +1200,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1226,7 +1226,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1250,19 +1250,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1272,7 +1272,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1296,15 +1296,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1314,7 +1314,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1333,15 +1333,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1351,7 +1351,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1370,15 +1370,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1388,7 +1388,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1412,23 +1412,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1438,7 +1438,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1457,23 +1457,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1483,7 +1483,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1502,23 +1502,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1528,7 +1528,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1547,23 +1547,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1573,7 +1573,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1592,19 +1592,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1614,7 +1614,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1633,23 +1633,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1659,7 +1659,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1678,19 +1678,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1700,7 +1700,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1719,23 +1719,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1745,7 +1745,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1764,19 +1764,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1786,7 +1786,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1805,23 +1805,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1831,7 +1831,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1850,23 +1850,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1876,7 +1876,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1900,15 +1900,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1918,7 +1918,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1937,15 +1937,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1955,7 +1955,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -1979,15 +1979,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -1997,7 +1997,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2021,15 +2021,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2039,7 +2039,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2063,23 +2063,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2089,7 +2089,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2108,23 +2108,23 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2134,7 +2134,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2158,19 +2158,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -2189,19 +2189,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -2225,19 +2225,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2247,7 +2247,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2271,19 +2271,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2293,7 +2293,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2317,19 +2317,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2339,7 +2339,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2358,19 +2358,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2380,7 +2380,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2399,19 +2399,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2421,7 +2421,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2440,19 +2440,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2462,7 +2462,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2481,19 +2481,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2503,7 +2503,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2527,15 +2527,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -2559,11 +2559,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 }
               ]
             }
@@ -2587,11 +2587,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 }
               ]
             }
@@ -2610,11 +2610,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 }
               ]
             }
@@ -2633,11 +2633,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 }
               ]
             }
@@ -2661,19 +2661,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -2697,19 +2697,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2719,7 +2719,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2738,19 +2738,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2760,7 +2760,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2779,19 +2779,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2801,7 +2801,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2820,19 +2820,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2842,7 +2842,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2861,19 +2861,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2883,7 +2883,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2902,19 +2902,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2924,7 +2924,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2943,19 +2943,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -2965,7 +2965,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -2984,19 +2984,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -3006,7 +3006,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -3025,19 +3025,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -3047,7 +3047,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -3071,15 +3071,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -3089,7 +3089,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -3113,19 +3113,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -3135,7 +3135,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -3159,19 +3159,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3190,19 +3190,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3221,19 +3221,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3252,19 +3252,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3283,19 +3283,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3314,19 +3314,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3345,19 +3345,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3376,19 +3376,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3407,19 +3407,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3438,19 +3438,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3469,19 +3469,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3500,19 +3500,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3536,15 +3536,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3563,15 +3563,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3590,15 +3590,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -3608,7 +3608,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -3627,15 +3627,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3654,15 +3654,15 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3686,7 +3686,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 }
               ]
             }
@@ -3705,19 +3705,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3741,19 +3741,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -3763,7 +3763,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -3787,7 +3787,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -3797,7 +3797,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 }
               ]
             },
@@ -3807,7 +3807,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_ST7920SPI",
-                  "value": 0
+                  "value": 32
                 }
               ]
             }
@@ -3826,7 +3826,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -3836,7 +3836,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 }
               ]
             },
@@ -3846,7 +3846,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_ST7920SPI",
-                  "value": 0
+                  "value": 32
                 }
               ]
             }
@@ -3870,7 +3870,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3889,7 +3889,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3908,7 +3908,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3927,7 +3927,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3946,7 +3946,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3965,7 +3965,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -3989,19 +3989,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -4011,7 +4011,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4035,19 +4035,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -4057,7 +4057,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4081,19 +4081,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -4103,7 +4103,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4122,19 +4122,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -4144,7 +4144,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4163,19 +4163,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -4185,7 +4185,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4209,19 +4209,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -4231,7 +4231,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4255,19 +4255,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -4277,7 +4277,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4296,19 +4296,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -4318,7 +4318,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4337,19 +4337,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -4359,7 +4359,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4378,19 +4378,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             },
@@ -4400,7 +4400,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4424,11 +4424,11 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 }
               ]
             },
@@ -4438,7 +4438,7 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_I2C",
-                  "value": 0
+                  "value": 16
                 }
               ]
             }
@@ -4462,19 +4462,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -4498,19 +4498,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -4529,19 +4529,19 @@
               "supportedInterfaces": [
                 {
                   "name": "COM_4WSPI",
-                  "value": 0
+                  "value": 1
                 },
                 {
                   "name": "COM_3WSPI",
-                  "value": 0
+                  "value": 2
                 },
                 {
                   "name": "COM_6800",
-                  "value": 0
+                  "value": 4
                 },
                 {
                   "name": "COM_8080",
-                  "value": 0
+                  "value": 8
                 }
               ]
             }
@@ -4550,7 +4550,7 @@
       ]
     }
   ],
-  "md5Hash": "b18882426fbcb7a073c85b7b9a7d1d3b",
+  "md5Hash": "1c5fd54bfb428efda1ecd87f77c760e3",
   "lastUpdated": {
     "dateTime": {
       "date": {
@@ -4559,10 +4559,10 @@
         "day": 30
       },
       "time": {
-        "hour": 14,
-        "minute": 55,
-        "second": 21,
-        "nano": 791427000
+        "hour": 15,
+        "minute": 35,
+        "second": 10,
+        "nano": 13115000
       }
     },
     "offset": {
