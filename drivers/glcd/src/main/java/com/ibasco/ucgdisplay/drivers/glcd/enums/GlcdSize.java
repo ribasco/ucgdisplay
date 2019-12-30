@@ -20,7 +20,7 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Thu, 19 Dec 2019 19:56:13 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Mon, 30 Dec 2019 14:55:18 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 

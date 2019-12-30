@@ -19,119 +19,16 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-//
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Mon, 30 Dec 2019 14:55:18 +0800)
-//
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-public enum GlcdControllerType {
-  A2PRINTER,
+import org.junit.jupiter.api.Test;
 
-  HX1230,
+import static org.junit.jupiter.api.Assertions.*;
 
-  IL3820,
+class GlcdSizeTest {
 
-  IST3020,
-
-  IST7920,
-
-  KS0108,
-
-  LC7981,
-
-  LD7032,
-
-  LS013B7DH03,
-
-  LS013B7DH05,
-
-  LS027B7DH01,
-
-  MAX7219,
-
-  NT7534,
-
-  PCD8544,
-
-  PCF8812,
-
-  RA8835,
-
-  SBN1661,
-
-  SED1330,
-
-  SED1520,
-
-  SH1106,
-
-  SH1107,
-
-  SH1108,
-
-  SH1122,
-
-  SSD0323,
-
-  SSD1305,
-
-  SSD1306,
-
-  SSD1309,
-
-  SSD1316,
-
-  SSD1317,
-
-  SSD1318,
-
-  SSD1322,
-
-  SSD1325,
-
-  SSD1326,
-
-  SSD1327,
-
-  SSD1329,
-
-  SSD1606,
-
-  SSD1607,
-
-  ST7511,
-
-  ST75256,
-
-  ST7528,
-
-  ST75320,
-
-  ST7565,
-
-  ST7567,
-
-  ST7586S,
-
-  ST7588,
-
-  ST7920,
-
-  T6963,
-
-  UC1601,
-
-  UC1604,
-
-  UC1608,
-
-  UC1610,
-
-  UC1611,
-
-  UC1617,
-
-  UC1638,
-
-  UC1701
+    @Test
+    void testGet() {
+        assertEquals(GlcdSize.SIZE_128x64, GlcdSize.get(128 / 8, 64 / 8));
+    }
 }
