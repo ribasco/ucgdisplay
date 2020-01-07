@@ -47,10 +47,10 @@ jobs:
         run: echo 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main' | sudo tee -a /etc/apt/sources.list.d/llvm.list
 
       - name: Add ubuntu toolchain ppa
-        run: sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+        run: sudo add-apt-repository -n ppa:ubuntu-toolchain-r/test
 
       - name: Update the package cache
-        run: sudo apt-get update
+        run: sudo apt-get update || true
 
       - name: Install required packages
         run: sudo apt-get install gnupg2 mingw-w64 autoconf-archive llvm-9 llvm-9-dev clang-9 gcc-7 g++-7 gcc-multilib g++-multilib libssl1.0-dev
