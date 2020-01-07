@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Graphics LCD driver
  * %%
- * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -25,6 +25,7 @@ import com.ibasco.ucgdisplay.common.drivers.DisplayDriver;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 
 /**
  * Graphics Display Driver interface based on the U8G2 Interface.
@@ -1275,6 +1276,13 @@ public interface GlcdDisplayDriver extends DisplayDriver {
      * @see #clearBuffer
      */
     byte[] getBuffer();
+
+    /**
+     * Returns the pixel buffer that is shared with the native library
+     *
+     * @return A direct {@link ByteBuffer}
+     */
+    ByteBuffer getNativeBuffer();
 
     /**
      * Returns the total size of the internal display buffer

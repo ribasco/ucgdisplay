@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Graphics LCD driver
  * %%
- * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -20,7 +20,7 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Mon, 30 Dec 2019 15:35:04 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Tue, 7 Jan 2020 13:15:56 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 

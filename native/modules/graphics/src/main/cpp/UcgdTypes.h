@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Native :: Graphics
  * %%
- * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -269,8 +269,10 @@ struct ucgd_t {
     u8g2_cb_t *rotation;
     bool flag_font;
     bool flag_virtual;
-    int comm_int; //communications interface
-    int comm_type; //communications type
+    //communications interface
+    int comm_int;
+    //communications type
+    int comm_type;
     bool debug;
 
     ~ucgd_t() {
