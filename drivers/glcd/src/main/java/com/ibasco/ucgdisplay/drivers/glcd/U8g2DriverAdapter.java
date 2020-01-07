@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Graphics LCD driver
  * %%
- * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -32,6 +32,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +46,8 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     private long _id;
 
     private int x = 0, y = 0;
+
+    private ByteBuffer buffer;
 
     private void checkRequirements() {
         if (_id < 0)
@@ -61,7 +64,9 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
         if (config.getOption(GlcdOption.ROTATION) != null) {
             rotation = config.getOption(GlcdOption.ROTATION);
         }
-        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, pinConfig, config.getOptions(), virtual);
+        int size = 8 * config.getDisplay().getDisplaySize().getTileWidth() * config.getDisplay().getDisplaySize().getTileHeight();
+        buffer = ByteBuffer.allocateDirect(size);
+        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, pinConfig, buffer, config.getOptions(), virtual);
     }
 
     @Override
@@ -503,6 +508,11 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     public byte[] getBuffer() {
         checkRequirements();
         return U8g2Graphics.getBuffer(_id);
+    }
+
+    @Override
+    public ByteBuffer getNativeBuffer() {
+        return buffer;
     }
 
     @Override

@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Native :: Graphics
  * %%
- * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -123,10 +123,11 @@ u8g2_cb_t *U8g2Util_ToRotation(int rotation);
  * @param gpio_device The gpio chip path
  * @param rotation Display rotation
  * @param pin_config Pin mapping configuration
+ * @param buffer The pixel buffer
  * @param virtualMode Set to true to activate emulator mode
  * @return
  */
-std::shared_ptr<ucgd_t>& U8g2Util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, option_map_t &options, bool virtualMode = false);
+std::shared_ptr<ucgd_t>& U8g2Util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, option_map_t &options, uint8_t* buffer, bool virtualMode = false);
 
 /**
  * Byte callback wrapper for u8g2 setup procedures

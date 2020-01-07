@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Native :: Graphics
  * %%
- * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -73,10 +73,10 @@ extern "C" {
 /*
  * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
  * Method:    setup
- * Signature: (Ljava/lang/String;III[ILjava/util/Map;ZLorg/slf4j/Logger;)J
+ * Signature: (Ljava/lang/String;III[ILjava/nio/ByteBuffer;Ljava/util/Map;ZLorg/slf4j/Logger;Ljava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup
-  (JNIEnv *, jclass, jstring, jint, jint, jint, jintArray, jobject, jboolean, jobject);
+  (JNIEnv *, jclass, jstring, jint, jint, jint, jintArray, jobject, jobject, jboolean, jobject, jstring);
 
 /*
  * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics

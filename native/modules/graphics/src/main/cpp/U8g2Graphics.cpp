@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Native :: Graphics
  * %%
- * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -143,7 +143,7 @@ void update_key_value_store(JNIEnv *env, std::string key, jobject &value, option
     if (clsObj == nullptr) {
         map.insert(std::make_pair(key, nullptr));
     } else if (env->IsInstanceOf(value, clsString)) {
-        jstring strValue = (jstring) env->CallObjectMethod(value, midToString);
+        auto strValue = (jstring) env->CallObjectMethod(value, midToString);
         map.insert(std::make_pair(key, std::string(env->GetStringUTFChars(strValue, 0))));
     } else if (env->IsInstanceOf(value, clsInteger)) {
         jint intValue = env->CallStaticIntMethod(clsNativeUtils, midToInteger, value);
@@ -190,8 +190,8 @@ void process_options(JNIEnv *env, jobject options, option_map_t &map, std::uniqu
         jobject objValue = env->CallObjectMethod(objEntry, midGetValue);
 
         //convert key and value to strings
-        jstring jstrKey = (jstring) env->CallObjectMethod(objKey, midToString);
-        jstring jstrValue = (jstring) env->CallObjectMethod(objValue, midToString);
+        auto jstrKey = (jstring) env->CallObjectMethod(objKey, midToString);
+        auto jstrValue = (jstring) env->CallObjectMethod(objValue, midToString);
 
         const char *strKey = env->GetStringUTFChars(jstrKey, 0);
         const char *strValue = env->GetStringUTFChars(jstrValue, 0);
@@ -205,11 +205,21 @@ void process_options(JNIEnv *env, jobject options, option_map_t &map, std::uniqu
     log->debug("process_options() : Processed a total of {} option entries", map.size());
 }
 
-jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jintArray pin_config, jobject options, jboolean virtualMode, jobject logger) {
+jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jintArray pin_config, jobject buffer, jobject options, jboolean virtualMode, jobject logger, jstring version) {
     jobject globalLogger;
     JNI_MakeGlobal(env, logger, globalLogger);
 
     std::unique_ptr<Log> log = std::make_unique<Log>(globalLogger);
+
+    if (buffer == nullptr) {
+        JNI_ThrowNativeLibraryException(env, "Pixel buffer not provided");
+        return -1;
+    }
+
+    std::string sVersion;
+    if (version != nullptr) {
+        sVersion = std::string(env->GetStringUTFChars(version, nullptr));
+    }
 
     log->debug("=========================================================================================================");
     log->debug(" ");
@@ -221,11 +231,10 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     log->debug(" ╚═════╝  ╚═════╝ ╚═════╝ ╚═════╝ ╚═╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝");
     log->debug(" ");
     log->debug("=========================================================================================================");
-    log->debug("Native Library - Version {}", UCGD_VERSION);
+    log->debug("Native Library - Version {}", sVersion.c_str());
     log->debug("=========================================================================================================");
 
     std::string setup_proc_name;
-
     if (setupProc != nullptr) {
         setup_proc_name = std::string(env->GetStringUTFChars(setupProc, nullptr));
     } else {
@@ -293,7 +302,6 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
         if (mapOptions[OPT_EXTRA_DEBUG_INFO].has_value()) {
             g_ShowExtraDebugInfo = std::any_cast<bool>(mapOptions[OPT_EXTRA_DEBUG_INFO]);
         }
-
         //Initialize Providers
         locator.setProviderManager(std::make_unique<ProviderManager>());
         auto &pMan = locator.getProviderManager();
@@ -313,10 +321,11 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
 #endif
         initialized = true;
     }
-
     //7. Setup and Initialize the Display
     try {
-        std::shared_ptr<ucgd_t> &context = U8g2Util_SetupAndInitDisplay(setup_proc_name, commInt, commType, _rotation, *pinMap, mapOptions, virtualMode);
+        locator.getLogger().debug("setup() : Converting direct buffer to native buffer");
+        auto* pixelBuffer = static_cast<uint8_t *>(env->GetDirectBufferAddress(buffer));
+        std::shared_ptr<ucgd_t> &context = U8g2Util_SetupAndInitDisplay(setup_proc_name, commInt, commType, _rotation, *pinMap, mapOptions, pixelBuffer, virtualMode);
         locator.getLogger().debug("setup() : Returning to java land");
         return context->address();
     } catch (std::exception &e) {

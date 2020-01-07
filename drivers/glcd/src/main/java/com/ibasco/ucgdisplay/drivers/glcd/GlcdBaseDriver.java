@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Graphics LCD driver
  * %%
- * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -673,6 +674,11 @@ abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
     public byte[] getBuffer() {
         checkRequirements();
         return adapter.getBuffer();
+    }
+
+    @Override
+    public ByteBuffer getNativeBuffer() {
+        return adapter.getNativeBuffer();
     }
 
     @Override

@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Native :: Graphics
  * %%
- * Copyright (C) 2018 - 2019 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -169,7 +169,7 @@ u8g2_msg_func_info_t U8g2Util_GetByteCb(int commInt, int commType) {
     return nullptr;
 }
 
-std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, option_map_t &options, bool virtualMode) {
+std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_proc_name, int commInt, int commType, const u8g2_cb_t *rotation, u8g2_pin_map_t pin_config, option_map_t &options, uint8_t* buffer, bool virtualMode) {
     JNIEnv *env;
     GETENV(env);
 
@@ -318,6 +318,10 @@ std::shared_ptr<ucgd_t> &U8g2Util_SetupAndInitDisplay(const std::string &setup_p
 
     //Call the setup procedure
     context->setup_cb(pU8g2, rotation, U8g2Util_ByteCallbackWrapper, U8g2Util_GpioCallbackWrapper);
+
+    //Allocate dynamic buffer
+    u8g2_SetBufferPtr(pU8g2, buffer);
+    //log.debug("setup_display() : Allocating pixel buffers dynamically (size: {})", size);
 
     //Initialize the display
     log.debug("setup_display() : Executing u8g2 startup sequence for '{}'", std::to_string(context->address()));
