@@ -99,7 +99,7 @@ abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
     protected GlcdBaseDriver(GlcdConfig config, boolean virtual, GlcdDriverEventHandler handler, GlcdDriverAdapter driverAdapter) {
         this.config = config;
         this.virtual = virtual;
-        this.driverEventHandler = handler == null ? createDefaultEventHandler() : handler;
+        this.driverEventHandler = handler;// == null ? createDefaultEventHandler() : handler;
         this.adapter = driverAdapter == null ? new U8g2DriverAdapter() : driverAdapter;
     }
 
