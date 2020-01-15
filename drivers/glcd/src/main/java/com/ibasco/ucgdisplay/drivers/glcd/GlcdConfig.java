@@ -29,10 +29,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -130,9 +127,8 @@ public class GlcdConfig {
      * @return The u8g2 setup procedure that is going to be used by native library
      */
     public String getSetupProcedure() {
-        if (StringUtils.isBlank(setupProcedure)) {
+        if (StringUtils.isBlank(setupProcedure))
             setupProcedure = lookupSetupInfo().getFunction();
-        }
         return setupProcedure;
     }
 
@@ -189,5 +185,19 @@ public class GlcdConfig {
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SIMPLE_STYLE);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GlcdConfig that = (GlcdConfig) o;
+        return display.equals(that.display) &&
+                busInterface == that.busInterface;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(display, busInterface);
     }
 }
