@@ -20,7 +20,7 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Tue, 7 Jan 2020 13:15:59 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Mon, 27 Jan 2020 07:31:22 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
@@ -375,6 +375,26 @@ public enum GlcdFont {
 
   FONT_CURSIVEPIXEL_TR("u8g2_font_CursivePixel_tr"),
 
+  FONT_DIGITALDISCOTHIN_TE("u8g2_font_DigitalDioThin_te"),
+
+  FONT_DIGITALDISCOTHIN_TF("u8g2_font_DigitalDioThin_tf"),
+
+  FONT_DIGITALDISCOTHIN_TN("u8g2_font_DigitalDioThin_tn"),
+
+  FONT_DIGITALDISCOTHIN_TR("u8g2_font_DigitalDioThin_tr"),
+
+  FONT_DIGITALDISCOTHIN_TU("u8g2_font_DigitalDioThin_tu"),
+
+  FONT_DIGITALDISCO_TE("u8g2_font_DigitalDio_te"),
+
+  FONT_DIGITALDISCO_TF("u8g2_font_DigitalDio_tf"),
+
+  FONT_DIGITALDISCO_TN("u8g2_font_DigitalDio_tn"),
+
+  FONT_DIGITALDISCO_TR("u8g2_font_DigitalDio_tr"),
+
+  FONT_DIGITALDISCO_TU("u8g2_font_DigitalDio_tu"),
+
   FONT_ENGRISH_TF("u8g2_font_Engrish_tf"),
 
   FONT_ENGRISH_TR("u8g2_font_Engrish_tr"),
@@ -399,9 +419,35 @@ public enum GlcdFont {
 
   FONT_IMPACTBITS_TR("u8g2_font_ImptBits_tr"),
 
+  FONT_PIXELLARI_TE("u8g2_font_Pixellari_te"),
+
+  FONT_PIXELLARI_TF("u8g2_font_Pixellari_tf"),
+
+  FONT_PIXELLARI_TN("u8g2_font_Pixellari_tn"),
+
+  FONT_PIXELLARI_TR("u8g2_font_Pixellari_tr"),
+
+  FONT_PIXELLARI_TU("u8g2_font_Pixellari_tu"),
+
   FONT_TIMESNEWPIXEL_TR("u8g2_font_TimesNewPixel_tr"),
 
   FONT_UNTITLED16PIXELSANSSERIFBITMAP_TR("u8g2_font_Untitled16PixelSansSerifBitmap_tr"),
+
+  FONT_VCR_OSD_MF("u8g2_font_VCR_OSD_mf"),
+
+  FONT_VCR_OSD_MN("u8g2_font_VCR_OSD_mn"),
+
+  FONT_VCR_OSD_MR("u8g2_font_VCR_OSD_mr"),
+
+  FONT_VCR_OSD_MU("u8g2_font_VCR_OSD_mu"),
+
+  FONT_VCR_OSD_TF("u8g2_font_VCR_OSD_tf"),
+
+  FONT_VCR_OSD_TN("u8g2_font_VCR_OSD_tn"),
+
+  FONT_VCR_OSD_TR("u8g2_font_VCR_OSD_tr"),
+
+  FONT_VCR_OSD_TU("u8g2_font_VCR_OSD_tu"),
 
   FONT_WIZZARD_TR("u8g2_font_Wizzard_tr"),
 
@@ -1463,6 +1509,454 @@ public enum GlcdFont {
 
   FONT_LOGISOSO92_TN("u8g2_font_logisoso92_tn"),
 
+  FONT_LUBIS08_TE("u8g2_font_luBIS08_te"),
+
+  FONT_LUBIS08_TF("u8g2_font_luBIS08_tf"),
+
+  FONT_LUBIS08_TN("u8g2_font_luBIS08_tn"),
+
+  FONT_LUBIS08_TR("u8g2_font_luBIS08_tr"),
+
+  FONT_LUBIS10_TE("u8g2_font_luBIS10_te"),
+
+  FONT_LUBIS10_TF("u8g2_font_luBIS10_tf"),
+
+  FONT_LUBIS10_TN("u8g2_font_luBIS10_tn"),
+
+  FONT_LUBIS10_TR("u8g2_font_luBIS10_tr"),
+
+  FONT_LUBIS12_TE("u8g2_font_luBIS12_te"),
+
+  FONT_LUBIS12_TF("u8g2_font_luBIS12_tf"),
+
+  FONT_LUBIS12_TN("u8g2_font_luBIS12_tn"),
+
+  FONT_LUBIS12_TR("u8g2_font_luBIS12_tr"),
+
+  FONT_LUBIS14_TE("u8g2_font_luBIS14_te"),
+
+  FONT_LUBIS14_TF("u8g2_font_luBIS14_tf"),
+
+  FONT_LUBIS14_TN("u8g2_font_luBIS14_tn"),
+
+  FONT_LUBIS14_TR("u8g2_font_luBIS14_tr"),
+
+  FONT_LUBIS18_TE("u8g2_font_luBIS18_te"),
+
+  FONT_LUBIS18_TF("u8g2_font_luBIS18_tf"),
+
+  FONT_LUBIS18_TN("u8g2_font_luBIS18_tn"),
+
+  FONT_LUBIS18_TR("u8g2_font_luBIS18_tr"),
+
+  FONT_LUBIS19_TE("u8g2_font_luBIS19_te"),
+
+  FONT_LUBIS19_TF("u8g2_font_luBIS19_tf"),
+
+  FONT_LUBIS19_TN("u8g2_font_luBIS19_tn"),
+
+  FONT_LUBIS19_TR("u8g2_font_luBIS19_tr"),
+
+  FONT_LUBIS24_TE("u8g2_font_luBIS24_te"),
+
+  FONT_LUBIS24_TF("u8g2_font_luBIS24_tf"),
+
+  FONT_LUBIS24_TN("u8g2_font_luBIS24_tn"),
+
+  FONT_LUBIS24_TR("u8g2_font_luBIS24_tr"),
+
+  FONT_LUBS08_TE("u8g2_font_luBS08_te"),
+
+  FONT_LUBS08_TF("u8g2_font_luBS08_tf"),
+
+  FONT_LUBS08_TN("u8g2_font_luBS08_tn"),
+
+  FONT_LUBS08_TR("u8g2_font_luBS08_tr"),
+
+  FONT_LUBS10_TE("u8g2_font_luBS10_te"),
+
+  FONT_LUBS10_TF("u8g2_font_luBS10_tf"),
+
+  FONT_LUBS10_TN("u8g2_font_luBS10_tn"),
+
+  FONT_LUBS10_TR("u8g2_font_luBS10_tr"),
+
+  FONT_LUBS12_TE("u8g2_font_luBS12_te"),
+
+  FONT_LUBS12_TF("u8g2_font_luBS12_tf"),
+
+  FONT_LUBS12_TN("u8g2_font_luBS12_tn"),
+
+  FONT_LUBS12_TR("u8g2_font_luBS12_tr"),
+
+  FONT_LUBS14_TE("u8g2_font_luBS14_te"),
+
+  FONT_LUBS14_TF("u8g2_font_luBS14_tf"),
+
+  FONT_LUBS14_TN("u8g2_font_luBS14_tn"),
+
+  FONT_LUBS14_TR("u8g2_font_luBS14_tr"),
+
+  FONT_LUBS18_TE("u8g2_font_luBS18_te"),
+
+  FONT_LUBS18_TF("u8g2_font_luBS18_tf"),
+
+  FONT_LUBS18_TN("u8g2_font_luBS18_tn"),
+
+  FONT_LUBS18_TR("u8g2_font_luBS18_tr"),
+
+  FONT_LUBS19_TE("u8g2_font_luBS19_te"),
+
+  FONT_LUBS19_TF("u8g2_font_luBS19_tf"),
+
+  FONT_LUBS19_TN("u8g2_font_luBS19_tn"),
+
+  FONT_LUBS19_TR("u8g2_font_luBS19_tr"),
+
+  FONT_LUBS24_TE("u8g2_font_luBS24_te"),
+
+  FONT_LUBS24_TF("u8g2_font_luBS24_tf"),
+
+  FONT_LUBS24_TN("u8g2_font_luBS24_tn"),
+
+  FONT_LUBS24_TR("u8g2_font_luBS24_tr"),
+
+  FONT_LUIS08_TE("u8g2_font_luIS08_te"),
+
+  FONT_LUIS08_TF("u8g2_font_luIS08_tf"),
+
+  FONT_LUIS08_TN("u8g2_font_luIS08_tn"),
+
+  FONT_LUIS08_TR("u8g2_font_luIS08_tr"),
+
+  FONT_LUIS10_TE("u8g2_font_luIS10_te"),
+
+  FONT_LUIS10_TF("u8g2_font_luIS10_tf"),
+
+  FONT_LUIS10_TN("u8g2_font_luIS10_tn"),
+
+  FONT_LUIS10_TR("u8g2_font_luIS10_tr"),
+
+  FONT_LUIS12_TE("u8g2_font_luIS12_te"),
+
+  FONT_LUIS12_TF("u8g2_font_luIS12_tf"),
+
+  FONT_LUIS12_TN("u8g2_font_luIS12_tn"),
+
+  FONT_LUIS12_TR("u8g2_font_luIS12_tr"),
+
+  FONT_LUIS14_TE("u8g2_font_luIS14_te"),
+
+  FONT_LUIS14_TF("u8g2_font_luIS14_tf"),
+
+  FONT_LUIS14_TN("u8g2_font_luIS14_tn"),
+
+  FONT_LUIS14_TR("u8g2_font_luIS14_tr"),
+
+  FONT_LUIS18_TE("u8g2_font_luIS18_te"),
+
+  FONT_LUIS18_TF("u8g2_font_luIS18_tf"),
+
+  FONT_LUIS18_TN("u8g2_font_luIS18_tn"),
+
+  FONT_LUIS18_TR("u8g2_font_luIS18_tr"),
+
+  FONT_LUIS19_TE("u8g2_font_luIS19_te"),
+
+  FONT_LUIS19_TF("u8g2_font_luIS19_tf"),
+
+  FONT_LUIS19_TN("u8g2_font_luIS19_tn"),
+
+  FONT_LUIS19_TR("u8g2_font_luIS19_tr"),
+
+  FONT_LUIS24_TE("u8g2_font_luIS24_te"),
+
+  FONT_LUIS24_TF("u8g2_font_luIS24_tf"),
+
+  FONT_LUIS24_TN("u8g2_font_luIS24_tn"),
+
+  FONT_LUIS24_TR("u8g2_font_luIS24_tr"),
+
+  FONT_LURS08_TE("u8g2_font_luRS08_te"),
+
+  FONT_LURS08_TF("u8g2_font_luRS08_tf"),
+
+  FONT_LURS08_TN("u8g2_font_luRS08_tn"),
+
+  FONT_LURS08_TR("u8g2_font_luRS08_tr"),
+
+  FONT_LURS10_TE("u8g2_font_luRS10_te"),
+
+  FONT_LURS10_TF("u8g2_font_luRS10_tf"),
+
+  FONT_LURS10_TN("u8g2_font_luRS10_tn"),
+
+  FONT_LURS10_TR("u8g2_font_luRS10_tr"),
+
+  FONT_LURS12_TE("u8g2_font_luRS12_te"),
+
+  FONT_LURS12_TF("u8g2_font_luRS12_tf"),
+
+  FONT_LURS12_TN("u8g2_font_luRS12_tn"),
+
+  FONT_LURS12_TR("u8g2_font_luRS12_tr"),
+
+  FONT_LURS14_TE("u8g2_font_luRS14_te"),
+
+  FONT_LURS14_TF("u8g2_font_luRS14_tf"),
+
+  FONT_LURS14_TN("u8g2_font_luRS14_tn"),
+
+  FONT_LURS14_TR("u8g2_font_luRS14_tr"),
+
+  FONT_LURS18_TE("u8g2_font_luRS18_te"),
+
+  FONT_LURS18_TF("u8g2_font_luRS18_tf"),
+
+  FONT_LURS18_TN("u8g2_font_luRS18_tn"),
+
+  FONT_LURS18_TR("u8g2_font_luRS18_tr"),
+
+  FONT_LURS19_TE("u8g2_font_luRS19_te"),
+
+  FONT_LURS19_TF("u8g2_font_luRS19_tf"),
+
+  FONT_LURS19_TN("u8g2_font_luRS19_tn"),
+
+  FONT_LURS19_TR("u8g2_font_luRS19_tr"),
+
+  FONT_LURS24_TE("u8g2_font_luRS24_te"),
+
+  FONT_LURS24_TF("u8g2_font_luRS24_tf"),
+
+  FONT_LURS24_TN("u8g2_font_luRS24_tn"),
+
+  FONT_LURS24_TR("u8g2_font_luRS24_tr"),
+
+  FONT_LUBB08_TE("u8g2_font_lubB08_te"),
+
+  FONT_LUBB08_TF("u8g2_font_lubB08_tf"),
+
+  FONT_LUBB08_TN("u8g2_font_lubB08_tn"),
+
+  FONT_LUBB08_TR("u8g2_font_lubB08_tr"),
+
+  FONT_LUBB10_TE("u8g2_font_lubB10_te"),
+
+  FONT_LUBB10_TF("u8g2_font_lubB10_tf"),
+
+  FONT_LUBB10_TN("u8g2_font_lubB10_tn"),
+
+  FONT_LUBB10_TR("u8g2_font_lubB10_tr"),
+
+  FONT_LUBB12_TE("u8g2_font_lubB12_te"),
+
+  FONT_LUBB12_TF("u8g2_font_lubB12_tf"),
+
+  FONT_LUBB12_TN("u8g2_font_lubB12_tn"),
+
+  FONT_LUBB12_TR("u8g2_font_lubB12_tr"),
+
+  FONT_LUBB14_TE("u8g2_font_lubB14_te"),
+
+  FONT_LUBB14_TF("u8g2_font_lubB14_tf"),
+
+  FONT_LUBB14_TN("u8g2_font_lubB14_tn"),
+
+  FONT_LUBB14_TR("u8g2_font_lubB14_tr"),
+
+  FONT_LUBB18_TE("u8g2_font_lubB18_te"),
+
+  FONT_LUBB18_TF("u8g2_font_lubB18_tf"),
+
+  FONT_LUBB18_TN("u8g2_font_lubB18_tn"),
+
+  FONT_LUBB18_TR("u8g2_font_lubB18_tr"),
+
+  FONT_LUBB19_TE("u8g2_font_lubB19_te"),
+
+  FONT_LUBB19_TF("u8g2_font_lubB19_tf"),
+
+  FONT_LUBB19_TN("u8g2_font_lubB19_tn"),
+
+  FONT_LUBB19_TR("u8g2_font_lubB19_tr"),
+
+  FONT_LUBB24_TE("u8g2_font_lubB24_te"),
+
+  FONT_LUBB24_TF("u8g2_font_lubB24_tf"),
+
+  FONT_LUBB24_TN("u8g2_font_lubB24_tn"),
+
+  FONT_LUBB24_TR("u8g2_font_lubB24_tr"),
+
+  FONT_LUBBI08_TE("u8g2_font_lubBI08_te"),
+
+  FONT_LUBBI08_TF("u8g2_font_lubBI08_tf"),
+
+  FONT_LUBBI08_TN("u8g2_font_lubBI08_tn"),
+
+  FONT_LUBBI08_TR("u8g2_font_lubBI08_tr"),
+
+  FONT_LUBBI10_TE("u8g2_font_lubBI10_te"),
+
+  FONT_LUBBI10_TF("u8g2_font_lubBI10_tf"),
+
+  FONT_LUBBI10_TN("u8g2_font_lubBI10_tn"),
+
+  FONT_LUBBI10_TR("u8g2_font_lubBI10_tr"),
+
+  FONT_LUBBI12_TE("u8g2_font_lubBI12_te"),
+
+  FONT_LUBBI12_TF("u8g2_font_lubBI12_tf"),
+
+  FONT_LUBBI12_TN("u8g2_font_lubBI12_tn"),
+
+  FONT_LUBBI12_TR("u8g2_font_lubBI12_tr"),
+
+  FONT_LUBBI14_TE("u8g2_font_lubBI14_te"),
+
+  FONT_LUBBI14_TF("u8g2_font_lubBI14_tf"),
+
+  FONT_LUBBI14_TN("u8g2_font_lubBI14_tn"),
+
+  FONT_LUBBI14_TR("u8g2_font_lubBI14_tr"),
+
+  FONT_LUBBI18_TE("u8g2_font_lubBI18_te"),
+
+  FONT_LUBBI18_TF("u8g2_font_lubBI18_tf"),
+
+  FONT_LUBBI18_TN("u8g2_font_lubBI18_tn"),
+
+  FONT_LUBBI18_TR("u8g2_font_lubBI18_tr"),
+
+  FONT_LUBBI19_TE("u8g2_font_lubBI19_te"),
+
+  FONT_LUBBI19_TF("u8g2_font_lubBI19_tf"),
+
+  FONT_LUBBI19_TN("u8g2_font_lubBI19_tn"),
+
+  FONT_LUBBI19_TR("u8g2_font_lubBI19_tr"),
+
+  FONT_LUBBI24_TE("u8g2_font_lubBI24_te"),
+
+  FONT_LUBBI24_TF("u8g2_font_lubBI24_tf"),
+
+  FONT_LUBBI24_TN("u8g2_font_lubBI24_tn"),
+
+  FONT_LUBBI24_TR("u8g2_font_lubBI24_tr"),
+
+  FONT_LUBI08_TE("u8g2_font_lubI08_te"),
+
+  FONT_LUBI08_TF("u8g2_font_lubI08_tf"),
+
+  FONT_LUBI08_TN("u8g2_font_lubI08_tn"),
+
+  FONT_LUBI08_TR("u8g2_font_lubI08_tr"),
+
+  FONT_LUBI10_TE("u8g2_font_lubI10_te"),
+
+  FONT_LUBI10_TF("u8g2_font_lubI10_tf"),
+
+  FONT_LUBI10_TN("u8g2_font_lubI10_tn"),
+
+  FONT_LUBI10_TR("u8g2_font_lubI10_tr"),
+
+  FONT_LUBI12_TE("u8g2_font_lubI12_te"),
+
+  FONT_LUBI12_TF("u8g2_font_lubI12_tf"),
+
+  FONT_LUBI12_TN("u8g2_font_lubI12_tn"),
+
+  FONT_LUBI12_TR("u8g2_font_lubI12_tr"),
+
+  FONT_LUBI14_TE("u8g2_font_lubI14_te"),
+
+  FONT_LUBI14_TF("u8g2_font_lubI14_tf"),
+
+  FONT_LUBI14_TN("u8g2_font_lubI14_tn"),
+
+  FONT_LUBI14_TR("u8g2_font_lubI14_tr"),
+
+  FONT_LUBI18_TE("u8g2_font_lubI18_te"),
+
+  FONT_LUBI18_TF("u8g2_font_lubI18_tf"),
+
+  FONT_LUBI18_TN("u8g2_font_lubI18_tn"),
+
+  FONT_LUBI18_TR("u8g2_font_lubI18_tr"),
+
+  FONT_LUBI19_TE("u8g2_font_lubI19_te"),
+
+  FONT_LUBI19_TF("u8g2_font_lubI19_tf"),
+
+  FONT_LUBI19_TN("u8g2_font_lubI19_tn"),
+
+  FONT_LUBI19_TR("u8g2_font_lubI19_tr"),
+
+  FONT_LUBI24_TE("u8g2_font_lubI24_te"),
+
+  FONT_LUBI24_TF("u8g2_font_lubI24_tf"),
+
+  FONT_LUBI24_TN("u8g2_font_lubI24_tn"),
+
+  FONT_LUBI24_TR("u8g2_font_lubI24_tr"),
+
+  FONT_LUBR08_TE("u8g2_font_lubR08_te"),
+
+  FONT_LUBR08_TF("u8g2_font_lubR08_tf"),
+
+  FONT_LUBR08_TN("u8g2_font_lubR08_tn"),
+
+  FONT_LUBR08_TR("u8g2_font_lubR08_tr"),
+
+  FONT_LUBR10_TE("u8g2_font_lubR10_te"),
+
+  FONT_LUBR10_TF("u8g2_font_lubR10_tf"),
+
+  FONT_LUBR10_TN("u8g2_font_lubR10_tn"),
+
+  FONT_LUBR10_TR("u8g2_font_lubR10_tr"),
+
+  FONT_LUBR12_TE("u8g2_font_lubR12_te"),
+
+  FONT_LUBR12_TF("u8g2_font_lubR12_tf"),
+
+  FONT_LUBR12_TN("u8g2_font_lubR12_tn"),
+
+  FONT_LUBR12_TR("u8g2_font_lubR12_tr"),
+
+  FONT_LUBR14_TE("u8g2_font_lubR14_te"),
+
+  FONT_LUBR14_TF("u8g2_font_lubR14_tf"),
+
+  FONT_LUBR14_TN("u8g2_font_lubR14_tn"),
+
+  FONT_LUBR14_TR("u8g2_font_lubR14_tr"),
+
+  FONT_LUBR18_TE("u8g2_font_lubR18_te"),
+
+  FONT_LUBR18_TF("u8g2_font_lubR18_tf"),
+
+  FONT_LUBR18_TN("u8g2_font_lubR18_tn"),
+
+  FONT_LUBR18_TR("u8g2_font_lubR18_tr"),
+
+  FONT_LUBR19_TE("u8g2_font_lubR19_te"),
+
+  FONT_LUBR19_TF("u8g2_font_lubR19_tf"),
+
+  FONT_LUBR19_TN("u8g2_font_lubR19_tn"),
+
+  FONT_LUBR19_TR("u8g2_font_lubR19_tr"),
+
+  FONT_LUBR24_TE("u8g2_font_lubR24_te"),
+
+  FONT_LUBR24_TF("u8g2_font_lubR24_tf"),
+
+  FONT_LUBR24_TN("u8g2_font_lubR24_tn"),
+
+  FONT_LUBR24_TR("u8g2_font_lubR24_tr"),
+
   FONT_LUCASARTS_SCUMM_SUBTITLE_O_TF("u8g2_font_lasarts_umm_subtitle_o_tf"),
 
   FONT_LUCASARTS_SCUMM_SUBTITLE_O_TN("u8g2_font_lasarts_umm_subtitle_o_tn"),
@@ -1658,6 +2152,14 @@ public enum GlcdFont {
   FONT_NINE_BY_FIVE_NBP_TN("u8g2_font_nine_by_five_nbp_tn"),
 
   FONT_NINE_BY_FIVE_NBP_TR("u8g2_font_nine_by_five_nbp_tr"),
+
+  FONT_NOKIAFC22_TF("u8g2_font_nokia22_tf"),
+
+  FONT_NOKIAFC22_TN("u8g2_font_nokia22_tn"),
+
+  FONT_NOKIAFC22_TR("u8g2_font_nokia22_tr"),
+
+  FONT_NOKIAFC22_TU("u8g2_font_nokia22_tu"),
 
   FONT_OLDWIZARD_TF("u8g2_font_oldwizard_tf"),
 
@@ -1917,6 +2419,8 @@ public enum GlcdFont {
 
   FONT_PCSENIOR_8U("u8g2_font_senior_8u"),
 
+  FONT_PEARFONT_TR("u8g2_font_pearfont_tr"),
+
   FONT_PIECEOFCAKE_MEL_TN("u8g2_font_pieoake_mel_tn"),
 
   FONT_PIECEOFCAKE_MEL_TR("u8g2_font_pieoake_mel_tr"),
@@ -1932,6 +2436,8 @@ public enum GlcdFont {
   FONT_PIXELMORDRED_TN("u8g2_font_pixelmordred_tn"),
 
   FONT_PIXELMORDRED_TR("u8g2_font_pixelmordred_tr"),
+
+  FONT_PIXELPOIIZ_TR("u8g2_font_pixelpoiiz_tr"),
 
   FONT_PRESS_MEL_TN("u8g2_font_press_mel_tn"),
 

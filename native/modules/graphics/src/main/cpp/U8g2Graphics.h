@@ -550,6 +550,62 @@ JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setClip
 JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setMaxClipWindow
   (JNIEnv *, jclass, jlong);
 
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    updateDisplay
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_updateDisplay__J
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    updateDisplay
+ * Signature: (JIIII)V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_updateDisplay__JIIII
+  (JNIEnv *, jclass, jlong, jint, jint, jint, jint);
+
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    exportToXBM
+ * Signature: (J)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToXBM
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    exportToPBM
+ * Signature: (J)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToPBM
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    exportToXBM2
+ * Signature: (J)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToXBM2
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    exportToPBM2
+ * Signature: (J)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToPBM2
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    sendCommand
+ * Signature: (JLjava/lang/String;[B)V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_sendCommand
+  (JNIEnv *, jclass, jlong, jstring, jbyteArray);
+
 #ifdef __cplusplus
 }
 #endif

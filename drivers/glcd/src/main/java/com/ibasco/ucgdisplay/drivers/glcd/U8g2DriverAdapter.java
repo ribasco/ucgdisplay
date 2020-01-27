@@ -558,6 +558,48 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     }
 
     @Override
+    public void updateDisplay() {
+        checkRequirements();
+        U8g2Graphics.updateDisplay(_id);
+    }
+
+    @Override
+    public void updateDisplay(int x, int y, int width, int height) {
+        checkRequirements();
+        U8g2Graphics.updateDisplay(_id, x, y, width, height);
+    }
+
+    @Override
+    public String exportToXBM() {
+        checkRequirements();
+        return U8g2Graphics.exportToXBM(_id);
+    }
+
+    @Override
+    public String exportToPBM() {
+        checkRequirements();
+        return U8g2Graphics.exportToPBM(_id);
+    }
+
+    @Override
+    public String exportToXBM2() {
+        checkRequirements();
+        return U8g2Graphics.exportToXBM2(_id);
+    }
+
+    @Override
+    public String exportToPBM2() {
+        checkRequirements();
+        return U8g2Graphics.exportToPBM2(_id);
+    }
+
+    @Override
+    public void sendCommand(String format, byte... args) {
+        checkRequirements();
+        U8g2Graphics.sendCommand(_id, format, args);
+    }
+
+    @Override
     public void write(byte... data) {
         throw new NotImplementedException("Write not implemented for this driver");
     }

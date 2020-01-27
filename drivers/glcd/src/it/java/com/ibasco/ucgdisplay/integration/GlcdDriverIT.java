@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -111,5 +112,153 @@ class GlcdDriverIT {
         driver = new GlcdDriver(config, true);
         assertThrows(NativeLibraryException.class, () -> driver.drawString("Hello"));
         driver.sendBuffer();
+    }
+
+    @DisplayName("Test XBM export")
+    @Test
+    void testExportXBM() {
+        driver = createVirtualDriver();
+        driver.setFont(GlcdFont.FONT_9X15B_TR);
+        driver.clearBuffer();
+        driver.drawBox(0, 0, 20, 20);
+        driver.sendBuffer();
+        String output = driver.exportToXBM();
+        assertNotNull(output);
+        assertTrue(output.contains("xbm_width 128"));
+        assertTrue(output.contains("xbm_height 64"));
+    }
+
+    @DisplayName("Test XBM2 export")
+    @Test
+    void testExportXBM2() {
+        driver = createVirtualDriver();
+        driver.setFont(GlcdFont.FONT_9X15B_TR);
+        driver.clearBuffer();
+        driver.setFontPosTop();
+        driver.drawString(0, 0, "Hello world");
+        driver.drawBox(0, 0, 20, 20);
+        driver.sendBuffer();
+        String output = driver.exportToXBM2();
+        assertNotNull(output);
+        assertTrue(output.contains("xbm_width 128"));
+        assertTrue(output.contains("xbm_height 64"));
+    }
+
+    @DisplayName("Test export PBM")
+    @Test
+    void testExportPBM() {
+        driver = createVirtualDriver();
+        driver.setFont(GlcdFont.FONT_9X15B_TR);
+        driver.clearBuffer();
+        driver.setFontPosTop();
+        driver.drawString(0, 0, "Hello world");
+        driver.drawBox(0, 0, 20, 20);
+        driver.sendBuffer();
+        String output = driver.exportToPBM();
+        assertNotNull(output);
+        String[] parts = output.split("\n");
+        assertTrue(parts.length > 0);
+        assertEquals("P1", parts[0]);
+        assertEquals("128", parts[1]);
+        assertEquals("64", parts[2]);
+    }
+
+    @DisplayName("Test export PBM2")
+    @Test
+    void testExportPBM2() {
+        driver = createVirtualDriver();
+        driver.setFont(GlcdFont.FONT_9X15B_TR);
+        driver.clearBuffer();
+        driver.setFontPosTop();
+        driver.drawString(0, 0, "Hello world");
+        driver.drawBox(0, 0, 20, 20);
+        driver.sendBuffer();
+        String output = driver.exportToPBM2();
+        assertNotNull(output);
+        String[] parts = output.split("\n");
+        assertTrue(parts.length > 0);
+        assertEquals("P1", parts[0]);
+        assertEquals("128", parts[1]);
+        assertEquals("64", parts[2]);
+    }
+
+    @DisplayName("Test update display")
+    @Test
+    void testUpdateDisplay() {
+        driver = createVirtualDriver();
+        driver.clearBuffer();
+        driver.drawBox(0, 0, 20, 20);
+        driver.updateDisplay();
+        byte[] buffer = driver.getBuffer();
+        assertNotNull(buffer);
+        assertFalse(isBufferEmpty(buffer));
+    }
+
+    @DisplayName("Test update display area")
+    @Test
+    void testUpdateDisplayArea() {
+        driver = createVirtualDriver();
+        driver.clearBuffer();
+        driver.drawBox(0, 0, 20, 20);
+        driver.updateDisplay(0, 0, 20, 20);
+        byte[] buffer = driver.getBuffer();
+        assertNotNull(buffer);
+        assertFalse(isBufferEmpty(buffer));
+    }
+
+    @DisplayName("Test clear buffer")
+    @Test
+    void testClearBuffer() {
+        driver = createVirtualDriver();
+        driver.clearBuffer();
+        driver.drawBox(0, 0, 20, 20);
+        driver.setBufferCurrTileRow(0);
+        driver.sendBuffer();
+        assertNotNull(driver.getNativeBuffer());
+        assertFalse(isBufferEmpty(driver.getNativeBuffer()));
+        driver.clearBuffer();
+        driver.sendBuffer();
+        assertTrue(isBufferEmpty(driver.getNativeBuffer()));
+    }
+
+    @DisplayName("Test send command")
+    @Test
+    void testSendCommand() {
+        driver = createVirtualDriver();
+        assertDoesNotThrow(() -> driver.sendCommand("caaaaaac", new byte[] {0x027, 0, 3, 0, 7, 0, 127, 0x2f}));
+    }
+
+    private boolean isBufferEmpty(ByteBuffer buffer) {
+        buffer.clear();
+        while (buffer.hasRemaining()) {
+            int b = Byte.toUnsignedInt(buffer.get());
+            if (b != 0)
+                return false;
+        }
+        return true;
+    }
+
+    private boolean isBufferEmpty(byte[] data) {
+        for (byte b : data) {
+            if (b != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private GlcdDriver createVirtualDriver() {
+        return createVirtualDriver(null);
+    }
+
+    private GlcdDriver createVirtualDriver(GlcdConfig config) {
+        if (config == null) {
+            config = GlcdConfigBuilder
+                    .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                    .build();
+        }
+
+        driver = new GlcdDriver(config, true);
+        return driver;
     }
 }

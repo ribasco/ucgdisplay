@@ -26,6 +26,7 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
 
 import java.io.File;
 import java.nio.ByteBuffer;
+import java.util.Map;
 
 /**
  * Graphics Display Driver interface based on the U8G2 Interface.
@@ -1376,4 +1377,256 @@ public interface GlcdDisplayDriver extends DisplayDriver {
      * @see #setClipWindow(int, int, int, int)
      */
     void setMaxClipWindow();
+
+   /**
+     * <p>
+     * Updates all area of the display. This is almost identical to {@link #sendBuffer()}. The area has to be specified in tiles.
+     * One tile is a 8x8 pixel area. To get the pixel value, multiply the tile value with 8 (for ROTATION_R0).
+     * </p>
+     *
+     * <p>The tile coordinates are independent from the applied rotation in the U8g2 constructor but have the same
+     * orientation as ROTATION_R0. For other rotations the calculation between pixel value tile position is more
+     * complicated. The three member functions {@link #sendBuffer()}, {@link #updateDisplay()} and {@link #updateDisplay(int, int, int, int)} are designed for the
+     * full buffer mode (constructor with _F_ in the name). However {@link #sendBuffer()} and {@link #updateDisplay()} can be used in
+     * page mode also. If updateDisplay is used together with ePaper displays, ensure that a proper refresh sequence is
+     * send to the display.</p>
+     *
+     * <p>Differences between {@link #sendBuffer()}, {@link #updateDisplay()} and {@link #updateDisplay(int, int, int, int)}</p>
+     *
+     * <table>
+     * <thead>
+     * <tr>
+     * <th>Behavior/Feature</th>
+     * <th><code>sendBuffer</code></th>
+     * <th><code>updateDisplay</code></th>
+     * <th><code>updateDisplayArea</code></th>
+     * </tr>
+     * </thead>
+     * <tbody>
+     * <tr>
+     * <td>Sends a refreshDisplay message</td>
+     * <td>yes</td>
+     * <td>no</td>
+     * <td>no</td>
+     * </tr>
+     * <tr>
+     * <td>Works in full buffer mode</td>
+     * <td>yes</td>
+     * <td>yes</td>
+     * <td>yes</td>
+     * </tr>
+     * <tr>
+     * <td>Works in page buffer mode</td>
+     * <td>yes</td>
+     * <td>yes</td>
+     * <td>no</td>
+     * </tr>
+     * </tbody>
+     * </table>
+     *
+     * @apiNote <ul>
+     * <li>Range for tx: 0..getBufferTileWidth()-1 and for ty: 0..getBufferTileHeight()-1. There is no overflow check.
+     * The area must fully fit into the display area.
+     * Especially the following conditions must be true: tx+tw <= getBufferTileWidth() and ty+th <= getBufferTileHeight().</li>
+     * <li>
+     * <p>setClipWindow vs updateDisplayArea: Both may generate similar visual effects, however..</p>
+     * <h2>setClipWindow</h2>
+     *     <ul>
+     *          <li>Pixel coordinates</li>
+     *          <li>Used within the firstPage/nextPage loop</li>
+     *          <li>Valid for full and page buffer mode</li>
+     *          <li>Will limit the number of pixel drawn into the buffer</li>
+     *          <li>Performance increase due to lesser pixel painting</li>
+     *          <li>Will work with any rotation command in the constructor</li>
+     *          <li>Will work with any setting for u8g2.setFlipMode()</li>
+     *      </ul>
+     *      <h2>updateDisplayArea</h2>
+     *      <ul>
+     *          <li>Tile coordinates</li>
+     *          <li>Must be used outside the firstPage/nextPage loop</li>
+     *          <li>Valid only for full buffer mode</li>
+     *          <li>Will limit the data transfer to the display</li>
+     *          <li>Performance increase due to lesser data transfer to the display</li>
+     *          <li>Will work with any rotation command in the constructor, but requires more complicated calculation for the tile coordinates if the rotation is not U8G2_R0.</li>
+     *          <li>Will work with any setting for u8g2.setFlipMode()</li>
+     *      </ul>
+     * </li>
+     * <li>More details here <a href="https://github.com/olikraus/u8g2/issues/736">Github Issue (736)</a></li>
+     * </ul>
+     *
+     * @apiNote <ul>
+     * <li>Range for tx: 0..getBufferTileWidth()-1 and for ty: 0..getBufferTileHeight()-1. There is no overflow check.
+     * The area must fully fit into the display area.
+     * Especially the following conditions must be true: tx+tw <= getBufferTileWidth() and ty+th <= getBufferTileHeight().</li>
+     * <li>
+     * <p>setClipWindow vs updateDisplayArea: Both may generate similar visual effects, however..</p>
+     * <h2>setClipWindow</h2>
+     *     <ul>
+     *          <li>Pixel coordinates</li>
+     *          <li>Used within the firstPage/nextPage loop</li>
+     *          <li>Valid for full and page buffer mode</li>
+     *          <li>Will limit the number of pixel drawn into the buffer</li>
+     *          <li>Performance increase due to lesser pixel painting</li>
+     *          <li>Will work with any rotation command in the constructor</li>
+     *          <li>Will work with any setting for u8g2.setFlipMode()</li>
+     *      </ul>
+     *      <h2>updateDisplayArea</h2>
+     *      <ul>
+     *          <li>Tile coordinates</li>
+     *          <li>Must be used outside the firstPage/nextPage loop</li>
+     *          <li>Valid only for full buffer mode</li>
+     *          <li>Will limit the data transfer to the display</li>
+     *          <li>Performance increase due to lesser data transfer to the display</li>
+     *          <li>Will work with any rotation command in the constructor, but requires more complicated calculation for the tile coordinates if the rotation is not U8G2_R0.</li>
+     *          <li>Will work with any setting for u8g2.setFlipMode()</li>
+     *      </ul>
+     * </li>
+     * <li>More details here <a href="https://github.com/olikraus/u8g2/issues/736">Github Issue (736)</a></li>
+     * </ul>
+     */
+    void updateDisplay();
+
+    /**
+     * <p>
+     * Updates the specified rectangle areaof the display. This is almost identical to {@link #sendBuffer()}.
+     * The area has to be specified in tiles. One tile is a 8x8 pixel area.
+     * To get the pixel value, multiply the tile value with 8 (for ROTATION_R0).
+     * </p>
+     *
+     * <p>The tile coordinates are independent from the applied rotation in the U8g2 constructor but have the same
+     * orientation as ROTATION_R0. For other rotations the calculation between pixel value tile position is more
+     * complicated. The three member functions {@link #sendBuffer()}, {@link #updateDisplay()} and {@link #updateDisplay(int, int, int, int)} are designed for the
+     * full buffer mode (constructor with _F_ in the name). However {@link #sendBuffer()} and {@link #updateDisplay()} can be used in
+     * page mode also. If updateDisplay is used together with ePaper displays, ensure that a proper refresh sequence is
+     * send to the display.</p>
+     *
+     * <p>Differences between sendBuffer, updateDisplay and updateDisplayArea</p>
+     *
+     * <table>
+     * <thead>
+     * <tr>
+     * <th>Behavior/Feature</th>
+     * <th><code>sendBuffer</code></th>
+     * <th><code>updateDisplay</code></th>
+     * <th><code>updateDisplayArea</code></th>
+     * </tr>
+     * </thead>
+     * <tbody>
+     * <tr>
+     * <td>Sends a refreshDisplay message</td>
+     * <td>yes</td>
+     * <td>no</td>
+     * <td>no</td>
+     * </tr>
+     * <tr>
+     * <td>Works in full buffer mode</td>
+     * <td>yes</td>
+     * <td>yes</td>
+     * <td>yes</td>
+     * </tr>
+     * <tr>
+     * <td>Works in page buffer mode</td>
+     * <td>yes</td>
+     * <td>yes</td>
+     * <td>no</td>
+     * </tr>
+     * </tbody>
+     * </table>
+     *
+     * @param x
+     *         The starting x-coordinate of the rectangular region
+     * @param y
+     *         The starting y-coordinate of the rectangular region
+     * @param width
+     *         The width of the rectangular region
+     * @param height
+     *         The height of the rectangular region
+     *
+     * @apiNote <ul>
+     * <li>Range for tx: 0..getBufferTileWidth()-1 and for ty: 0..getBufferTileHeight()-1. There is no overflow check.
+     * The area must fully fit into the display area.
+     * Especially the following conditions must be true: tx+tw <= getBufferTileWidth() and ty+th <= getBufferTileHeight().</li>
+     * <li>
+     * <p>setClipWindow vs updateDisplayArea: Both may generate similar visual effects, however..</p>
+     * <h2>setClipWindow</h2>
+     *     <ul>
+     *          <li>Pixel coordinates</li>
+     *          <li>Used within the firstPage/nextPage loop</li>
+     *          <li>Valid for full and page buffer mode</li>
+     *          <li>Will limit the number of pixel drawn into the buffer</li>
+     *          <li>Performance increase due to lesser pixel painting</li>
+     *          <li>Will work with any rotation command in the constructor</li>
+     *          <li>Will work with any setting for u8g2.setFlipMode()</li>
+     *      </ul>
+     *      <h2>updateDisplayArea</h2>
+     *      <ul>
+     *          <li>Tile coordinates</li>
+     *          <li>Must be used outside the firstPage/nextPage loop</li>
+     *          <li>Valid only for full buffer mode</li>
+     *          <li>Will limit the data transfer to the display</li>
+     *          <li>Performance increase due to lesser data transfer to the display</li>
+     *          <li>Will work with any rotation command in the constructor, but requires more complicated calculation for the tile coordinates if the rotation is not U8G2_R0.</li>
+     *          <li>Will work with any setting for u8g2.setFlipMode()</li>
+     *      </ul>
+     * </li>
+     * <li>More details here <a href="https://github.com/olikraus/u8g2/issues/736">Github Issue (736)</a></li>
+     * </ul>
+     */
+    void updateDisplay(int x, int y, int width, int height);
+
+    /**
+     * Exports an <a href="https://en.wikipedia.org/wiki/X_BitMap">XBM</a> formatted ASCII string representati0on of the current display buffer
+     *
+     * @return The XBM formatted ASCII representation of the display buffer
+     */
+    String exportToXBM();
+
+    /**
+     * Exports a <a href="https://en.wikipedia.org/wiki/Netpbm_format">PBM</a> formatted ASCII string representation of the current display buffer
+     *
+     * @return The PBM formatted ASCII representation of the display buffer
+     */
+    String exportToPBM();
+
+    /**
+     * <p>Exports an <a href="https://en.wikipedia.org/wiki/X_BitMap">XBM</a> formatted ASCII string representati0on of the current display buffer.</p>
+     *
+     * <p>Display controllers: SH1122, LD7032, ST7920, ST7986, LC7981, T6963, SED1330, RA8835, MAX7219, LS0xx</p>
+     *
+     * @return The XBM formatted ASCII representation of the display buffer
+     */
+   String exportToXBM2();
+
+    /**
+     * <p>Exports a <a href="https://en.wikipedia.org/wiki/Netpbm_format">PBM</a> formatted ASCII string representation of the current display buffer</p>
+     *
+     * <p>Display controllers: SH1122, LD7032, ST7920, ST7986, LC7981, T6963, SED1330, RA8835, MAX7219, LS0xx</p>
+     *
+     * @return The PBM formatted ASCII representation of the display buffer
+     */
+    String exportToPBM2();
+
+    /**
+     * <p>Send special commands to the display controller. These commands are specified in the datasheet of the display
+     * controller. U8g2 just provides an interface (There is no support on the functionality for these commands).
+     * The information is transfered as a sequence of bytes. Each byte has a special meaning:</p>
+     * <ul>
+     *  <li>Command byte (c): Commands for the controller. Usually this byte will activate or deactivate a feature in the display controller.</li>
+     *  <li>Argument (a): Some commands require extra information. A command byte then requires a certain number or arguments.</li>
+     *  <li>Pixel data (d): Instructs the display controller to interpret the byte as pixel data, which has to be written to the display memory. In some cases, pixel data require a special command also.</li>
+     * </ul>
+     *
+     * <h2>Example</h2>
+     * <p>Send multiple commands with arguments: Activate hardware scroll to the left on a SSD1306 display</p>
+     * <pre>
+     *     sendCommand("caaaaaac", 0x027, 0, 3, 0, 7, 0, 255, 0x2f);
+     * </pre>
+     *
+     * @param format
+     *         A sequence (string) of c, a or d
+     * @param args
+     *         A sequence of bytes, separated by comma, one byte per char in the fmt string.
+     *         The byte will be interpreted accordingly to the char at the same position of the fmt string.
+     **/
+    void sendCommand(String format, byte... args);
 }

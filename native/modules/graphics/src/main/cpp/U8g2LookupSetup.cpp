@@ -1,5 +1,5 @@
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Tue, 7 Jan 2020 13:15:59 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Mon, 27 Jan 2020 07:31:22 +0800)
 //
 #include "U8g2Hal.h"
 #include <iostream>
@@ -110,6 +110,8 @@ void U8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
     setup_map["u8g2_Setup_ssd1327_i2c_ws_96x64_f"] = u8g2_Setup_ssd1327_i2c_ws_96x64_f;
     setup_map["u8g2_Setup_ssd1327_ea_w128128_f"] = u8g2_Setup_ssd1327_ea_w128128_f;
     setup_map["u8g2_Setup_ssd1327_i2c_ea_w128128_f"] = u8g2_Setup_ssd1327_i2c_ea_w128128_f;
+    setup_map["u8g2_Setup_ssd1327_visionox_128x96_f"] = u8g2_Setup_ssd1327_visionox_128x96_f;
+    setup_map["u8g2_Setup_ssd1327_i2c_visionox_128x96_f"] = u8g2_Setup_ssd1327_i2c_visionox_128x96_f;
     setup_map["u8g2_Setup_ssd1327_ws_128x128_f"] = u8g2_Setup_ssd1327_ws_128x128_f;
     setup_map["u8g2_Setup_ssd1327_i2c_ws_128x128_f"] = u8g2_Setup_ssd1327_i2c_ws_128x128_f;
     setup_map["u8g2_Setup_ssd1327_midas_128x128_f"] = u8g2_Setup_ssd1327_midas_128x128_f;
@@ -158,6 +160,7 @@ void U8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
     setup_map["u8g2_Setup_st7565_64128n_f"] = u8g2_Setup_st7565_64128n_f;
     setup_map["u8g2_Setup_st7567_enh_dg128064_f"] = u8g2_Setup_st7567_enh_dg128064_f;
     setup_map["u8g2_Setup_st7567_pi_132x64_f"] = u8g2_Setup_st7567_pi_132x64_f;
+    setup_map["u8g2_Setup_st7567_os12864_f"] = u8g2_Setup_st7567_os12864_f;
     setup_map["u8g2_Setup_st7567_64x32_f"] = u8g2_Setup_st7567_64x32_f;
     setup_map["u8g2_Setup_st7567_i2c_64x32_f"] = u8g2_Setup_st7567_i2c_64x32_f;
     setup_map["u8g2_Setup_st7567_enh_dg128064i_f"] = u8g2_Setup_st7567_enh_dg128064i_f;

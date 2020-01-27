@@ -20,7 +20,7 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Tue, 7 Jan 2020 13:15:56 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Mon, 27 Jan 2020 07:31:21 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd;
 
@@ -2340,6 +2340,40 @@ public interface Glcd {
     /**
      * <p>
      * Display Name:
+     *     SSD1327 :: VISIONOX_128X96
+     * </p>
+     * <p>
+     * Display Width:
+     *     128 pixels
+     * </p>
+     * <p>
+     * Display height:
+     *     96 pixels
+     * </p>
+     * Supported Bus Interfaces: 
+     * <ul><li>4-Wire SPI protocol</li>
+     * <li>3-Wire SPI protocol</li>
+     * <li>Parallel 8-bit 6800 protocol</li>
+     * <li>Parallel 8-bit 8080 protocol</li>
+     * <li>I2C protocol</li></ul>
+     * <p>
+     * Notes from author:
+     *     N/A
+     * </p>
+     */
+    GlcdDisplay D_128x96_VISIONOX128X96 = new GlcdDisplay(
+        GlcdControllerType.SSD1327,
+        "D_128x96_VISIONOX128X96",
+        16,
+        12,
+        GlcdBufferType.VERTICAL,
+        new GlcdSetupInfo("u8g2_Setup_ssd1327_visionox_128x96_f", COM_4WSPI | COM_3WSPI | COM_6800 | COM_8080),
+        new GlcdSetupInfo("u8g2_Setup_ssd1327_i2c_visionox_128x96_f", COM_I2C)
+    );
+
+    /**
+     * <p>
+     * Display Name:
      *     SSD1327 :: WS_128X128
      * </p>
      * <p>
@@ -3484,6 +3518,37 @@ public interface Glcd {
         8,
         GlcdBufferType.VERTICAL,
         new GlcdSetupInfo("u8g2_Setup_st7567_pi_132x64_f", COM_4WSPI | COM_6800 | COM_8080)
+    );
+
+    /**
+     * <p>
+     * Display Name:
+     *     ST7567 :: OS12864
+     * </p>
+     * <p>
+     * Display Width:
+     *     128 pixels
+     * </p>
+     * <p>
+     * Display height:
+     *     64 pixels
+     * </p>
+     * Supported Bus Interfaces: 
+     * <ul><li>4-Wire SPI protocol</li>
+     * <li>Parallel 8-bit 6800 protocol</li>
+     * <li>Parallel 8-bit 8080 protocol</li></ul>
+     * <p>
+     * Notes from author:
+     *     N/A
+     * </p>
+     */
+    GlcdDisplay D_128x64_OS12864 = new GlcdDisplay(
+        GlcdControllerType.ST7567,
+        "D_128x64_OS12864",
+        16,
+        8,
+        GlcdBufferType.VERTICAL,
+        new GlcdSetupInfo("u8g2_Setup_st7567_os12864_f", COM_4WSPI | COM_6800 | COM_8080)
     );
 
     /**

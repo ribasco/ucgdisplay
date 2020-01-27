@@ -724,6 +724,48 @@ abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
     }
 
     @Override
+    public void updateDisplay() {
+        checkRequirements();
+        adapter.updateDisplay();
+    }
+
+    @Override
+    public void updateDisplay(int x, int y, int width, int height) {
+        checkRequirements();
+        adapter.updateDisplay(x, y, width, height);
+    }
+
+    @Override
+    public String exportToXBM() {
+        checkRequirements();
+        return adapter.exportToXBM();
+    }
+
+    @Override
+    public String exportToPBM() {
+        checkRequirements();
+        return adapter.exportToPBM();
+    }
+
+    @Override
+    public String exportToXBM2() {
+        checkRequirements();
+        return adapter.exportToXBM2();
+    }
+
+    @Override
+    public String exportToPBM2() {
+        checkRequirements();
+        return adapter.exportToPBM2();
+    }
+
+    @Override
+    public void sendCommand(String format, byte... args) {
+        checkRequirements();
+        adapter.sendCommand(format, args);
+    }
+
+    @Override
     public final long getId() {
         return adapter.getId();
     }

@@ -2387,6 +2387,47 @@
           ]
         },
         {
+          "name": "VISIONOX_128X96",
+          "tileWidth": 16,
+          "tileHeight": 12,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_3WSPI",
+                  "value": 2
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            },
+            {
+              "cadName": "u8x8_cad_ssd13xx_i2c",
+              "cadNameShort": "i2c",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_I2C",
+                  "value": 16
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "WS_128X128",
           "tileWidth": 16,
           "tileHeight": 16,
@@ -3578,6 +3619,33 @@
           ]
         },
         {
+          "name": "OS12864",
+          "tileWidth": 16,
+          "tileHeight": 8,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "64X32",
           "tileWidth": 8,
           "tileHeight": 4,
@@ -4550,19 +4618,19 @@
       ]
     }
   ],
-  "md5Hash": "1c5fd54bfb428efda1ecd87f77c760e3",
+  "md5Hash": "c59df7c9826b75c5f8ccc15f58f91852",
   "lastUpdated": {
     "dateTime": {
       "date": {
         "year": 2020,
         "month": 1,
-        "day": 7
+        "day": 27
       },
       "time": {
-        "hour": 13,
-        "minute": 16,
-        "second": 0,
-        "nano": 316711000
+        "hour": 7,
+        "minute": 31,
+        "second": 24,
+        "nano": 374419000
       }
     },
     "offset": {
