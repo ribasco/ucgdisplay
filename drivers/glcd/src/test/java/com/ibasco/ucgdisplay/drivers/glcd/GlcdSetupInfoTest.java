@@ -22,10 +22,11 @@
 package com.ibasco.ucgdisplay.drivers.glcd;
 
 import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
-import static org.junit.jupiter.api.Assertions.*;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdCommProtocol;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GlcdSetupInfoTest {
     @Test
@@ -36,15 +37,15 @@ class GlcdSetupInfoTest {
         assertEquals("test_setup_f", setupInfo.getFunction());
         assertEquals(0x1A, setupInfo.getProtocols());
 
-        assertTrue(setupInfo.isSupported(GlcdBusInterface.PARALLEL_8080));
-        assertTrue(setupInfo.isSupported(GlcdBusInterface.SPI_SW_3WIRE));
-        assertTrue(setupInfo.isSupported(GlcdBusInterface.I2C_HW));
-        assertTrue(setupInfo.isSupported(GlcdBusInterface.I2C_SW));
+        assertTrue(setupInfo.isSupported(GlcdCommProtocol.PARALLEL_8080));
+        assertTrue(setupInfo.isSupported(GlcdCommProtocol.SPI_SW_3WIRE));
+        assertTrue(setupInfo.isSupported(GlcdCommProtocol.I2C_HW));
+        assertTrue(setupInfo.isSupported(GlcdCommProtocol.I2C_SW));
 
-        assertFalse(setupInfo.isSupported(GlcdBusInterface.SERIAL_HW));
-        assertFalse(setupInfo.isSupported(GlcdBusInterface.PARALLEL_6800));
-        assertFalse(setupInfo.isSupported(GlcdBusInterface.PARALLEL_6800_KS0108));
-        assertFalse(setupInfo.isSupported(GlcdBusInterface.SPI_SW_4WIRE));
-        assertFalse(setupInfo.isSupported(GlcdBusInterface.SPI_HW_4WIRE_ST7920));
+        assertFalse(setupInfo.isSupported(GlcdCommProtocol.SERIAL_HW));
+        assertFalse(setupInfo.isSupported(GlcdCommProtocol.PARALLEL_6800));
+        assertFalse(setupInfo.isSupported(GlcdCommProtocol.PARALLEL_6800_KS0108));
+        assertFalse(setupInfo.isSupported(GlcdCommProtocol.SPI_SW_4WIRE));
+        assertFalse(setupInfo.isSupported(GlcdCommProtocol.SPI_HW_4WIRE_ST7920));
     }
 }

@@ -22,9 +22,8 @@
 package com.ibasco.ucgdisplay.drivers.glcd;
 
 import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdCommProtocol;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdRotation;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,10 +32,12 @@ import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GlcdDriverTest {
@@ -831,7 +832,7 @@ class GlcdDriverTest {
 
     private void updateValidConfig(GlcdConfig config) {
         config.setDisplay(Glcd.ST7920.D_128x64);
-        config.setBusInterface(GlcdBusInterface.SPI_HW_4WIRE_ST7920);
+        config.setBusInterface(GlcdCommProtocol.SPI_HW_4WIRE_ST7920);
         config.setPinMapConfig(new GlcdPinMapConfig());
         config.setOption(GlcdOption.ROTATION, GlcdRotation.ROTATION_NONE);
     }

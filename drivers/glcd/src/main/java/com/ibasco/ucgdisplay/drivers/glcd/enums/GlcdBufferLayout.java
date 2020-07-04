@@ -19,20 +19,31 @@
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * =========================END==================================
  */
-package com.ibasco.ucgdisplay.drivers.glcd;
+package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBufferLayout;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdController;
-import org.junit.jupiter.api.Test;
+public enum GlcdBufferLayout {
+    HORIZONTAL("Horizontal", "u8g2_ll_hvline_horizontal_right_lsb"),
+    VERTICAL("Vertical", "u8g2_ll_hvline_vertical_top_lsb");
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+    private final String name;
 
-class GlcdDisplayTest {
+    private final String key;
 
-    @Test
-    void testEquals() {
-        assertEquals(Glcd.ST7920.D_128x64, new GlcdDisplay(GlcdController.ST7920, "D_128x64", 16, 8, GlcdBufferLayout.HORIZONTAL));
-        assertNotEquals(Glcd.ST7920.D_192x32, new GlcdDisplay(GlcdController.ST7920, "D_128x64", 16, 8, GlcdBufferLayout.HORIZONTAL));
+    GlcdBufferLayout(String name, String key) {
+        this.key = key;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

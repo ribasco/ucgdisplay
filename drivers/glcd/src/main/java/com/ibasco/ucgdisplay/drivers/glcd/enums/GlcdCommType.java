@@ -21,23 +21,31 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-public enum GlcdBufferType {
-    HORIZONTAL("Horizontal", "u8g2_ll_hvline_horizontal_right_lsb"),
-    VERTICAL("Vertical", "u8g2_ll_hvline_vertical_top_lsb");
+import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
 
-    private String name;
+/**
+ * Enumeration for the types of implementation of data transport
+ *
+ * @author Rafael Ibasco
+ */
+public enum GlcdCommType {
+    /**
+     * Hardware specific features are used for data-transport between devices
+     */
+    HARDWARE(U8g2Graphics.BUS_HARDWARE),
 
-    private String key;
+    /**
+     * Software bit-banging procedures are used for data-transport between devices
+     */
+    SOFTWARE(U8g2Graphics.BUS_SOFTWARE);
 
-    GlcdBufferType(String name, String key) {
-        this.key = key;
+    private final int value;
+
+    GlcdCommType(int value) {
+        this.value = value;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getKey() {
-        return key;
+    public int getValue() {
+        return value;
     }
 }

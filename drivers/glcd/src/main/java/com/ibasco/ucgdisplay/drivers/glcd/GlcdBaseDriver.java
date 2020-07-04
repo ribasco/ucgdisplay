@@ -194,7 +194,7 @@ abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
         if (config == null)
             throw new GlcdConfigException("Config cannot be null", null);
 
-        GlcdBusInterface bus = config.getBusInterface();
+        GlcdCommProtocol bus = config.getBusInterface();
 
         if (!virtual) {
             if (bus == null)
@@ -211,7 +211,7 @@ abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
         }
 
         //If I2C is selected, make sure device address is not empty
-        if ((config.getBusInterface() == GlcdBusInterface.I2C_HW) || (config.getBusInterface() == GlcdBusInterface.I2C_SW)) {
+        if ((config.getBusInterface() == GlcdCommProtocol.I2C_HW) || (config.getBusInterface() == GlcdCommProtocol.I2C_SW)) {
             int address = config.getOption(GlcdOption.I2C_DEVICE_ADDRESS, -1);
             if (address == -1) {
                 throw new GlcdConfigException("You must specify a device address for I2C comm interface", config);
@@ -225,7 +225,7 @@ abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
         //Check pin mapping
         if (!virtual) {
             //Make pin mapping mandatory for bit-bang implementations (software bus type)
-            if (config.getBusInterface().getBusType() == GlcdBusType.SOFTWARE && (config.getPinMap() == null || config.getPinMap().isEmpty()))
+            if (config.getBusInterface().getBusType() == GlcdCommType.SOFTWARE && (config.getPinMap() == null || config.getPinMap().isEmpty()))
                 throw new GlcdConfigException("Missing pin map configuration. You chose bit-bang implementation, but did not map any gpio pins", config);
         }
 

@@ -21,14 +21,13 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdCommProtocol;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdPin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 /**
@@ -60,7 +59,7 @@ public class GlcdConfigBuilder {
      *
      * @return A new instance of {@link GlcdConfigBuilder}
      */
-    public static GlcdConfigBuilder create(GlcdDisplay display, GlcdBusInterface busInterface) {
+    public static GlcdConfigBuilder create(GlcdDisplay display, GlcdCommProtocol busInterface) {
         GlcdConfigBuilder configBuilder = new GlcdConfigBuilder();
         configBuilder.config.setDisplay(display);
         configBuilder.config.setBusInterface(busInterface);

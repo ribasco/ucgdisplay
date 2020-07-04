@@ -250,7 +250,7 @@ public class GlcdST7920HWExample {
         // - CE1 = 7
         GlcdConfig config = GlcdConfigBuilder
                 //Use ST7920 - 128 x 64 display, SPI 4-wire Hardware
-                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_HW_4WIRE_ST7920)
+                .create(Glcd.ST7920.D_128x64, GlcdCommProtocol.SPI_HW_4WIRE_ST7920)
                 //Set to 180 rotation
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
                 //Using system/c-periphery provider

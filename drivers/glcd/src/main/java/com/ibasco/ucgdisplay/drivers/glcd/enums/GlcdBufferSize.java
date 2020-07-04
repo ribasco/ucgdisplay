@@ -8,12 +8,12 @@
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -21,31 +21,38 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
-
-/**
- * Enumeration of a bus interface data transport proedure types
- *
- * @author Rafael Ibasco
- */
-public enum GlcdBusType {
+public enum GlcdBufferSize {
     /**
-     * Hardware specific features are used for data-transport between devices
+     * Only one page of the display memory is stored in the microcontroller RAM.
+     * <p>
+     * Use a firstPage()/nextPage() loop for drawing on the display.
      */
-    HARDWARE(U8g2Graphics.BUS_HARDWARE),
+    PAGE_BUFFER_1("Page Buffer (One Page)"),
 
     /**
-     * Software bit-banging procedures are used for data-transport between devices
+     * Same as 1, but maintains two pages in the microcontroller RAM.
+     * This will be up to two times faster than 1.
      */
-    SOFTWARE(U8g2Graphics.BUS_SOFTWARE);
+    PAGE_BUFFER_2("Page Buffer (Two Pages)"),
 
-    private int value;
+    /**
+     * Keep a copy of the full display frame buffer in the microcontroller RAM.
+     * Use clearBuffer() to clear the RAM and sendBuffer() to transfer the microcontroller RAM to the display.
+     */
+    FULL_FRAME_BUFFER("Full Frame Buffer");
 
-    GlcdBusType(int value) {
-        this.value = value;
+    private final String name;
+
+    GlcdBufferSize(String name) {
+        this.name = name;
     }
 
-    public int getValue() {
-        return value;
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

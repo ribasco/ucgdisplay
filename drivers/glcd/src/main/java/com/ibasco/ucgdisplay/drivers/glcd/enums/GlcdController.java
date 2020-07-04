@@ -20,20 +20,20 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Mon, 27 Jan 2020 07:31:21 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 4 Jul 2020 18:14:57 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-public enum GlcdControllerType {
-  A2PRINTER,
+public enum GlcdController {
+    A2PRINTER,
 
-  HX1230,
+    HX1230,
 
-  IL3820,
+    IL3820,
 
-  IST3020,
+    IST3020,
 
-  IST7920,
+    IST7920,
 
   KS0108,
 

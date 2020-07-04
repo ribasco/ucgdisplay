@@ -21,7 +21,7 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdCommProtocol;
 
 /**
  * Holds information of u8g2 setup procedure and supported bus protocols of a {@link GlcdDisplay}
@@ -45,7 +45,7 @@ public final class GlcdSetupInfo {
         return function;
     }
 
-    public boolean isSupported(GlcdBusInterface protocol) {
+    public boolean isSupported(GlcdCommProtocol protocol) {
         return (protocols & protocol.getValue()) > 0;
     }
 

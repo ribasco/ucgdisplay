@@ -22,15 +22,14 @@
 package com.ibasco.ucgdisplay.drivers.glcd;
 
 import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GlcdConfigBuilderTest {
 
@@ -40,7 +39,7 @@ class GlcdConfigBuilderTest {
     private GlcdDisplay display;
 
     @Mock
-    private GlcdBusInterface busInterface;
+    private GlcdCommProtocol busInterface;
 
     @BeforeEach
     void setUp() {

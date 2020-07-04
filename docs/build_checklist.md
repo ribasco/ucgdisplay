@@ -1,0 +1,8 @@
+- [] Update git repositories
+    - [] https://github.com/ribasco/u8g2
+    - [] https://github.com/ribasco/c-periphery
+- [] Run code generation tool (https://github.com/ribasco/ucg-code-gen)
+- [] Compile project via maven (verify and test)
+- [] Update Project README
+- [] Commit project changes
+- [] Push changes to origin/master branch

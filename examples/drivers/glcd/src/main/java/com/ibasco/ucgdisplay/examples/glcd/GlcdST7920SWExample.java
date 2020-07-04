@@ -27,7 +27,6 @@ import com.ibasco.ucgdisplay.drivers.glcd.utils.XBMUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
 import java.util.Objects;
 
 /**
@@ -78,7 +77,7 @@ public class GlcdST7920SWExample {
         // - CE1 = 7
         GlcdConfig config = GlcdConfigBuilder
                 //Use ST7920 - 128 x 64 display, SPI 4-wire Hardware
-                .create(Glcd.ST7920.D_128x64, GlcdBusInterface.SPI_SW_4WIRE_ST7920)
+                .create(Glcd.ST7920.D_128x64, GlcdCommProtocol.SPI_SW_4WIRE_ST7920)
                 //Set to 180 rotation
                 .option(GlcdOption.ROTATION, GlcdRotation.ROTATION_180)
                 //Using system/c-periphery provider

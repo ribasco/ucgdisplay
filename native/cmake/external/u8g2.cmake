@@ -1,5 +1,5 @@
 #
-# THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Mon, 27 Jan 2020 07:31:22 +0800)
+# THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 4 Jul 2020 18:15:14 +0800)
 #
 
 include(ExternalProject)
@@ -7,7 +7,7 @@ include(ExternalProject)
 set(PROJ_PREFIX "u8g2")
 
 #1: https://github.com/olikraus/u8g2.git
-#2: /home/raffy/projects/u8g2.git
+#2: /home/raffy/projects/u8g2-ribasco
 #3: https://github.com/ribasco/u8g2.git
 
 ExternalProject_Add(

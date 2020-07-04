@@ -21,9 +21,9 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBufferType;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdControllerType;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBufferLayout;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdCommProtocol;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdController;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdSize;
 
 import java.util.ArrayList;
@@ -36,13 +36,13 @@ import java.util.Objects;
  * @author Rafael Ibasco
  */
 public class GlcdDisplay {
-    private String name;
-    private GlcdControllerType controller;
-    private GlcdSetupInfo[] setupDetails;
-    private GlcdSize displaySize;
-    private GlcdBufferType bufferType;
+    private final String name;
+    private final GlcdController controller;
+    private final GlcdSetupInfo[] setupDetails;
+    private final GlcdSize displaySize;
+    private final GlcdBufferLayout bufferType;
 
-    GlcdDisplay(GlcdControllerType controller, String name, int tileWidth, int tileHeight, GlcdBufferType bufferType, GlcdSetupInfo... setupInfo) {
+    GlcdDisplay(GlcdController controller, String name, int tileWidth, int tileHeight, GlcdBufferLayout bufferType, GlcdSetupInfo... setupInfo) {
         this.name = name;
         this.controller = controller;
         this.bufferType = bufferType;
@@ -55,11 +55,11 @@ public class GlcdDisplay {
      * Check if this display supports the provided bus interface
      *
      * @param busInterface
-     *         The {@link GlcdBusInterface} to check
+     *         The {@link GlcdCommProtocol} to check
      *
      * @return <code>True</code> if this display supports the provided bus interface
      */
-    public boolean hasBusInterface(GlcdBusInterface busInterface) {
+    public boolean hasBusInterface(GlcdCommProtocol busInterface) {
         for (GlcdSetupInfo info : setupDetails) {
             if ((info.getProtocols() & busInterface.getValue()) > 0)
                 return true;
@@ -70,12 +70,12 @@ public class GlcdDisplay {
     /**
      * @return A list of supported bus interfaces of this display
      */
-    public List<GlcdBusInterface> getBusInterfaces() {
+    public List<GlcdCommProtocol> getBusInterfaces() {
         if (setupDetails == null || setupDetails.length <= 0)
             return null;
-        List<GlcdBusInterface> protocols = new ArrayList<>();
+        List<GlcdCommProtocol> protocols = new ArrayList<>();
         for (GlcdSetupInfo setup : setupDetails) {
-            for (GlcdBusInterface protocol : GlcdBusInterface.values()) {
+            for (GlcdCommProtocol protocol : GlcdCommProtocol.values()) {
                 if ((setup.getProtocols() & protocol.getValue()) > 0)
                     protocols.add(protocol);
             }
@@ -91,9 +91,9 @@ public class GlcdDisplay {
     }
 
     /**
-     * @return A {@link GlcdControllerType} describing the controller of this display
+     * @return A {@link GlcdController} describing the controller of this display
      */
-    public GlcdControllerType getController() {
+    public GlcdController getController() {
         return controller;
     }
 
@@ -107,7 +107,7 @@ public class GlcdDisplay {
     /**
      * @return Returns the buffer type/layout of the display
      */
-    public GlcdBufferType getBufferType() {
+    public GlcdBufferLayout getBufferType() {
         return bufferType;
     }
 

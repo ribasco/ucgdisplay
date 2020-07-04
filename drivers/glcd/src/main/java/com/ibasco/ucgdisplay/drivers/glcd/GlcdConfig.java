@@ -21,7 +21,7 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdBusInterface;
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdCommProtocol;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdSize;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdConfigException;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +29,10 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -43,7 +46,7 @@ public class GlcdConfig {
     private static final Logger log = getLogger(GlcdConfig.class);
 
     private GlcdDisplay display;
-    private GlcdBusInterface busInterface;
+    private GlcdCommProtocol busInterface;
     private GlcdPinMapConfig pinMap;
     private String setupProcedure;
     private Map<String, Object> options = new HashMap<>();
@@ -62,7 +65,7 @@ public class GlcdConfig {
     /**
      * @return The current bus interface for the selected display controller
      */
-    public GlcdBusInterface getBusInterface() {
+    public GlcdCommProtocol getBusInterface() {
         return busInterface;
     }
 
@@ -174,7 +177,7 @@ public class GlcdConfig {
         this.display = display;
     }
 
-    void setBusInterface(GlcdBusInterface busInterface) {
+    void setBusInterface(GlcdCommProtocol busInterface) {
         this.busInterface = busInterface;
     }
 

@@ -1,5 +1,5 @@
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Mon, 27 Jan 2020 07:31:22 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 4 Jul 2020 18:15:11 +0800)
 //
 #include "U8g2Hal.h"
 #include <iostream>

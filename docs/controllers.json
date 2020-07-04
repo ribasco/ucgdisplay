@@ -456,6 +456,25 @@
               ]
             }
           ]
+        },
+        {
+          "name": "16X16",
+          "tileWidth": 2,
+          "tileHeight": 2,
+          "bufferLayout": "u8g2_ll_hvline_horizontal_right_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_empty",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -3683,6 +3702,43 @@
           ]
         },
         {
+          "name": "HEM6432",
+          "tileWidth": 8,
+          "tileHeight": 4,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            },
+            {
+              "cadName": "u8x8_cad_ssd13xx_i2c",
+              "cadNameShort": "i2c",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_I2C",
+                  "value": 16
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "ENH_DG128064I",
           "tileWidth": 16,
           "tileHeight": 8,
@@ -4219,6 +4275,47 @@
           ]
         },
         {
+          "name": "DEM240064",
+          "tileWidth": 30,
+          "tileHeight": 8,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_3WSPI",
+                  "value": 2
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            },
+            {
+              "cadName": "u8x8_cad_uc16xx_i2c",
+              "cadNameShort": "i2c",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_I2C",
+                  "value": 16
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "ERC240120",
           "tileWidth": 30,
           "tileHeight": 15,
@@ -4618,19 +4715,19 @@
       ]
     }
   ],
-  "md5Hash": "c59df7c9826b75c5f8ccc15f58f91852",
+  "md5Hash": "d324eeafd6424b7edfb7018de42d621a",
   "lastUpdated": {
     "dateTime": {
       "date": {
         "year": 2020,
-        "month": 1,
-        "day": 27
+        "month": 7,
+        "day": 4
       },
       "time": {
-        "hour": 7,
-        "minute": 31,
-        "second": 24,
-        "nano": 374419000
+        "hour": 18,
+        "minute": 15,
+        "second": 14,
+        "nano": 850724000
       }
     },
     "offset": {

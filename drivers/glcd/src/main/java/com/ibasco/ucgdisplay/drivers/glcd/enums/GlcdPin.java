@@ -131,11 +131,11 @@ public enum GlcdPin {
      */
     PSB(20, "Parallel/Serial Select Pin");
 
-    private int index;
+    private final int index;
 
     private GlcdPin parent;
 
-    private String description;
+    private final String description;
 
     GlcdPin(int index, String description) {
         this.index = index;
@@ -145,6 +145,13 @@ public enum GlcdPin {
     GlcdPin(GlcdPin parent, String description) {
         this(parent.index, description);
         this.parent = parent;
+    }
+
+    /**
+     * @return Name of the enumeration
+     */
+    public String getName() {
+        return this.name();
     }
 
     /**
@@ -175,6 +182,9 @@ public enum GlcdPin {
         return this.parent;
     }
 
+    /**
+     * @return A {@link List} of the values of the {@link GlcdPin} enumeration
+     */
     public static List<GlcdPin> getPins() {
         return Arrays.asList(GlcdPin.values());
     }

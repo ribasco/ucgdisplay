@@ -1,5 +1,5 @@
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Mon, 27 Jan 2020 07:31:22 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 4 Jul 2020 18:15:14 +0800)
 //
 #include "U8g2Hal.h"
 #include <iostream>
@@ -26,6 +26,7 @@ void U8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
     setup_map["u8g2_Setup_max7219_64x8_f"] = u8g2_Setup_max7219_64x8_f;
     setup_map["u8g2_Setup_max7219_8x8_f"] = u8g2_Setup_max7219_8x8_f;
     setup_map["u8g2_Setup_max7219_32x8_f"] = u8g2_Setup_max7219_32x8_f;
+    //setup_map["u8g2_Setup_max7219_16x16_f"] = u8g2_Setup_max7219_16x16_f;
     setup_map["u8g2_Setup_nt7534_tg12864r_f"] = u8g2_Setup_nt7534_tg12864r_f;
     setup_map["u8g2_Setup_pcd8544_84x48_f"] = u8g2_Setup_pcd8544_84x48_f;
     setup_map["u8g2_Setup_pcf8812_96x65_f"] = u8g2_Setup_pcf8812_96x65_f;
@@ -163,6 +164,8 @@ void U8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
     setup_map["u8g2_Setup_st7567_os12864_f"] = u8g2_Setup_st7567_os12864_f;
     setup_map["u8g2_Setup_st7567_64x32_f"] = u8g2_Setup_st7567_64x32_f;
     setup_map["u8g2_Setup_st7567_i2c_64x32_f"] = u8g2_Setup_st7567_i2c_64x32_f;
+    setup_map["u8g2_Setup_st7567_hem6432_f"] = u8g2_Setup_st7567_hem6432_f;
+    setup_map["u8g2_Setup_st7567_i2c_hem6432_f"] = u8g2_Setup_st7567_i2c_hem6432_f;
     setup_map["u8g2_Setup_st7567_enh_dg128064i_f"] = u8g2_Setup_st7567_enh_dg128064i_f;
     setup_map["u8g2_Setup_st7567_jlx12864_f"] = u8g2_Setup_st7567_jlx12864_f;
     setup_map["u8g2_Setup_st7586s_s028hn118a_f"] = u8g2_Setup_st7586s_s028hn118a_f;
@@ -189,6 +192,8 @@ void U8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
     setup_map["u8g2_Setup_uc1608_i2c_erc24064_f"] = u8g2_Setup_uc1608_i2c_erc24064_f;
     setup_map["u8g2_Setup_uc1608_240x128_f"] = u8g2_Setup_uc1608_240x128_f;
     setup_map["u8g2_Setup_uc1608_i2c_240x128_f"] = u8g2_Setup_uc1608_i2c_240x128_f;
+    setup_map["u8g2_Setup_uc1608_dem240064_f"] = u8g2_Setup_uc1608_dem240064_f;
+    setup_map["u8g2_Setup_uc1608_i2c_dem240064_f"] = u8g2_Setup_uc1608_i2c_dem240064_f;
     setup_map["u8g2_Setup_uc1608_erc240120_f"] = u8g2_Setup_uc1608_erc240120_f;
     setup_map["u8g2_Setup_uc1608_i2c_erc240120_f"] = u8g2_Setup_uc1608_i2c_erc240120_f;
     setup_map["u8g2_Setup_uc1610_ea_dogxl160_f"] = u8g2_Setup_uc1610_ea_dogxl160_f;
