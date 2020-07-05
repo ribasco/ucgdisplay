@@ -186,7 +186,7 @@ public class GlcdConfigBuilder {
         } else {
             if (GlcdOptionValue.class.isAssignableFrom(value.getClass())) {
                 //Process special enum types
-                GlcdOptionValue<?> optionValue = (GlcdOptionValue) value;
+                GlcdOptionValue<?> optionValue = (GlcdOptionValue<?>) value;
 
                 if (!optionValueTypeSupported(optionValue))
                     throw new IllegalStateException("The value type of option '" + option + "' value is not supported");

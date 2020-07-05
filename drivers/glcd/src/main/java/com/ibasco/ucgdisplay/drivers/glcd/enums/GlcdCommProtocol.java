@@ -37,7 +37,7 @@ public enum GlcdCommProtocol {
     /**
      * 4-Wire SPI (Hardware Implementation / If supported, second 4-wire hardware SPI)
      */
-    SPI_HW_4WIRE_2ND(COM_4WSPI, GlcdCommType.HARDWARE, "Second 4-Wire Hardware SPI", SPI_HW_4WIRE),
+    SPI_HW_4WIRE_2ND(COM_4WSPI, GlcdCommType.HARDWARE, "4-Wire Hardware SPI (Second Interface)", SPI_HW_4WIRE),
 
     /**
      * 4-Wire SPI (Software Implementation)
@@ -72,6 +72,11 @@ public enum GlcdCommProtocol {
      * 3-Wire SPI (Software Implementation)
      */
     SPI_SW_3WIRE(COM_3WSPI, GlcdCommType.SOFTWARE, "3-Wire Software SPI"),
+
+    /**
+     * 3-Wire SPI (Hardware Implementation / NOT CURRENTLY IMPLEMENTED)
+     */
+    SPI_HW_3WIRE(COM_3WSPI, GlcdCommType.HARDWARE, "3-Wire Hardware SPI"),
 
     /**
      * I2C Protocol (Software Implementation)

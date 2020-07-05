@@ -21,10 +21,13 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
+import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdCommProtocol;
+
 public class GlcdInterfaceInfo {
 
     private final int index;
     private final String name;
+    private final GlcdCommProtocol protocol;
     private final String setPinFunction;
     private final String arduinoComProcedure;
     private final String arduinoGpioProcedure;
@@ -33,9 +36,10 @@ public class GlcdInterfaceInfo {
     private final String pinsMarkdown;
     private final String genericComProcedure;
 
-    public GlcdInterfaceInfo(int index, String name, String setPinFunction, String arduinoComProcedure, String arduinoGpioProcedure, String pinsWithType, String pinsPlain, String pinsMarkdown, String genericComProcedure) {
+    public GlcdInterfaceInfo(int index, GlcdCommProtocol protocol, String name, String setPinFunction, String arduinoComProcedure, String arduinoGpioProcedure, String pinsWithType, String pinsPlain, String pinsMarkdown, String genericComProcedure) {
         this.index = index;
         this.name = name;
+        this.protocol = protocol;
         this.setPinFunction = setPinFunction;
         this.arduinoComProcedure = arduinoComProcedure;
         this.arduinoGpioProcedure = arduinoGpioProcedure;
@@ -47,6 +51,10 @@ public class GlcdInterfaceInfo {
 
     public int getIndex() {
         return index;
+    }
+
+    public GlcdCommProtocol getProtocol() {
+        return protocol;
     }
 
     public String getName() {

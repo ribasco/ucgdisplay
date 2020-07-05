@@ -1,5 +1,5 @@
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 4 Jul 2020 18:15:14 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sun, 5 Jul 2020 10:46:43 +0800)
 //
 #include "U8g2Hal.h"
 #include <iostream>
@@ -26,7 +26,6 @@ void U8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
     setup_map["u8g2_Setup_max7219_64x8_f"] = u8g2_Setup_max7219_64x8_f;
     setup_map["u8g2_Setup_max7219_8x8_f"] = u8g2_Setup_max7219_8x8_f;
     setup_map["u8g2_Setup_max7219_32x8_f"] = u8g2_Setup_max7219_32x8_f;
-    //setup_map["u8g2_Setup_max7219_16x16_f"] = u8g2_Setup_max7219_16x16_f;
     setup_map["u8g2_Setup_nt7534_tg12864r_f"] = u8g2_Setup_nt7534_tg12864r_f;
     setup_map["u8g2_Setup_pcd8544_84x48_f"] = u8g2_Setup_pcd8544_84x48_f;
     setup_map["u8g2_Setup_pcf8812_96x65_f"] = u8g2_Setup_pcf8812_96x65_f;

@@ -49,7 +49,7 @@ public class GlcdConfig {
     private GlcdCommProtocol busInterface;
     private GlcdPinMapConfig pinMap;
     private String setupProcedure;
-    private Map<String, Object> options = new HashMap<>();
+    private final Map<String, Object> options = new HashMap<>();
 
     GlcdConfig() {
         //package-private

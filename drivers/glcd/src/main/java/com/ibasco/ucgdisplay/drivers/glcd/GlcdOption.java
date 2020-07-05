@@ -143,11 +143,16 @@ public class GlcdOption<T> {
     public static final GlcdOption<Integer> PIGPIO_PORT = createOption("pigpio_port");
 
     /**
+     * Specify the buffer size to be allocated for the display controller 1 page buffer, 2 page buffers or Full Screen Buffer
+     */
+    public static final GlcdOption<GlcdBufferSize> BUFFER_SIZE = createOption("buffer_size");
+
+    /**
      * Show additional debug information on the console
      */
     public static final GlcdOption<Boolean> EXTRA_DEBUG_INFO = createOption("extra_debug_info");
 
-    private String name;
+    private final String name;
 
     /**
      * Private constructor. This class is only meant to be a placeholder for the Glcd config options.

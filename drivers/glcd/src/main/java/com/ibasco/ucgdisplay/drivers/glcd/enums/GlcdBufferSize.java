@@ -21,30 +21,35 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
-public enum GlcdBufferSize {
+import com.ibasco.ucgdisplay.drivers.glcd.GlcdOptionValue;
+
+public enum GlcdBufferSize implements GlcdOptionValue<Integer> {
     /**
      * Only one page of the display memory is stored in the microcontroller RAM.
      * <p>
      * Use a firstPage()/nextPage() loop for drawing on the display.
      */
-    PAGE_BUFFER_1("Page Buffer (One Page)"),
+    PAGE_BUFFER_1(0, "Page Buffer (One Page)"),
 
     /**
      * Same as 1, but maintains two pages in the microcontroller RAM.
      * This will be up to two times faster than 1.
      */
-    PAGE_BUFFER_2("Page Buffer (Two Pages)"),
+    PAGE_BUFFER_2(1, "Page Buffer (Two Pages)"),
 
     /**
      * Keep a copy of the full display frame buffer in the microcontroller RAM.
      * Use clearBuffer() to clear the RAM and sendBuffer() to transfer the microcontroller RAM to the display.
      */
-    FULL_FRAME_BUFFER("Full Frame Buffer");
+    FULL_FRAME_BUFFER(2, "Full Frame Buffer");
 
     private final String name;
 
-    GlcdBufferSize(String name) {
+    private final int value;
+
+    GlcdBufferSize(int value, String name) {
         this.name = name;
+        this.value = value;
     }
 
     public String getName() {
@@ -54,5 +59,15 @@ public enum GlcdBufferSize {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public Integer toValue() {
+        return this.value;
+    }
+
+    @Override
+    public Class<Integer> getType() {
+        return Integer.class;
     }
 }
