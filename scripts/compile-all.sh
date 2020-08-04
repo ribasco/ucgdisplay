@@ -9,6 +9,6 @@ echo "  \_____\____/|_|  |_|_|   |_____|______|______| /_/    \_\______|______|"
 echo "                                                                         "
 
 
-cd /home/raffy/projects/ucgdisplay
+cd /home/ribasco/projects/ucgdisplay
 
 mvn clean package -P'cross-compile,!build-linux-x86_64' -DskipTests=true -Dgpg.skip

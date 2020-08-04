@@ -273,7 +273,14 @@ struct ucgd_t {
     int comm_int;
     //communications type
     int comm_type;
+    //debug flag
     bool debug;
+    //pixel buffer
+    uint8_t* buffer;
+    long bufferSize;
+    //pixel buffer (bgra)
+    uint8_t* bufferBgra;
+    long bufferBgraSize;
 
     ~ucgd_t() {
         ::debug(std::string("ucgd_t : Device closed: ") + std::to_string(address()));
@@ -336,6 +343,10 @@ struct ucgd_t {
         } catch (OptionNotFoundException &e) {
             return defaultVal;
         }
+    }
+
+    [[nodiscard]] const std::weak_ptr<UcgdProvider> &getProvider() const {
+        return provider;
     }
 
 private:

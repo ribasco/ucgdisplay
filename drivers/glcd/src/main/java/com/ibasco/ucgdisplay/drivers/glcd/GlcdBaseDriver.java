@@ -682,6 +682,11 @@ abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
     }
 
     @Override
+    public ByteBuffer getNativeBgraBuffer() {
+        return adapter.getNativeBgraBuffer();
+    }
+
+    @Override
     public int getBufferTileWidth() {
         checkRequirements();
         return adapter.getBufferTileWidth();

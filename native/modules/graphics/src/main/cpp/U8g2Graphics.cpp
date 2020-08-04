@@ -80,7 +80,7 @@ void signal_handler (int sig) {
 
 void registerSignalHandlers() {
 #if !defined(_WIN32) && !defined(_WIN64)
-    struct sigaction act;
+    struct sigaction act{};
     memset (&act, '\0', sizeof(act));
 
     //Register our signal handler(s)
@@ -147,7 +147,7 @@ bool check_validity(JNIEnv *env, jlong id) {
     return true;
 }
 
-void update_key_value_store(JNIEnv *env, std::string key, jobject &value, option_map_t &map) {
+void update_key_value_store(JNIEnv *env, const std::string& key, jobject &value, option_map_t &map) {
     jclass clsString = env->FindClass(CLS_STRING);
     jclass clsObj = env->GetObjectClass(value);
     jclass clsInteger = env->FindClass(CLS_INTEGER);
@@ -222,7 +222,41 @@ void process_options(JNIEnv *env, jobject options, option_map_t &map, std::uniqu
     log->debug("process_options() : Processed a total of {} option entries", map.size());
 }
 
-jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jintArray pin_config, jobject buffer, jobject options, jboolean virtualMode, jobject logger, jstring version) {
+/**
+* Convert u8g2 buffer to bgra buffer
+*/
+void updateBgraBuffer(long id) {
+    const std::unique_ptr<DeviceManager> &devMgr = ServiceLocator::getInstance().getDeviceManager();
+    const std::shared_ptr<ucgd_t> &context = devMgr->getDevice(static_cast<uintptr_t>(id));
+    //do not update buffer if not in virtual mode
+    if (!context->flag_virtual)
+        return;
+    uint8_t* u8g2Buffer = context->buffer;
+    uint8_t* bgraBuffer = context->bufferBgra;
+    if (u8g2Buffer == nullptr || bgraBuffer == nullptr || context->bufferSize <= 0 || context->bufferBgraSize <= 0)
+        return;
+    for (int i = 0; i < context->bufferSize; i++) {
+        uint8_t data = *(u8g2Buffer + i);
+        //read from msb to lsb
+        for (int pos = 7; pos >= 0; pos--) {
+            if (data & (1 << pos)) {
+                //black
+                *(bgraBuffer++) = 0; //blue
+                *(bgraBuffer++) = 0; //green
+                *(bgraBuffer++) = 0; //red
+                *(bgraBuffer++) = 255; //alpha
+            } else {
+                //transparent
+                *(bgraBuffer++) = 0;
+                *(bgraBuffer++) = 0;
+                *(bgraBuffer++) = 0;
+                *(bgraBuffer++) = 0;
+            }
+        }
+    }
+}
+
+jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclass cls, jstring setupProc, jint commInt, jint commType, jint rotation, jintArray pin_config, jobject buffer, jobject bufferBgra, jobject options, jboolean virtualMode, jobject logger, jstring version) {
     jobject globalLogger;
     JNI_MakeGlobal(env, logger, globalLogger);
 
@@ -230,6 +264,11 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
 
     if (buffer == nullptr) {
         JNI_ThrowNativeLibraryException(env, "Pixel buffer not provided");
+        return -1;
+    }
+
+    if (virtualMode && bufferBgra == nullptr) {
+        JNI_ThrowNativeLibraryException(env, "BGRA Pixel buffer not provided");
         return -1;
     }
 
@@ -343,6 +382,12 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
         locator.getLogger().debug("setup() : Converting direct buffer to native buffer");
         auto* pixelBuffer = static_cast<uint8_t *>(env->GetDirectBufferAddress(buffer));
         std::shared_ptr<ucgd_t> &context = U8g2Util_SetupAndInitDisplay(setup_proc_name, commInt, commType, _rotation, *pinMap, mapOptions, pixelBuffer, virtualMode);
+        context->buffer = pixelBuffer;
+        context->bufferSize = env->GetDirectBufferCapacity(buffer);
+        if (virtualMode && bufferBgra != nullptr) {
+            context->bufferBgra = static_cast<uint8_t *>(env->GetDirectBufferAddress(bufferBgra));
+            context->bufferBgraSize = env->GetDirectBufferCapacity(bufferBgra);
+        }
         locator.getLogger().debug("setup() : Returning to java land");
         return context->address();
     } catch (std::exception &e) {
@@ -406,8 +451,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawEllipse(JNIEnv *env, 
     if (!check_validity(env, id))
         return;
     BEGIN_CATCH
-        u8g2_DrawEllipse(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y),
-                         static_cast<u8g2_uint_t>(rx), static_cast<u8g2_uint_t>(ry), static_cast<uint8_t>(options));
+        u8g2_DrawEllipse(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(rx), static_cast<u8g2_uint_t>(ry), static_cast<uint8_t>(options));
     END_CATCH
 }
 
@@ -793,6 +837,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_sendBuffer(JNIEnv *env, j
         return;
     BEGIN_CATCH
         u8g2_SendBuffer(toU8g2(id));
+        updateBgraBuffer(id);
     END_CATCH
 }
 
@@ -1001,6 +1046,7 @@ jstring Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToXBM(JNIEnv *en
             jsout = env->NewStringUTF(out.c_str());
         return jsout;
     END_CATCH
+    return nullptr;
 }
 
 jstring Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToPBM(JNIEnv *env, jclass cls, jlong id) {
@@ -1015,6 +1061,7 @@ jstring Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToPBM(JNIEnv *en
             jsout = env->NewStringUTF(out.c_str());
         return jsout;
     END_CATCH
+    return nullptr;
 }
 
 jstring Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToXBM2(JNIEnv *env, jclass cls, jlong id) {
@@ -1029,6 +1076,7 @@ jstring Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToXBM2(JNIEnv *e
             jsout = env->NewStringUTF(out.c_str());
         return jsout;
     END_CATCH
+    return nullptr;
 }
 
 jstring Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToPBM2(JNIEnv *env, jclass cls, jlong id) {
@@ -1043,6 +1091,7 @@ jstring Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToPBM2(JNIEnv *e
             jsout = env->NewStringUTF(out.c_str());
         return jsout;
     END_CATCH
+    return nullptr;
 }
 
 void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_sendCommand(JNIEnv *env, jclass cls, jlong id, jstring fmt, jbyteArray args) {

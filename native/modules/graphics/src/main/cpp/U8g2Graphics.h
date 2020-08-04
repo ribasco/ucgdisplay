@@ -73,10 +73,10 @@ extern "C" {
 /*
  * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
  * Method:    setup
- * Signature: (Ljava/lang/String;III[ILjava/nio/ByteBuffer;Ljava/util/Map;ZLorg/slf4j/Logger;Ljava/lang/String;)J
+ * Signature: (Ljava/lang/String;III[ILjava/nio/ByteBuffer;Ljava/nio/ByteBuffer;Ljava/util/Map;ZLorg/slf4j/Logger;Ljava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup
-  (JNIEnv *, jclass, jstring, jint, jint, jint, jintArray, jobject, jobject, jboolean, jobject, jstring);
+  (JNIEnv *, jclass, jstring, jint, jint, jint, jintArray, jobject, jobject, jobject, jboolean, jobject, jstring);
 
 /*
  * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics

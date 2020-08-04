@@ -21,7 +21,6 @@
  */
 package com.ibasco.ucgdisplay.drivers.glcd;
 
-import com.ibasco.ucgdisplay.core.u8g2.U8g2EventDispatcher;
 import com.ibasco.ucgdisplay.core.u8g2.U8g2Graphics;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdDriverException;
@@ -33,8 +32,6 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.File;
 import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Driver adapter using JNI and U8g2. Please note that this class is NOT thread-safe.
@@ -48,6 +45,8 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     private int x = 0, y = 0;
 
     private ByteBuffer buffer;
+
+    private ByteBuffer bufferBgra;
 
     private void checkRequirements() {
         if (_id < 0)
@@ -66,7 +65,13 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
         }
         int size = 8 * config.getDisplay().getDisplaySize().getTileWidth() * config.getDisplay().getDisplaySize().getTileHeight();
         buffer = ByteBuffer.allocateDirect(size);
-        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, pinConfig, buffer, config.getOptions(), virtual);
+        if (virtual) {
+            int bgraSize = config.getDisplay().getDisplaySize().getDisplayWidth() * config.getDisplay().getDisplaySize().getDisplayHeight() * 4;
+            bufferBgra = ByteBuffer.allocateDirect(bgraSize);
+        } else {
+            bufferBgra = null;
+        }
+        _id = U8g2Graphics.setup(setupProcedure, commInt, commType, rotation, pinConfig, buffer, bufferBgra, config.getOptions(), virtual);
     }
 
     @Override
@@ -513,6 +518,11 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     @Override
     public ByteBuffer getNativeBuffer() {
         return buffer;
+    }
+
+    @Override
+    public ByteBuffer getNativeBgraBuffer() {
+        return bufferBgra;
     }
 
     @Override

@@ -7,16 +7,16 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdController;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdFont;
 import com.ibasco.ucgdisplay.drivers.glcd.enums.GlcdSize;
 import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdConfigException;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Graphics display driver integration test
@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Rafael Ibasco
  */
 class GlcdDriverIT {
+
     private GlcdDriver driver;
 
     private Executable createVirtualDriverExecutable(GlcdConfig config) {
@@ -228,8 +229,18 @@ class GlcdDriverIT {
         assertDoesNotThrow(() -> driver.sendCommand("caaaaaac", new byte[] {0x027, 0, 3, 0, 7, 0, 127, 0x2f}));
     }
 
+    @DisplayName("Test native buffers")
+    @Test
+    void testNativeBuffer() {
+        driver = createVirtualDriver();
+        driver.clearBuffer();
+        driver.drawBox(0, 0, 128, 64);
+        assertNotNull(driver.getNativeBuffer());
+        assertNotNull(driver.getNativeBgraBuffer());
+    }
+
     private boolean isBufferEmpty(ByteBuffer buffer) {
-        buffer.clear();
+        ((Buffer) buffer).clear();
         while (buffer.hasRemaining()) {
             int b = Byte.toUnsignedInt(buffer.get());
             if (b != 0)

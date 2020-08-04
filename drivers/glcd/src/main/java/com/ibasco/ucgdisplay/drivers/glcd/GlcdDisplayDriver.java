@@ -26,7 +26,6 @@ import com.ibasco.ucgdisplay.drivers.glcd.enums.*;
 
 import java.io.File;
 import java.nio.ByteBuffer;
-import java.util.Map;
 
 /**
  * Graphics Display Driver interface based on the U8G2 Interface.
@@ -36,6 +35,7 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public interface GlcdDisplayDriver extends DisplayDriver {
+
     /**
      * <p>Draw a box (filled frame), starting at x/y position (upper left edge). The box has width w and height h.
      * Parts of the box can be outside of the display boundaries. This procedure will use the current color
@@ -1286,6 +1286,13 @@ public interface GlcdDisplayDriver extends DisplayDriver {
     ByteBuffer getNativeBuffer();
 
     /**
+     * Similar to {@link #getNativeBuffer()} but this returns a buffer in bgra pixel format.
+     *
+     * @return A direct {@link ByteBuffer}. Null if virtual mode is false.
+     */
+    ByteBuffer getNativeBgraBuffer();
+
+    /**
      * Returns the total size of the internal display buffer
      *
      * @return The buffer size in bytes
@@ -1378,7 +1385,7 @@ public interface GlcdDisplayDriver extends DisplayDriver {
      */
     void setMaxClipWindow();
 
-   /**
+    /**
      * <p>
      * Updates all area of the display. This is almost identical to {@link #sendBuffer()}. The area has to be specified in tiles.
      * One tile is a 8x8 pixel area. To get the pixel value, multiply the tile value with 8 (for ROTATION_R0).
@@ -1453,7 +1460,6 @@ public interface GlcdDisplayDriver extends DisplayDriver {
      * </li>
      * <li>More details here <a href="https://github.com/olikraus/u8g2/issues/736">Github Issue (736)</a></li>
      * </ul>
-     *
      * @apiNote <ul>
      * <li>Range for tx: 0..getBufferTileWidth()-1 and for ty: 0..getBufferTileHeight()-1. There is no overflow check.
      * The area must fully fit into the display area.
@@ -1595,7 +1601,7 @@ public interface GlcdDisplayDriver extends DisplayDriver {
      *
      * @return The XBM formatted ASCII representation of the display buffer
      */
-   String exportToXBM2();
+    String exportToXBM2();
 
     /**
      * <p>Exports a <a href="https://en.wikipedia.org/wiki/Netpbm_format">PBM</a> formatted ASCII string representation of the current display buffer</p>
