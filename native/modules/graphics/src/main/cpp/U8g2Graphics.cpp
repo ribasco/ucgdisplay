@@ -241,10 +241,10 @@ void updateBgraBuffer(long id) {
         for (int pos = 7; pos >= 0; pos--) {
             if (data & (1 << pos)) {
                 //black
-                *(bgraBuffer++) = 255; //blue
+                *(bgraBuffer++) = 0; //blue
                 *(bgraBuffer++) = 255; //green
-                *(bgraBuffer++) = 0; //red
-                *(bgraBuffer++) = 255; //alpha
+                *(bgraBuffer++) = 255; //red
+                *(bgraBuffer++) = 0; //alpha
             } else {
                 //transparent
                 *(bgraBuffer++) = 0;
