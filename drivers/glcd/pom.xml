@@ -36,6 +36,11 @@
     <name>${project.prefix} Graphics LCD driver</name>
     <dependencies>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.ibasco.ucgdisplay</groupId>
             <artifactId>ucgd-native-graphics</artifactId>
         </dependency>

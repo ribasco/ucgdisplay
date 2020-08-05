@@ -222,28 +222,17 @@ void process_options(JNIEnv *env, jobject options, option_map_t &map, std::uniqu
     log->debug("process_options() : Processed a total of {} option entries", map.size());
 }
 
-/**
-* Convert u8g2 buffer to bgra buffer
-*/
-void updateBgraBuffer(long id) {
-    const std::unique_ptr<DeviceManager> &devMgr = ServiceLocator::getInstance().getDeviceManager();
-    const std::shared_ptr<ucgd_t> &context = devMgr->getDevice(static_cast<uintptr_t>(id));
-    //do not update buffer if not in virtual mode
-    if (!context->flag_virtual)
-        return;
-    uint8_t* u8g2Buffer = context->buffer;
-    uint8_t* bgraBuffer = context->bufferBgra;
-    if (u8g2Buffer == nullptr || bgraBuffer == nullptr || context->bufferSize <= 0 || context->bufferBgraSize <= 0)
-        return;
-    for (int i = 0; i < context->bufferSize; i++) {
-        uint8_t data = *(u8g2Buffer + i);
+void processHorizontalBuffer(int width, uint8_t* buffer, int bufferSize, uint8_t* bgraBuffer, int bgraBufferSize) {
+    Log& log = ServiceLocator::getInstance().getLogger();
+    for (int i = 0; i < bufferSize; i++) {
+        uint8_t data = *(buffer + i);
         //read from msb to lsb
         for (int pos = 7; pos >= 0; pos--) {
             if (data & (1 << pos)) {
                 //black
-                *(bgraBuffer++) = 255; //blue
-                *(bgraBuffer++) = 127; //green
-                *(bgraBuffer++) = 127; //red
+                *(bgraBuffer++) = 0; //blue
+                *(bgraBuffer++) = 0; //green
+                *(bgraBuffer++) = 0; //red
                 *(bgraBuffer++) = 255; //alpha
             } else {
                 //transparent
@@ -253,6 +242,78 @@ void updateBgraBuffer(long id) {
                 *(bgraBuffer++) = 0;
             }
         }
+    }
+}
+
+void processVerticalBuffer(int width, uint8_t* buffer, int bufferSize, uint8_t* bgraBuffer, int bgraBufferSize) {
+    const std::unique_ptr<DeviceManager> &devMgr = ServiceLocator::getInstance().getDeviceManager();
+    Log& log = ServiceLocator::getInstance().getLogger();
+
+    int bitpos = 0, x = 0, y = 0, page = 0, pos = 0, mark = 0;
+    while (true) {
+        if (x > (width - 1)) {
+            //are we at the last bit?
+            if (bitpos++ >= 7) {
+                if (!(pos < bufferSize))
+                    break;
+                page++;
+                bitpos = 0;
+                pos = width * page;
+                mark = pos;
+            } else {
+                pos = mark;
+            }
+            x = 0;
+        }
+
+        uint8_t data = buffer[pos++];
+        y =  (page * 8) + bitpos;
+        int bit = (data & (1 << bitpos)) != 0 ? 1 : 0;
+        if (bit) {
+           //black
+           *(bgraBuffer++) = 0; //blue
+           *(bgraBuffer++) = 0; //green
+           *(bgraBuffer++) = 0; //red
+           *(bgraBuffer++) = 255; //alpha
+        } else {
+            //transparent
+            *(bgraBuffer++) = 0;
+            *(bgraBuffer++) = 0;
+            *(bgraBuffer++) = 0;
+            *(bgraBuffer++) = 0;
+        }
+        //log.debug("Bit = {}, Idx = {}, Page = {} ({}, {}) = {}", bitpos, pos - 1, page, x, y, bit);
+        x++;
+    }
+}
+
+/**
+* Convert u8g2 buffer to bgra buffer
+*/
+void updateBgraBuffer(long id) {
+    const std::unique_ptr<DeviceManager> &devMgr = ServiceLocator::getInstance().getDeviceManager();
+    const std::shared_ptr<ucgd_t> &context = devMgr->getDevice(static_cast<uintptr_t>(id));
+    Log& log = ServiceLocator::getInstance().getLogger();
+
+    //do not update buffer if not in virtual mode
+    if (!context->flag_virtual)
+        return;
+    //auto& log = ServiceLocator::getInstance().getLogger();
+    uint8_t* u8g2Buffer = context->buffer;
+    uint8_t* bgraBuffer = context->bufferBgra;
+
+    if (u8g2Buffer == nullptr || bgraBuffer == nullptr || context->bufferSize <= 0 || context->bufferBgraSize <= 0)
+        return;
+
+    int width = context->u8g2->pixel_buf_width;
+    int height = context->u8g2->pixel_buf_height;
+
+    //u8g2_ll_hvline_vertical_top_lsb
+    //u8g2_ll_hvline_horizontal_right_lsb
+    if (context->u8g2->ll_hvline == u8g2_ll_hvline_vertical_top_lsb) {
+        processVerticalBuffer(width, u8g2Buffer, context->bufferSize, bgraBuffer, context->bufferBgraSize);
+    } else {
+        processHorizontalBuffer(width, u8g2Buffer, context->bufferSize, bgraBuffer, context->bufferBgraSize);
     }
 }
 
@@ -384,6 +445,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
         std::shared_ptr<ucgd_t> &context = U8g2Util_SetupAndInitDisplay(setup_proc_name, commInt, commType, _rotation, *pinMap, mapOptions, pixelBuffer, virtualMode);
         context->buffer = pixelBuffer;
         context->bufferSize = env->GetDirectBufferCapacity(buffer);
+        locator.getLogger().debug("setup() : Pixel buffer initialized with size {}", context->bufferSize);
         if (virtualMode && bufferBgra != nullptr) {
             context->bufferBgra = static_cast<uint8_t *>(env->GetDirectBufferAddress(bufferBgra));
             context->bufferBgraSize = env->GetDirectBufferCapacity(bufferBgra);

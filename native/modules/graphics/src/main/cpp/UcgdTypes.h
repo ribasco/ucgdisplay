@@ -267,7 +267,9 @@ struct ucgd_t {
     u8g2_msg_func_t gpio_cb;
     //Dislpay rotation mode
     u8g2_cb_t *rotation;
+    //font flag
     bool flag_font;
+    //virtual flag
     bool flag_virtual;
     //communications interface
     int comm_int;
