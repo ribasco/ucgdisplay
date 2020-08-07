@@ -266,29 +266,40 @@ struct ucgd_t {
     //GPIO callback
     u8g2_msg_func_t gpio_cb;
     //Dislpay rotation mode
-    u8g2_cb_t *rotation;
+    u8g2_cb_t *rotation{};
     //font flag
-    bool flag_font;
+    bool flag_font{};
     //virtual flag
-    bool flag_virtual;
+    bool flag_virtual{};
     //communications interface
-    int comm_int;
+    int comm_int{};
     //communications type
-    int comm_type;
+    int comm_type{};
     //debug flag
-    bool debug;
+    bool debug{};
     //pixel buffer
-    uint8_t* buffer;
-    long bufferSize;
+    uint8_t* buffer{};
+    //u8g2 buffer size
+    long bufferSize{};
     //pixel buffer (bgra)
-    uint8_t* bufferBgra;
-    long bufferBgraSize;
+    uint8_t* bufferBgra{};
+    //bgra buffer size
+    long bufferBgraSize{};
+    //Color used to draw set bits (used for the bgra buffer)
+    int primary_color;
+    //Color used to draw unset bits (used for the bgra buffer)
+    int secondary_color;
+
+    ucgd_t() {
+        primary_color = 255;
+        secondary_color = 0;
+    }
 
     ~ucgd_t() {
         ::debug(std::string("ucgd_t : Device closed: ") + std::to_string(address()));
     }
 
-    uintptr_t address() {
+    [[nodiscard]] uintptr_t address() const {
         return (uintptr_t) u8g2.get();
     }
 
@@ -305,8 +316,8 @@ struct ucgd_t {
     //options associated with this context
     std::map<std::string, std::any> options;
 
-    auto setDefaultProvider(std::shared_ptr<UcgdProvider> &provider) -> void {
-        this->provider = provider;
+    auto setDefaultProvider(std::shared_ptr<UcgdProvider> &prvdr) -> void {
+        this->provider = prvdr;
     }
 
     auto getDefaultProvider() -> std::shared_ptr<UcgdProvider> {

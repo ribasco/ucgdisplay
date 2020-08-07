@@ -336,12 +336,20 @@ class GlcdDriverIT {
         assertEquals(GlcdBufferLayout.VERTICAL, driver.getConfig().getDisplay().getBufferType());
 
         ByteBuffer u8g2Buff = driver.getNativeBuffer();
+        ByteBuffer bgraBuff = driver.getNativeBgraBuffer();
 
         assertNotNull(u8g2Buff);
         assertFalse(isBufferEmpty(u8g2Buff));
 
         driver.sendBuffer();
         assertFalse(isBufferEmpty(u8g2Buff));
+        assertFalse(isBufferEmpty(bgraBuff));
+
+        driver.clearBuffer();
+        assertTrue(isBufferEmpty(u8g2Buff));
+        assertTrue(isBufferEmpty(bgraBuff));
+
+        driver.drawPixel(20, 20);
     }
 
     private void processVerticalHz(int width, byte[] buffer) {
@@ -364,7 +372,7 @@ class GlcdDriverIT {
             byte data = buffer[pos++];
             y =  (page * 8) + bitpos;
             int bit = (data & (1 << bitpos)) != 0 ? 1 : 0;
-            log.debug("Bit = {}, Idx = {}, Page = {} ({}, {}) = {}", bitpos, pos - 1, page, x, y, bit);
+            //log.debug("Bit = {}, Idx = {}, Page = {} ({}, {}) = {}", bitpos, pos - 1, page, x, y, bit);
             x++;
         }
     }
@@ -391,7 +399,7 @@ class GlcdDriverIT {
             byte data = buffer.get();
             y =  (page * 8) + bitpos;
             int bit = (data & (1 << bitpos)) != 0 ? 1 : 0;
-            log.debug("Bit = {}, Idx = {}, Page = {} ({}, {}) = {}", bitpos, buffer.position() - 1, page, x, y, bit);
+            //log.debug("Bit = {}, Idx = {}, Page = {} ({}, {}) = {}", bitpos, buffer.position() - 1, page, x, y, bit);
             x++;
         }
     }
@@ -409,7 +417,7 @@ class GlcdDriverIT {
             for (int pos = 0; pos <= 7; pos++) {
                 y = (page * 8) + pos;
                 int bit = (data & (1 << pos)) != 0 ? 1 : 0;
-                log.debug("\t\t({}) x={}, y={} = {}", u8g2Buff.position() - 1, x, y, bit);
+                //log.debug("\t\t({}) x={}, y={} = {}", u8g2Buff.position() - 1, x, y, bit);
             }
             x++;
         }

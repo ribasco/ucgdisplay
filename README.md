@@ -6,7 +6,8 @@
 
 ### Change Log
 **2.0.0-alpha (07/04/2020)**
-- Added BGRA buffers
+- Added setPrimaryColor and setSecondaryColor methods in native class
+- Added direct native access for BGRA buffers. 
 - Added GlcdInterfaceLookup utility class to provide additional information about a communication protocol 
 - New meta data information for fonts
 - Renamed GlcdBufferType to GlcdBufferLayout

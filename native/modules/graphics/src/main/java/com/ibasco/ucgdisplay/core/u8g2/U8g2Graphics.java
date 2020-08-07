@@ -41,30 +41,35 @@ public class U8g2Graphics {
     private static final Logger log = LoggerFactory.getLogger(U8g2Graphics.class);
 
     //<editor-fold desc="Display rotation options">
+
     /**
      * No rotation
      *
      * @see #setDisplayRotation
      */
     public static final int ROTATION_R0 = 0;
+
     /**
      * 90 degree clockwise rotation
      *
      * @see #setDisplayRotation
      */
     public static final int ROTATION_R1 = 1;
+
     /**
      * 180 degree clockwise rotation
      *
      * @see #setDisplayRotation
      */
     public static final int ROTATION_R2 = 2;
+
     /**
      * 270 degree clockwise rotation
      *
      * @see #setDisplayRotation
      */
     public static final int ROTATION_R3 = 3;
+
     /**
      * No rotation, landscape, display content is mirrored
      *
@@ -74,6 +79,7 @@ public class U8g2Graphics {
     //</editor-fold>
 
     //<editor-fold desc="Bus Interface types">
+
     /**
      * Bus interface using the device hardware specific features for data transport
      */
@@ -86,6 +92,7 @@ public class U8g2Graphics {
     //</editor-fold>
 
     //<editor-fold desc="Bus Interfaces">
+
     /**
      * 4-Wire SPI protocol
      */
@@ -133,6 +140,7 @@ public class U8g2Graphics {
     //</editor-fold>
 
     //<editor-fold desc="Draw Options">
+
     /**
      * Draw the upper right portion of the shape
      */
@@ -201,7 +209,7 @@ public class U8g2Graphics {
      * @param buffer
      *         The buffer contiaining the pixel data of the display
      * @param bufferBgra
-     *         The buffer containing the pixel data of the display. The memory structure of this buffer is converted following the BGRA format.  
+     *         The buffer containing the pixel data of the display. The memory structure of this buffer is converted following the BGRA format.
      * @param options
      *         Additional provider specific options
      * @param virtual
@@ -1309,7 +1317,6 @@ public class U8g2Graphics {
      */
     public static native void setBufferCurrTileRow(long id, int row);
 
-
     /**
      * <p>Return the pixel width of string.</p>
      *
@@ -1433,7 +1440,6 @@ public class U8g2Graphics {
      * </li>
      * <li>More details here <a href="https://github.com/olikraus/u8g2/issues/736">Github Issue (736)</a></li>
      * </ul>
-     *
      * @apiNote <ul>
      * <li>Range for tx: 0..getBufferTileWidth()-1 and for ty: 0..getBufferTileHeight()-1. There is no overflow check.
      * The area must fully fit into the display area.
@@ -1625,4 +1631,20 @@ public class U8g2Graphics {
      *         The byte will be interpreted accordingly to the char at the same position of the fmt string.
      */
     public static native void sendCommand(long id, String format, byte... args);
+
+    /**
+     * Set the primary color (set bit) for the pixel data on the BGRA buffer. Default value is 255 (Black)
+     *
+     * @param color
+     *         A 32-bit color value in BGRA format
+     */
+    public static native void setPrimaryColor(long id, int color);
+
+    /**
+     * Set the secondary color (unset bit) for the pixel data on the BGRA buffer. Default value is 0 (Transparent)
+     *
+     * @param color
+     *         A 32-bit color value in BGRA format
+     */
+    public static native void setSecondaryColor(long id, int color);
 }

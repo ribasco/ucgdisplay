@@ -49,7 +49,7 @@ bool tryGetAndInitProvider(const std::shared_ptr<ucgd_t> &context, const std::st
 /**
  * Initialize the HAL
  */
-void U8g2hal_Init() {
+void U8g2Hal_Init() {
     //Initialize lookup tables
     U8g2hal_InitSetupFunctions(u8g2_setup_functions);
     U8g2hal_InitFonts(u8g2_font_map);

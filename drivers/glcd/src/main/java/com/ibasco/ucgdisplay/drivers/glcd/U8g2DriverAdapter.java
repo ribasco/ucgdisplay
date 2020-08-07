@@ -610,6 +610,18 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     }
 
     @Override
+    public void setPrimaryColor(int color) {
+        checkRequirements();
+        U8g2Graphics.setPrimaryColor(_id, color);
+    }
+
+    @Override
+    public void setSecondaryColor(int color) {
+        checkRequirements();
+        U8g2Graphics.setSecondaryColor(_id, color);
+    }
+
+    @Override
     public void write(byte... data) {
         throw new NotImplementedException("Write not implemented for this driver");
     }

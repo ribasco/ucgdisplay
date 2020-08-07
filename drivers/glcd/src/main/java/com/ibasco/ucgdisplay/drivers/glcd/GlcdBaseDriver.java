@@ -49,15 +49,15 @@ abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
 
     private static final GlcdRotation DEFAULT_ROTATION = GlcdRotation.ROTATION_NONE;
 
-    private GlcdConfig config;
+    private final GlcdConfig config;
 
     private GlcdDriverEventHandler driverEventHandler;
 
     private boolean initialized = false;
 
-    private boolean virtual;
+    private final boolean virtual;
 
-    private GlcdDriverAdapter adapter;
+    private final GlcdDriverAdapter adapter;
 
     /**
      * Create new instance based on the config provided.
@@ -768,6 +768,18 @@ abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
     public void sendCommand(String format, byte... args) {
         checkRequirements();
         adapter.sendCommand(format, args);
+    }
+
+    @Override
+    public void setPrimaryColor(int color) {
+        checkRequirements();
+        adapter.setPrimaryColor(color);
+    }
+
+    @Override
+    public void setSecondaryColor(int color) {
+        checkRequirements();
+        adapter.setSecondaryColor(color);
     }
 
     @Override

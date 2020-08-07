@@ -1635,4 +1635,20 @@ public interface GlcdDisplayDriver extends DisplayDriver {
      *         The byte will be interpreted accordingly to the char at the same position of the fmt string.
      **/
     void sendCommand(String format, byte... args);
+
+    /**
+     * Set the primary color (set bit) for the pixel data on the BGRA buffer.
+     *
+     * @param color
+     *         A 32-bit color value in BGRA format
+     */
+    void setPrimaryColor(int color);
+
+    /**
+     * Set the secondary color (unset bit) for the pixel data on the BGRA buffer.
+     *
+     * @param color
+     *         A 32-bit color value in BGRA format
+     */
+    void setSecondaryColor(int color);
 }

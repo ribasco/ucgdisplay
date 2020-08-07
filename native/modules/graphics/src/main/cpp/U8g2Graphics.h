@@ -606,6 +606,22 @@ JNIEXPORT jstring JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_expo
 JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_sendCommand
   (JNIEnv *, jclass, jlong, jstring, jbyteArray);
 
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    setPrimaryColor
+ * Signature: (JI)V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setPrimaryColor
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    setSecondaryColor
+ * Signature: (JI)V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setSecondaryColor
+  (JNIEnv *, jclass, jlong, jint);
+
 #ifdef __cplusplus
 }
 #endif

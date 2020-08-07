@@ -103,7 +103,7 @@ uint8_t cb_byte_sed1520(const std::shared_ptr<ucgd_t> &info, u8x8_t *u8x8, uint8
 /**
  * Initialize the lookup t ables. This shuld be called prior to calling the other methods found in this file
  */
-void U8g2hal_Init();
+void U8g2Hal_Init();
 
 /**
  * Initialize u8g2 setup lookup table
