@@ -625,18 +625,18 @@ JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setSeco
 /*
  * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
  * Method:    drawPixels
- * Signature: (J[BI)V
+ * Signature: (JIIII[B)V
  */
 JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixels
-  (JNIEnv *, jclass, jlong, jbyteArray, jint);
+  (JNIEnv *, jclass, jlong, jint, jint, jint, jint, jbyteArray);
 
 /*
  * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
  * Method:    drawPixelsBgra
- * Signature: (J[BI)V
+ * Signature: (JIIII[B)V
  */
 JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixelsBgra
-  (JNIEnv *, jclass, jlong, jbyteArray, jint);
+  (JNIEnv *, jclass, jlong, jint, jint, jint, jint, jbyteArray);
 
 #ifdef __cplusplus
 }

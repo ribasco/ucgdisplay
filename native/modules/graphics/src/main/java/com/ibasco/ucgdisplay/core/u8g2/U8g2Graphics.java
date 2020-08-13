@@ -1657,22 +1657,30 @@ public class U8g2Graphics {
      *
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int[], ByteBuffer, ByteBuffer, Map, boolean)}
-     * @param buffer
-     *         The pixel buffer
-     * @param size
-     *         The size of the pixel buffer
+     * @param x
+     *         The destination x-coordinate
+     * @param y
+     *         The destination y-coordinate
+     * @param width
+     *         The width of the area to be drawn
+     * @param height
+     *         The height of the area to be drawn
      */
-    public static native void drawPixels(long id, byte[] buffer, int size);
+    public static native void drawPixels(long id, int x, int y, int width, int height, byte[] buffer);
 
     /**
      * <p>Draws pixels on the screen based on the provided pixel buffer. This buffer is using the BGRA format. The size of the buffer is determined by the following formulat: width * height * 4</p>
      *
      * @param id
      *         The display instance id retrieved via {@link #setup(String, int, int, int, int[], ByteBuffer, ByteBuffer, Map, boolean)}
-     * @param buffer
-     *         The bgra pixel buffer
-     * @param size
-     *         The size of the bgra pixel buffer
+     * @param x
+     *         The destination x-coordinate
+     * @param y
+     *         The destination y-coordinate
+     * @param width
+     *         The width of the area to be drawn
+     * @param height
+     *         The height of the area to be drawn
      */
-    public static native void drawPixelsBgra(long id, byte[] buffer, int size);
+    public static native void drawPixelsBgra(long id, int x, int y, int width, int height, byte[] buffer);
 }

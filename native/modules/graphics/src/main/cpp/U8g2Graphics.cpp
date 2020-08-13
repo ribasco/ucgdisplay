@@ -1123,7 +1123,7 @@ jstring Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToXBM(JNIEnv *en
     BEGIN_CATCH
         clearOutputBuffer();
         std::shared_ptr<ucgd_t> context = ServiceLocator::getInstance().getDeviceManager()->getDevice(static_cast<uintptr_t>(id));
-        u8g2_t* u8g2 = toU8g2(id);
+        u8g2_t *u8g2 = toU8g2(id);
         u8g2_WriteBufferXBM(u8g2, &writeOutputBuffer);
         std::string out = readOutputBuffer();
         jstring jsout = nullptr;
@@ -1209,7 +1209,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setSecondaryColor(JNIEnv 
     END_CATCH
 }
 
-void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixels(JNIEnv *env, jclass cls, jlong id, jbyteArray buffer, jint size) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixels(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height, jbyteArray buffer) {
     if (!checkValidity(env, id))
         return;
     BEGIN_CATCH
@@ -1217,52 +1217,83 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixels(JNIEnv *env, j
         uint8_t tmp[bufferSize];
         JNI_CopyJByteArray(env, buffer, tmp, bufferSize);
         u8g2_t *u8g2 = toU8g2(id);
-        int x = 0, y = 0;
-        int width = u8g2_GetBufferTileWidth(u8g2) * 8;
-        int height = u8g2_GetBufferTileHeight(u8g2) * 8;
+        int destX = x, destY = y;
+        int maxX = x + width;
+        int maxY = y + height;
+        int displayWidth = u8g2_GetBufferTileWidth(u8g2) * 8;
+        int displayHeight = u8g2_GetBufferTileHeight(u8g2) * 8;
+
         u8g2_ClearBuffer(u8g2);
-        for (int i = 0; i < bufferSize; i++) {
-            uint8_t data = tmp[i];
+        for (int idx = 0; idx < bufferSize; idx++) {
+            uint8_t data = tmp[idx];
             //start with the most significant bit
             for (int pos = 7; pos >= 0; pos++) {
-                if (x >= width) {
-                    x = 0;
-                    y++;
+                if (destX >= maxX) {
+                    destX = x;
+                    destY++;
+                }
+                //check bounds
+                if (destX >= maxX || destY >= maxY || destX >= displayWidth || destY >= displayHeight || destX < 0 || destY < 0) {
+                    destX++;
+                    continue;
                 }
                 //if bit is set, draw
                 if (((1 << pos) & data) != 0)
-                    u8g2_DrawPixel(u8g2, x, y);
-                x++;
+                    u8g2_DrawPixel(u8g2, destX, destY);
+                destX++;
             }
         }
     END_CATCH
 }
 
-void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixelsBgra(JNIEnv *env, jclass cls, jlong id, jbyteArray buffer, jint size) {
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixelsBgra(JNIEnv *env, jclass cls, jlong id, jint x, jint y, jint width, jint height, jbyteArray buffer) {
     if (!checkValidity(env, id))
         return;
     BEGIN_CATCH
         jsize jBufferSize = env->GetArrayLength(buffer);
         jbyte *jBuffer = env->GetByteArrayElements(buffer, nullptr);
+
         u8g2_t *u8g2 = toU8g2(id);
-        int width = u8g2_GetBufferTileWidth(u8g2) * 8;
-        int height = u8g2_GetBufferTileHeight(u8g2) * 8;
+        int displayWidth = u8g2_GetBufferTileWidth(u8g2) * 8;
+        int displayHeight = u8g2_GetBufferTileHeight(u8g2) * 8;
         u8g2_ClearBuffer(u8g2);
-        int x = 0, y = 0;
-        for (int i = 0; i < jBufferSize; i += 4) {
-            if (x >= width) {
-                y++;
-                x = 0;
+
+        //iterate the source image
+        int destX = x, destY = y;
+        int maxX = x + width;
+        int maxY = y + height;
+
+        /*std::cout << "x = " << std::to_string(x) << std::endl;
+        std::cout << "y = " << std::to_string(y) << std::endl;
+        std::cout << "maxX = " << std::to_string(maxX) << std::endl;
+        std::cout << "maxY = " << std::to_string(maxY) << std::endl;
+        std::cout << "sourceWidth = " << std::to_string(width) << std::endl;
+        std::cout << "sourceHeight = " << std::to_string(height) << std::endl;
+        std::cout << "bufferSize = " << std::to_string(jBufferSize) << std::endl;*/
+
+        for (int pos = 0; pos < jBufferSize; pos += 4) {
+            if (destX >= maxX) {
+                destY++;
+                destX = x;
             }
-            auto blue = static_cast<uint8_t>(jBuffer[i + 0]);
-            auto green = static_cast<uint8_t>(jBuffer[i + 1]);
-            auto red = static_cast<uint8_t>(jBuffer[i + 2]);
-            auto alpha = static_cast<uint8_t>(jBuffer[i + 3]);
+
+            //check bounds
+            if (destX >= maxX || destY >= maxY || destX >= displayWidth || destY >= displayHeight || destX < 0 || destY < 0) {
+                destX++;
+                continue;
+            }
+
+            auto blue = static_cast<uint8_t>(jBuffer[pos + 0]);
+            auto green = static_cast<uint8_t>(jBuffer[pos + 1]);
+            auto red = static_cast<uint8_t>(jBuffer[pos + 2]);
+            auto alpha = static_cast<uint8_t>(jBuffer[pos + 3]);
             int color = (blue << 24) | (green << 16) | (red << 8) | (alpha);
-            //std::cout << "X = " << std::to_string(x) << ", Y = " << std::to_string(y) << " = " << std::to_string(color) << std::endl;
-            if (color != 0)
-                u8g2_DrawPixel(u8g2, x, y);
-            x++;
+
+            if (color != 0) {
+                //std::cout << "[" << std::to_string(destX - x)  << "] Drawing: X = " << std::to_string(destX) << ", Y = " << std::to_string(destY) << " = " << std::to_string(color) << std::endl;
+                u8g2_DrawPixel(u8g2, destX, destY);
+            }
+            destX++;
         }
         env->ReleaseByteArrayElements(buffer, jBuffer, 0);
     END_CATCH

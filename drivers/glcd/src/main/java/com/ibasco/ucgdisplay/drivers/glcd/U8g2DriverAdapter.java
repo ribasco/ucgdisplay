@@ -207,17 +207,17 @@ public class U8g2DriverAdapter implements GlcdDriverAdapter {
     }
 
     @Override
-    public void drawPixels(byte[] buffer, int size) {
+    public void drawPixels(int x, int y, int width, int height, byte[] buffer) {
         checkRequirements();
         setCursor(x, y);
-        U8g2Graphics.drawPixels(_id, buffer, size);
+        U8g2Graphics.drawPixels(_id, x, y, width, height, buffer);
     }
 
     @Override
-    public void drawPixelsBgra(byte[] buffer, int size) {
+    public void drawPixelsBgra(int x, int y, int width, int height, byte[] buffer) {
         checkRequirements();
         setCursor(x, y);
-        U8g2Graphics.drawPixelsBgra(_id, buffer, size);
+        U8g2Graphics.drawPixelsBgra(_id, x, y, width, height, buffer);
     }
 
     @Override

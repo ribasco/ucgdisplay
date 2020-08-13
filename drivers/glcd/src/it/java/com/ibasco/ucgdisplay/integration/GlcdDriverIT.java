@@ -357,24 +357,37 @@ class GlcdDriverIT {
     public void testDrawPixelsBgra() {
         driver = createVirtualDriver(GlcdConfigBuilder.create(Glcd.SSD1306.D_128x64_128X64NONAME, GlcdCommProtocol.SPI_HW_4WIRE).build());
 
-        int width = driver.getConfig().getDisplaySize().getDisplayWidth();
-        int height = driver.getConfig().getDisplaySize().getDisplayHeight();
+        int sourceWidth = 27;
+        int sourceHeight = 32;
 
-        byte[] pixels = new byte[width * height * 4];
-        pixels[0] = 127;
-        pixels[1] = 127;
-        pixels[2] = 127;
-        pixels[3] = 127;
-        driver.drawPixelsBgra(pixels, 0);
-        driver.sendBuffer();
+        byte[] sourceImage = new byte[sourceWidth * sourceHeight * 4];
+
+        //Populate source image
+        for (int idx = 0; idx < sourceImage.length; idx += 4) {
+            sourceImage[idx] = 0;
+            sourceImage[idx + 1] = 0;
+            sourceImage[idx + 2] = 0;
+            sourceImage[idx + 3] = 127;
+        }
 
         ByteBuffer bgraBuffer = driver.getNativeBgraBuffer();
-        bgraBuffer.clear();
-        int firstPixel = bgraBuffer.getInt();
-        int secondPixel = bgraBuffer.getInt();
+        driver.drawPixelsBgra(100, 15, sourceWidth, sourceHeight, sourceImage);
+        driver.sendBuffer();
 
-        assertTrue(firstPixel != 0);
-        assertEquals(0, secondPixel);
+        //formula for determining bgra array index given x and y coordinates
+        // (x + y * 128) * 4
+
+        int firstPixel = getColor(bgraBuffer, 100, 15, 128);
+        int lastPixel = getColor(bgraBuffer, 126, 46, 128);
+
+        assertEquals(255, firstPixel);
+        assertEquals(255, lastPixel);
+    }
+
+    private int getColor(ByteBuffer buffer, int x, int y, int width) {
+        int index = (x + y * width) * 4;
+        buffer.position(index);
+        return buffer.getInt();
     }
 
     private void processVerticalHz(int width, byte[] buffer) {
@@ -395,7 +408,7 @@ class GlcdDriverIT {
                 x = 0;
             }
             byte data = buffer[pos++];
-            y =  (page * 8) + bitpos;
+            y = (page * 8) + bitpos;
             int bit = (data & (1 << bitpos)) != 0 ? 1 : 0;
             //log.debug("Bit = {}, Idx = {}, Page = {} ({}, {}) = {}", bitpos, pos - 1, page, x, y, bit);
             x++;
@@ -422,7 +435,7 @@ class GlcdDriverIT {
                 x = 0;
             }
             byte data = buffer.get();
-            y =  (page * 8) + bitpos;
+            y = (page * 8) + bitpos;
             int bit = (data & (1 << bitpos)) != 0 ? 1 : 0;
             //log.debug("Bit = {}, Idx = {}, Page = {} ({}, {}) = {}", bitpos, buffer.position() - 1, page, x, y, bit);
             x++;

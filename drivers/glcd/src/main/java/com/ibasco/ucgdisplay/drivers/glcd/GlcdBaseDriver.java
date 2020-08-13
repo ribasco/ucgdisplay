@@ -783,15 +783,15 @@ abstract public class GlcdBaseDriver implements GlcdDisplayDriver {
     }
 
     @Override
-    public void drawPixels(byte[] buffer, int size) {
+    public void drawPixels(int x, int y, int width, int height, byte[] buffer) {
         checkRequirements();
-        adapter.drawPixels(buffer, size);
+        adapter.drawPixels(x, y, width, height, buffer);
     }
 
     @Override
-    public void drawPixelsBgra(byte[] buffer, int size) {
+    public void drawPixelsBgra(int x, int y, int width, int height, byte[] buffer) {
         checkRequirements();
-        adapter.drawPixelsBgra(buffer, size);
+        adapter.drawPixelsBgra(x, y, width, height, buffer);
     }
 
     @Override
