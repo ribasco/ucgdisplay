@@ -28,6 +28,7 @@
 #include <iostream>
 #include <Log.h>
 #include <Global.h>
+#include <sstream>
 
 #if defined(__APPLE__) && !defined(__AVAILABILITY__)
 #include <Availability.h>
@@ -289,10 +290,17 @@ struct ucgd_t {
     int primary_color;
     //Color used to draw unset bits (used for the bgra buffer)
     int secondary_color;
+    //output buffer
+    std::unique_ptr<std::stringstream> output_buffer;
+
+    const void writeOutputBuffer(const char *output) {
+
+    }
 
     ucgd_t() {
         primary_color = 255;
         secondary_color = 0;
+        output_buffer = std::make_unique<std::stringstream>();
     }
 
     ~ucgd_t() {

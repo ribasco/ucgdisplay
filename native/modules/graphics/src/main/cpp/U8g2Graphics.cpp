@@ -210,13 +210,13 @@ void copyToBgraBufferHorizontal(int width, const std::shared_ptr<ucgd_t> &contex
     unsigned int secondary = context->secondary_color;
 
     unsigned int pBlue = ((primary >> 24) & 0xff);
-    unsigned int pGreen   = ((primary >> 16) & 0xff);
-    unsigned int pRed = ((primary >>  8) & 0xff);
-    unsigned int pAlpha  = (primary & 0xff);
+    unsigned int pGreen = ((primary >> 16) & 0xff);
+    unsigned int pRed = ((primary >> 8) & 0xff);
+    unsigned int pAlpha = (primary & 0xff);
 
     unsigned int sBlue = ((secondary >> 24) & 0xff);
     unsigned int sGreen = ((secondary >> 16) & 0xff);
-    unsigned int sRed = ((secondary >>  8) & 0xff);
+    unsigned int sRed = ((secondary >> 8) & 0xff);
     unsigned int sAlpha = (secondary & 0xff);
 
     int bpos = 0;
@@ -254,13 +254,13 @@ void copyToBgraBufferVertical(int width, const std::shared_ptr<ucgd_t> &context)
     unsigned int secondary = context->secondary_color;
 
     unsigned int pBlue = ((primary >> 24) & 0xff);
-    unsigned int pGreen   = ((primary >> 16) & 0xff);
-    unsigned int pRed = ((primary >>  8) & 0xff);
-    unsigned int pAlpha  = (primary & 0xff);
+    unsigned int pGreen = ((primary >> 16) & 0xff);
+    unsigned int pRed = ((primary >> 8) & 0xff);
+    unsigned int pAlpha = (primary & 0xff);
 
     unsigned int sBlue = ((secondary >> 24) & 0xff);
     unsigned int sGreen = ((secondary >> 16) & 0xff);
-    unsigned int sRed = ((secondary >>  8) & 0xff);
+    unsigned int sRed = ((secondary >> 8) & 0xff);
     unsigned int sAlpha = (secondary & 0xff);
 
     int bitpos = 0, x = 0, y = 0, page = 0, pos = 0, mark = 0, bpos = 0;
@@ -676,8 +676,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawTriangle(JNIEnv *env,
     if (!checkValidity(env, id))
         return;
     BEGIN_CATCH
-        u8g2_DrawTriangle(toU8g2(id), static_cast<int16_t>(x0), static_cast<int16_t>(y0), static_cast<int16_t>(x1),
-                          static_cast<int16_t>(y1), static_cast<int16_t>(x2), static_cast<int16_t>(y2));
+        u8g2_DrawTriangle(toU8g2(id), static_cast<int16_t>(x0), static_cast<int16_t>(y0), static_cast<int16_t>(x1), static_cast<int16_t>(y1), static_cast<int16_t>(x2), static_cast<int16_t>(y2));
     END_CATCH
 }
 
@@ -689,8 +688,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawXBM(JNIEnv *env, jcla
         jsize len = env->GetArrayLength(data);
         uint8_t tmp[len];
         JNI_CopyJByteArray(env, data, tmp, len);
-        u8g2_DrawXBM(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y),
-                     static_cast<u8g2_uint_t>(width), static_cast<u8g2_uint_t>(height), tmp);
+        u8g2_DrawXBM(toU8g2(id), static_cast<u8g2_uint_t>(x), static_cast<u8g2_uint_t>(y), static_cast<u8g2_uint_t>(width), static_cast<u8g2_uint_t>(height), tmp);
     END_CATCH
 }
 
@@ -1124,7 +1122,9 @@ jstring Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_exportToXBM(JNIEnv *en
         return nullptr;
     BEGIN_CATCH
         clearOutputBuffer();
-        u8g2_WriteBufferXBM(toU8g2(id), &writeOutputBuffer);
+        std::shared_ptr<ucgd_t> context = ServiceLocator::getInstance().getDeviceManager()->getDevice(static_cast<uintptr_t>(id));
+        u8g2_t* u8g2 = toU8g2(id);
+        u8g2_WriteBufferXBM(u8g2, &writeOutputBuffer);
         std::string out = readOutputBuffer();
         jstring jsout = nullptr;
         if (!out.empty())
@@ -1209,5 +1209,63 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setSecondaryColor(JNIEnv 
     END_CATCH
 }
 
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixels(JNIEnv *env, jclass cls, jlong id, jbyteArray buffer, jint size) {
+    if (!checkValidity(env, id))
+        return;
+    BEGIN_CATCH
+        jsize bufferSize = env->GetArrayLength(buffer);
+        uint8_t tmp[bufferSize];
+        JNI_CopyJByteArray(env, buffer, tmp, bufferSize);
+        u8g2_t *u8g2 = toU8g2(id);
+        int x = 0, y = 0;
+        int width = u8g2_GetBufferTileWidth(u8g2) * 8;
+        int height = u8g2_GetBufferTileHeight(u8g2) * 8;
+        u8g2_ClearBuffer(u8g2);
+        for (int i = 0; i < bufferSize; i++) {
+            uint8_t data = tmp[i];
+            //start with the most significant bit
+            for (int pos = 7; pos >= 0; pos++) {
+                if (x >= width) {
+                    x = 0;
+                    y++;
+                }
+                //if bit is set, draw
+                if (((1 << pos) & data) != 0)
+                    u8g2_DrawPixel(u8g2, x, y);
+                x++;
+            }
+        }
+    END_CATCH
+}
+
+void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixelsBgra(JNIEnv *env, jclass cls, jlong id, jbyteArray buffer, jint size) {
+    if (!checkValidity(env, id))
+        return;
+    BEGIN_CATCH
+        jsize jBufferSize = env->GetArrayLength(buffer);
+        jbyte *jBuffer = env->GetByteArrayElements(buffer, nullptr);
+        u8g2_t *u8g2 = toU8g2(id);
+        int width = u8g2_GetBufferTileWidth(u8g2) * 8;
+        int height = u8g2_GetBufferTileHeight(u8g2) * 8;
+        u8g2_ClearBuffer(u8g2);
+        int x = 0, y = 0;
+        for (int i = 0; i < jBufferSize; i += 4) {
+            if (x >= width) {
+                y++;
+                x = 0;
+            }
+            auto blue = static_cast<uint8_t>(jBuffer[i + 0]);
+            auto green = static_cast<uint8_t>(jBuffer[i + 1]);
+            auto red = static_cast<uint8_t>(jBuffer[i + 2]);
+            auto alpha = static_cast<uint8_t>(jBuffer[i + 3]);
+            int color = (blue << 24) | (green << 16) | (red << 8) | (alpha);
+            //std::cout << "X = " << std::to_string(x) << ", Y = " << std::to_string(y) << " = " << std::to_string(color) << std::endl;
+            if (color != 0)
+                u8g2_DrawPixel(u8g2, x, y);
+            x++;
+        }
+        env->ReleaseByteArrayElements(buffer, jBuffer, 0);
+    END_CATCH
+}
 
 #pragma clang diagnostic pop

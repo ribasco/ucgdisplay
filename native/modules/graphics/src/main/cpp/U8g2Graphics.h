@@ -622,6 +622,22 @@ JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setPrim
 JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setSecondaryColor
   (JNIEnv *, jclass, jlong, jint);
 
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    drawPixels
+ * Signature: (J[BI)V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixels
+  (JNIEnv *, jclass, jlong, jbyteArray, jint);
+
+/*
+ * Class:     com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics
+ * Method:    drawPixelsBgra
+ * Signature: (J[BI)V
+ */
+JNIEXPORT void JNICALL Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixelsBgra
+  (JNIEnv *, jclass, jlong, jbyteArray, jint);
+
 #ifdef __cplusplus
 }
 #endif

@@ -1635,6 +1635,8 @@ public class U8g2Graphics {
     /**
      * Set the primary color (set bit) for the pixel data on the BGRA buffer. Default value is 255 (Black)
      *
+     * @param id
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int[], ByteBuffer, ByteBuffer, Map, boolean)}
      * @param color
      *         A 32-bit color value in BGRA format
      */
@@ -1643,8 +1645,34 @@ public class U8g2Graphics {
     /**
      * Set the secondary color (unset bit) for the pixel data on the BGRA buffer. Default value is 0 (Transparent)
      *
+     * @param id
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int[], ByteBuffer, ByteBuffer, Map, boolean)}
      * @param color
      *         A 32-bit color value in BGRA format
      */
     public static native void setSecondaryColor(long id, int color);
+
+    /**
+     * <p>Draws pixels on the screen based on the provided pixel buffer. The size of the buffer can be determined by the following formula  width * height</p>
+     *
+     * @param id
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int[], ByteBuffer, ByteBuffer, Map, boolean)}
+     * @param buffer
+     *         The pixel buffer
+     * @param size
+     *         The size of the pixel buffer
+     */
+    public static native void drawPixels(long id, byte[] buffer, int size);
+
+    /**
+     * <p>Draws pixels on the screen based on the provided pixel buffer. This buffer is using the BGRA format. The size of the buffer is determined by the following formulat: width * height * 4</p>
+     *
+     * @param id
+     *         The display instance id retrieved via {@link #setup(String, int, int, int, int[], ByteBuffer, ByteBuffer, Map, boolean)}
+     * @param buffer
+     *         The bgra pixel buffer
+     * @param size
+     *         The size of the bgra pixel buffer
+     */
+    public static native void drawPixelsBgra(long id, byte[] buffer, int size);
 }

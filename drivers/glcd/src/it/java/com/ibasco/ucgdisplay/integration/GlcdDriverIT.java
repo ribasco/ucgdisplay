@@ -352,6 +352,31 @@ class GlcdDriverIT {
         driver.drawPixel(20, 20);
     }
 
+    @DisplayName("Test draw pixels")
+    @Test
+    public void testDrawPixelsBgra() {
+        driver = createVirtualDriver(GlcdConfigBuilder.create(Glcd.SSD1306.D_128x64_128X64NONAME, GlcdCommProtocol.SPI_HW_4WIRE).build());
+
+        int width = driver.getConfig().getDisplaySize().getDisplayWidth();
+        int height = driver.getConfig().getDisplaySize().getDisplayHeight();
+
+        byte[] pixels = new byte[width * height * 4];
+        pixels[0] = 127;
+        pixels[1] = 127;
+        pixels[2] = 127;
+        pixels[3] = 127;
+        driver.drawPixelsBgra(pixels, 0);
+        driver.sendBuffer();
+
+        ByteBuffer bgraBuffer = driver.getNativeBgraBuffer();
+        bgraBuffer.clear();
+        int firstPixel = bgraBuffer.getInt();
+        int secondPixel = bgraBuffer.getInt();
+
+        assertTrue(firstPixel != 0);
+        assertEquals(0, secondPixel);
+    }
+
     private void processVerticalHz(int width, byte[] buffer) {
         int bitpos = 0, x = 0, y = 0, page = 0, pos = 0, mark = 0;
         while (true) {
