@@ -1221,7 +1221,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixels(JNIEnv *env, j
         int displayWidth = u8g2_GetBufferTileWidth(u8g2) * 8;
         int displayHeight = u8g2_GetBufferTileHeight(u8g2) * 8;
 
-        u8g2_ClearBuffer(u8g2);
+        //u8g2_ClearBuffer(u8g2);
         for (int idx = 0; idx < bufferSize; idx++) {
             uint8_t data = tmp[idx];
             //start with the most significant bit
@@ -1254,7 +1254,7 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixelsBgra(JNIEnv *en
         u8g2_t *u8g2 = toU8g2(id);
         int displayWidth = u8g2_GetBufferTileWidth(u8g2) * 8;
         int displayHeight = u8g2_GetBufferTileHeight(u8g2) * 8;
-        u8g2_ClearBuffer(u8g2);
+        //u8g2_ClearBuffer(u8g2);
 
         //iterate the source image
         int destX = x, destY = y;
