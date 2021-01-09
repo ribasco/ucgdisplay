@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Graphics LCD driver
  * %%
- * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2021 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -20,7 +20,7 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sun, 5 Jul 2020 10:46:27 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 9 Jan 2021 08:41:59 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
@@ -56,6 +56,8 @@ public enum GlcdController {
   PCF8812,
 
   RA8835,
+
+  S1D15E06,
 
   SBN1661,
 
@@ -110,6 +112,8 @@ public enum GlcdController {
   ST7565,
 
   ST7567,
+
+  ST7571,
 
   ST7586S,
 

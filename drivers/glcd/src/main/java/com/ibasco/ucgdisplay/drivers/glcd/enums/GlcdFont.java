@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Graphics LCD driver
  * %%
- * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2021 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -20,12 +20,12 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sun, 5 Jul 2020 10:46:41 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 9 Jan 2021 08:42:12 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
 public enum GlcdFont {
-  FONT_10X20_ME("u8g2_font_10x20_me", 645, 5205, "Misc Fixed Medium R Normal  20 200 75 75 C 100 ISO10646 1"),
+  FONT_10X20_ME("u8g2_font_10x20_me", 646, 5205, "Misc Fixed Medium R Normal  20 200 75 75 C 100 ISO10646 1"),
 
   FONT_10X20_MF("u8g2_font_10x20_mf", 191, 5205, "Misc Fixed Medium R Normal  20 200 75 75 C 100 ISO10646 1"),
 
@@ -39,7 +39,7 @@ public enum GlcdFont {
 
   FONT_10X20_T_GREEK("u8g2_font_10x20_t_greek", 229, 5205, "Misc Fixed Medium R Normal  20 200 75 75 C 100 ISO10646 1"),
 
-  FONT_10X20_TE("u8g2_font_10x20_te", 645, 5205, "Misc Fixed Medium R Normal  20 200 75 75 C 100 ISO10646 1"),
+  FONT_10X20_TE("u8g2_font_10x20_te", 646, 5205, "Misc Fixed Medium R Normal  20 200 75 75 C 100 ISO10646 1"),
 
   FONT_10X20_TF("u8g2_font_10x20_tf", 191, 5205, "Misc Fixed Medium R Normal  20 200 75 75 C 100 ISO10646 1"),
 
@@ -103,7 +103,7 @@ public enum GlcdFont {
 
   FONT_6X12_M_SYMBOLS("u8g2_font_6x12_m_symbols", 467, 4531, "Misc Fixed Medium R SemiCondensed  12 110 75 75 C 60 ISO10646 1"),
 
-  FONT_6X12_ME("u8g2_font_6x12_me", 644, 4531, "Misc Fixed Medium R SemiCondensed  12 110 75 75 C 60 ISO10646 1"),
+  FONT_6X12_ME("u8g2_font_6x12_me", 645, 4531, "Misc Fixed Medium R SemiCondensed  12 110 75 75 C 60 ISO10646 1"),
 
   FONT_6X12_MF("u8g2_font_6x12_mf", 191, 4531, "Misc Fixed Medium R SemiCondensed  12 110 75 75 C 60 ISO10646 1"),
 
@@ -115,7 +115,7 @@ public enum GlcdFont {
 
   FONT_6X12_T_SYMBOLS("u8g2_font_6x12_t_symbols", 467, 4531, "Misc Fixed Medium R SemiCondensed  12 110 75 75 C 60 ISO10646 1"),
 
-  FONT_6X12_TE("u8g2_font_6x12_te", 644, 4531, "Misc Fixed Medium R SemiCondensed  12 110 75 75 C 60 ISO10646 1"),
+  FONT_6X12_TE("u8g2_font_6x12_te", 645, 4531, "Misc Fixed Medium R SemiCondensed  12 110 75 75 C 60 ISO10646 1"),
 
   FONT_6X12_TF("u8g2_font_6x12_tf", 191, 4531, "Misc Fixed Medium R SemiCondensed  12 110 75 75 C 60 ISO10646 1"),
 
@@ -151,7 +151,7 @@ public enum GlcdFont {
 
   FONT_6X13O_TR("u8g2_font_6x13O_tr", 95, 770, "Misc Fixed Medium O SemiCondensed  13 120 75 75 C 60 ISO10646 1"),
 
-  FONT_6X13_ME("u8g2_font_6x13_me", 614, 4121, "Misc Fixed Medium R SemiCondensed  13 120 75 75 C 60 ISO10646 1"),
+  FONT_6X13_ME("u8g2_font_6x13_me", 615, 4121, "Misc Fixed Medium R SemiCondensed  13 120 75 75 C 60 ISO10646 1"),
 
   FONT_6X13_MF("u8g2_font_6x13_mf", 191, 4121, "Misc Fixed Medium R SemiCondensed  13 120 75 75 C 60 ISO10646 1"),
 
@@ -163,7 +163,7 @@ public enum GlcdFont {
 
   FONT_6X13_T_HEBREW("u8g2_font_6x13_t_hebrew", 220, 4121, "Misc Fixed Medium R SemiCondensed  13 120 75 75 C 60 ISO10646 1"),
 
-  FONT_6X13_TE("u8g2_font_6x13_te", 614, 4121, "Misc Fixed Medium R SemiCondensed  13 120 75 75 C 60 ISO10646 1"),
+  FONT_6X13_TE("u8g2_font_6x13_te", 615, 4121, "Misc Fixed Medium R SemiCondensed  13 120 75 75 C 60 ISO10646 1"),
 
   FONT_6X13_TF("u8g2_font_6x13_tf", 191, 4121, "Misc Fixed Medium R SemiCondensed  13 120 75 75 C 60 ISO10646 1"),
 
@@ -199,7 +199,7 @@ public enum GlcdFont {
 
   FONT_7X13_M_SYMBOLS("u8g2_font_7x13_m_symbols", 435, 3226, "Misc Fixed Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
-  FONT_7X13_ME("u8g2_font_7x13_me", 612, 3226, "Misc Fixed Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
+  FONT_7X13_ME("u8g2_font_7x13_me", 613, 3226, "Misc Fixed Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
   FONT_7X13_MF("u8g2_font_7x13_mf", 191, 3226, "Misc Fixed Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
@@ -211,7 +211,7 @@ public enum GlcdFont {
 
   FONT_7X13_T_SYMBOLS("u8g2_font_7x13_t_symbols", 435, 3226, "Misc Fixed Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
-  FONT_7X13_TE("u8g2_font_7x13_te", 612, 3226, "Misc Fixed Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
+  FONT_7X13_TE("u8g2_font_7x13_te", 613, 3226, "Misc Fixed Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
   FONT_7X13_TF("u8g2_font_7x13_tf", 191, 3226, "Misc Fixed Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
@@ -269,7 +269,7 @@ public enum GlcdFont {
 
   FONT_8X13_M_SYMBOLS("u8g2_font_8x13_m_symbols", 453, 3703, "Misc Fixed Medium R Normal  13 120 75 75 C 80 ISO10646 1"),
 
-  FONT_8X13_ME("u8g2_font_8x13_me", 613, 3703, "Misc Fixed Medium R Normal  13 120 75 75 C 80 ISO10646 1"),
+  FONT_8X13_ME("u8g2_font_8x13_me", 614, 3703, "Misc Fixed Medium R Normal  13 120 75 75 C 80 ISO10646 1"),
 
   FONT_8X13_MF("u8g2_font_8x13_mf", 191, 3703, "Misc Fixed Medium R Normal  13 120 75 75 C 80 ISO10646 1"),
 
@@ -281,7 +281,7 @@ public enum GlcdFont {
 
   FONT_8X13_T_SYMBOLS("u8g2_font_8x13_t_symbols", 453, 3703, "Misc Fixed Medium R Normal  13 120 75 75 C 80 ISO10646 1"),
 
-  FONT_8X13_TE("u8g2_font_8x13_te", 613, 3703, "Misc Fixed Medium R Normal  13 120 75 75 C 80 ISO10646 1"),
+  FONT_8X13_TE("u8g2_font_8x13_te", 614, 3703, "Misc Fixed Medium R Normal  13 120 75 75 C 80 ISO10646 1"),
 
   FONT_8X13_TF("u8g2_font_8x13_tf", 191, 3703, "Misc Fixed Medium R Normal  13 120 75 75 C 80 ISO10646 1"),
 
@@ -303,7 +303,7 @@ public enum GlcdFont {
 
   FONT_9X15_M_SYMBOLS("u8g2_font_9x15_m_symbols", 463, 4777, "Misc Fixed Medium R Normal  15 140 75 75 C 90 ISO10646 1"),
 
-  FONT_9X15_ME("u8g2_font_9x15_me", 614, 4777, "Misc Fixed Medium R Normal  15 140 75 75 C 90 ISO10646 1"),
+  FONT_9X15_ME("u8g2_font_9x15_me", 615, 4777, "Misc Fixed Medium R Normal  15 140 75 75 C 90 ISO10646 1"),
 
   FONT_9X15_MF("u8g2_font_9x15_mf", 191, 4777, "Misc Fixed Medium R Normal  15 140 75 75 C 90 ISO10646 1"),
 
@@ -315,7 +315,7 @@ public enum GlcdFont {
 
   FONT_9X15_T_SYMBOLS("u8g2_font_9x15_t_symbols", 463, 4777, "Misc Fixed Medium R Normal  15 140 75 75 C 90 ISO10646 1"),
 
-  FONT_9X15_TE("u8g2_font_9x15_te", 614, 4777, "Misc Fixed Medium R Normal  15 140 75 75 C 90 ISO10646 1"),
+  FONT_9X15_TE("u8g2_font_9x15_te", 615, 4777, "Misc Fixed Medium R Normal  15 140 75 75 C 90 ISO10646 1"),
 
   FONT_9X15_TF("u8g2_font_9x15_tf", 191, 4777, "Misc Fixed Medium R Normal  15 140 75 75 C 90 ISO10646 1"),
 
@@ -347,25 +347,25 @@ public enum GlcdFont {
 
   FONT_9X18_TR("u8g2_font_9x18_tr", 95, 4766, "Misc Fixed Medium R Normal  18 120 100 100 C 90 ISO10646 1"),
 
-  FONT_BBSESQUE_TE("u8g2_font_BBSesque_te", 184, 448, "FreeType BBSesque Medium R Normal  16 160 72 72 P 65 ISO10646 1"),
+  FONT_BBSESQUE_TE("u8g2_font_BBSesque_te", 185, 448, "FreeType BBSesque Medium R Normal  16 160 72 72 P 65 ISO10646 1"),
 
   FONT_BBSESQUE_TF("u8g2_font_BBSesque_tf", 180, 448, "FreeType BBSesque Medium R Normal  16 160 72 72 P 65 ISO10646 1"),
 
   FONT_BBSESQUE_TR("u8g2_font_BBSesque_tr", 95, 448, "FreeType BBSesque Medium R Normal  16 160 72 72 P 65 ISO10646 1"),
 
-  FONT_BITTYPEWRITER_TE("u8g2_font_BitTypeWriter_te", 105, 107, "FreeType BitTypeWriter Medium R Normal  16 160 72 72 P 53 ISO10646 1"),
+  FONT_BITTYPEWRITER_TE("u8g2_font_BitTypeWriter_te", 106, 107, "FreeType BitTypeWriter Medium R Normal  16 160 72 72 P 53 ISO10646 1"),
 
   FONT_BITTYPEWRITER_TR("u8g2_font_BitTypeWriter_tr", 95, 107, "FreeType BitTypeWriter Medium R Normal  16 160 72 72 P 53 ISO10646 1"),
 
   FONT_BORN2BSPORTYSLAB_T_ALL("u8g2_font_Born2bSportySlab_t_all", 1649, 1649, "FreeType Born2bSportySlab Medium R Normal  16 160 72 72 P 81 ISO10646 1"),
 
-  FONT_BORN2BSPORTYSLAB_TE("u8g2_font_Born2bSportySlab_te", 550, 1649, "FreeType Born2bSportySlab Medium R Normal  16 160 72 72 P 81 ISO10646 1"),
+  FONT_BORN2BSPORTYSLAB_TE("u8g2_font_Born2bSportySlab_te", 551, 1649, "FreeType Born2bSportySlab Medium R Normal  16 160 72 72 P 81 ISO10646 1"),
 
   FONT_BORN2BSPORTYSLAB_TF("u8g2_font_Born2bSportySlab_tf", 190, 1649, "FreeType Born2bSportySlab Medium R Normal  16 160 72 72 P 81 ISO10646 1"),
 
   FONT_BORN2BSPORTYSLAB_TR("u8g2_font_Born2bSportySlab_tr", 95, 1649, "FreeType Born2bSportySlab Medium R Normal  16 160 72 72 P 81 ISO10646 1"),
 
-  FONT_BORN2BSPORTYV2_TE("u8g2_font_Born2bSportyV2_te", 323, 499, "FreeType Born2bSportyV2 Medium R Normal  16 160 72 72 P 63 ISO10646 1"),
+  FONT_BORN2BSPORTYV2_TE("u8g2_font_Born2bSportyV2_te", 324, 499, "FreeType Born2bSportyV2 Medium R Normal  16 160 72 72 P 63 ISO10646 1"),
 
   FONT_BORN2BSPORTYV2_TF("u8g2_font_Born2bSportyV2_tf", 190, 499, "FreeType Born2bSportyV2 Medium R Normal  16 160 72 72 P 63 ISO10646 1"),
 
@@ -373,7 +373,7 @@ public enum GlcdFont {
 
   FONT_CURSIVEPIXEL_TR("u8g2_font_CursivePixel_tr", 95, 96, "FreeType CursivePixel Medium R Normal  16 160 72 72 P 65 ISO10646 1"),
 
-  FONT_DIGITALDISCOTHIN_TE("u8g2_font_DigitalDiscoThin_te", 322, 351, "FreeType DigitalDisco Medium R Normal  16 160 72 72 P 70 ISO10646 1"),
+  FONT_DIGITALDISCOTHIN_TE("u8g2_font_DigitalDiscoThin_te", 323, 351, "FreeType DigitalDisco Medium R Normal  16 160 72 72 P 70 ISO10646 1"),
 
   FONT_DIGITALDISCOTHIN_TF("u8g2_font_DigitalDiscoThin_tf", 190, 351, "FreeType DigitalDisco Medium R Normal  16 160 72 72 P 70 ISO10646 1"),
 
@@ -383,7 +383,7 @@ public enum GlcdFont {
 
   FONT_DIGITALDISCOTHIN_TU("u8g2_font_DigitalDiscoThin_tu", 64, 351, "FreeType DigitalDisco Medium R Normal  16 160 72 72 P 70 ISO10646 1"),
 
-  FONT_DIGITALDISCO_TE("u8g2_font_DigitalDisco_te", 322, 351, "FreeType DigitalDisco Medium R Normal  16 160 72 72 P 73 ISO10646 1"),
+  FONT_DIGITALDISCO_TE("u8g2_font_DigitalDisco_te", 323, 351, "FreeType DigitalDisco Medium R Normal  16 160 72 72 P 73 ISO10646 1"),
 
   FONT_DIGITALDISCO_TF("u8g2_font_DigitalDisco_tf", 190, 351, "FreeType DigitalDisco Medium R Normal  16 160 72 72 P 73 ISO10646 1"),
 
@@ -397,19 +397,19 @@ public enum GlcdFont {
 
   FONT_ENGRISH_TR("u8g2_font_Engrish_tr", 95, 128, "FreeType Engrish Medium R Normal  16 160 72 72 P 61 ISO10646 1"),
 
-  FONT_GEORGIA7PX_TE("u8g2_font_Georgia7px_te", 317, 319, "FreeType Georgia7px Medium R Normal  16 160 72 72 P 57 ISO10646 1"),
+  FONT_GEORGIA7PX_TE("u8g2_font_Georgia7px_te", 318, 319, "FreeType Georgia7px Medium R Normal  16 160 72 72 P 57 ISO10646 1"),
 
   FONT_GEORGIA7PX_TF("u8g2_font_Georgia7px_tf", 190, 319, "FreeType Georgia7px Medium R Normal  16 160 72 72 P 57 ISO10646 1"),
 
   FONT_GEORGIA7PX_TR("u8g2_font_Georgia7px_tr", 95, 319, "FreeType Georgia7px Medium R Normal  16 160 72 72 P 57 ISO10646 1"),
 
-  FONT_HELVETIPIXELOUTLINE_TE("u8g2_font_HelvetiPixelOutline_te", 117, 119, "FreeType HelvetiPixel Medium R Normal  16 160 72 72 P 105 ISO10646 1"),
+  FONT_HELVETIPIXELOUTLINE_TE("u8g2_font_HelvetiPixelOutline_te", 118, 119, "FreeType HelvetiPixel Medium R Normal  16 160 72 72 P 105 ISO10646 1"),
 
   FONT_HELVETIPIXELOUTLINE_TR("u8g2_font_HelvetiPixelOutline_tr", 94, 119, "FreeType HelvetiPixel Medium R Normal  16 160 72 72 P 105 ISO10646 1"),
 
   FONT_HELVETIPIXEL_TR("u8g2_font_HelvetiPixel_tr", 95, 96, "FreeType HelvetiPixel Medium R Normal  16 160 72 72 P 50 ISO10646 1"),
 
-  FONT_IPAANDRUSLCD_TE("u8g2_font_IPAandRUSLCD_te", 405, 473, "FreeType IPAandRUSLCD Medium R Normal  16 160 72 72 P 52 ISO10646 1"),
+  FONT_IPAANDRUSLCD_TE("u8g2_font_IPAandRUSLCD_te", 406, 473, "FreeType IPAandRUSLCD Medium R Normal  16 160 72 72 P 52 ISO10646 1"),
 
   FONT_IPAANDRUSLCD_TF("u8g2_font_IPAandRUSLCD_tf", 190, 473, "FreeType IPAandRUSLCD Medium R Normal  16 160 72 72 P 52 ISO10646 1"),
 
@@ -417,7 +417,7 @@ public enum GlcdFont {
 
   FONT_IMPACTBITS_TR("u8g2_font_ImpactBits_tr", 95, 96, "FreeType ImpactBits Medium R Normal  16 160 72 72 P 65 ISO10646 1"),
 
-  FONT_PIXELLARI_TE("u8g2_font_Pixellari_te", 317, 319, "FreeType Pixellari Medium R Normal  16 160 72 72 P 71 ISO10646 1"),
+  FONT_PIXELLARI_TE("u8g2_font_Pixellari_te", 318, 319, "FreeType Pixellari Medium R Normal  16 160 72 72 P 71 ISO10646 1"),
 
   FONT_PIXELLARI_TF("u8g2_font_Pixellari_tf", 190, 319, "FreeType Pixellari Medium R Normal  16 160 72 72 P 71 ISO10646 1"),
 
@@ -823,7 +823,7 @@ public enum GlcdFont {
 
   FONT_CU12_H_SYMBOLS("u8g2_font_cu12_h_symbols", 356, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
 
-  FONT_CU12_HE("u8g2_font_cu12_he", 612, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
+  FONT_CU12_HE("u8g2_font_cu12_he", 613, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
 
   FONT_CU12_HF("u8g2_font_cu12_hf", 191, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
 
@@ -831,7 +831,7 @@ public enum GlcdFont {
 
   FONT_CU12_HR("u8g2_font_cu12_hr", 95, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
 
-  FONT_CU12_ME("u8g2_font_cu12_me", 612, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
+  FONT_CU12_ME("u8g2_font_cu12_me", 613, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
 
   FONT_CU12_MF("u8g2_font_cu12_mf", 191, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
 
@@ -851,7 +851,7 @@ public enum GlcdFont {
 
   FONT_CU12_T_TIBETAN("u8g2_font_cu12_t_tibetan", 150, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
 
-  FONT_CU12_TE("u8g2_font_cu12_te", 612, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
+  FONT_CU12_TE("u8g2_font_cu12_te", 613, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
 
   FONT_CU12_TF("u8g2_font_cu12_tf", 191, 8453, "MUTT ClearlyU Medium R Normal  17 120 100 100 P 123 ISO10646 1"),
 
@@ -923,13 +923,13 @@ public enum GlcdFont {
 
   FONT_FUB11_TR("u8g2_font_fub11_tr", 95, 243, "FreeType FreeUniversal Bold R Normal  16 160 72 72 P 81 ISO10646 1"),
 
-  FONT_FUB14_T_SYMBOL("u8g2_font_fub14_t_symbol", 45, 243, "FreeType FreeUniversal Bold R Normal  20 200 72 72 P 101 ISO10646 1"),
+  FONT_FUB14_T_SYMBOL("u8g2_font_fub14_t_symbol", 45, 243, "FreeType FreeUniversal Bold R Normal  20 200 72 72 P 102 ISO10646 1"),
 
-  FONT_FUB14_TF("u8g2_font_fub14_tf", 189, 243, "FreeType FreeUniversal Bold R Normal  20 200 72 72 P 101 ISO10646 1"),
+  FONT_FUB14_TF("u8g2_font_fub14_tf", 189, 243, "FreeType FreeUniversal Bold R Normal  20 200 72 72 P 102 ISO10646 1"),
 
-  FONT_FUB14_TN("u8g2_font_fub14_tn", 18, 243, "FreeType FreeUniversal Bold R Normal  20 200 72 72 P 101 ISO10646 1"),
+  FONT_FUB14_TN("u8g2_font_fub14_tn", 18, 243, "FreeType FreeUniversal Bold R Normal  20 200 72 72 P 102 ISO10646 1"),
 
-  FONT_FUB14_TR("u8g2_font_fub14_tr", 95, 243, "FreeType FreeUniversal Bold R Normal  20 200 72 72 P 101 ISO10646 1"),
+  FONT_FUB14_TR("u8g2_font_fub14_tr", 95, 243, "FreeType FreeUniversal Bold R Normal  20 200 72 72 P 102 ISO10646 1"),
 
   FONT_FUB17_T_SYMBOL("u8g2_font_fub17_t_symbol", 45, 243, "FreeType FreeUniversal Bold R Normal  23 230 72 72 P 115 ISO10646 1"),
 
@@ -963,25 +963,25 @@ public enum GlcdFont {
 
   FONT_FUB30_TR("u8g2_font_fub30_tr", 95, 243, "FreeType FreeUniversal Bold R Normal  40 400 72 72 P 198 ISO10646 1"),
 
-  FONT_FUB35_T_SYMBOL("u8g2_font_fub35_t_symbol", 45, 243, "FreeType FreeUniversal Bold R Normal  49 490 72 72 P 242 ISO10646 1"),
+  FONT_FUB35_T_SYMBOL("u8g2_font_fub35_t_symbol", 45, 243, "FreeType FreeUniversal Bold R Normal  49 490 72 72 P 243 ISO10646 1"),
 
-  FONT_FUB35_TF("u8g2_font_fub35_tf", 189, 243, "FreeType FreeUniversal Bold R Normal  49 490 72 72 P 242 ISO10646 1"),
+  FONT_FUB35_TF("u8g2_font_fub35_tf", 189, 243, "FreeType FreeUniversal Bold R Normal  49 490 72 72 P 243 ISO10646 1"),
 
-  FONT_FUB35_TN("u8g2_font_fub35_tn", 18, 243, "FreeType FreeUniversal Bold R Normal  49 490 72 72 P 242 ISO10646 1"),
+  FONT_FUB35_TN("u8g2_font_fub35_tn", 18, 243, "FreeType FreeUniversal Bold R Normal  49 490 72 72 P 243 ISO10646 1"),
 
-  FONT_FUB35_TR("u8g2_font_fub35_tr", 95, 243, "FreeType FreeUniversal Bold R Normal  49 490 72 72 P 242 ISO10646 1"),
+  FONT_FUB35_TR("u8g2_font_fub35_tr", 95, 243, "FreeType FreeUniversal Bold R Normal  49 490 72 72 P 243 ISO10646 1"),
 
-  FONT_FUB42_T_SYMBOL("u8g2_font_fub42_t_symbol", 44, 243, "FreeType FreeUniversal Bold R Normal  58 580 72 72 P 286 ISO10646 1"),
+  FONT_FUB42_T_SYMBOL("u8g2_font_fub42_t_symbol", 44, 243, "FreeType FreeUniversal Bold R Normal  58 580 72 72 P 287 ISO10646 1"),
 
-  FONT_FUB42_TF("u8g2_font_fub42_tf", 189, 243, "FreeType FreeUniversal Bold R Normal  58 580 72 72 P 286 ISO10646 1"),
+  FONT_FUB42_TF("u8g2_font_fub42_tf", 189, 243, "FreeType FreeUniversal Bold R Normal  58 580 72 72 P 287 ISO10646 1"),
 
-  FONT_FUB42_TN("u8g2_font_fub42_tn", 18, 243, "FreeType FreeUniversal Bold R Normal  58 580 72 72 P 286 ISO10646 1"),
+  FONT_FUB42_TN("u8g2_font_fub42_tn", 18, 243, "FreeType FreeUniversal Bold R Normal  58 580 72 72 P 287 ISO10646 1"),
 
-  FONT_FUB42_TR("u8g2_font_fub42_tr", 95, 243, "FreeType FreeUniversal Bold R Normal  58 580 72 72 P 286 ISO10646 1"),
+  FONT_FUB42_TR("u8g2_font_fub42_tr", 95, 243, "FreeType FreeUniversal Bold R Normal  58 580 72 72 P 287 ISO10646 1"),
 
-  FONT_FUB49_T_SYMBOL("u8g2_font_fub49_t_symbol", 44, 243, "FreeType FreeUniversal Bold R Normal  68 680 72 72 P 335 ISO10646 1"),
+  FONT_FUB49_T_SYMBOL("u8g2_font_fub49_t_symbol", 44, 243, "FreeType FreeUniversal Bold R Normal  68 680 72 72 P 336 ISO10646 1"),
 
-  FONT_FUB49_TN("u8g2_font_fub49_tn", 18, 243, "FreeType FreeUniversal Bold R Normal  68 680 72 72 P 335 ISO10646 1"),
+  FONT_FUB49_TN("u8g2_font_fub49_tn", 18, 243, "FreeType FreeUniversal Bold R Normal  68 680 72 72 P 336 ISO10646 1"),
 
   FONT_FUR11_T_SYMBOL("u8g2_font_fur11_t_symbol", 45, 243, "FreeType FreeUniversal Medium R Normal  16 160 72 72 P 78 ISO10646 1"),
 
@@ -1047,13 +1047,13 @@ public enum GlcdFont {
 
   FONT_FUR42_TR("u8g2_font_fur42_tr", 95, 243, "FreeType FreeUniversal Medium R Normal  58 580 72 72 P 271 ISO10646 1"),
 
-  FONT_FUR49_T_SYMBOL("u8g2_font_fur49_t_symbol", 44, 243, "FreeType FreeUniversal Medium R Normal  68 680 72 72 P 317 ISO10646 1"),
+  FONT_FUR49_T_SYMBOL("u8g2_font_fur49_t_symbol", 44, 243, "FreeType FreeUniversal Medium R Normal  68 680 72 72 P 318 ISO10646 1"),
 
-  FONT_FUR49_TN("u8g2_font_fur49_tn", 18, 243, "FreeType FreeUniversal Medium R Normal  68 680 72 72 P 317 ISO10646 1"),
+  FONT_FUR49_TN("u8g2_font_fur49_tn", 18, 243, "FreeType FreeUniversal Medium R Normal  68 680 72 72 P 318 ISO10646 1"),
 
   FONT_GANJ_NAMEH_SANS10_T_ALL("u8g2_font_ganj_nameh_sans10_t_all", 274, 276, "FreeType GanjNamehSans Medium R Normal  10 100 72 72 P 53 ISO10646 1"),
 
-  FONT_GANJ_NAMEH_SANS12_T_ALL("u8g2_font_ganj_nameh_sans12_t_all", 274, 276, "FreeType GanjNamehSans Medium R Normal  12 120 72 72 P 64 ISO10646 1"),
+  FONT_GANJ_NAMEH_SANS12_T_ALL("u8g2_font_ganj_nameh_sans12_t_all", 274, 276, "FreeType GanjNamehSans Medium R Normal  12 120 72 72 P 66 ISO10646 1"),
 
   FONT_GANJ_NAMEH_SANS14_T_ALL("u8g2_font_ganj_nameh_sans14_t_all", 274, 276, "FreeType GanjNamehSans Medium R Normal  14 140 72 72 P 76 ISO10646 1"),
 
@@ -1109,7 +1109,7 @@ public enum GlcdFont {
 
   FONT_HEAVYBOTTOM_TR("u8g2_font_heavybottom_tr", 95, 96, "FreeType HEAVYBOTTOM Medium R Normal  16 160 72 72 P 82 ISO10646 1"),
 
-  FONT_HELVB08_TE("u8g2_font_helvB08_te", 446, 756, "Adobe Helvetica Bold R Normal  11 80 100 100 P 60 ISO10646 1"),
+  FONT_HELVB08_TE("u8g2_font_helvB08_te", 447, 756, "Adobe Helvetica Bold R Normal  11 80 100 100 P 60 ISO10646 1"),
 
   FONT_HELVB08_TF("u8g2_font_helvB08_tf", 191, 756, "Adobe Helvetica Bold R Normal  11 80 100 100 P 60 ISO10646 1"),
 
@@ -1117,7 +1117,7 @@ public enum GlcdFont {
 
   FONT_HELVB08_TR("u8g2_font_helvB08_tr", 95, 756, "Adobe Helvetica Bold R Normal  11 80 100 100 P 60 ISO10646 1"),
 
-  FONT_HELVB10_TE("u8g2_font_helvB10_te", 446, 756, "Adobe Helvetica Bold R Normal  14 100 100 100 P 82 ISO10646 1"),
+  FONT_HELVB10_TE("u8g2_font_helvB10_te", 447, 756, "Adobe Helvetica Bold R Normal  14 100 100 100 P 82 ISO10646 1"),
 
   FONT_HELVB10_TF("u8g2_font_helvB10_tf", 191, 756, "Adobe Helvetica Bold R Normal  14 100 100 100 P 82 ISO10646 1"),
 
@@ -1125,7 +1125,7 @@ public enum GlcdFont {
 
   FONT_HELVB10_TR("u8g2_font_helvB10_tr", 95, 756, "Adobe Helvetica Bold R Normal  14 100 100 100 P 82 ISO10646 1"),
 
-  FONT_HELVB12_TE("u8g2_font_helvB12_te", 446, 756, "Adobe Helvetica Bold R Normal  17 120 100 100 P 92 ISO10646 1"),
+  FONT_HELVB12_TE("u8g2_font_helvB12_te", 447, 756, "Adobe Helvetica Bold R Normal  17 120 100 100 P 92 ISO10646 1"),
 
   FONT_HELVB12_TF("u8g2_font_helvB12_tf", 191, 756, "Adobe Helvetica Bold R Normal  17 120 100 100 P 92 ISO10646 1"),
 
@@ -1133,7 +1133,7 @@ public enum GlcdFont {
 
   FONT_HELVB12_TR("u8g2_font_helvB12_tr", 95, 756, "Adobe Helvetica Bold R Normal  17 120 100 100 P 92 ISO10646 1"),
 
-  FONT_HELVB14_TE("u8g2_font_helvB14_te", 446, 756, "Adobe Helvetica Bold R Normal  20 140 100 100 P 105 ISO10646 1"),
+  FONT_HELVB14_TE("u8g2_font_helvB14_te", 447, 756, "Adobe Helvetica Bold R Normal  20 140 100 100 P 105 ISO10646 1"),
 
   FONT_HELVB14_TF("u8g2_font_helvB14_tf", 191, 756, "Adobe Helvetica Bold R Normal  20 140 100 100 P 105 ISO10646 1"),
 
@@ -1141,7 +1141,7 @@ public enum GlcdFont {
 
   FONT_HELVB14_TR("u8g2_font_helvB14_tr", 95, 756, "Adobe Helvetica Bold R Normal  20 140 100 100 P 105 ISO10646 1"),
 
-  FONT_HELVB18_TE("u8g2_font_helvB18_te", 446, 756, "Adobe Helvetica Bold R Normal  25 180 100 100 P 138 ISO10646 1"),
+  FONT_HELVB18_TE("u8g2_font_helvB18_te", 447, 756, "Adobe Helvetica Bold R Normal  25 180 100 100 P 138 ISO10646 1"),
 
   FONT_HELVB18_TF("u8g2_font_helvB18_tf", 191, 756, "Adobe Helvetica Bold R Normal  25 180 100 100 P 138 ISO10646 1"),
 
@@ -1149,7 +1149,7 @@ public enum GlcdFont {
 
   FONT_HELVB18_TR("u8g2_font_helvB18_tr", 95, 756, "Adobe Helvetica Bold R Normal  25 180 100 100 P 138 ISO10646 1"),
 
-  FONT_HELVB24_TE("u8g2_font_helvB24_te", 446, 756, "Adobe Helvetica Bold R Normal  34 240 100 100 P 182 ISO10646 1"),
+  FONT_HELVB24_TE("u8g2_font_helvB24_te", 447, 756, "Adobe Helvetica Bold R Normal  34 240 100 100 P 182 ISO10646 1"),
 
   FONT_HELVB24_TF("u8g2_font_helvB24_tf", 191, 756, "Adobe Helvetica Bold R Normal  34 240 100 100 P 182 ISO10646 1"),
 
@@ -1157,7 +1157,7 @@ public enum GlcdFont {
 
   FONT_HELVB24_TR("u8g2_font_helvB24_tr", 95, 756, "Adobe Helvetica Bold R Normal  34 240 100 100 P 182 ISO10646 1"),
 
-  FONT_HELVR08_TE("u8g2_font_helvR08_te", 446, 756, "Adobe Helvetica Medium R Normal  11 80 100 100 P 56 ISO10646 1"),
+  FONT_HELVR08_TE("u8g2_font_helvR08_te", 447, 756, "Adobe Helvetica Medium R Normal  11 80 100 100 P 56 ISO10646 1"),
 
   FONT_HELVR08_TF("u8g2_font_helvR08_tf", 191, 756, "Adobe Helvetica Medium R Normal  11 80 100 100 P 56 ISO10646 1"),
 
@@ -1165,7 +1165,7 @@ public enum GlcdFont {
 
   FONT_HELVR08_TR("u8g2_font_helvR08_tr", 95, 756, "Adobe Helvetica Medium R Normal  11 80 100 100 P 56 ISO10646 1"),
 
-  FONT_HELVR10_TE("u8g2_font_helvR10_te", 446, 756, "Adobe Helvetica Medium R Normal  14 100 100 100 P 76 ISO10646 1"),
+  FONT_HELVR10_TE("u8g2_font_helvR10_te", 447, 756, "Adobe Helvetica Medium R Normal  14 100 100 100 P 76 ISO10646 1"),
 
   FONT_HELVR10_TF("u8g2_font_helvR10_tf", 191, 756, "Adobe Helvetica Medium R Normal  14 100 100 100 P 76 ISO10646 1"),
 
@@ -1173,7 +1173,7 @@ public enum GlcdFont {
 
   FONT_HELVR10_TR("u8g2_font_helvR10_tr", 95, 756, "Adobe Helvetica Medium R Normal  14 100 100 100 P 76 ISO10646 1"),
 
-  FONT_HELVR12_TE("u8g2_font_helvR12_te", 446, 756, "Adobe Helvetica Medium R Normal  17 120 100 100 P 88 ISO10646 1"),
+  FONT_HELVR12_TE("u8g2_font_helvR12_te", 447, 756, "Adobe Helvetica Medium R Normal  17 120 100 100 P 88 ISO10646 1"),
 
   FONT_HELVR12_TF("u8g2_font_helvR12_tf", 191, 756, "Adobe Helvetica Medium R Normal  17 120 100 100 P 88 ISO10646 1"),
 
@@ -1181,7 +1181,7 @@ public enum GlcdFont {
 
   FONT_HELVR12_TR("u8g2_font_helvR12_tr", 95, 756, "Adobe Helvetica Medium R Normal  17 120 100 100 P 88 ISO10646 1"),
 
-  FONT_HELVR14_TE("u8g2_font_helvR14_te", 446, 756, "Adobe Helvetica Medium R Normal  20 140 100 100 P 100 ISO10646 1"),
+  FONT_HELVR14_TE("u8g2_font_helvR14_te", 447, 756, "Adobe Helvetica Medium R Normal  20 140 100 100 P 100 ISO10646 1"),
 
   FONT_HELVR14_TF("u8g2_font_helvR14_tf", 191, 756, "Adobe Helvetica Medium R Normal  20 140 100 100 P 100 ISO10646 1"),
 
@@ -1189,7 +1189,7 @@ public enum GlcdFont {
 
   FONT_HELVR14_TR("u8g2_font_helvR14_tr", 95, 756, "Adobe Helvetica Medium R Normal  20 140 100 100 P 100 ISO10646 1"),
 
-  FONT_HELVR18_TE("u8g2_font_helvR18_te", 446, 756, "Adobe Helvetica Medium R Normal  25 180 100 100 P 130 ISO10646 1"),
+  FONT_HELVR18_TE("u8g2_font_helvR18_te", 447, 756, "Adobe Helvetica Medium R Normal  25 180 100 100 P 130 ISO10646 1"),
 
   FONT_HELVR18_TF("u8g2_font_helvR18_tf", 191, 756, "Adobe Helvetica Medium R Normal  25 180 100 100 P 130 ISO10646 1"),
 
@@ -1197,7 +1197,7 @@ public enum GlcdFont {
 
   FONT_HELVR18_TR("u8g2_font_helvR18_tr", 95, 756, "Adobe Helvetica Medium R Normal  25 180 100 100 P 130 ISO10646 1"),
 
-  FONT_HELVR24_TE("u8g2_font_helvR24_te", 446, 756, "Adobe Helvetica Medium R Normal  34 240 100 100 P 176 ISO10646 1"),
+  FONT_HELVR24_TE("u8g2_font_helvR24_te", 447, 756, "Adobe Helvetica Medium R Normal  34 240 100 100 P 176 ISO10646 1"),
 
   FONT_HELVR24_TF("u8g2_font_helvR24_tf", 191, 756, "Adobe Helvetica Medium R Normal  34 240 100 100 P 176 ISO10646 1"),
 
@@ -1231,11 +1231,11 @@ public enum GlcdFont {
 
   FONT_INB24_MR("u8g2_font_inb24_mr", 95, 658, "FreeType Inconsolata LGC Bold R Normal  33 330 72 72 P 162 ISO10646 1"),
 
-  FONT_INB27_MF("u8g2_font_inb27_mf", 191, 658, "FreeType Inconsolata LGC Bold R Normal  36 360 72 72 P 176 ISO10646 1"),
+  FONT_INB27_MF("u8g2_font_inb27_mf", 191, 658, "FreeType Inconsolata LGC Bold R Normal  36 360 72 72 P 177 ISO10646 1"),
 
-  FONT_INB27_MN("u8g2_font_inb27_mn", 18, 658, "FreeType Inconsolata LGC Bold R Normal  36 360 72 72 P 176 ISO10646 1"),
+  FONT_INB27_MN("u8g2_font_inb27_mn", 18, 658, "FreeType Inconsolata LGC Bold R Normal  36 360 72 72 P 177 ISO10646 1"),
 
-  FONT_INB27_MR("u8g2_font_inb27_mr", 95, 658, "FreeType Inconsolata LGC Bold R Normal  36 360 72 72 P 176 ISO10646 1"),
+  FONT_INB27_MR("u8g2_font_inb27_mr", 95, 658, "FreeType Inconsolata LGC Bold R Normal  36 360 72 72 P 177 ISO10646 1"),
 
   FONT_INB30_MF("u8g2_font_inb30_mf", 191, 658, "FreeType Inconsolata LGC Bold R Normal  40 400 72 72 P 196 ISO10646 1"),
 
@@ -1243,11 +1243,11 @@ public enum GlcdFont {
 
   FONT_INB30_MR("u8g2_font_inb30_mr", 95, 658, "FreeType Inconsolata LGC Bold R Normal  40 400 72 72 P 196 ISO10646 1"),
 
-  FONT_INB33_MF("u8g2_font_inb33_mf", 191, 658, "FreeType Inconsolata LGC Bold R Normal  44 440 72 72 P 214 ISO10646 1"),
+  FONT_INB33_MF("u8g2_font_inb33_mf", 191, 658, "FreeType Inconsolata LGC Bold R Normal  44 440 72 72 P 215 ISO10646 1"),
 
-  FONT_INB33_MN("u8g2_font_inb33_mn", 18, 658, "FreeType Inconsolata LGC Bold R Normal  44 440 72 72 P 214 ISO10646 1"),
+  FONT_INB33_MN("u8g2_font_inb33_mn", 18, 658, "FreeType Inconsolata LGC Bold R Normal  44 440 72 72 P 215 ISO10646 1"),
 
-  FONT_INB33_MR("u8g2_font_inb33_mr", 95, 658, "FreeType Inconsolata LGC Bold R Normal  44 440 72 72 P 214 ISO10646 1"),
+  FONT_INB33_MR("u8g2_font_inb33_mr", 95, 658, "FreeType Inconsolata LGC Bold R Normal  44 440 72 72 P 215 ISO10646 1"),
 
   FONT_INB38_MF("u8g2_font_inb38_mf", 191, 658, "FreeType Inconsolata LGC Bold R Normal  51 510 72 72 P 249 ISO10646 1"),
 
@@ -1289,11 +1289,11 @@ public enum GlcdFont {
 
   FONT_INR16_MR("u8g2_font_inr16_mr", 95, 658, "FreeType Inconsolata LGC Medium R Normal  22 220 72 72 P 102 ISO10646 1"),
 
-  FONT_INR19_MF("u8g2_font_inr19_mf", 191, 658, "FreeType Inconsolata LGC Medium R Normal  26 260 72 72 P 119 ISO10646 1"),
+  FONT_INR19_MF("u8g2_font_inr19_mf", 191, 658, "FreeType Inconsolata LGC Medium R Normal  26 260 72 72 P 120 ISO10646 1"),
 
-  FONT_INR19_MN("u8g2_font_inr19_mn", 18, 658, "FreeType Inconsolata LGC Medium R Normal  26 260 72 72 P 119 ISO10646 1"),
+  FONT_INR19_MN("u8g2_font_inr19_mn", 18, 658, "FreeType Inconsolata LGC Medium R Normal  26 260 72 72 P 120 ISO10646 1"),
 
-  FONT_INR19_MR("u8g2_font_inr19_mr", 95, 658, "FreeType Inconsolata LGC Medium R Normal  26 260 72 72 P 119 ISO10646 1"),
+  FONT_INR19_MR("u8g2_font_inr19_mr", 95, 658, "FreeType Inconsolata LGC Medium R Normal  26 260 72 72 P 120 ISO10646 1"),
 
   FONT_INR21_MF("u8g2_font_inr21_mf", 191, 658, "FreeType Inconsolata LGC Medium R Normal  30 300 72 72 P 138 ISO10646 1"),
 
@@ -1383,7 +1383,7 @@ public enum GlcdFont {
 
   FONT_IRANIAN_SANS_14_T_ALL("u8g2_font_iranian_sans_14_t_all", 321, 323, "FreeType Iranian Sans Medium R Normal  14 140 72 72 P 79 ISO10646 1"),
 
-  FONT_IRANIAN_SANS_16_T_ALL("u8g2_font_iranian_sans_16_t_all", 321, 323, "FreeType Iranian Sans Medium R Normal  16 160 72 72 P 91 ISO10646 1"),
+  FONT_IRANIAN_SANS_16_T_ALL("u8g2_font_iranian_sans_16_t_all", 321, 323, "FreeType Iranian Sans Medium R Normal  16 160 72 72 P 90 ISO10646 1"),
 
   FONT_IRANIAN_SANS_8_T_ALL("u8g2_font_iranian_sans_8_t_all", 321, 323, "FreeType Iranian Sans Medium R Normal  8 80 72 72 P 47 ISO10646 1"),
 
@@ -1507,7 +1507,7 @@ public enum GlcdFont {
 
   FONT_LOGISOSO92_TN("u8g2_font_logisoso92_tn", 18, 527, "FreeType Logisoso Medium R Normal  131 1310 72 72 P 150 ISO10646 1"),
 
-  FONT_LUBIS08_TE("u8g2_font_luBIS08_te", 416, 723, "B&H Lucida Bold I Normal Sans 11 80 100 100 P 69 ISO10646 1"),
+  FONT_LUBIS08_TE("u8g2_font_luBIS08_te", 417, 723, "B&H Lucida Bold I Normal Sans 11 80 100 100 P 69 ISO10646 1"),
 
   FONT_LUBIS08_TF("u8g2_font_luBIS08_tf", 191, 723, "B&H Lucida Bold I Normal Sans 11 80 100 100 P 69 ISO10646 1"),
 
@@ -1515,7 +1515,7 @@ public enum GlcdFont {
 
   FONT_LUBIS08_TR("u8g2_font_luBIS08_tr", 95, 723, "B&H Lucida Bold I Normal Sans 11 80 100 100 P 69 ISO10646 1"),
 
-  FONT_LUBIS10_TE("u8g2_font_luBIS10_te", 416, 723, "B&H Lucida Bold I Normal Sans 14 100 100 100 P 90 ISO10646 1"),
+  FONT_LUBIS10_TE("u8g2_font_luBIS10_te", 417, 723, "B&H Lucida Bold I Normal Sans 14 100 100 100 P 90 ISO10646 1"),
 
   FONT_LUBIS10_TF("u8g2_font_luBIS10_tf", 191, 723, "B&H Lucida Bold I Normal Sans 14 100 100 100 P 90 ISO10646 1"),
 
@@ -1523,7 +1523,7 @@ public enum GlcdFont {
 
   FONT_LUBIS10_TR("u8g2_font_luBIS10_tr", 95, 723, "B&H Lucida Bold I Normal Sans 14 100 100 100 P 90 ISO10646 1"),
 
-  FONT_LUBIS12_TE("u8g2_font_luBIS12_te", 416, 723, "B&H Lucida Bold I Normal Sans 17 120 100 100 P 108 ISO10646 1"),
+  FONT_LUBIS12_TE("u8g2_font_luBIS12_te", 417, 723, "B&H Lucida Bold I Normal Sans 17 120 100 100 P 108 ISO10646 1"),
 
   FONT_LUBIS12_TF("u8g2_font_luBIS12_tf", 191, 723, "B&H Lucida Bold I Normal Sans 17 120 100 100 P 108 ISO10646 1"),
 
@@ -1531,7 +1531,7 @@ public enum GlcdFont {
 
   FONT_LUBIS12_TR("u8g2_font_luBIS12_tr", 95, 723, "B&H Lucida Bold I Normal Sans 17 120 100 100 P 108 ISO10646 1"),
 
-  FONT_LUBIS14_TE("u8g2_font_luBIS14_te", 416, 723, "B&H Lucida Bold I Normal Sans 20 140 100 100 P 127 ISO10646 1"),
+  FONT_LUBIS14_TE("u8g2_font_luBIS14_te", 417, 723, "B&H Lucida Bold I Normal Sans 20 140 100 100 P 127 ISO10646 1"),
 
   FONT_LUBIS14_TF("u8g2_font_luBIS14_tf", 191, 723, "B&H Lucida Bold I Normal Sans 20 140 100 100 P 127 ISO10646 1"),
 
@@ -1539,7 +1539,7 @@ public enum GlcdFont {
 
   FONT_LUBIS14_TR("u8g2_font_luBIS14_tr", 95, 723, "B&H Lucida Bold I Normal Sans 20 140 100 100 P 127 ISO10646 1"),
 
-  FONT_LUBIS18_TE("u8g2_font_luBIS18_te", 416, 723, "B&H Lucida Bold I Normal Sans 25 180 100 100 P 159 ISO10646 1"),
+  FONT_LUBIS18_TE("u8g2_font_luBIS18_te", 417, 723, "B&H Lucida Bold I Normal Sans 25 180 100 100 P 159 ISO10646 1"),
 
   FONT_LUBIS18_TF("u8g2_font_luBIS18_tf", 191, 723, "B&H Lucida Bold I Normal Sans 25 180 100 100 P 159 ISO10646 1"),
 
@@ -1547,7 +1547,7 @@ public enum GlcdFont {
 
   FONT_LUBIS18_TR("u8g2_font_luBIS18_tr", 95, 723, "B&H Lucida Bold I Normal Sans 25 180 100 100 P 159 ISO10646 1"),
 
-  FONT_LUBIS19_TE("u8g2_font_luBIS19_te", 416, 723, "B&H Lucida Bold I Normal Sans 26 190 100 100 P 166 ISO10646 1"),
+  FONT_LUBIS19_TE("u8g2_font_luBIS19_te", 417, 723, "B&H Lucida Bold I Normal Sans 26 190 100 100 P 166 ISO10646 1"),
 
   FONT_LUBIS19_TF("u8g2_font_luBIS19_tf", 191, 723, "B&H Lucida Bold I Normal Sans 26 190 100 100 P 166 ISO10646 1"),
 
@@ -1555,7 +1555,7 @@ public enum GlcdFont {
 
   FONT_LUBIS19_TR("u8g2_font_luBIS19_tr", 95, 723, "B&H Lucida Bold I Normal Sans 26 190 100 100 P 166 ISO10646 1"),
 
-  FONT_LUBIS24_TE("u8g2_font_luBIS24_te", 416, 723, "B&H Lucida Bold I Normal Sans 34 240 100 100 P 215 ISO10646 1"),
+  FONT_LUBIS24_TE("u8g2_font_luBIS24_te", 417, 723, "B&H Lucida Bold I Normal Sans 34 240 100 100 P 215 ISO10646 1"),
 
   FONT_LUBIS24_TF("u8g2_font_luBIS24_tf", 191, 723, "B&H Lucida Bold I Normal Sans 34 240 100 100 P 215 ISO10646 1"),
 
@@ -1563,7 +1563,7 @@ public enum GlcdFont {
 
   FONT_LUBIS24_TR("u8g2_font_luBIS24_tr", 95, 723, "B&H Lucida Bold I Normal Sans 34 240 100 100 P 215 ISO10646 1"),
 
-  FONT_LUBS08_TE("u8g2_font_luBS08_te", 446, 756, "B&H Lucida Bold R Normal Sans 11 80 100 100 P 70 ISO10646 1"),
+  FONT_LUBS08_TE("u8g2_font_luBS08_te", 447, 756, "B&H Lucida Bold R Normal Sans 11 80 100 100 P 70 ISO10646 1"),
 
   FONT_LUBS08_TF("u8g2_font_luBS08_tf", 191, 756, "B&H Lucida Bold R Normal Sans 11 80 100 100 P 70 ISO10646 1"),
 
@@ -1571,7 +1571,7 @@ public enum GlcdFont {
 
   FONT_LUBS08_TR("u8g2_font_luBS08_tr", 95, 756, "B&H Lucida Bold R Normal Sans 11 80 100 100 P 70 ISO10646 1"),
 
-  FONT_LUBS10_TE("u8g2_font_luBS10_te", 446, 756, "B&H Lucida Bold R Normal Sans 14 100 100 100 P 89 ISO10646 1"),
+  FONT_LUBS10_TE("u8g2_font_luBS10_te", 447, 756, "B&H Lucida Bold R Normal Sans 14 100 100 100 P 89 ISO10646 1"),
 
   FONT_LUBS10_TF("u8g2_font_luBS10_tf", 191, 756, "B&H Lucida Bold R Normal Sans 14 100 100 100 P 89 ISO10646 1"),
 
@@ -1579,7 +1579,7 @@ public enum GlcdFont {
 
   FONT_LUBS10_TR("u8g2_font_luBS10_tr", 95, 756, "B&H Lucida Bold R Normal Sans 14 100 100 100 P 89 ISO10646 1"),
 
-  FONT_LUBS12_TE("u8g2_font_luBS12_te", 446, 756, "B&H Lucida Bold R Normal Sans 17 120 100 100 P 108 ISO10646 1"),
+  FONT_LUBS12_TE("u8g2_font_luBS12_te", 447, 756, "B&H Lucida Bold R Normal Sans 17 120 100 100 P 108 ISO10646 1"),
 
   FONT_LUBS12_TF("u8g2_font_luBS12_tf", 191, 756, "B&H Lucida Bold R Normal Sans 17 120 100 100 P 108 ISO10646 1"),
 
@@ -1587,7 +1587,7 @@ public enum GlcdFont {
 
   FONT_LUBS12_TR("u8g2_font_luBS12_tr", 95, 756, "B&H Lucida Bold R Normal Sans 17 120 100 100 P 108 ISO10646 1"),
 
-  FONT_LUBS14_TE("u8g2_font_luBS14_te", 446, 756, "B&H Lucida Bold R Normal Sans 20 140 100 100 P 127 ISO10646 1"),
+  FONT_LUBS14_TE("u8g2_font_luBS14_te", 447, 756, "B&H Lucida Bold R Normal Sans 20 140 100 100 P 127 ISO10646 1"),
 
   FONT_LUBS14_TF("u8g2_font_luBS14_tf", 191, 756, "B&H Lucida Bold R Normal Sans 20 140 100 100 P 127 ISO10646 1"),
 
@@ -1595,7 +1595,7 @@ public enum GlcdFont {
 
   FONT_LUBS14_TR("u8g2_font_luBS14_tr", 95, 756, "B&H Lucida Bold R Normal Sans 20 140 100 100 P 127 ISO10646 1"),
 
-  FONT_LUBS18_TE("u8g2_font_luBS18_te", 446, 756, "B&H Lucida Bold R Normal Sans 25 180 100 100 P 158 ISO10646 1"),
+  FONT_LUBS18_TE("u8g2_font_luBS18_te", 447, 756, "B&H Lucida Bold R Normal Sans 25 180 100 100 P 158 ISO10646 1"),
 
   FONT_LUBS18_TF("u8g2_font_luBS18_tf", 191, 756, "B&H Lucida Bold R Normal Sans 25 180 100 100 P 158 ISO10646 1"),
 
@@ -1603,7 +1603,7 @@ public enum GlcdFont {
 
   FONT_LUBS18_TR("u8g2_font_luBS18_tr", 95, 756, "B&H Lucida Bold R Normal Sans 25 180 100 100 P 158 ISO10646 1"),
 
-  FONT_LUBS19_TE("u8g2_font_luBS19_te", 446, 756, "B&H Lucida Bold R Normal Sans 26 190 100 100 P 166 ISO10646 1"),
+  FONT_LUBS19_TE("u8g2_font_luBS19_te", 447, 756, "B&H Lucida Bold R Normal Sans 26 190 100 100 P 166 ISO10646 1"),
 
   FONT_LUBS19_TF("u8g2_font_luBS19_tf", 191, 756, "B&H Lucida Bold R Normal Sans 26 190 100 100 P 166 ISO10646 1"),
 
@@ -1611,7 +1611,7 @@ public enum GlcdFont {
 
   FONT_LUBS19_TR("u8g2_font_luBS19_tr", 95, 756, "B&H Lucida Bold R Normal Sans 26 190 100 100 P 166 ISO10646 1"),
 
-  FONT_LUBS24_TE("u8g2_font_luBS24_te", 446, 756, "B&H Lucida Bold R Normal Sans 34 240 100 100 P 216 ISO10646 1"),
+  FONT_LUBS24_TE("u8g2_font_luBS24_te", 447, 756, "B&H Lucida Bold R Normal Sans 34 240 100 100 P 216 ISO10646 1"),
 
   FONT_LUBS24_TF("u8g2_font_luBS24_tf", 191, 756, "B&H Lucida Bold R Normal Sans 34 240 100 100 P 216 ISO10646 1"),
 
@@ -1619,7 +1619,7 @@ public enum GlcdFont {
 
   FONT_LUBS24_TR("u8g2_font_luBS24_tr", 95, 756, "B&H Lucida Bold R Normal Sans 34 240 100 100 P 216 ISO10646 1"),
 
-  FONT_LUIS08_TE("u8g2_font_luIS08_te", 416, 723, "B&H Lucida Medium I Normal Sans 11 80 100 100 P 62 ISO10646 1"),
+  FONT_LUIS08_TE("u8g2_font_luIS08_te", 417, 723, "B&H Lucida Medium I Normal Sans 11 80 100 100 P 62 ISO10646 1"),
 
   FONT_LUIS08_TF("u8g2_font_luIS08_tf", 191, 723, "B&H Lucida Medium I Normal Sans 11 80 100 100 P 62 ISO10646 1"),
 
@@ -1627,7 +1627,7 @@ public enum GlcdFont {
 
   FONT_LUIS08_TR("u8g2_font_luIS08_tr", 95, 723, "B&H Lucida Medium I Normal Sans 11 80 100 100 P 62 ISO10646 1"),
 
-  FONT_LUIS10_TE("u8g2_font_luIS10_te", 416, 723, "B&H Lucida Medium I Normal Sans 14 100 100 100 P 80 ISO10646 1"),
+  FONT_LUIS10_TE("u8g2_font_luIS10_te", 417, 723, "B&H Lucida Medium I Normal Sans 14 100 100 100 P 80 ISO10646 1"),
 
   FONT_LUIS10_TF("u8g2_font_luIS10_tf", 191, 723, "B&H Lucida Medium I Normal Sans 14 100 100 100 P 80 ISO10646 1"),
 
@@ -1635,7 +1635,7 @@ public enum GlcdFont {
 
   FONT_LUIS10_TR("u8g2_font_luIS10_tr", 95, 723, "B&H Lucida Medium I Normal Sans 14 100 100 100 P 80 ISO10646 1"),
 
-  FONT_LUIS12_TE("u8g2_font_luIS12_te", 416, 723, "B&H Lucida Medium I Normal Sans 17 120 100 100 P 97 ISO10646 1"),
+  FONT_LUIS12_TE("u8g2_font_luIS12_te", 417, 723, "B&H Lucida Medium I Normal Sans 17 120 100 100 P 97 ISO10646 1"),
 
   FONT_LUIS12_TF("u8g2_font_luIS12_tf", 191, 723, "B&H Lucida Medium I Normal Sans 17 120 100 100 P 97 ISO10646 1"),
 
@@ -1643,7 +1643,7 @@ public enum GlcdFont {
 
   FONT_LUIS12_TR("u8g2_font_luIS12_tr", 95, 723, "B&H Lucida Medium I Normal Sans 17 120 100 100 P 97 ISO10646 1"),
 
-  FONT_LUIS14_TE("u8g2_font_luIS14_te", 416, 723, "B&H Lucida Medium I Normal Sans 20 140 100 100 P 114 ISO10646 1"),
+  FONT_LUIS14_TE("u8g2_font_luIS14_te", 417, 723, "B&H Lucida Medium I Normal Sans 20 140 100 100 P 114 ISO10646 1"),
 
   FONT_LUIS14_TF("u8g2_font_luIS14_tf", 191, 723, "B&H Lucida Medium I Normal Sans 20 140 100 100 P 114 ISO10646 1"),
 
@@ -1651,7 +1651,7 @@ public enum GlcdFont {
 
   FONT_LUIS14_TR("u8g2_font_luIS14_tr", 95, 723, "B&H Lucida Medium I Normal Sans 20 140 100 100 P 114 ISO10646 1"),
 
-  FONT_LUIS18_TE("u8g2_font_luIS18_te", 416, 723, "B&H Lucida Medium I Normal Sans 25 180 100 100 P 141 ISO10646 1"),
+  FONT_LUIS18_TE("u8g2_font_luIS18_te", 417, 723, "B&H Lucida Medium I Normal Sans 25 180 100 100 P 141 ISO10646 1"),
 
   FONT_LUIS18_TF("u8g2_font_luIS18_tf", 191, 723, "B&H Lucida Medium I Normal Sans 25 180 100 100 P 141 ISO10646 1"),
 
@@ -1659,7 +1659,7 @@ public enum GlcdFont {
 
   FONT_LUIS18_TR("u8g2_font_luIS18_tr", 95, 723, "B&H Lucida Medium I Normal Sans 25 180 100 100 P 141 ISO10646 1"),
 
-  FONT_LUIS19_TE("u8g2_font_luIS19_te", 416, 723, "B&H Lucida Medium I Normal Sans 26 190 100 100 P 147 ISO10646 1"),
+  FONT_LUIS19_TE("u8g2_font_luIS19_te", 417, 723, "B&H Lucida Medium I Normal Sans 26 190 100 100 P 147 ISO10646 1"),
 
   FONT_LUIS19_TF("u8g2_font_luIS19_tf", 191, 723, "B&H Lucida Medium I Normal Sans 26 190 100 100 P 147 ISO10646 1"),
 
@@ -1667,7 +1667,7 @@ public enum GlcdFont {
 
   FONT_LUIS19_TR("u8g2_font_luIS19_tr", 95, 723, "B&H Lucida Medium I Normal Sans 26 190 100 100 P 147 ISO10646 1"),
 
-  FONT_LUIS24_TE("u8g2_font_luIS24_te", 416, 723, "B&H Lucida Medium I Normal Sans 34 240 100 100 P 192 ISO10646 1"),
+  FONT_LUIS24_TE("u8g2_font_luIS24_te", 417, 723, "B&H Lucida Medium I Normal Sans 34 240 100 100 P 192 ISO10646 1"),
 
   FONT_LUIS24_TF("u8g2_font_luIS24_tf", 191, 723, "B&H Lucida Medium I Normal Sans 34 240 100 100 P 192 ISO10646 1"),
 
@@ -1675,7 +1675,7 @@ public enum GlcdFont {
 
   FONT_LUIS24_TR("u8g2_font_luIS24_tr", 95, 723, "B&H Lucida Medium I Normal Sans 34 240 100 100 P 192 ISO10646 1"),
 
-  FONT_LURS08_TE("u8g2_font_luRS08_te", 446, 756, "B&H Lucida Medium R Normal Sans 11 80 100 100 P 63 ISO10646 1"),
+  FONT_LURS08_TE("u8g2_font_luRS08_te", 447, 756, "B&H Lucida Medium R Normal Sans 11 80 100 100 P 63 ISO10646 1"),
 
   FONT_LURS08_TF("u8g2_font_luRS08_tf", 191, 756, "B&H Lucida Medium R Normal Sans 11 80 100 100 P 63 ISO10646 1"),
 
@@ -1683,7 +1683,7 @@ public enum GlcdFont {
 
   FONT_LURS08_TR("u8g2_font_luRS08_tr", 95, 756, "B&H Lucida Medium R Normal Sans 11 80 100 100 P 63 ISO10646 1"),
 
-  FONT_LURS10_TE("u8g2_font_luRS10_te", 446, 756, "B&H Lucida Medium R Normal Sans 14 100 100 100 P 80 ISO10646 1"),
+  FONT_LURS10_TE("u8g2_font_luRS10_te", 447, 756, "B&H Lucida Medium R Normal Sans 14 100 100 100 P 80 ISO10646 1"),
 
   FONT_LURS10_TF("u8g2_font_luRS10_tf", 191, 756, "B&H Lucida Medium R Normal Sans 14 100 100 100 P 80 ISO10646 1"),
 
@@ -1691,7 +1691,7 @@ public enum GlcdFont {
 
   FONT_LURS10_TR("u8g2_font_luRS10_tr", 95, 756, "B&H Lucida Medium R Normal Sans 14 100 100 100 P 80 ISO10646 1"),
 
-  FONT_LURS12_TE("u8g2_font_luRS12_te", 446, 756, "B&H Lucida Medium R Normal Sans 17 120 100 100 P 96 ISO10646 1"),
+  FONT_LURS12_TE("u8g2_font_luRS12_te", 447, 756, "B&H Lucida Medium R Normal Sans 17 120 100 100 P 96 ISO10646 1"),
 
   FONT_LURS12_TF("u8g2_font_luRS12_tf", 191, 756, "B&H Lucida Medium R Normal Sans 17 120 100 100 P 96 ISO10646 1"),
 
@@ -1699,7 +1699,7 @@ public enum GlcdFont {
 
   FONT_LURS12_TR("u8g2_font_luRS12_tr", 95, 756, "B&H Lucida Medium R Normal Sans 17 120 100 100 P 96 ISO10646 1"),
 
-  FONT_LURS14_TE("u8g2_font_luRS14_te", 446, 756, "B&H Lucida Medium R Normal Sans 20 140 100 100 P 114 ISO10646 1"),
+  FONT_LURS14_TE("u8g2_font_luRS14_te", 447, 756, "B&H Lucida Medium R Normal Sans 20 140 100 100 P 114 ISO10646 1"),
 
   FONT_LURS14_TF("u8g2_font_luRS14_tf", 191, 756, "B&H Lucida Medium R Normal Sans 20 140 100 100 P 114 ISO10646 1"),
 
@@ -1707,7 +1707,7 @@ public enum GlcdFont {
 
   FONT_LURS14_TR("u8g2_font_luRS14_tr", 95, 756, "B&H Lucida Medium R Normal Sans 20 140 100 100 P 114 ISO10646 1"),
 
-  FONT_LURS18_TE("u8g2_font_luRS18_te", 446, 756, "B&H Lucida Medium R Normal Sans 25 180 100 100 P 142 ISO10646 1"),
+  FONT_LURS18_TE("u8g2_font_luRS18_te", 447, 756, "B&H Lucida Medium R Normal Sans 25 180 100 100 P 142 ISO10646 1"),
 
   FONT_LURS18_TF("u8g2_font_luRS18_tf", 191, 756, "B&H Lucida Medium R Normal Sans 25 180 100 100 P 142 ISO10646 1"),
 
@@ -1715,7 +1715,7 @@ public enum GlcdFont {
 
   FONT_LURS18_TR("u8g2_font_luRS18_tr", 95, 756, "B&H Lucida Medium R Normal Sans 25 180 100 100 P 142 ISO10646 1"),
 
-  FONT_LURS19_TE("u8g2_font_luRS19_te", 446, 756, "B&H Lucida Medium R Normal Sans 26 190 100 100 P 147 ISO10646 1"),
+  FONT_LURS19_TE("u8g2_font_luRS19_te", 447, 756, "B&H Lucida Medium R Normal Sans 26 190 100 100 P 147 ISO10646 1"),
 
   FONT_LURS19_TF("u8g2_font_luRS19_tf", 191, 756, "B&H Lucida Medium R Normal Sans 26 190 100 100 P 147 ISO10646 1"),
 
@@ -1723,7 +1723,7 @@ public enum GlcdFont {
 
   FONT_LURS19_TR("u8g2_font_luRS19_tr", 95, 756, "B&H Lucida Medium R Normal Sans 26 190 100 100 P 147 ISO10646 1"),
 
-  FONT_LURS24_TE("u8g2_font_luRS24_te", 446, 756, "B&H Lucida Medium R Normal Sans 34 240 100 100 P 191 ISO10646 1"),
+  FONT_LURS24_TE("u8g2_font_luRS24_te", 447, 756, "B&H Lucida Medium R Normal Sans 34 240 100 100 P 191 ISO10646 1"),
 
   FONT_LURS24_TF("u8g2_font_luRS24_tf", 191, 756, "B&H Lucida Medium R Normal Sans 34 240 100 100 P 191 ISO10646 1"),
 
@@ -1731,7 +1731,7 @@ public enum GlcdFont {
 
   FONT_LURS24_TR("u8g2_font_luRS24_tr", 95, 756, "B&H Lucida Medium R Normal Sans 34 240 100 100 P 191 ISO10646 1"),
 
-  FONT_LUBB08_TE("u8g2_font_lubB08_te", 446, 756, "B&H LucidaBright DemiBold R Normal  11 80 100 100 P 66 ISO10646 1"),
+  FONT_LUBB08_TE("u8g2_font_lubB08_te", 447, 756, "B&H LucidaBright DemiBold R Normal  11 80 100 100 P 66 ISO10646 1"),
 
   FONT_LUBB08_TF("u8g2_font_lubB08_tf", 191, 756, "B&H LucidaBright DemiBold R Normal  11 80 100 100 P 66 ISO10646 1"),
 
@@ -1739,7 +1739,7 @@ public enum GlcdFont {
 
   FONT_LUBB08_TR("u8g2_font_lubB08_tr", 95, 756, "B&H LucidaBright DemiBold R Normal  11 80 100 100 P 66 ISO10646 1"),
 
-  FONT_LUBB10_TE("u8g2_font_lubB10_te", 446, 756, "B&H LucidaBright DemiBold R Normal  14 100 100 100 P 84 ISO10646 1"),
+  FONT_LUBB10_TE("u8g2_font_lubB10_te", 447, 756, "B&H LucidaBright DemiBold R Normal  14 100 100 100 P 84 ISO10646 1"),
 
   FONT_LUBB10_TF("u8g2_font_lubB10_tf", 191, 756, "B&H LucidaBright DemiBold R Normal  14 100 100 100 P 84 ISO10646 1"),
 
@@ -1747,7 +1747,7 @@ public enum GlcdFont {
 
   FONT_LUBB10_TR("u8g2_font_lubB10_tr", 95, 756, "B&H LucidaBright DemiBold R Normal  14 100 100 100 P 84 ISO10646 1"),
 
-  FONT_LUBB12_TE("u8g2_font_lubB12_te", 446, 756, "B&H LucidaBright DemiBold R Normal  17 120 100 100 P 101 ISO10646 1"),
+  FONT_LUBB12_TE("u8g2_font_lubB12_te", 447, 756, "B&H LucidaBright DemiBold R Normal  17 120 100 100 P 101 ISO10646 1"),
 
   FONT_LUBB12_TF("u8g2_font_lubB12_tf", 191, 756, "B&H LucidaBright DemiBold R Normal  17 120 100 100 P 101 ISO10646 1"),
 
@@ -1755,7 +1755,7 @@ public enum GlcdFont {
 
   FONT_LUBB12_TR("u8g2_font_lubB12_tr", 95, 756, "B&H LucidaBright DemiBold R Normal  17 120 100 100 P 101 ISO10646 1"),
 
-  FONT_LUBB14_TE("u8g2_font_lubB14_te", 446, 756, "B&H LucidaBright DemiBold R Normal  20 140 100 100 P 118 ISO10646 1"),
+  FONT_LUBB14_TE("u8g2_font_lubB14_te", 447, 756, "B&H LucidaBright DemiBold R Normal  20 140 100 100 P 118 ISO10646 1"),
 
   FONT_LUBB14_TF("u8g2_font_lubB14_tf", 191, 756, "B&H LucidaBright DemiBold R Normal  20 140 100 100 P 118 ISO10646 1"),
 
@@ -1763,7 +1763,7 @@ public enum GlcdFont {
 
   FONT_LUBB14_TR("u8g2_font_lubB14_tr", 95, 756, "B&H LucidaBright DemiBold R Normal  20 140 100 100 P 118 ISO10646 1"),
 
-  FONT_LUBB18_TE("u8g2_font_lubB18_te", 446, 756, "B&H LucidaBright DemiBold R Normal  25 180 100 100 P 149 ISO10646 1"),
+  FONT_LUBB18_TE("u8g2_font_lubB18_te", 447, 756, "B&H LucidaBright DemiBold R Normal  25 180 100 100 P 149 ISO10646 1"),
 
   FONT_LUBB18_TF("u8g2_font_lubB18_tf", 191, 756, "B&H LucidaBright DemiBold R Normal  25 180 100 100 P 149 ISO10646 1"),
 
@@ -1771,7 +1771,7 @@ public enum GlcdFont {
 
   FONT_LUBB18_TR("u8g2_font_lubB18_tr", 95, 756, "B&H LucidaBright DemiBold R Normal  25 180 100 100 P 149 ISO10646 1"),
 
-  FONT_LUBB19_TE("u8g2_font_lubB19_te", 446, 756, "B&H LucidaBright DemiBold R Normal  26 190 100 100 P 155 ISO10646 1"),
+  FONT_LUBB19_TE("u8g2_font_lubB19_te", 447, 756, "B&H LucidaBright DemiBold R Normal  26 190 100 100 P 155 ISO10646 1"),
 
   FONT_LUBB19_TF("u8g2_font_lubB19_tf", 191, 756, "B&H LucidaBright DemiBold R Normal  26 190 100 100 P 155 ISO10646 1"),
 
@@ -1779,7 +1779,7 @@ public enum GlcdFont {
 
   FONT_LUBB19_TR("u8g2_font_lubB19_tr", 95, 756, "B&H LucidaBright DemiBold R Normal  26 190 100 100 P 155 ISO10646 1"),
 
-  FONT_LUBB24_TE("u8g2_font_lubB24_te", 446, 756, "B&H LucidaBright DemiBold R Normal  34 240 100 100 P 202 ISO10646 1"),
+  FONT_LUBB24_TE("u8g2_font_lubB24_te", 447, 756, "B&H LucidaBright DemiBold R Normal  34 240 100 100 P 202 ISO10646 1"),
 
   FONT_LUBB24_TF("u8g2_font_lubB24_tf", 191, 756, "B&H LucidaBright DemiBold R Normal  34 240 100 100 P 202 ISO10646 1"),
 
@@ -1787,7 +1787,7 @@ public enum GlcdFont {
 
   FONT_LUBB24_TR("u8g2_font_lubB24_tr", 95, 756, "B&H LucidaBright DemiBold R Normal  34 240 100 100 P 202 ISO10646 1"),
 
-  FONT_LUBBI08_TE("u8g2_font_lubBI08_te", 416, 723, "B&H LucidaBright DemiBold I Normal  11 80 100 100 P 66 ISO10646 1"),
+  FONT_LUBBI08_TE("u8g2_font_lubBI08_te", 417, 723, "B&H LucidaBright DemiBold I Normal  11 80 100 100 P 66 ISO10646 1"),
 
   FONT_LUBBI08_TF("u8g2_font_lubBI08_tf", 191, 723, "B&H LucidaBright DemiBold I Normal  11 80 100 100 P 66 ISO10646 1"),
 
@@ -1795,7 +1795,7 @@ public enum GlcdFont {
 
   FONT_LUBBI08_TR("u8g2_font_lubBI08_tr", 95, 723, "B&H LucidaBright DemiBold I Normal  11 80 100 100 P 66 ISO10646 1"),
 
-  FONT_LUBBI10_TE("u8g2_font_lubBI10_te", 416, 723, "B&H LucidaBright DemiBold I Normal  14 100 100 100 P 84 ISO10646 1"),
+  FONT_LUBBI10_TE("u8g2_font_lubBI10_te", 417, 723, "B&H LucidaBright DemiBold I Normal  14 100 100 100 P 84 ISO10646 1"),
 
   FONT_LUBBI10_TF("u8g2_font_lubBI10_tf", 191, 723, "B&H LucidaBright DemiBold I Normal  14 100 100 100 P 84 ISO10646 1"),
 
@@ -1803,7 +1803,7 @@ public enum GlcdFont {
 
   FONT_LUBBI10_TR("u8g2_font_lubBI10_tr", 95, 723, "B&H LucidaBright DemiBold I Normal  14 100 100 100 P 84 ISO10646 1"),
 
-  FONT_LUBBI12_TE("u8g2_font_lubBI12_te", 416, 723, "B&H LucidaBright DemiBold I Normal  17 120 100 100 P 101 ISO10646 1"),
+  FONT_LUBBI12_TE("u8g2_font_lubBI12_te", 417, 723, "B&H LucidaBright DemiBold I Normal  17 120 100 100 P 101 ISO10646 1"),
 
   FONT_LUBBI12_TF("u8g2_font_lubBI12_tf", 191, 723, "B&H LucidaBright DemiBold I Normal  17 120 100 100 P 101 ISO10646 1"),
 
@@ -1811,7 +1811,7 @@ public enum GlcdFont {
 
   FONT_LUBBI12_TR("u8g2_font_lubBI12_tr", 95, 723, "B&H LucidaBright DemiBold I Normal  17 120 100 100 P 101 ISO10646 1"),
 
-  FONT_LUBBI14_TE("u8g2_font_lubBI14_te", 416, 723, "B&H LucidaBright DemiBold I Normal  20 140 100 100 P 119 ISO10646 1"),
+  FONT_LUBBI14_TE("u8g2_font_lubBI14_te", 417, 723, "B&H LucidaBright DemiBold I Normal  20 140 100 100 P 119 ISO10646 1"),
 
   FONT_LUBBI14_TF("u8g2_font_lubBI14_tf", 191, 723, "B&H LucidaBright DemiBold I Normal  20 140 100 100 P 119 ISO10646 1"),
 
@@ -1819,7 +1819,7 @@ public enum GlcdFont {
 
   FONT_LUBBI14_TR("u8g2_font_lubBI14_tr", 95, 723, "B&H LucidaBright DemiBold I Normal  20 140 100 100 P 119 ISO10646 1"),
 
-  FONT_LUBBI18_TE("u8g2_font_lubBI18_te", 416, 723, "B&H LucidaBright DemiBold I Normal  25 180 100 100 P 149 ISO10646 1"),
+  FONT_LUBBI18_TE("u8g2_font_lubBI18_te", 417, 723, "B&H LucidaBright DemiBold I Normal  25 180 100 100 P 149 ISO10646 1"),
 
   FONT_LUBBI18_TF("u8g2_font_lubBI18_tf", 191, 723, "B&H LucidaBright DemiBold I Normal  25 180 100 100 P 149 ISO10646 1"),
 
@@ -1827,7 +1827,7 @@ public enum GlcdFont {
 
   FONT_LUBBI18_TR("u8g2_font_lubBI18_tr", 95, 723, "B&H LucidaBright DemiBold I Normal  25 180 100 100 P 149 ISO10646 1"),
 
-  FONT_LUBBI19_TE("u8g2_font_lubBI19_te", 416, 723, "B&H LucidaBright DemiBold I Normal  26 190 100 100 P 156 ISO10646 1"),
+  FONT_LUBBI19_TE("u8g2_font_lubBI19_te", 417, 723, "B&H LucidaBright DemiBold I Normal  26 190 100 100 P 156 ISO10646 1"),
 
   FONT_LUBBI19_TF("u8g2_font_lubBI19_tf", 191, 723, "B&H LucidaBright DemiBold I Normal  26 190 100 100 P 156 ISO10646 1"),
 
@@ -1835,7 +1835,7 @@ public enum GlcdFont {
 
   FONT_LUBBI19_TR("u8g2_font_lubBI19_tr", 95, 723, "B&H LucidaBright DemiBold I Normal  26 190 100 100 P 156 ISO10646 1"),
 
-  FONT_LUBBI24_TE("u8g2_font_lubBI24_te", 416, 723, "B&H LucidaBright DemiBold I Normal  34 240 100 100 P 203 ISO10646 1"),
+  FONT_LUBBI24_TE("u8g2_font_lubBI24_te", 417, 723, "B&H LucidaBright DemiBold I Normal  34 240 100 100 P 203 ISO10646 1"),
 
   FONT_LUBBI24_TF("u8g2_font_lubBI24_tf", 191, 723, "B&H LucidaBright DemiBold I Normal  34 240 100 100 P 203 ISO10646 1"),
 
@@ -1843,7 +1843,7 @@ public enum GlcdFont {
 
   FONT_LUBBI24_TR("u8g2_font_lubBI24_tr", 95, 723, "B&H LucidaBright DemiBold I Normal  34 240 100 100 P 203 ISO10646 1"),
 
-  FONT_LUBI08_TE("u8g2_font_lubI08_te", 416, 723, "B&H LucidaBright Medium I Normal  11 80 100 100 P 63 ISO10646 1"),
+  FONT_LUBI08_TE("u8g2_font_lubI08_te", 417, 723, "B&H LucidaBright Medium I Normal  11 80 100 100 P 63 ISO10646 1"),
 
   FONT_LUBI08_TF("u8g2_font_lubI08_tf", 191, 723, "B&H LucidaBright Medium I Normal  11 80 100 100 P 63 ISO10646 1"),
 
@@ -1851,7 +1851,7 @@ public enum GlcdFont {
 
   FONT_LUBI08_TR("u8g2_font_lubI08_tr", 95, 723, "B&H LucidaBright Medium I Normal  11 80 100 100 P 63 ISO10646 1"),
 
-  FONT_LUBI10_TE("u8g2_font_lubI10_te", 416, 723, "B&H LucidaBright Medium I Normal  14 100 100 100 P 80 ISO10646 1"),
+  FONT_LUBI10_TE("u8g2_font_lubI10_te", 417, 723, "B&H LucidaBright Medium I Normal  14 100 100 100 P 80 ISO10646 1"),
 
   FONT_LUBI10_TF("u8g2_font_lubI10_tf", 191, 723, "B&H LucidaBright Medium I Normal  14 100 100 100 P 80 ISO10646 1"),
 
@@ -1859,7 +1859,7 @@ public enum GlcdFont {
 
   FONT_LUBI10_TR("u8g2_font_lubI10_tr", 95, 723, "B&H LucidaBright Medium I Normal  14 100 100 100 P 80 ISO10646 1"),
 
-  FONT_LUBI12_TE("u8g2_font_lubI12_te", 416, 723, "B&H LucidaBright Medium I Normal  17 120 100 100 P 96 ISO10646 1"),
+  FONT_LUBI12_TE("u8g2_font_lubI12_te", 417, 723, "B&H LucidaBright Medium I Normal  17 120 100 100 P 96 ISO10646 1"),
 
   FONT_LUBI12_TF("u8g2_font_lubI12_tf", 191, 723, "B&H LucidaBright Medium I Normal  17 120 100 100 P 96 ISO10646 1"),
 
@@ -1867,7 +1867,7 @@ public enum GlcdFont {
 
   FONT_LUBI12_TR("u8g2_font_lubI12_tr", 95, 723, "B&H LucidaBright Medium I Normal  17 120 100 100 P 96 ISO10646 1"),
 
-  FONT_LUBI14_TE("u8g2_font_lubI14_te", 416, 723, "B&H LucidaBright Medium I Normal  20 140 100 100 P 113 ISO10646 1"),
+  FONT_LUBI14_TE("u8g2_font_lubI14_te", 417, 723, "B&H LucidaBright Medium I Normal  20 140 100 100 P 113 ISO10646 1"),
 
   FONT_LUBI14_TF("u8g2_font_lubI14_tf", 191, 723, "B&H LucidaBright Medium I Normal  20 140 100 100 P 113 ISO10646 1"),
 
@@ -1875,7 +1875,7 @@ public enum GlcdFont {
 
   FONT_LUBI14_TR("u8g2_font_lubI14_tr", 95, 723, "B&H LucidaBright Medium I Normal  20 140 100 100 P 113 ISO10646 1"),
 
-  FONT_LUBI18_TE("u8g2_font_lubI18_te", 416, 723, "B&H LucidaBright Medium I Normal  25 180 100 100 P 142 ISO10646 1"),
+  FONT_LUBI18_TE("u8g2_font_lubI18_te", 417, 723, "B&H LucidaBright Medium I Normal  25 180 100 100 P 142 ISO10646 1"),
 
   FONT_LUBI18_TF("u8g2_font_lubI18_tf", 191, 723, "B&H LucidaBright Medium I Normal  25 180 100 100 P 142 ISO10646 1"),
 
@@ -1883,7 +1883,7 @@ public enum GlcdFont {
 
   FONT_LUBI18_TR("u8g2_font_lubI18_tr", 95, 723, "B&H LucidaBright Medium I Normal  25 180 100 100 P 142 ISO10646 1"),
 
-  FONT_LUBI19_TE("u8g2_font_lubI19_te", 416, 723, "B&H LucidaBright Medium I Normal  26 190 100 100 P 148 ISO10646 1"),
+  FONT_LUBI19_TE("u8g2_font_lubI19_te", 417, 723, "B&H LucidaBright Medium I Normal  26 190 100 100 P 148 ISO10646 1"),
 
   FONT_LUBI19_TF("u8g2_font_lubI19_tf", 191, 723, "B&H LucidaBright Medium I Normal  26 190 100 100 P 148 ISO10646 1"),
 
@@ -1891,7 +1891,7 @@ public enum GlcdFont {
 
   FONT_LUBI19_TR("u8g2_font_lubI19_tr", 95, 723, "B&H LucidaBright Medium I Normal  26 190 100 100 P 148 ISO10646 1"),
 
-  FONT_LUBI24_TE("u8g2_font_lubI24_te", 416, 723, "B&H LucidaBright Medium I Normal  34 240 100 100 P 194 ISO10646 1"),
+  FONT_LUBI24_TE("u8g2_font_lubI24_te", 417, 723, "B&H LucidaBright Medium I Normal  34 240 100 100 P 194 ISO10646 1"),
 
   FONT_LUBI24_TF("u8g2_font_lubI24_tf", 191, 723, "B&H LucidaBright Medium I Normal  34 240 100 100 P 194 ISO10646 1"),
 
@@ -1899,7 +1899,7 @@ public enum GlcdFont {
 
   FONT_LUBI24_TR("u8g2_font_lubI24_tr", 95, 723, "B&H LucidaBright Medium I Normal  34 240 100 100 P 194 ISO10646 1"),
 
-  FONT_LUBR08_TE("u8g2_font_lubR08_te", 446, 756, "B&H LucidaBright Medium R Normal  11 80 100 100 P 63 ISO10646 1"),
+  FONT_LUBR08_TE("u8g2_font_lubR08_te", 447, 756, "B&H LucidaBright Medium R Normal  11 80 100 100 P 63 ISO10646 1"),
 
   FONT_LUBR08_TF("u8g2_font_lubR08_tf", 191, 756, "B&H LucidaBright Medium R Normal  11 80 100 100 P 63 ISO10646 1"),
 
@@ -1907,7 +1907,7 @@ public enum GlcdFont {
 
   FONT_LUBR08_TR("u8g2_font_lubR08_tr", 95, 756, "B&H LucidaBright Medium R Normal  11 80 100 100 P 63 ISO10646 1"),
 
-  FONT_LUBR10_TE("u8g2_font_lubR10_te", 446, 756, "B&H LucidaBright Medium R Normal  14 100 100 100 P 80 ISO10646 1"),
+  FONT_LUBR10_TE("u8g2_font_lubR10_te", 447, 756, "B&H LucidaBright Medium R Normal  14 100 100 100 P 80 ISO10646 1"),
 
   FONT_LUBR10_TF("u8g2_font_lubR10_tf", 191, 756, "B&H LucidaBright Medium R Normal  14 100 100 100 P 80 ISO10646 1"),
 
@@ -1915,7 +1915,7 @@ public enum GlcdFont {
 
   FONT_LUBR10_TR("u8g2_font_lubR10_tr", 95, 756, "B&H LucidaBright Medium R Normal  14 100 100 100 P 80 ISO10646 1"),
 
-  FONT_LUBR12_TE("u8g2_font_lubR12_te", 446, 756, "B&H LucidaBright Medium R Normal  17 120 100 100 P 96 ISO10646 1"),
+  FONT_LUBR12_TE("u8g2_font_lubR12_te", 447, 756, "B&H LucidaBright Medium R Normal  17 120 100 100 P 96 ISO10646 1"),
 
   FONT_LUBR12_TF("u8g2_font_lubR12_tf", 191, 756, "B&H LucidaBright Medium R Normal  17 120 100 100 P 96 ISO10646 1"),
 
@@ -1923,7 +1923,7 @@ public enum GlcdFont {
 
   FONT_LUBR12_TR("u8g2_font_lubR12_tr", 95, 756, "B&H LucidaBright Medium R Normal  17 120 100 100 P 96 ISO10646 1"),
 
-  FONT_LUBR14_TE("u8g2_font_lubR14_te", 446, 756, "B&H LucidaBright Medium R Normal  20 140 100 100 P 114 ISO10646 1"),
+  FONT_LUBR14_TE("u8g2_font_lubR14_te", 447, 756, "B&H LucidaBright Medium R Normal  20 140 100 100 P 114 ISO10646 1"),
 
   FONT_LUBR14_TF("u8g2_font_lubR14_tf", 191, 756, "B&H LucidaBright Medium R Normal  20 140 100 100 P 114 ISO10646 1"),
 
@@ -1931,7 +1931,7 @@ public enum GlcdFont {
 
   FONT_LUBR14_TR("u8g2_font_lubR14_tr", 95, 756, "B&H LucidaBright Medium R Normal  20 140 100 100 P 114 ISO10646 1"),
 
-  FONT_LUBR18_TE("u8g2_font_lubR18_te", 446, 756, "B&H LucidaBright Medium R Normal  25 180 100 100 P 142 ISO10646 1"),
+  FONT_LUBR18_TE("u8g2_font_lubR18_te", 447, 756, "B&H LucidaBright Medium R Normal  25 180 100 100 P 142 ISO10646 1"),
 
   FONT_LUBR18_TF("u8g2_font_lubR18_tf", 191, 756, "B&H LucidaBright Medium R Normal  25 180 100 100 P 142 ISO10646 1"),
 
@@ -1939,7 +1939,7 @@ public enum GlcdFont {
 
   FONT_LUBR18_TR("u8g2_font_lubR18_tr", 95, 756, "B&H LucidaBright Medium R Normal  25 180 100 100 P 142 ISO10646 1"),
 
-  FONT_LUBR19_TE("u8g2_font_lubR19_te", 446, 756, "B&H LucidaBright Medium R Normal  26 190 100 100 P 149 ISO10646 1"),
+  FONT_LUBR19_TE("u8g2_font_lubR19_te", 447, 756, "B&H LucidaBright Medium R Normal  26 190 100 100 P 149 ISO10646 1"),
 
   FONT_LUBR19_TF("u8g2_font_lubR19_tf", 191, 756, "B&H LucidaBright Medium R Normal  26 190 100 100 P 149 ISO10646 1"),
 
@@ -1947,7 +1947,7 @@ public enum GlcdFont {
 
   FONT_LUBR19_TR("u8g2_font_lubR19_tr", 95, 756, "B&H LucidaBright Medium R Normal  26 190 100 100 P 149 ISO10646 1"),
 
-  FONT_LUBR24_TE("u8g2_font_lubR24_te", 446, 756, "B&H LucidaBright Medium R Normal  34 240 100 100 P 193 ISO10646 1"),
+  FONT_LUBR24_TE("u8g2_font_lubR24_te", 447, 756, "B&H LucidaBright Medium R Normal  34 240 100 100 P 193 ISO10646 1"),
 
   FONT_LUBR24_TF("u8g2_font_lubR24_tf", 191, 756, "B&H LucidaBright Medium R Normal  34 240 100 100 P 193 ISO10646 1"),
 
@@ -1983,7 +1983,7 @@ public enum GlcdFont {
 
   FONT_MADEMOISELLE_MEL_TR("u8g2_font_mademoiselle_mel_tr", 95, 107, "FreeType Mademoiselle Medium R Normal  16 160 72 72 P 82 ISO10646 1"),
 
-  FONT_MANIAC_TE("u8g2_font_maniac_te", 424, 1530, "FreeType Maniac Medium R Normal  32 320 72 72 P 183 ISO10646 1"),
+  FONT_MANIAC_TE("u8g2_font_maniac_te", 425, 1530, "FreeType Maniac Medium R Normal  32 320 72 72 P 183 ISO10646 1"),
 
   FONT_MANIAC_TF("u8g2_font_maniac_tf", 191, 1530, "FreeType Maniac Medium R Normal  32 320 72 72 P 183 ISO10646 1"),
 
@@ -2041,7 +2041,7 @@ public enum GlcdFont {
 
   FONT_MOZART_NBP_TR("u8g2_font_mozart_nbp_tr", 95, 260, "FreeType Mozart NBP Medium R Normal  16 160 72 72 P 49 ISO10646 1"),
 
-  FONT_NCENB08_TE("u8g2_font_ncenB08_te", 446, 756, "Adobe New Century Schoolbook Bold R Normal  11 80 100 100 P 66 ISO10646 1"),
+  FONT_NCENB08_TE("u8g2_font_ncenB08_te", 447, 756, "Adobe New Century Schoolbook Bold R Normal  11 80 100 100 P 66 ISO10646 1"),
 
   FONT_NCENB08_TF("u8g2_font_ncenB08_tf", 191, 756, "Adobe New Century Schoolbook Bold R Normal  11 80 100 100 P 66 ISO10646 1"),
 
@@ -2049,7 +2049,7 @@ public enum GlcdFont {
 
   FONT_NCENB08_TR("u8g2_font_ncenB08_tr", 95, 756, "Adobe New Century Schoolbook Bold R Normal  11 80 100 100 P 66 ISO10646 1"),
 
-  FONT_NCENB10_TE("u8g2_font_ncenB10_te", 446, 756, "Adobe New Century Schoolbook Bold R Normal  14 100 100 100 P 87 ISO10646 1"),
+  FONT_NCENB10_TE("u8g2_font_ncenB10_te", 447, 756, "Adobe New Century Schoolbook Bold R Normal  14 100 100 100 P 87 ISO10646 1"),
 
   FONT_NCENB10_TF("u8g2_font_ncenB10_tf", 191, 756, "Adobe New Century Schoolbook Bold R Normal  14 100 100 100 P 87 ISO10646 1"),
 
@@ -2057,7 +2057,7 @@ public enum GlcdFont {
 
   FONT_NCENB10_TR("u8g2_font_ncenB10_tr", 95, 756, "Adobe New Century Schoolbook Bold R Normal  14 100 100 100 P 87 ISO10646 1"),
 
-  FONT_NCENB12_TE("u8g2_font_ncenB12_te", 446, 756, "Adobe New Century Schoolbook Bold R Normal  17 120 100 100 P 99 ISO10646 1"),
+  FONT_NCENB12_TE("u8g2_font_ncenB12_te", 447, 756, "Adobe New Century Schoolbook Bold R Normal  17 120 100 100 P 99 ISO10646 1"),
 
   FONT_NCENB12_TF("u8g2_font_ncenB12_tf", 191, 756, "Adobe New Century Schoolbook Bold R Normal  17 120 100 100 P 99 ISO10646 1"),
 
@@ -2065,7 +2065,7 @@ public enum GlcdFont {
 
   FONT_NCENB12_TR("u8g2_font_ncenB12_tr", 95, 756, "Adobe New Century Schoolbook Bold R Normal  17 120 100 100 P 99 ISO10646 1"),
 
-  FONT_NCENB14_TE("u8g2_font_ncenB14_te", 446, 756, "Adobe New Century Schoolbook Bold R Normal  20 140 100 100 P 113 ISO10646 1"),
+  FONT_NCENB14_TE("u8g2_font_ncenB14_te", 447, 756, "Adobe New Century Schoolbook Bold R Normal  20 140 100 100 P 113 ISO10646 1"),
 
   FONT_NCENB14_TF("u8g2_font_ncenB14_tf", 191, 756, "Adobe New Century Schoolbook Bold R Normal  20 140 100 100 P 113 ISO10646 1"),
 
@@ -2073,7 +2073,7 @@ public enum GlcdFont {
 
   FONT_NCENB14_TR("u8g2_font_ncenB14_tr", 95, 756, "Adobe New Century Schoolbook Bold R Normal  20 140 100 100 P 113 ISO10646 1"),
 
-  FONT_NCENB18_TE("u8g2_font_ncenB18_te", 446, 756, "Adobe New Century Schoolbook Bold R Normal  25 180 100 100 P 149 ISO10646 1"),
+  FONT_NCENB18_TE("u8g2_font_ncenB18_te", 447, 756, "Adobe New Century Schoolbook Bold R Normal  25 180 100 100 P 149 ISO10646 1"),
 
   FONT_NCENB18_TF("u8g2_font_ncenB18_tf", 191, 756, "Adobe New Century Schoolbook Bold R Normal  25 180 100 100 P 149 ISO10646 1"),
 
@@ -2081,7 +2081,7 @@ public enum GlcdFont {
 
   FONT_NCENB18_TR("u8g2_font_ncenB18_tr", 95, 756, "Adobe New Century Schoolbook Bold R Normal  25 180 100 100 P 149 ISO10646 1"),
 
-  FONT_NCENB24_TE("u8g2_font_ncenB24_te", 446, 756, "Adobe New Century Schoolbook Bold R Normal  34 240 100 100 P 193 ISO10646 1"),
+  FONT_NCENB24_TE("u8g2_font_ncenB24_te", 447, 756, "Adobe New Century Schoolbook Bold R Normal  34 240 100 100 P 193 ISO10646 1"),
 
   FONT_NCENB24_TF("u8g2_font_ncenB24_tf", 191, 756, "Adobe New Century Schoolbook Bold R Normal  34 240 100 100 P 193 ISO10646 1"),
 
@@ -2089,7 +2089,7 @@ public enum GlcdFont {
 
   FONT_NCENB24_TR("u8g2_font_ncenB24_tr", 95, 756, "Adobe New Century Schoolbook Bold R Normal  34 240 100 100 P 193 ISO10646 1"),
 
-  FONT_NCENR08_TE("u8g2_font_ncenR08_te", 446, 756, "Adobe New Century Schoolbook Medium R Normal  11 80 100 100 P 60 ISO10646 1"),
+  FONT_NCENR08_TE("u8g2_font_ncenR08_te", 447, 756, "Adobe New Century Schoolbook Medium R Normal  11 80 100 100 P 60 ISO10646 1"),
 
   FONT_NCENR08_TF("u8g2_font_ncenR08_tf", 191, 756, "Adobe New Century Schoolbook Medium R Normal  11 80 100 100 P 60 ISO10646 1"),
 
@@ -2097,7 +2097,7 @@ public enum GlcdFont {
 
   FONT_NCENR08_TR("u8g2_font_ncenR08_tr", 95, 756, "Adobe New Century Schoolbook Medium R Normal  11 80 100 100 P 60 ISO10646 1"),
 
-  FONT_NCENR10_TE("u8g2_font_ncenR10_te", 446, 756, "Adobe New Century Schoolbook Medium R Normal  14 100 100 100 P 82 ISO10646 1"),
+  FONT_NCENR10_TE("u8g2_font_ncenR10_te", 447, 756, "Adobe New Century Schoolbook Medium R Normal  14 100 100 100 P 82 ISO10646 1"),
 
   FONT_NCENR10_TF("u8g2_font_ncenR10_tf", 191, 756, "Adobe New Century Schoolbook Medium R Normal  14 100 100 100 P 82 ISO10646 1"),
 
@@ -2105,7 +2105,7 @@ public enum GlcdFont {
 
   FONT_NCENR10_TR("u8g2_font_ncenR10_tr", 95, 756, "Adobe New Century Schoolbook Medium R Normal  14 100 100 100 P 82 ISO10646 1"),
 
-  FONT_NCENR12_TE("u8g2_font_ncenR12_te", 446, 756, "Adobe New Century Schoolbook Medium R Normal  17 120 100 100 P 91 ISO10646 1"),
+  FONT_NCENR12_TE("u8g2_font_ncenR12_te", 447, 756, "Adobe New Century Schoolbook Medium R Normal  17 120 100 100 P 91 ISO10646 1"),
 
   FONT_NCENR12_TF("u8g2_font_ncenR12_tf", 191, 756, "Adobe New Century Schoolbook Medium R Normal  17 120 100 100 P 91 ISO10646 1"),
 
@@ -2113,7 +2113,7 @@ public enum GlcdFont {
 
   FONT_NCENR12_TR("u8g2_font_ncenR12_tr", 95, 756, "Adobe New Century Schoolbook Medium R Normal  17 120 100 100 P 91 ISO10646 1"),
 
-  FONT_NCENR14_TE("u8g2_font_ncenR14_te", 446, 756, "Adobe New Century Schoolbook Medium R Normal  20 140 100 100 P 103 ISO10646 1"),
+  FONT_NCENR14_TE("u8g2_font_ncenR14_te", 447, 756, "Adobe New Century Schoolbook Medium R Normal  20 140 100 100 P 103 ISO10646 1"),
 
   FONT_NCENR14_TF("u8g2_font_ncenR14_tf", 191, 756, "Adobe New Century Schoolbook Medium R Normal  20 140 100 100 P 103 ISO10646 1"),
 
@@ -2121,7 +2121,7 @@ public enum GlcdFont {
 
   FONT_NCENR14_TR("u8g2_font_ncenR14_tr", 95, 756, "Adobe New Century Schoolbook Medium R Normal  20 140 100 100 P 103 ISO10646 1"),
 
-  FONT_NCENR18_TE("u8g2_font_ncenR18_te", 446, 756, "Adobe New Century Schoolbook Medium R Normal  25 180 100 100 P 136 ISO10646 1"),
+  FONT_NCENR18_TE("u8g2_font_ncenR18_te", 447, 756, "Adobe New Century Schoolbook Medium R Normal  25 180 100 100 P 136 ISO10646 1"),
 
   FONT_NCENR18_TF("u8g2_font_ncenR18_tf", 191, 756, "Adobe New Century Schoolbook Medium R Normal  25 180 100 100 P 136 ISO10646 1"),
 
@@ -2129,7 +2129,7 @@ public enum GlcdFont {
 
   FONT_NCENR18_TR("u8g2_font_ncenR18_tr", 95, 756, "Adobe New Century Schoolbook Medium R Normal  25 180 100 100 P 136 ISO10646 1"),
 
-  FONT_NCENR24_TE("u8g2_font_ncenR24_te", 446, 756, "Adobe New Century Schoolbook Medium R Normal  34 240 100 100 P 181 ISO10646 1"),
+  FONT_NCENR24_TE("u8g2_font_ncenR24_te", 447, 756, "Adobe New Century Schoolbook Medium R Normal  34 240 100 100 P 181 ISO10646 1"),
 
   FONT_NCENR24_TF("u8g2_font_ncenR24_tf", 191, 756, "Adobe New Century Schoolbook Medium R Normal  34 240 100 100 P 181 ISO10646 1"),
 
@@ -2349,17 +2349,17 @@ public enum GlcdFont {
 
   FONT_OSB29_TR("u8g2_font_osb29_tr", 95, 1376, "FreeType Old Standard TT Bold R Normal  38 380 72 72 P 206 ISO10646 1"),
 
-  FONT_OSB35_TF("u8g2_font_osb35_tf", 191, 1376, "FreeType Old Standard TT Bold R Normal  48 480 72 72 P 258 ISO10646 1"),
+  FONT_OSB35_TF("u8g2_font_osb35_tf", 191, 1376, "FreeType Old Standard TT Bold R Normal  48 480 72 72 P 259 ISO10646 1"),
 
-  FONT_OSB35_TN("u8g2_font_osb35_tn", 18, 1376, "FreeType Old Standard TT Bold R Normal  48 480 72 72 P 258 ISO10646 1"),
+  FONT_OSB35_TN("u8g2_font_osb35_tn", 18, 1376, "FreeType Old Standard TT Bold R Normal  48 480 72 72 P 259 ISO10646 1"),
 
-  FONT_OSB35_TR("u8g2_font_osb35_tr", 95, 1376, "FreeType Old Standard TT Bold R Normal  48 480 72 72 P 258 ISO10646 1"),
+  FONT_OSB35_TR("u8g2_font_osb35_tr", 95, 1376, "FreeType Old Standard TT Bold R Normal  48 480 72 72 P 259 ISO10646 1"),
 
-  FONT_OSB41_TF("u8g2_font_osb41_tf", 191, 1376, "FreeType Old Standard TT Bold R Normal  55 550 72 72 P 295 ISO10646 1"),
+  FONT_OSB41_TF("u8g2_font_osb41_tf", 191, 1376, "FreeType Old Standard TT Bold R Normal  55 550 72 72 P 296 ISO10646 1"),
 
-  FONT_OSB41_TN("u8g2_font_osb41_tn", 18, 1376, "FreeType Old Standard TT Bold R Normal  55 550 72 72 P 295 ISO10646 1"),
+  FONT_OSB41_TN("u8g2_font_osb41_tn", 18, 1376, "FreeType Old Standard TT Bold R Normal  55 550 72 72 P 296 ISO10646 1"),
 
-  FONT_OSB41_TR("u8g2_font_osb41_tr", 95, 1376, "FreeType Old Standard TT Bold R Normal  55 550 72 72 P 295 ISO10646 1"),
+  FONT_OSB41_TR("u8g2_font_osb41_tr", 95, 1376, "FreeType Old Standard TT Bold R Normal  55 550 72 72 P 296 ISO10646 1"),
 
   FONT_OSKOOL_TF("u8g2_font_oskool_tf", 112, 114, "FreeType Oskool Medium R Normal  16 160 72 72 P 57 ISO10646 1"),
 
@@ -2373,11 +2373,11 @@ public enum GlcdFont {
 
   FONT_OSR18_TR("u8g2_font_osr18_tr", 95, 1456, "FreeType Old Standard TT Medium R Normal  26 260 72 72 P 138 ISO10646 1"),
 
-  FONT_OSR21_TF("u8g2_font_osr21_tf", 191, 1456, "FreeType Old Standard TT Medium R Normal  29 290 72 72 P 153 ISO10646 1"),
+  FONT_OSR21_TF("u8g2_font_osr21_tf", 191, 1456, "FreeType Old Standard TT Medium R Normal  29 290 72 72 P 154 ISO10646 1"),
 
-  FONT_OSR21_TN("u8g2_font_osr21_tn", 18, 1456, "FreeType Old Standard TT Medium R Normal  29 290 72 72 P 153 ISO10646 1"),
+  FONT_OSR21_TN("u8g2_font_osr21_tn", 18, 1456, "FreeType Old Standard TT Medium R Normal  29 290 72 72 P 154 ISO10646 1"),
 
-  FONT_OSR21_TR("u8g2_font_osr21_tr", 95, 1456, "FreeType Old Standard TT Medium R Normal  29 290 72 72 P 153 ISO10646 1"),
+  FONT_OSR21_TR("u8g2_font_osr21_tr", 95, 1456, "FreeType Old Standard TT Medium R Normal  29 290 72 72 P 154 ISO10646 1"),
 
   FONT_OSR26_TF("u8g2_font_osr26_tf", 191, 1456, "FreeType Old Standard TT Medium R Normal  36 360 72 72 P 189 ISO10646 1"),
 
@@ -2667,7 +2667,7 @@ public enum GlcdFont {
 
   FONT_SAMIM_12_T_ALL("u8g2_font_samim_12_t_all", 486, 489, "FreeType Samim Medium R Normal  12 120 72 72 P 61 ISO10646 1"),
 
-  FONT_SAMIM_14_T_ALL("u8g2_font_samim_14_t_all", 486, 489, "FreeType Samim Medium R Normal  14 140 72 72 P 69 ISO10646 1"),
+  FONT_SAMIM_14_T_ALL("u8g2_font_samim_14_t_all", 486, 489, "FreeType Samim Medium R Normal  14 140 72 72 P 70 ISO10646 1"),
 
   FONT_SAMIM_16_T_ALL("u8g2_font_samim_16_t_all", 486, 489, "FreeType Samim Medium R Normal  16 160 72 72 P 79 ISO10646 1"),
 
@@ -2735,7 +2735,7 @@ public enum GlcdFont {
 
   FONT_SYNCHRONIZER_NBP_TR("u8g2_font_synchronizer_nbp_tr", 95, 208, "FreeType Synchronizer NBP Medium R Normal  8 80 72 72 P 48 ISO10646 1"),
 
-  FONT_T0_11_ME("u8g2_font_t0_11_me", 645, 3075, "UW Ttyp0 Medium R Normal  11 100 75 75 C 60 ISO10646 1"),
+  FONT_T0_11_ME("u8g2_font_t0_11_me", 646, 3075, "UW Ttyp0 Medium R Normal  11 100 75 75 C 60 ISO10646 1"),
 
   FONT_T0_11_MF("u8g2_font_t0_11_mf", 191, 3075, "UW Ttyp0 Medium R Normal  11 100 75 75 C 60 ISO10646 1"),
 
@@ -2743,7 +2743,7 @@ public enum GlcdFont {
 
   FONT_T0_11_MR("u8g2_font_t0_11_mr", 95, 3075, "UW Ttyp0 Medium R Normal  11 100 75 75 C 60 ISO10646 1"),
 
-  FONT_T0_11_TE("u8g2_font_t0_11_te", 645, 3075, "UW Ttyp0 Medium R Normal  11 100 75 75 C 60 ISO10646 1"),
+  FONT_T0_11_TE("u8g2_font_t0_11_te", 646, 3075, "UW Ttyp0 Medium R Normal  11 100 75 75 C 60 ISO10646 1"),
 
   FONT_T0_11_TF("u8g2_font_t0_11_tf", 191, 3075, "UW Ttyp0 Medium R Normal  11 100 75 75 C 60 ISO10646 1"),
 
@@ -2751,7 +2751,7 @@ public enum GlcdFont {
 
   FONT_T0_11_TR("u8g2_font_t0_11_tr", 95, 3075, "UW Ttyp0 Medium R Normal  11 100 75 75 C 60 ISO10646 1"),
 
-  FONT_T0_11B_ME("u8g2_font_t0_11b_me", 645, 3075, "UW Ttyp0 Bold R Normal  11 100 75 75 C 60 ISO10646 1"),
+  FONT_T0_11B_ME("u8g2_font_t0_11b_me", 646, 3075, "UW Ttyp0 Bold R Normal  11 100 75 75 C 60 ISO10646 1"),
 
   FONT_T0_11B_MF("u8g2_font_t0_11b_mf", 191, 3075, "UW Ttyp0 Bold R Normal  11 100 75 75 C 60 ISO10646 1"),
 
@@ -2759,7 +2759,7 @@ public enum GlcdFont {
 
   FONT_T0_11B_MR("u8g2_font_t0_11b_mr", 95, 3075, "UW Ttyp0 Bold R Normal  11 100 75 75 C 60 ISO10646 1"),
 
-  FONT_T0_11B_TE("u8g2_font_t0_11b_te", 645, 3075, "UW Ttyp0 Bold R Normal  11 100 75 75 C 60 ISO10646 1"),
+  FONT_T0_11B_TE("u8g2_font_t0_11b_te", 646, 3075, "UW Ttyp0 Bold R Normal  11 100 75 75 C 60 ISO10646 1"),
 
   FONT_T0_11B_TF("u8g2_font_t0_11b_tf", 191, 3075, "UW Ttyp0 Bold R Normal  11 100 75 75 C 60 ISO10646 1"),
 
@@ -2767,7 +2767,7 @@ public enum GlcdFont {
 
   FONT_T0_11B_TR("u8g2_font_t0_11b_tr", 95, 3075, "UW Ttyp0 Bold R Normal  11 100 75 75 C 60 ISO10646 1"),
 
-  FONT_T0_12_ME("u8g2_font_t0_12_me", 645, 3075, "UW Ttyp0 Medium R Normal  12 110 75 75 C 60 ISO10646 1"),
+  FONT_T0_12_ME("u8g2_font_t0_12_me", 646, 3075, "UW Ttyp0 Medium R Normal  12 110 75 75 C 60 ISO10646 1"),
 
   FONT_T0_12_MF("u8g2_font_t0_12_mf", 191, 3075, "UW Ttyp0 Medium R Normal  12 110 75 75 C 60 ISO10646 1"),
 
@@ -2775,7 +2775,7 @@ public enum GlcdFont {
 
   FONT_T0_12_MR("u8g2_font_t0_12_mr", 95, 3075, "UW Ttyp0 Medium R Normal  12 110 75 75 C 60 ISO10646 1"),
 
-  FONT_T0_12_TE("u8g2_font_t0_12_te", 645, 3075, "UW Ttyp0 Medium R Normal  12 110 75 75 C 60 ISO10646 1"),
+  FONT_T0_12_TE("u8g2_font_t0_12_te", 646, 3075, "UW Ttyp0 Medium R Normal  12 110 75 75 C 60 ISO10646 1"),
 
   FONT_T0_12_TF("u8g2_font_t0_12_tf", 191, 3075, "UW Ttyp0 Medium R Normal  12 110 75 75 C 60 ISO10646 1"),
 
@@ -2783,7 +2783,7 @@ public enum GlcdFont {
 
   FONT_T0_12_TR("u8g2_font_t0_12_tr", 95, 3075, "UW Ttyp0 Medium R Normal  12 110 75 75 C 60 ISO10646 1"),
 
-  FONT_T0_12B_ME("u8g2_font_t0_12b_me", 645, 3075, "UW Ttyp0 Bold R Normal  12 110 75 75 C 60 ISO10646 1"),
+  FONT_T0_12B_ME("u8g2_font_t0_12b_me", 646, 3075, "UW Ttyp0 Bold R Normal  12 110 75 75 C 60 ISO10646 1"),
 
   FONT_T0_12B_MF("u8g2_font_t0_12b_mf", 191, 3075, "UW Ttyp0 Bold R Normal  12 110 75 75 C 60 ISO10646 1"),
 
@@ -2791,7 +2791,7 @@ public enum GlcdFont {
 
   FONT_T0_12B_MR("u8g2_font_t0_12b_mr", 95, 3075, "UW Ttyp0 Bold R Normal  12 110 75 75 C 60 ISO10646 1"),
 
-  FONT_T0_12B_TE("u8g2_font_t0_12b_te", 645, 3075, "UW Ttyp0 Bold R Normal  12 110 75 75 C 60 ISO10646 1"),
+  FONT_T0_12B_TE("u8g2_font_t0_12b_te", 646, 3075, "UW Ttyp0 Bold R Normal  12 110 75 75 C 60 ISO10646 1"),
 
   FONT_T0_12B_TF("u8g2_font_t0_12b_tf", 191, 3075, "UW Ttyp0 Bold R Normal  12 110 75 75 C 60 ISO10646 1"),
 
@@ -2799,7 +2799,7 @@ public enum GlcdFont {
 
   FONT_T0_12B_TR("u8g2_font_t0_12b_tr", 95, 3075, "UW Ttyp0 Bold R Normal  12 110 75 75 C 60 ISO10646 1"),
 
-  FONT_T0_13_ME("u8g2_font_t0_13_me", 645, 3075, "UW Ttyp0 Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
+  FONT_T0_13_ME("u8g2_font_t0_13_me", 646, 3075, "UW Ttyp0 Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
   FONT_T0_13_MF("u8g2_font_t0_13_mf", 191, 3075, "UW Ttyp0 Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
@@ -2807,7 +2807,7 @@ public enum GlcdFont {
 
   FONT_T0_13_MR("u8g2_font_t0_13_mr", 95, 3075, "UW Ttyp0 Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
-  FONT_T0_13_TE("u8g2_font_t0_13_te", 645, 3075, "UW Ttyp0 Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
+  FONT_T0_13_TE("u8g2_font_t0_13_te", 646, 3075, "UW Ttyp0 Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
   FONT_T0_13_TF("u8g2_font_t0_13_tf", 191, 3075, "UW Ttyp0 Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
@@ -2815,7 +2815,7 @@ public enum GlcdFont {
 
   FONT_T0_13_TR("u8g2_font_t0_13_tr", 95, 3075, "UW Ttyp0 Medium R Normal  13 120 75 75 C 70 ISO10646 1"),
 
-  FONT_T0_13B_ME("u8g2_font_t0_13b_me", 645, 3075, "UW Ttyp0 Bold R Normal  13 120 75 75 C 70 ISO10646 1"),
+  FONT_T0_13B_ME("u8g2_font_t0_13b_me", 646, 3075, "UW Ttyp0 Bold R Normal  13 120 75 75 C 70 ISO10646 1"),
 
   FONT_T0_13B_MF("u8g2_font_t0_13b_mf", 191, 3075, "UW Ttyp0 Bold R Normal  13 120 75 75 C 70 ISO10646 1"),
 
@@ -2823,7 +2823,7 @@ public enum GlcdFont {
 
   FONT_T0_13B_MR("u8g2_font_t0_13b_mr", 95, 3075, "UW Ttyp0 Bold R Normal  13 120 75 75 C 70 ISO10646 1"),
 
-  FONT_T0_13B_TE("u8g2_font_t0_13b_te", 645, 3075, "UW Ttyp0 Bold R Normal  13 120 75 75 C 70 ISO10646 1"),
+  FONT_T0_13B_TE("u8g2_font_t0_13b_te", 646, 3075, "UW Ttyp0 Bold R Normal  13 120 75 75 C 70 ISO10646 1"),
 
   FONT_T0_13B_TF("u8g2_font_t0_13b_tf", 191, 3075, "UW Ttyp0 Bold R Normal  13 120 75 75 C 70 ISO10646 1"),
 
@@ -2831,7 +2831,7 @@ public enum GlcdFont {
 
   FONT_T0_13B_TR("u8g2_font_t0_13b_tr", 95, 3075, "UW Ttyp0 Bold R Normal  13 120 75 75 C 70 ISO10646 1"),
 
-  FONT_T0_14_ME("u8g2_font_t0_14_me", 645, 3075, "UW Ttyp0 Medium R Normal  14 130 75 75 C 70 ISO10646 1"),
+  FONT_T0_14_ME("u8g2_font_t0_14_me", 646, 3075, "UW Ttyp0 Medium R Normal  14 130 75 75 C 70 ISO10646 1"),
 
   FONT_T0_14_MF("u8g2_font_t0_14_mf", 191, 3075, "UW Ttyp0 Medium R Normal  14 130 75 75 C 70 ISO10646 1"),
 
@@ -2839,7 +2839,7 @@ public enum GlcdFont {
 
   FONT_T0_14_MR("u8g2_font_t0_14_mr", 95, 3075, "UW Ttyp0 Medium R Normal  14 130 75 75 C 70 ISO10646 1"),
 
-  FONT_T0_14_TE("u8g2_font_t0_14_te", 645, 3075, "UW Ttyp0 Medium R Normal  14 130 75 75 C 70 ISO10646 1"),
+  FONT_T0_14_TE("u8g2_font_t0_14_te", 646, 3075, "UW Ttyp0 Medium R Normal  14 130 75 75 C 70 ISO10646 1"),
 
   FONT_T0_14_TF("u8g2_font_t0_14_tf", 191, 3075, "UW Ttyp0 Medium R Normal  14 130 75 75 C 70 ISO10646 1"),
 
@@ -2847,7 +2847,7 @@ public enum GlcdFont {
 
   FONT_T0_14_TR("u8g2_font_t0_14_tr", 95, 3075, "UW Ttyp0 Medium R Normal  14 130 75 75 C 70 ISO10646 1"),
 
-  FONT_T0_14B_ME("u8g2_font_t0_14b_me", 645, 3075, "UW Ttyp0 Bold R Normal  14 130 75 75 C 70 ISO10646 1"),
+  FONT_T0_14B_ME("u8g2_font_t0_14b_me", 646, 3075, "UW Ttyp0 Bold R Normal  14 130 75 75 C 70 ISO10646 1"),
 
   FONT_T0_14B_MF("u8g2_font_t0_14b_mf", 191, 3075, "UW Ttyp0 Bold R Normal  14 130 75 75 C 70 ISO10646 1"),
 
@@ -2855,7 +2855,7 @@ public enum GlcdFont {
 
   FONT_T0_14B_MR("u8g2_font_t0_14b_mr", 95, 3075, "UW Ttyp0 Bold R Normal  14 130 75 75 C 70 ISO10646 1"),
 
-  FONT_T0_14B_TE("u8g2_font_t0_14b_te", 645, 3075, "UW Ttyp0 Bold R Normal  14 130 75 75 C 70 ISO10646 1"),
+  FONT_T0_14B_TE("u8g2_font_t0_14b_te", 646, 3075, "UW Ttyp0 Bold R Normal  14 130 75 75 C 70 ISO10646 1"),
 
   FONT_T0_14B_TF("u8g2_font_t0_14b_tf", 191, 3075, "UW Ttyp0 Bold R Normal  14 130 75 75 C 70 ISO10646 1"),
 
@@ -2863,7 +2863,7 @@ public enum GlcdFont {
 
   FONT_T0_14B_TR("u8g2_font_t0_14b_tr", 95, 3075, "UW Ttyp0 Bold R Normal  14 130 75 75 C 70 ISO10646 1"),
 
-  FONT_T0_15_ME("u8g2_font_t0_15_me", 645, 3075, "UW Ttyp0 Medium R Normal  15 140 75 75 C 80 ISO10646 1"),
+  FONT_T0_15_ME("u8g2_font_t0_15_me", 646, 3075, "UW Ttyp0 Medium R Normal  15 140 75 75 C 80 ISO10646 1"),
 
   FONT_T0_15_MF("u8g2_font_t0_15_mf", 191, 3075, "UW Ttyp0 Medium R Normal  15 140 75 75 C 80 ISO10646 1"),
 
@@ -2871,7 +2871,7 @@ public enum GlcdFont {
 
   FONT_T0_15_MR("u8g2_font_t0_15_mr", 95, 3075, "UW Ttyp0 Medium R Normal  15 140 75 75 C 80 ISO10646 1"),
 
-  FONT_T0_15_TE("u8g2_font_t0_15_te", 645, 3075, "UW Ttyp0 Medium R Normal  15 140 75 75 C 80 ISO10646 1"),
+  FONT_T0_15_TE("u8g2_font_t0_15_te", 646, 3075, "UW Ttyp0 Medium R Normal  15 140 75 75 C 80 ISO10646 1"),
 
   FONT_T0_15_TF("u8g2_font_t0_15_tf", 191, 3075, "UW Ttyp0 Medium R Normal  15 140 75 75 C 80 ISO10646 1"),
 
@@ -2879,7 +2879,7 @@ public enum GlcdFont {
 
   FONT_T0_15_TR("u8g2_font_t0_15_tr", 95, 3075, "UW Ttyp0 Medium R Normal  15 140 75 75 C 80 ISO10646 1"),
 
-  FONT_T0_15B_ME("u8g2_font_t0_15b_me", 645, 3075, "UW Ttyp0 Bold R Normal  15 140 75 75 C 80 ISO10646 1"),
+  FONT_T0_15B_ME("u8g2_font_t0_15b_me", 646, 3075, "UW Ttyp0 Bold R Normal  15 140 75 75 C 80 ISO10646 1"),
 
   FONT_T0_15B_MF("u8g2_font_t0_15b_mf", 191, 3075, "UW Ttyp0 Bold R Normal  15 140 75 75 C 80 ISO10646 1"),
 
@@ -2887,7 +2887,7 @@ public enum GlcdFont {
 
   FONT_T0_15B_MR("u8g2_font_t0_15b_mr", 95, 3075, "UW Ttyp0 Bold R Normal  15 140 75 75 C 80 ISO10646 1"),
 
-  FONT_T0_15B_TE("u8g2_font_t0_15b_te", 645, 3075, "UW Ttyp0 Bold R Normal  15 140 75 75 C 80 ISO10646 1"),
+  FONT_T0_15B_TE("u8g2_font_t0_15b_te", 646, 3075, "UW Ttyp0 Bold R Normal  15 140 75 75 C 80 ISO10646 1"),
 
   FONT_T0_15B_TF("u8g2_font_t0_15b_tf", 191, 3075, "UW Ttyp0 Bold R Normal  15 140 75 75 C 80 ISO10646 1"),
 
@@ -2895,7 +2895,7 @@ public enum GlcdFont {
 
   FONT_T0_15B_TR("u8g2_font_t0_15b_tr", 95, 3075, "UW Ttyp0 Bold R Normal  15 140 75 75 C 80 ISO10646 1"),
 
-  FONT_T0_16_ME("u8g2_font_t0_16_me", 645, 3075, "UW Ttyp0 Medium R Normal  16 150 75 75 C 80 ISO10646 1"),
+  FONT_T0_16_ME("u8g2_font_t0_16_me", 646, 3075, "UW Ttyp0 Medium R Normal  16 150 75 75 C 80 ISO10646 1"),
 
   FONT_T0_16_MF("u8g2_font_t0_16_mf", 191, 3075, "UW Ttyp0 Medium R Normal  16 150 75 75 C 80 ISO10646 1"),
 
@@ -2903,7 +2903,7 @@ public enum GlcdFont {
 
   FONT_T0_16_MR("u8g2_font_t0_16_mr", 95, 3075, "UW Ttyp0 Medium R Normal  16 150 75 75 C 80 ISO10646 1"),
 
-  FONT_T0_16_TE("u8g2_font_t0_16_te", 645, 3075, "UW Ttyp0 Medium R Normal  16 150 75 75 C 80 ISO10646 1"),
+  FONT_T0_16_TE("u8g2_font_t0_16_te", 646, 3075, "UW Ttyp0 Medium R Normal  16 150 75 75 C 80 ISO10646 1"),
 
   FONT_T0_16_TF("u8g2_font_t0_16_tf", 191, 3075, "UW Ttyp0 Medium R Normal  16 150 75 75 C 80 ISO10646 1"),
 
@@ -2911,7 +2911,7 @@ public enum GlcdFont {
 
   FONT_T0_16_TR("u8g2_font_t0_16_tr", 95, 3075, "UW Ttyp0 Medium R Normal  16 150 75 75 C 80 ISO10646 1"),
 
-  FONT_T0_16B_ME("u8g2_font_t0_16b_me", 645, 3075, "UW Ttyp0 Bold R Normal  16 150 75 75 C 80 ISO10646 1"),
+  FONT_T0_16B_ME("u8g2_font_t0_16b_me", 646, 3075, "UW Ttyp0 Bold R Normal  16 150 75 75 C 80 ISO10646 1"),
 
   FONT_T0_16B_MF("u8g2_font_t0_16b_mf", 191, 3075, "UW Ttyp0 Bold R Normal  16 150 75 75 C 80 ISO10646 1"),
 
@@ -2919,7 +2919,7 @@ public enum GlcdFont {
 
   FONT_T0_16B_MR("u8g2_font_t0_16b_mr", 95, 3075, "UW Ttyp0 Bold R Normal  16 150 75 75 C 80 ISO10646 1"),
 
-  FONT_T0_16B_TE("u8g2_font_t0_16b_te", 645, 3075, "UW Ttyp0 Bold R Normal  16 150 75 75 C 80 ISO10646 1"),
+  FONT_T0_16B_TE("u8g2_font_t0_16b_te", 646, 3075, "UW Ttyp0 Bold R Normal  16 150 75 75 C 80 ISO10646 1"),
 
   FONT_T0_16B_TF("u8g2_font_t0_16b_tf", 191, 3075, "UW Ttyp0 Bold R Normal  16 150 75 75 C 80 ISO10646 1"),
 
@@ -2927,7 +2927,7 @@ public enum GlcdFont {
 
   FONT_T0_16B_TR("u8g2_font_t0_16b_tr", 95, 3075, "UW Ttyp0 Bold R Normal  16 150 75 75 C 80 ISO10646 1"),
 
-  FONT_T0_17_ME("u8g2_font_t0_17_me", 645, 3075, "UW Ttyp0 Medium R Normal  17 160 75 75 C 90 ISO10646 1"),
+  FONT_T0_17_ME("u8g2_font_t0_17_me", 646, 3075, "UW Ttyp0 Medium R Normal  17 160 75 75 C 90 ISO10646 1"),
 
   FONT_T0_17_MF("u8g2_font_t0_17_mf", 191, 3075, "UW Ttyp0 Medium R Normal  17 160 75 75 C 90 ISO10646 1"),
 
@@ -2935,7 +2935,7 @@ public enum GlcdFont {
 
   FONT_T0_17_MR("u8g2_font_t0_17_mr", 95, 3075, "UW Ttyp0 Medium R Normal  17 160 75 75 C 90 ISO10646 1"),
 
-  FONT_T0_17_TE("u8g2_font_t0_17_te", 645, 3075, "UW Ttyp0 Medium R Normal  17 160 75 75 C 90 ISO10646 1"),
+  FONT_T0_17_TE("u8g2_font_t0_17_te", 646, 3075, "UW Ttyp0 Medium R Normal  17 160 75 75 C 90 ISO10646 1"),
 
   FONT_T0_17_TF("u8g2_font_t0_17_tf", 191, 3075, "UW Ttyp0 Medium R Normal  17 160 75 75 C 90 ISO10646 1"),
 
@@ -2943,7 +2943,7 @@ public enum GlcdFont {
 
   FONT_T0_17_TR("u8g2_font_t0_17_tr", 95, 3075, "UW Ttyp0 Medium R Normal  17 160 75 75 C 90 ISO10646 1"),
 
-  FONT_T0_17B_ME("u8g2_font_t0_17b_me", 645, 3075, "UW Ttyp0 Bold R Normal  17 160 75 75 C 90 ISO10646 1"),
+  FONT_T0_17B_ME("u8g2_font_t0_17b_me", 646, 3075, "UW Ttyp0 Bold R Normal  17 160 75 75 C 90 ISO10646 1"),
 
   FONT_T0_17B_MF("u8g2_font_t0_17b_mf", 191, 3075, "UW Ttyp0 Bold R Normal  17 160 75 75 C 90 ISO10646 1"),
 
@@ -2951,7 +2951,7 @@ public enum GlcdFont {
 
   FONT_T0_17B_MR("u8g2_font_t0_17b_mr", 95, 3075, "UW Ttyp0 Bold R Normal  17 160 75 75 C 90 ISO10646 1"),
 
-  FONT_T0_17B_TE("u8g2_font_t0_17b_te", 645, 3075, "UW Ttyp0 Bold R Normal  17 160 75 75 C 90 ISO10646 1"),
+  FONT_T0_17B_TE("u8g2_font_t0_17b_te", 646, 3075, "UW Ttyp0 Bold R Normal  17 160 75 75 C 90 ISO10646 1"),
 
   FONT_T0_17B_TF("u8g2_font_t0_17b_tf", 191, 3075, "UW Ttyp0 Bold R Normal  17 160 75 75 C 90 ISO10646 1"),
 
@@ -2959,7 +2959,7 @@ public enum GlcdFont {
 
   FONT_T0_17B_TR("u8g2_font_t0_17b_tr", 95, 3075, "UW Ttyp0 Bold R Normal  17 160 75 75 C 90 ISO10646 1"),
 
-  FONT_T0_18_ME("u8g2_font_t0_18_me", 645, 3075, "UW Ttyp0 Medium R Normal  18 170 75 75 C 90 ISO10646 1"),
+  FONT_T0_18_ME("u8g2_font_t0_18_me", 646, 3075, "UW Ttyp0 Medium R Normal  18 170 75 75 C 90 ISO10646 1"),
 
   FONT_T0_18_MF("u8g2_font_t0_18_mf", 191, 3075, "UW Ttyp0 Medium R Normal  18 170 75 75 C 90 ISO10646 1"),
 
@@ -2967,7 +2967,7 @@ public enum GlcdFont {
 
   FONT_T0_18_MR("u8g2_font_t0_18_mr", 95, 3075, "UW Ttyp0 Medium R Normal  18 170 75 75 C 90 ISO10646 1"),
 
-  FONT_T0_18_TE("u8g2_font_t0_18_te", 645, 3075, "UW Ttyp0 Medium R Normal  18 170 75 75 C 90 ISO10646 1"),
+  FONT_T0_18_TE("u8g2_font_t0_18_te", 646, 3075, "UW Ttyp0 Medium R Normal  18 170 75 75 C 90 ISO10646 1"),
 
   FONT_T0_18_TF("u8g2_font_t0_18_tf", 191, 3075, "UW Ttyp0 Medium R Normal  18 170 75 75 C 90 ISO10646 1"),
 
@@ -2975,7 +2975,7 @@ public enum GlcdFont {
 
   FONT_T0_18_TR("u8g2_font_t0_18_tr", 95, 3075, "UW Ttyp0 Medium R Normal  18 170 75 75 C 90 ISO10646 1"),
 
-  FONT_T0_18B_ME("u8g2_font_t0_18b_me", 645, 3075, "UW Ttyp0 Bold R Normal  18 170 75 75 C 90 ISO10646 1"),
+  FONT_T0_18B_ME("u8g2_font_t0_18b_me", 646, 3075, "UW Ttyp0 Bold R Normal  18 170 75 75 C 90 ISO10646 1"),
 
   FONT_T0_18B_MF("u8g2_font_t0_18b_mf", 191, 3075, "UW Ttyp0 Bold R Normal  18 170 75 75 C 90 ISO10646 1"),
 
@@ -2983,7 +2983,7 @@ public enum GlcdFont {
 
   FONT_T0_18B_MR("u8g2_font_t0_18b_mr", 95, 3075, "UW Ttyp0 Bold R Normal  18 170 75 75 C 90 ISO10646 1"),
 
-  FONT_T0_18B_TE("u8g2_font_t0_18b_te", 645, 3075, "UW Ttyp0 Bold R Normal  18 170 75 75 C 90 ISO10646 1"),
+  FONT_T0_18B_TE("u8g2_font_t0_18b_te", 646, 3075, "UW Ttyp0 Bold R Normal  18 170 75 75 C 90 ISO10646 1"),
 
   FONT_T0_18B_TF("u8g2_font_t0_18b_tf", 191, 3075, "UW Ttyp0 Bold R Normal  18 170 75 75 C 90 ISO10646 1"),
 
@@ -2991,7 +2991,7 @@ public enum GlcdFont {
 
   FONT_T0_18B_TR("u8g2_font_t0_18b_tr", 95, 3075, "UW Ttyp0 Bold R Normal  18 170 75 75 C 90 ISO10646 1"),
 
-  FONT_T0_22_ME("u8g2_font_t0_22_me", 645, 3075, "UW Ttyp0 Medium R Normal  22 200 75 75 C 110 ISO10646 1"),
+  FONT_T0_22_ME("u8g2_font_t0_22_me", 646, 3075, "UW Ttyp0 Medium R Normal  22 200 75 75 C 110 ISO10646 1"),
 
   FONT_T0_22_MF("u8g2_font_t0_22_mf", 191, 3075, "UW Ttyp0 Medium R Normal  22 200 75 75 C 110 ISO10646 1"),
 
@@ -2999,7 +2999,7 @@ public enum GlcdFont {
 
   FONT_T0_22_MR("u8g2_font_t0_22_mr", 95, 3075, "UW Ttyp0 Medium R Normal  22 200 75 75 C 110 ISO10646 1"),
 
-  FONT_T0_22_TE("u8g2_font_t0_22_te", 645, 3075, "UW Ttyp0 Medium R Normal  22 200 75 75 C 110 ISO10646 1"),
+  FONT_T0_22_TE("u8g2_font_t0_22_te", 646, 3075, "UW Ttyp0 Medium R Normal  22 200 75 75 C 110 ISO10646 1"),
 
   FONT_T0_22_TF("u8g2_font_t0_22_tf", 191, 3075, "UW Ttyp0 Medium R Normal  22 200 75 75 C 110 ISO10646 1"),
 
@@ -3007,7 +3007,7 @@ public enum GlcdFont {
 
   FONT_T0_22_TR("u8g2_font_t0_22_tr", 95, 3075, "UW Ttyp0 Medium R Normal  22 200 75 75 C 110 ISO10646 1"),
 
-  FONT_T0_22B_ME("u8g2_font_t0_22b_me", 645, 3075, "UW Ttyp0 Bold R Normal  22 200 75 75 C 110 ISO10646 1"),
+  FONT_T0_22B_ME("u8g2_font_t0_22b_me", 646, 3075, "UW Ttyp0 Bold R Normal  22 200 75 75 C 110 ISO10646 1"),
 
   FONT_T0_22B_MF("u8g2_font_t0_22b_mf", 191, 3075, "UW Ttyp0 Bold R Normal  22 200 75 75 C 110 ISO10646 1"),
 
@@ -3015,7 +3015,7 @@ public enum GlcdFont {
 
   FONT_T0_22B_MR("u8g2_font_t0_22b_mr", 95, 3075, "UW Ttyp0 Bold R Normal  22 200 75 75 C 110 ISO10646 1"),
 
-  FONT_T0_22B_TE("u8g2_font_t0_22b_te", 645, 3075, "UW Ttyp0 Bold R Normal  22 200 75 75 C 110 ISO10646 1"),
+  FONT_T0_22B_TE("u8g2_font_t0_22b_te", 646, 3075, "UW Ttyp0 Bold R Normal  22 200 75 75 C 110 ISO10646 1"),
 
   FONT_T0_22B_TF("u8g2_font_t0_22b_tf", 191, 3075, "UW Ttyp0 Bold R Normal  22 200 75 75 C 110 ISO10646 1"),
 
@@ -3141,7 +3141,7 @@ public enum GlcdFont {
 
   FONT_TINYTIM_TR("u8g2_font_tinytim_tr", 95, 114, "FreeType TinyTim Medium R Normal  16 160 72 72 P 43 ISO10646 1"),
 
-  FONT_TOM_THUMB_4X6_ME("u8g2_font_tom_thumb_4x6_me", 198, 203, "Raccoon Fixed4x6 Medium R Normal  6 60 75 75 P 40 ISO10646 1"),
+  FONT_TOM_THUMB_4X6_ME("u8g2_font_tom_thumb_4x6_me", 199, 203, "Raccoon Fixed4x6 Medium R Normal  6 60 75 75 P 40 ISO10646 1"),
 
   FONT_TOM_THUMB_4X6_MF("u8g2_font_tom_thumb_4x6_mf", 190, 203, "Raccoon Fixed4x6 Medium R Normal  6 60 75 75 P 40 ISO10646 1"),
 
@@ -3151,7 +3151,7 @@ public enum GlcdFont {
 
   FONT_TOM_THUMB_4X6_T_ALL("u8g2_font_tom_thumb_4x6_t_all", 203, 203, "Raccoon Fixed4x6 Medium R Normal  6 60 75 75 P 40 ISO10646 1"),
 
-  FONT_TOM_THUMB_4X6_TE("u8g2_font_tom_thumb_4x6_te", 198, 203, "Raccoon Fixed4x6 Medium R Normal  6 60 75 75 P 40 ISO10646 1"),
+  FONT_TOM_THUMB_4X6_TE("u8g2_font_tom_thumb_4x6_te", 199, 203, "Raccoon Fixed4x6 Medium R Normal  6 60 75 75 P 40 ISO10646 1"),
 
   FONT_TOM_THUMB_4X6_TF("u8g2_font_tom_thumb_4x6_tf", 190, 203, "Raccoon Fixed4x6 Medium R Normal  6 60 75 75 P 40 ISO10646 1"),
 
@@ -3257,7 +3257,7 @@ public enum GlcdFont {
 
   FONT_UNIFONT_T_WEATHER("u8g2_font_unifont_t_weather", 29, 11677, "gnu Unifont Medium R Normal Sans 16 160 75 75 c 80 iso10646 1"),
 
-  FONT_UNIFONT_TE("u8g2_font_unifont_te", 679, 57086, "gnu Unifont Medium R Normal Sans 16 160 75 75 c 80 iso10646 1"),
+  FONT_UNIFONT_TE("u8g2_font_unifont_te", 680, 57086, "gnu Unifont Medium R Normal Sans 16 160 75 75 c 80 iso10646 1"),
 
   FONT_UNIFONT_TF("u8g2_font_unifont_tf", 224, 57086, "gnu Unifont Medium R Normal Sans 16 160 75 75 c 80 iso10646 1"),
 

@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Native :: Graphics
  * %%
- * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2021 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -226,14 +226,14 @@ void copyToBgraBufferHorizontal(int width, const std::shared_ptr<ucgd_t> &contex
         for (int pos = 7; pos >= 0; pos--) {
             if (data & (1 << pos)) {
                 //primary color (Set bit)
-                bgraBuffer[bpos + 0] = pBlue;   //blue
+                bgraBuffer[bpos] = pBlue;   //blue
                 bgraBuffer[bpos + 1] = pGreen;   //green
                 bgraBuffer[bpos + 2] = pRed;   //red
                 bgraBuffer[bpos + 3] = pAlpha; //alpha
             }
             else {
                 //secondary color (Clear bit)
-                bgraBuffer[bpos + 0] = sBlue; //blue
+                bgraBuffer[bpos] = sBlue; //blue
                 bgraBuffer[bpos + 1] = sGreen; //green
                 bgraBuffer[bpos + 2] = sRed; //red
                 bgraBuffer[bpos + 3] = sAlpha; //alpha
@@ -330,12 +330,10 @@ void updateBgraBuffer(jlong id) {
 
     //u8g2_ll_hvline_vertical_top_lsb
     //u8g2_ll_hvline_horizontal_right_lsb
-    if (context->u8g2->ll_hvline == u8g2_ll_hvline_vertical_top_lsb) {
+    if (context->u8g2->ll_hvline == u8g2_ll_hvline_vertical_top_lsb)
         copyToBgraBufferVertical(width, context);
-    }
-    else {
+    else
         copyToBgraBufferHorizontal(width, context);
-    }
 }
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
@@ -1262,14 +1260,6 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_drawPixelsBgra(JNIEnv *en
         int destX = x, destY = y;
         int maxX = x + width;
         int maxY = y + height;
-
-        /*std::cout << "x = " << std::to_string(x) << std::endl;
-        std::cout << "y = " << std::to_string(y) << std::endl;
-        std::cout << "maxX = " << std::to_string(maxX) << std::endl;
-        std::cout << "maxY = " << std::to_string(maxY) << std::endl;
-        std::cout << "sourceWidth = " << std::to_string(width) << std::endl;
-        std::cout << "sourceHeight = " << std::to_string(height) << std::endl;
-        std::cout << "bufferSize = " << std::to_string(jBufferSize) << std::endl;*/
 
         for (int pos = 0; pos < jBufferSize; pos += 4) {
             if (destX >= maxX) {

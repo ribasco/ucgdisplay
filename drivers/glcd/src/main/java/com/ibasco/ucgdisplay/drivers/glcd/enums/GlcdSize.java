@@ -2,7 +2,7 @@
  * ========================START=================================
  * UCGDisplay :: Graphics LCD driver
  * %%
- * Copyright (C) 2018 - 2020 Universal Character/Graphics display library
+ * Copyright (C) 2018 - 2021 Universal Character/Graphics display library
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -20,7 +20,7 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sun, 5 Jul 2020 10:46:27 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 9 Jan 2021 08:41:59 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
@@ -65,6 +65,8 @@ public enum GlcdSize {
 
   SIZE_320x240(40, 30),
 
+  SIZE_160x104(20, 13),
+
   SIZE_128x32(16, 4),
 
   SIZE_72x40(9, 5),
@@ -76,6 +78,8 @@ public enum GlcdSize {
   SIZE_256x64(32, 8),
 
   SIZE_96x16(12, 2),
+
+  SIZE_2040x16(255, 2),
 
   SIZE_64x48(8, 6),
 
@@ -101,7 +105,7 @@ public enum GlcdSize {
 
   SIZE_176x104(22, 13),
 
-  SIZE_160x104(20, 13),
+  SIZE_160x64(20, 8),
 
   SIZE_136x32(17, 4),
 

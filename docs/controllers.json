@@ -295,6 +295,35 @@
       "name": "LD7032",
       "vendorList": [
         {
+          "name": "60X32_ALT",
+          "tileWidth": 8,
+          "tileHeight": 4,
+          "bufferLayout": "u8g2_ll_hvline_horizontal_right_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_011",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "cadName": "u8x8_cad_ld7032_i2c",
+              "cadNameShort": "i2c",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_I2C",
+                  "value": 16
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "60X32",
           "tileWidth": 8,
           "tileHeight": 4,
@@ -378,6 +407,25 @@
       "vendorList": [
         {
           "name": "400X240",
+          "tileWidth": 50,
+          "tileHeight": 30,
+          "bufferLayout": "u8g2_ll_hvline_horizontal_right_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "M0_400X240",
           "tileWidth": 50,
           "tileHeight": 30,
           "bufferLayout": "u8g2_ll_hvline_horizontal_right_lsb",
@@ -618,6 +666,38 @@
       ]
     },
     {
+      "name": "S1D15E06",
+      "vendorList": [
+        {
+          "name": "160100",
+          "tileWidth": 20,
+          "tileHeight": 13,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_011",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "SBN1661",
       "vendorList": [
         {
@@ -696,6 +776,51 @@
     {
       "name": "SH1106",
       "vendorList": [
+        {
+          "name": "128X32_VISIONOX",
+          "tileWidth": 16,
+          "tileHeight": 4,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_3WSPI",
+                  "value": 2
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            },
+            {
+              "cadName": "u8x8_cad_ssd13xx_fast_i2c",
+              "cadNameShort": "i2c",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_I2C",
+                  "value": 16
+                }
+              ]
+            }
+          ]
+        },
         {
           "name": "72X40_WISE",
           "tileWidth": 9,
@@ -1303,6 +1428,43 @@
       "name": "SSD1305",
       "vendorList": [
         {
+          "name": "128X64_RAYSTAR",
+          "tileWidth": 16,
+          "tileHeight": 8,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            },
+            {
+              "cadName": "u8x8_cad_ssd13xx_i2c",
+              "cadNameShort": "i2c",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_I2C",
+                  "value": 16
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "128X32_NONAME",
           "tileWidth": 16,
           "tileHeight": 4,
@@ -1634,6 +1796,37 @@
                 {
                   "name": "COM_I2C",
                   "value": 16
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "2040X16",
+          "tileWidth": 255,
+          "tileHeight": 2,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_3WSPI",
+                  "value": 2
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
                 }
               ]
             }
@@ -3154,6 +3347,43 @@
               ]
             }
           ]
+        },
+        {
+          "name": "ERC16064",
+          "tileWidth": 20,
+          "tileHeight": 8,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            },
+            {
+              "cadName": "u8x8_cad_ssd13xx_i2c",
+              "cadNameShort": "i2c",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_I2C",
+                  "value": 16
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -3206,6 +3436,99 @@
     {
       "name": "ST7565",
       "vendorList": [
+        {
+          "name": "EA_DOGM132",
+          "tileWidth": 17,
+          "tileHeight": 4,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_3WSPI",
+                  "value": 2
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "LX12864",
+          "tileWidth": 16,
+          "tileHeight": 8,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_3WSPI",
+                  "value": 2
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "64128N",
+          "tileWidth": 16,
+          "tileHeight": 8,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_3WSPI",
+                  "value": 2
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            }
+          ]
+        },
         {
           "name": "ERC12864",
           "tileWidth": 16,
@@ -3269,6 +3592,37 @@
           ]
         },
         {
+          "name": "KS0713",
+          "tileWidth": 16,
+          "tileHeight": 8,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_3WSPI",
+                  "value": 2
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "ERC12864_ALT",
           "tileWidth": 16,
           "tileHeight": 8,
@@ -3300,69 +3654,7 @@
           ]
         },
         {
-          "name": "EA_DOGM132",
-          "tileWidth": 17,
-          "tileHeight": 4,
-          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
-          "notes": "",
-          "vendorConfigs": [
-            {
-              "cadName": "u8x8_cad_001",
-              "cadNameShort": "",
-              "supportedInterfaces": [
-                {
-                  "name": "COM_4WSPI",
-                  "value": 1
-                },
-                {
-                  "name": "COM_3WSPI",
-                  "value": 2
-                },
-                {
-                  "name": "COM_6800",
-                  "value": 4
-                },
-                {
-                  "name": "COM_8080",
-                  "value": 8
-                }
-              ]
-            }
-          ]
-        },
-        {
           "name": "ZOLEN_128X64",
-          "tileWidth": 16,
-          "tileHeight": 8,
-          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
-          "notes": "",
-          "vendorConfigs": [
-            {
-              "cadName": "u8x8_cad_001",
-              "cadNameShort": "",
-              "supportedInterfaces": [
-                {
-                  "name": "COM_4WSPI",
-                  "value": 1
-                },
-                {
-                  "name": "COM_3WSPI",
-                  "value": 2
-                },
-                {
-                  "name": "COM_6800",
-                  "value": 4
-                },
-                {
-                  "name": "COM_8080",
-                  "value": 8
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "LX12864",
           "tileWidth": 16,
           "tileHeight": 8,
           "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
@@ -3518,37 +3810,6 @@
         },
         {
           "name": "EA_DOGM128",
-          "tileWidth": 16,
-          "tileHeight": 8,
-          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
-          "notes": "",
-          "vendorConfigs": [
-            {
-              "cadName": "u8x8_cad_001",
-              "cadNameShort": "",
-              "supportedInterfaces": [
-                {
-                  "name": "COM_4WSPI",
-                  "value": 1
-                },
-                {
-                  "name": "COM_3WSPI",
-                  "value": 2
-                },
-                {
-                  "name": "COM_6800",
-                  "value": 4
-                },
-                {
-                  "name": "COM_8080",
-                  "value": 8
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "64128N",
           "tileWidth": 16,
           "tileHeight": 8,
           "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
@@ -3795,8 +4056,81 @@
       ]
     },
     {
+      "name": "ST7571",
+      "vendorList": [
+        {
+          "name": "128X128",
+          "tileWidth": 16,
+          "tileHeight": 16,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            },
+            {
+              "cadName": "u8x8_cad_ssd13xx_i2c",
+              "cadNameShort": "i2c",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_I2C",
+                  "value": 16
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "ST7586S",
       "vendorList": [
+        {
+          "name": "YMC240160",
+          "tileWidth": 30,
+          "tileHeight": 20,
+          "bufferLayout": "u8g2_ll_hvline_horizontal_right_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_011",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_3WSPI",
+                  "value": 2
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            }
+          ]
+        },
         {
           "name": "S028HN118A",
           "tileWidth": 48,
@@ -4490,6 +4824,47 @@
           ]
         },
         {
+          "name": "IDS4073",
+          "tileWidth": 32,
+          "tileHeight": 16,
+          "bufferLayout": "u8g2_ll_hvline_vertical_top_lsb",
+          "notes": "",
+          "vendorConfigs": [
+            {
+              "cadName": "u8x8_cad_001",
+              "cadNameShort": "",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_4WSPI",
+                  "value": 1
+                },
+                {
+                  "name": "COM_3WSPI",
+                  "value": 2
+                },
+                {
+                  "name": "COM_6800",
+                  "value": 4
+                },
+                {
+                  "name": "COM_8080",
+                  "value": 8
+                }
+              ]
+            },
+            {
+              "cadName": "u8x8_cad_uc16xx_i2c",
+              "cadNameShort": "i2c",
+              "supportedInterfaces": [
+                {
+                  "name": "COM_I2C",
+                  "value": 16
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "EA_DOGM240",
           "tileWidth": 30,
           "tileHeight": 8,
@@ -4715,19 +5090,19 @@
       ]
     }
   ],
-  "md5Hash": "d324eeafd6424b7edfb7018de42d621a",
+  "md5Hash": "1d1a69e413dbede3e7330cd4beb44f5f",
   "lastUpdated": {
     "dateTime": {
       "date": {
-        "year": 2020,
-        "month": 7,
-        "day": 5
+        "year": 2021,
+        "month": 1,
+        "day": 9
       },
       "time": {
-        "hour": 10,
-        "minute": 46,
-        "second": 44,
-        "nano": 875480000
+        "hour": 8,
+        "minute": 42,
+        "second": 13,
+        "nano": 887002058
       }
     },
     "offset": {

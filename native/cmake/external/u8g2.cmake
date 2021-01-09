@@ -1,5 +1,5 @@
 #
-# THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sun, 5 Jul 2020 10:46:44 +0800)
+# THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 9 Jan 2021 08:42:13 +0800)
 #
 
 include(ExternalProject)
@@ -67,6 +67,7 @@ list(APPEND U8G2_SRC
     "${SOURCE_DIR}/csrc/u8x8_d_pcd8544_84x48.c"
     "${SOURCE_DIR}/csrc/u8x8_d_pcf8812.c"
     "${SOURCE_DIR}/csrc/u8x8_d_pcf8814_hx1230.c"
+    "${SOURCE_DIR}/csrc/u8x8_d_s1d15e06.c"
     "${SOURCE_DIR}/csrc/u8x8_d_sbn1661.c"
     "${SOURCE_DIR}/csrc/u8x8_d_sed1330.c"
     "${SOURCE_DIR}/csrc/u8x8_d_sh1106_64x32.c"
@@ -77,6 +78,7 @@ list(APPEND U8G2_SRC
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1305.c"
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1306_128x32.c"
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1306_128x64_noname.c"
+    "${SOURCE_DIR}/csrc/u8x8_d_ssd1306_2040x16.c"
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1306_48x64.c"
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1306_64x32.c"
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1306_64x48.c"
@@ -99,8 +101,10 @@ list(APPEND U8G2_SRC
     "${SOURCE_DIR}/csrc/u8x8_d_st75320.c"
     "${SOURCE_DIR}/csrc/u8x8_d_st7565.c"
     "${SOURCE_DIR}/csrc/u8x8_d_st7567.c"
+    "${SOURCE_DIR}/csrc/u8x8_d_st7571.c"
     "${SOURCE_DIR}/csrc/u8x8_d_st7586s_erc240160.c"
     "${SOURCE_DIR}/csrc/u8x8_d_st7586s_s028hn118a.c"
+    "${SOURCE_DIR}/csrc/u8x8_d_st7586s_ymc240160.c"
     "${SOURCE_DIR}/csrc/u8x8_d_st7588.c"
     "${SOURCE_DIR}/csrc/u8x8_d_st7920.c"
     "${SOURCE_DIR}/csrc/u8x8_d_stdio.c"
