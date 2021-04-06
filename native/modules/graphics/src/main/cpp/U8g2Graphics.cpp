@@ -201,6 +201,15 @@ void processOptions(JNIEnv *env, jobject options, option_map_t &map, std::unique
     log->debug("processOptions() : Processed a total of {} option entries", map.size());
 }
 
+uint8_t alphaBlend(uint8_t src, uint8_t dst) {
+    //C = SRC * (alpha / 255) + DST * (1 - (alpha / 255))
+    // a = alpha component
+    // A = source (fg)
+    // B = dest (bg)
+    // C = final output
+    return (src * (src / 255)) + (dst * (1 - (src / 255)));
+}
+
 void copyToBgraBufferHorizontal(int width, const std::shared_ptr<ucgd_t> &context) {
     Log &log = ServiceLocator::getInstance().getLogger();
     uint8_t *u8g2Buffer = context->buffer;
@@ -226,17 +235,17 @@ void copyToBgraBufferHorizontal(int width, const std::shared_ptr<ucgd_t> &contex
         for (int pos = 7; pos >= 0; pos--) {
             if (data & (1 << pos)) {
                 //primary color (Set bit)
-                bgraBuffer[bpos] = pBlue;   //blue
-                bgraBuffer[bpos + 1] = pGreen;   //green
-                bgraBuffer[bpos + 2] = pRed;   //red
-                bgraBuffer[bpos + 3] = pAlpha; //alpha
+                bgraBuffer[bpos] = alphaBlend(pBlue, bgraBuffer[bpos]);   //blue
+                bgraBuffer[bpos + 1] = alphaBlend(pGreen, bgraBuffer[bpos + 1]);   //green
+                bgraBuffer[bpos + 2] = alphaBlend(pRed, bgraBuffer[bpos + 2]);   //red
+                bgraBuffer[bpos + 3] = alphaBlend(pAlpha, bgraBuffer[bpos + 3]); //alpha
             }
             else {
                 //secondary color (Clear bit)
-                bgraBuffer[bpos] = sBlue; //blue
-                bgraBuffer[bpos + 1] = sGreen; //green
-                bgraBuffer[bpos + 2] = sRed; //red
-                bgraBuffer[bpos + 3] = sAlpha; //alpha
+                bgraBuffer[bpos] = alphaBlend(sBlue, bgraBuffer[bpos]);   //blue
+                bgraBuffer[bpos + 1] = alphaBlend(sGreen, bgraBuffer[bpos + 1]);   //green
+                bgraBuffer[bpos + 2] = alphaBlend(sRed, bgraBuffer[bpos + 2]);   //red
+                bgraBuffer[bpos + 3] = alphaBlend(sAlpha, bgraBuffer[bpos + 3]); //alpha
             }
             bpos += 4;
         }
@@ -253,11 +262,13 @@ void copyToBgraBufferVertical(int width, const std::shared_ptr<ucgd_t> &context)
     unsigned int primary = context->primary_color;
     unsigned int secondary = context->secondary_color;
 
+    //primary color
     unsigned int pBlue = ((primary >> 24) & 0xff);
     unsigned int pGreen = ((primary >> 16) & 0xff);
     unsigned int pRed = ((primary >> 8) & 0xff);
     unsigned int pAlpha = (primary & 0xff);
 
+    //secondary color
     unsigned int sBlue = ((secondary >> 24) & 0xff);
     unsigned int sGreen = ((secondary >> 16) & 0xff);
     unsigned int sRed = ((secondary >> 8) & 0xff);
@@ -286,19 +297,23 @@ void copyToBgraBufferVertical(int width, const std::shared_ptr<ucgd_t> &context)
         uint8_t data = u8g2Buffer[pos++];
         y = (page * 8) + bitpos;
         unsigned int bit = (data & (1 << bitpos)) != 0 ? 1 : 0;
+
+        //note: perform alpha blending
+        //if bit is set, use primary color
         if (bit) {
             //Primary color (Set bit)
-            bgraBuffer[bpos + 0] = pBlue;   //blue
-            bgraBuffer[bpos + 1] = pGreen;   //green
-            bgraBuffer[bpos + 2] = pRed;   //red
-            bgraBuffer[bpos + 3] = pAlpha; //alpha
+            bgraBuffer[bpos] = alphaBlend(pBlue, bgraBuffer[bpos]);   //blue
+            bgraBuffer[bpos + 1] = alphaBlend(pGreen, bgraBuffer[bpos + 1]);   //green
+            bgraBuffer[bpos + 2] = alphaBlend(pRed, bgraBuffer[bpos + 2]);   //red
+            bgraBuffer[bpos + 3] = alphaBlend(pAlpha, bgraBuffer[bpos + 3]); //alpha
         }
+        //use secondary if bit is unset
         else {
             //Secondary color (Clear bit)
-            bgraBuffer[bpos + 0] = sBlue; //blue
-            bgraBuffer[bpos + 1] = sGreen; //green
-            bgraBuffer[bpos + 2] = sRed; //red
-            bgraBuffer[bpos + 3] = sAlpha; //alpha
+            bgraBuffer[bpos] = alphaBlend(sBlue, bgraBuffer[bpos]);   //blue
+            bgraBuffer[bpos + 1] = alphaBlend(sGreen, bgraBuffer[bpos + 1]);   //green
+            bgraBuffer[bpos + 2] = alphaBlend(sRed, bgraBuffer[bpos + 2]);   //red
+            bgraBuffer[bpos + 3] = alphaBlend(sAlpha, bgraBuffer[bpos + 3]); //alpha
         }
         //log.debug("Bit = {}, Idx = {}, Page = {} ({}, {}) = {}", bitpos, pos - 1, page, x, y, bit);
         x++;
@@ -334,6 +349,17 @@ void updateBgraBuffer(jlong id) {
         copyToBgraBufferVertical(width, context);
     else
         copyToBgraBufferHorizontal(width, context);
+}
+
+void clearBgraBuffer(jlong id) {
+    const std::unique_ptr<DeviceManager> &devMgr = ServiceLocator::getInstance().getDeviceManager();
+    const std::shared_ptr<ucgd_t> &context = devMgr->getDevice(static_cast<uintptr_t>(id));
+    //do not update buffer if not in virtual mode
+    if (!context->flag_virtual)
+        return;
+    uint8_t *bgraBuffer = context->bufferBgra;
+    for (int i = 0; i < context->bufferBgraSize; i++)
+        bgraBuffer[i] = 0;
 }
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *jvm, void *reserved) {
@@ -488,8 +514,7 @@ jlong Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_setup(JNIEnv *env, jclas
     try {
         locator.getLogger().debug("setup() : Converting direct buffer to native buffer");
         auto *pixelBuffer = static_cast<uint8_t *>(env->GetDirectBufferAddress(buffer));
-        std::shared_ptr<ucgd_t> &context = U8g2Util_SetupAndInitDisplay(setup_proc_name, commInt, commType, _rotation,
-                                                                        *pinMap, mapOptions, pixelBuffer, virtualMode);
+        std::shared_ptr<ucgd_t> &context = U8g2Util_SetupAndInitDisplay(setup_proc_name, commInt, commType, _rotation, *pinMap, mapOptions, pixelBuffer, virtualMode);
         context->buffer = pixelBuffer;
         context->bufferSize = env->GetDirectBufferCapacity(buffer);
         locator.getLogger().debug("setup() : Pixel buffer initialized with size {}", context->bufferSize);
@@ -930,7 +955,8 @@ void Java_com_ibasco_ucgdisplay_core_u8g2_U8g2Graphics_clearBuffer(JNIEnv *env, 
         return;
     BEGIN_CATCH
         u8g2_ClearBuffer(toU8g2(id));
-        updateBgraBuffer(id);
+        clearBgraBuffer(id);
+        //updateBgraBuffer(id);
     END_CATCH
 }
 
