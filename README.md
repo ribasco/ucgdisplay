@@ -1,5 +1,3 @@
->  **WARNING:** This project is currently on ALPHA stage. Features may be added or removed at any point in time. Backwards compatibility between development versions are not guaranteed.
-
 ### Universal Character/Graphics LCD Library for Java
 
 [![Github Workflow Build Status](https://github.com/ribasco/ucgdisplay/workflows/CI%20/%20Testing%20/%20Deployment/badge.svg)](https://github.com/ribasco/ucgdisplay/actions?query=branch%3Amaster) [![Travis Build Status](https://travis-ci.org/ribasco/ucgdisplay.svg?branch=master)](https://travis-ci.org/ribasco/ucgdisplay) [![Maven Central](https://img.shields.io/maven-central/v/com.ibasco.ucgdisplay/ucg-display.svg?label=Maven%20Central)](https://search.maven.org/search?q=com.ibasco.ucgdisplay) [![Join the chat at https://gitter.im/ucgdisplay/Lobby](https://badges.gitter.im/ucgdisplay/Lobby.svg)](https://gitter.im/ucgdisplay/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4209cfcd33eb4f98a6e1d16414804d45)](https://app.codacy.com/app/ribasco/ucgdisplay?utm_source=github.com&utm_medium=referral&utm_content=ribasco/ucgdisplay&utm_campaign=Badge_Grade_Dashboard) [![Javadocs](https://www.javadoc.io/badge/com.ibasco.ucgdisplay/ucg-display.svg)](https://www.javadoc.io/doc/com.ibasco.ucgdisplay/ucg-display)
@@ -15,6 +13,7 @@
 - Renamed GlcdBusInterface to GlcdCommProtocol
 - Renamed GlcdBusType to GlcdCommType
 - Renamed GlcdControllerType to GlcdController
+- Apply alpha blending for primary and secondary colors in virtual mode
 
 **1.5.2-alpha (11/23/2019)** 
 

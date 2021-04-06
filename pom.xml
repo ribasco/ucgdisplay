@@ -38,8 +38,8 @@
         <release>2.0.0-alpha</release>
         <revision>${release}-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
         <pi4j.version>1.2</pi4j.version>
         <commons.io.version>2.6</commons.io.version>
         <commons.lang3.version>3.9</commons.lang3.version>
