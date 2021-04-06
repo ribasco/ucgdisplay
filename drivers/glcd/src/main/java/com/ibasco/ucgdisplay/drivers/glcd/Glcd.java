@@ -20,7 +20,7 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 9 Jan 2021 08:41:59 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Tue, 6 Apr 2021 10:39:11 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd;
 
@@ -2338,6 +2338,75 @@ public interface Glcd {
         GlcdBufferLayout.VERTICAL,
         new GlcdSetupInfo("u8g2_Setup_ssd1318_128x96_xcp_f", COM_4WSPI | COM_3WSPI | COM_6800 | COM_8080),
         new GlcdSetupInfo("u8g2_Setup_ssd1318_i2c_128x96_xcp_f", COM_I2C)
+    );
+  }
+
+  /**
+   * Display Controller: SSD1320
+   */
+  interface SSD1320 {
+    /**
+     * <p>
+     * Display Name:
+     *     SSD1320 :: 160X32
+     * </p>
+     * <p>
+     * Display Width:
+     *     160 pixels
+     * </p>
+     * <p>
+     * Display height:
+     *     32 pixels
+     * </p>
+     * Supported Bus Interfaces: 
+     * <ul><li>4-Wire SPI protocol</li>
+     * <li>3-Wire SPI protocol</li>
+     * <li>Parallel 8-bit 6800 protocol</li>
+     * <li>Parallel 8-bit 8080 protocol</li></ul>
+     * <p>
+     * Notes from author:
+     *     N/A
+     * </p>
+     */
+    GlcdDisplay D_160x32 = new GlcdDisplay(
+        GlcdController.SSD1320,
+        "D_160x32",
+        20,
+        4,
+        GlcdBufferLayout.VERTICAL,
+        new GlcdSetupInfo("u8g2_Setup_ssd1320_160x32_f", COM_4WSPI | COM_3WSPI | COM_6800 | COM_8080)
+    );
+
+    /**
+     * <p>
+     * Display Name:
+     *     SSD1320 :: 160X132
+     * </p>
+     * <p>
+     * Display Width:
+     *     160 pixels
+     * </p>
+     * <p>
+     * Display height:
+     *     136 pixels
+     * </p>
+     * Supported Bus Interfaces: 
+     * <ul><li>4-Wire SPI protocol</li>
+     * <li>3-Wire SPI protocol</li>
+     * <li>Parallel 8-bit 6800 protocol</li>
+     * <li>Parallel 8-bit 8080 protocol</li></ul>
+     * <p>
+     * Notes from author:
+     *     N/A
+     * </p>
+     */
+    GlcdDisplay D_160x136_160X132 = new GlcdDisplay(
+        GlcdController.SSD1320,
+        "D_160x136_160X132",
+        20,
+        17,
+        GlcdBufferLayout.VERTICAL,
+        new GlcdSetupInfo("u8g2_Setup_ssd1320_160x132_f", COM_4WSPI | COM_3WSPI | COM_6800 | COM_8080)
     );
   }
 

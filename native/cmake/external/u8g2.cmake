@@ -1,5 +1,5 @@
 #
-# THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 9 Jan 2021 08:42:13 +0800)
+# THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Tue, 6 Apr 2021 10:39:29 +0800)
 #
 
 include(ExternalProject)
@@ -88,6 +88,7 @@ list(APPEND U8G2_SRC
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1316.c"
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1317.c"
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1318.c"
+    "${SOURCE_DIR}/csrc/u8x8_d_ssd1320.c"
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1322.c"
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1325.c"
     "${SOURCE_DIR}/csrc/u8x8_d_ssd1326.c"

@@ -20,7 +20,7 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 9 Jan 2021 08:41:59 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Tue, 6 Apr 2021 10:39:11 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
@@ -86,6 +86,8 @@ public enum GlcdController {
   SSD1317,
 
   SSD1318,
+
+  SSD1320,
 
   SSD1322,
 

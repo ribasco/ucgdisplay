@@ -1,5 +1,5 @@
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 9 Jan 2021 08:42:13 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Tue, 6 Apr 2021 10:39:29 +0800)
 //
 #include "U8g2Hal.h"
 #include <iostream>
@@ -109,6 +109,8 @@ void U8g2hal_InitSetupFunctions(u8g2_setup_func_map_t &setup_map) {
     setup_map["u8g2_Setup_ssd1318_i2c_128x96_f"] = u8g2_Setup_ssd1318_i2c_128x96_f;
     setup_map["u8g2_Setup_ssd1318_128x96_xcp_f"] = u8g2_Setup_ssd1318_128x96_xcp_f;
     setup_map["u8g2_Setup_ssd1318_i2c_128x96_xcp_f"] = u8g2_Setup_ssd1318_i2c_128x96_xcp_f;
+    setup_map["u8g2_Setup_ssd1320_160x32_f"] = u8g2_Setup_ssd1320_160x32_f;
+    setup_map["u8g2_Setup_ssd1320_160x132_f"] = u8g2_Setup_ssd1320_160x132_f;
     setup_map["u8g2_Setup_ssd1322_nhd_256x64_f"] = u8g2_Setup_ssd1322_nhd_256x64_f;
     setup_map["u8g2_Setup_ssd1322_nhd_128x64_f"] = u8g2_Setup_ssd1322_nhd_128x64_f;
     setup_map["u8g2_Setup_ssd1325_nhd_128x64_f"] = u8g2_Setup_ssd1325_nhd_128x64_f;

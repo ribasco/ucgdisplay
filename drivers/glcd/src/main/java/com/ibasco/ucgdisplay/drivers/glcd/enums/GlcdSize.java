@@ -20,7 +20,7 @@
  * =========================END==================================
  */
 //
-// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Sat, 9 Jan 2021 08:41:59 +0800)
+// THIS IS AN AUTO-GENERATED CODE!! DO NOT MODIFY (Last updated: Tue, 6 Apr 2021 10:39:11 +0800)
 //
 package com.ibasco.ucgdisplay.drivers.glcd.enums;
 
@@ -86,6 +86,10 @@ public enum GlcdSize {
   SIZE_48x64(6, 8),
 
   SIZE_128x96(16, 12),
+
+  SIZE_160x32(20, 4),
+
+  SIZE_160x136(20, 17),
 
   SIZE_256x32(32, 4),
 
