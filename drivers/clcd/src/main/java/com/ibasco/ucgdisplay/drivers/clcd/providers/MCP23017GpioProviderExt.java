@@ -30,7 +30,7 @@ import java.lang.reflect.Field;
 
 public class MCP23017GpioProviderExt extends com.pi4j.gpio.extension.mcp.MCP23017GpioProvider {
     private static final int REGISTER_GPIO_A = 0x12;
-    private I2CDevice device;
+    private final I2CDevice device;
 
     public MCP23017GpioProviderExt(int busNumber, int address) throws I2CFactory.UnsupportedBusNumberException, IOException {
         this(busNumber, address, DEFAULT_POLLING_TIME);

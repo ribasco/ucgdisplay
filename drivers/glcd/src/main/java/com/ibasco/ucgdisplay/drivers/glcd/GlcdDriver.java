@@ -29,6 +29,11 @@ import com.ibasco.ucgdisplay.drivers.glcd.exceptions.GlcdDriverException;
  * @author Rafael Ibasco
  */
 public class GlcdDriver extends GlcdBaseDriver {
+
+    public GlcdDriver() {
+        super(null);
+    }
+
     /**
      * @throws GlcdDriverException
      *         When driver initialization fails
