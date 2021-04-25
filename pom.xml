@@ -35,7 +35,7 @@
 
     <!-- Project properties -->
     <properties>
-        <release>2.0.0-alpha</release>
+        <release>2.1.0-alpha</release>
         <revision>${release}-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>16</maven.compiler.source>
