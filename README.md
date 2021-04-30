@@ -86,7 +86,7 @@
 ### Pre-requisites
 
 ---
-* Java JDK 1.8+ (See [AdoptOpenJDK](https://adoptopenjdk.net/))
+* Java JDK 11+ (See [AdoptOpenJDK](https://adoptopenjdk.net/))
 * (Optional) [Libgpiod](https://github.com/brgl/libgpiod) (v1.4.1 or higher) - C library and tools for interacting with the linux GPIO character device (gpiod stands for GPIO device).
 * (Optional) [Pigpio](https://github.com/joan2937/pigpio) (v71 above) - pigpio is a C library for the Raspberry which allows control of the General Purpose Input Outputs (GPIO). 
 

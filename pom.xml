@@ -29,8 +29,7 @@
     <packaging>pom</packaging>
     <inceptionYear>2018</inceptionYear>
     <description>
-        A universal display library for single board computers. Supports character (Hitachi HD44780)
-        and graphics monochrome display devices (lcd, oled, e-ink etc) powered by U8g2
+        A universal display library for single board computers. Supports graphics monochrome display devices (lcd, oled, e-ink etc) powered by U8g2
     </description>
 
     <!-- Project properties -->
