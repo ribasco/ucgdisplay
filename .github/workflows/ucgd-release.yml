@@ -23,6 +23,8 @@ jobs:
           distribution: ${{ env.JAVA_DIST }}
           java-version: ${{ env.JAVA_VERSION }}
           check-latest: true
+          gpg-private-key: ${{ secrets.GPG_AUTHOR_PRIVATEKEY }} # Value of the GPG private key to import
+          gpg-passphrase: ${{ secrets.GPG_AUTHOR_PASSPHRASE }} # env variable for GPG private key passphrase
 
       - name: Extract branch name
         shell: bash
@@ -62,7 +64,7 @@ jobs:
         run: scripts/install-deps-bin.sh
 
       - name: Build Project (Java + Native)
-        run: mvn install -P'release' -Dchangelist= -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -B -V
+        run: mvn install -P'release' -Dchangelist= -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${{ env.BUILD_TYPE }} -Dlicense.skipUpdateLicense=true -DskipTests=true -B -V
 
       - name: Set up for Sonatype
         uses: actions/setup-java@v2
