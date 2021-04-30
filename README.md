@@ -129,7 +129,7 @@ To be able to download snapshots from Sonatype, add the following profile entry 
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucg-display</artifactId>
-             <version>3.0.0</version>
+             <version>3.0.1</version>
          </dependency>
     </dependencies>
     ```
@@ -144,7 +144,7 @@ To be able to download snapshots from Sonatype, add the following profile entry 
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-glcd</artifactId>
-             <version>3.0.0</version>
+             <version>3.0.1</version>
          </dependency>
     </dependencies>
     ```

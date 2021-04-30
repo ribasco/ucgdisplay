@@ -113,14 +113,15 @@
 
     <!-- Target directory properties for native binaries -->
     <property name="project.dir.target" value="${project.dir.base}/target"/>
-    <property name="project.target.dir.linux.x86_32" value="${project.dir.target}/classes/natives/linux_32"/>
-    <property name="project.target.dir.linux.x86_64" value="${project.dir.target}/classes/natives/linux_64"/>
-    <property name="project.target.dir.linux.arm32" value="${project.dir.target}/classes/natives/linux_arm"/>
-    <property name="project.target.dir.linux.arm64" value="${project.dir.target}/classes/natives/linux_arm64"/>
-    <property name="project.target.dir.win.x86_32" value="${project.dir.target}/classes/natives/windows_32"/>
-    <property name="project.target.dir.win.x86_64" value="${project.dir.target}/classes/natives/windows_64"/>
-    <property name="project.target.dir.osx.x86_32" value="${project.dir.target}/classes/natives/osx_32"/>
-    <property name="project.target.dir.osx.x86_64" value="${project.dir.target}/classes/natives/osx_64"/>
+    <property name="natives.dir.target" value="${project.dir.target}/classes/META-INF/lib"/>
+    <property name="project.target.dir.linux.x86_32" value="${natives.dir.target}/linux_32"/>
+    <property name="project.target.dir.linux.x86_64" value="${natives.dir.target}/linux_64"/>
+    <property name="project.target.dir.linux.arm32" value="${natives.dir.target}/linux_arm"/>
+    <property name="project.target.dir.linux.arm64" value="${natives.dir.target}/linux_arm64"/>
+    <property name="project.target.dir.win.x86_32" value="${natives.dir.target}/windows_32"/>
+    <property name="project.target.dir.win.x86_64" value="${natives.dir.target}/windows_64"/>
+    <property name="project.target.dir.osx.x86_32" value="${natives.dir.target}/osx_32"/>
+    <property name="project.target.dir.osx.x86_64" value="${natives.dir.target}/osx_64"/>
 
     <property name="cpp.proj.dir" value="${project.dir.base}/src/main/cpp"/>
     <property name="cmake.module.dir" value="${project.dir.root}/native/cmake"/>
