@@ -66,7 +66,7 @@ jobs:
         run: scripts/install-deps-bin.sh
 
       - name: Build Project (Java + Native)
-        run: mvn verify --batch-mode --show-version -P'release' -Dchangelist= -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${{ env.BUILD_TYPE }} -Dlicense.skipUpdateLicense=true -DskipTests=true
+        run: mvn package --batch-mode --show-version -P'release' -Dchangelist= -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${{ env.BUILD_TYPE }} -Dlicense.skipUpdateLicense=true -DskipTests=true
 
       - name: Publish to Sonatype (Staging)
         run: mvn --batch-mode deploy -P'deploy-sonatype,release' -Dchangelist= -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true
