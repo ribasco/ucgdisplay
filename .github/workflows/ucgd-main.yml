@@ -91,7 +91,7 @@ jobs:
 
       #- name: Set up for Sonatype
       #  uses: actions/setup-java@v2
-      -
+
       - name: Publish to Sonatype (Snapshots)
         if: github.event_name != 'pull_request' && github.event_name != 'release'
         run: mvn --batch-mode deploy -P'deploy-sonatype,release' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true -Dmaven.javadoc.skip=true
