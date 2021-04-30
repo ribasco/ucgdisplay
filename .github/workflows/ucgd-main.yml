@@ -81,16 +81,13 @@ jobs:
         run: scripts/install-deps-bin.sh
 
       - name: Build Project (Java + Native)
-        run: mvn --batch-mode --show-version package -P'release' -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${{ env.BUILD_TYPE }} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true
+        run: mvn package --batch-mode --show-version -P'release' -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${{ env.BUILD_TYPE }} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true
 
       - name: Unit Tests
         run: mvn test -Dmaven.javadoc.skip=true
 
       - name: Integration Tests
         run: mvn verify -Dmaven.javadoc.skip=true
-
-      #- name: Set up for Sonatype
-      #  uses: actions/setup-java@v2
 
       - name: Publish to Sonatype (Snapshots)
         if: github.event_name != 'pull_request' && github.event_name != 'release'
