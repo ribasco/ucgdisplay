@@ -1,6 +1,7 @@
 name: CI / Testing / Deployment
 
 on:
+  workflow_dispatch
   push:
     branches: [ master ]
     tags:
