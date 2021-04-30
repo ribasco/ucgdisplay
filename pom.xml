@@ -34,7 +34,7 @@
 
     <!-- Project properties -->
     <properties>
-        <revision>3.0.0${changelist}</revision>
+        <revision>3.0.1${changelist}</revision>
         <changelist>-SNAPSHOT</changelist>
         <sha1/>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -204,6 +204,24 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
                     <version>1.1.0</version>
+                    <executions>
+                        <!-- flatten -->
+                        <execution>
+                            <id>flatten</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                        </execution>
+                        <!-- ensure proper cleanup -->
+                        <execution>
+                            <id>flatten.clean</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                     <configuration>
                         <updatePomFile>true</updatePomFile>
                         <flattenMode>resolveCiFriendliesOnly</flattenMode>
@@ -455,6 +473,11 @@
 
         <!-- Parent plugins -->
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.1.0</version>
+            </plugin>
             <!-- ENFORCER Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
