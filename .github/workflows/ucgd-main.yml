@@ -75,7 +75,7 @@ jobs:
         run: scripts/install-deps-bin.sh
 
       - name: Build Project (Java + Native)
-        run: mvn install -P'release' -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+        run: mvn install -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${BUILD_TYPE} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
       - name: Unit Tests
         run: mvn test
@@ -96,7 +96,7 @@ jobs:
 
       - name: Publish to Sonatype (Snapshots)
         if: github.event_name != 'pull_request' && github.event_name != 'release'
-        run: mvn --batch-mode deploy -P'deploy-sonatype' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true -Dmaven.javadoc.skip=true
+        run: mvn --batch-mode deploy -P'deploy-sonatype,release' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true -Dmaven.javadoc.skip=true
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
