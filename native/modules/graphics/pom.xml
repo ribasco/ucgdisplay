@@ -59,6 +59,10 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -207,6 +211,7 @@
                             <skip>${skip.native.build}</skip>
                             <target>
                                 <!-- Pass maven properties to ant -->
+                                <!--suppress UnresolvedMavenProperty -->
                                 <echo>Building native GRAPHICS library (OS: ${current-os}, ARCH: ${current-arch}, BUILD
                                     TARGET: ${graphics.target}, BUILD TYPE: ${build.type})
                                 </echo>

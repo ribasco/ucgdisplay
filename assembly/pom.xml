@@ -28,19 +28,7 @@
         </dependency>
         <dependency>
             <groupId>com.ibasco.ucgdisplay</groupId>
-            <artifactId>ucgd-drivers-clcd</artifactId>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.ibasco.ucgdisplay</groupId>
             <artifactId>ucgd-native-graphics</artifactId>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.ibasco.ucgdisplay</groupId>
-            <artifactId>ucgd-native-input</artifactId>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -100,10 +88,8 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.ibasco.ucgdisplay:ucgd-common</include>
-                                    <include>com.ibasco.ucgdisplay:ucgd-drivers-clcd</include>
                                     <include>com.ibasco.ucgdisplay:ucgd-drivers-glcd</include>
                                     <include>com.ibasco.ucgdisplay:ucgd-native-graphics</include>
-                                    <include>com.ibasco.ucgdisplay:ucgd-native-input</include>
                                 </includes>
                             </artifactSet>
                             <!-- Add manifest entries -->

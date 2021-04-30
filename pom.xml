@@ -186,11 +186,8 @@
     <!-- Project Modules -->
     <modules>
         <module>common</module>
-        <module>drivers/clcd</module>
         <module>drivers/glcd</module>
         <module>native/modules/graphics</module>
-        <module>native/modules/input</module>
-        <module>examples/drivers/clcd</module>
         <module>examples/drivers/glcd</module>
         <module>assembly</module>
     </modules>
@@ -217,7 +214,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M4</version>
+                    <version>3.0.0-M5</version>
                     <executions>
                         <execution>
                             <phase>test</phase>
@@ -227,6 +224,7 @@
                         </execution>
                     </executions>
                     <configuration>
+                        <argLine>--add-opens ucgd.drivers.glcd/com.ibasco.ucgdisplay.drivers.glcd=ALL-UNNAMED --add-opens ucgd.drivers.glcd/com.ibasco.ucgdisplay.drivers.glcd.enums=ALL-UNNAMED --add-opens ucgd.drivers.glcd/com.ibasco.ucgdisplay.drivers.glcd.exceptions=ALL-UNNAMED --add-opens ucgd.drivers.glcd/com.ibasco.ucgdisplay.drivers.glcd.utils=ALL-UNNAMED</argLine>
                         <includes>
                             <include>**/Test*.java</include>
                             <include>**/*Test.java</include>
@@ -294,7 +292,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.2.0</version>
                     <configuration>
                         <archive>
                             <manifest>
@@ -391,8 +389,6 @@
                             <exclude>native/modules/graphics/src/main/cpp/utils/build/**</exclude>
                             <exclude>native/modules/graphics/src/main/cpp/build/**</exclude>
                             <exclude>native/modules/graphics/src/main/cpp/**</exclude>
-                            <exclude>native/modules/input/src/main/cpp/build/**</exclude>
-                            <exclude>native/modules/input/src/main/cpp/**</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
@@ -400,7 +396,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.2.0</version>
                     <executions>
                         <execution>
                             <id>attach-javadocs</id>
@@ -410,9 +406,8 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <skip>false</skip>
+                        <staleDataPath>${project.build.directory}/javadoc-stale-data/maven-javadoc-plugin-stale-data.txt</staleDataPath>
                         <detectJavaApiLink>false</detectJavaApiLink>
-                        <source>8</source>
                         <additionalOptions>-Xdoclint:none</additionalOptions>
                     </configuration>
                 </plugin>
@@ -440,6 +435,9 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
                     <version>2.7</version>
+                    <configuration>
+
+                    </configuration>
                 </plugin>
                 <!-- License Plugin -->
                 <plugin>
@@ -451,39 +449,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
 
         <!-- Parent plugins -->
         <plugins>
-            <!-- Flatten plugin -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Build helper plugin - Add test sources -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-            </plugin>
             <!-- ENFORCER Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -559,11 +531,6 @@
             </dependency>
             <dependency>
                 <groupId>com.ibasco.ucgdisplay</groupId>
-                <artifactId>ucgd-drivers-clcd</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ibasco.ucgdisplay</groupId>
                 <artifactId>ucgd-drivers-glcd</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -571,26 +538,6 @@
                 <groupId>com.ibasco.ucgdisplay</groupId>
                 <artifactId>ucgd-native-graphics</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ibasco.ucgdisplay</groupId>
-                <artifactId>ucgd-native-input</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.pi4j</groupId>
-                <artifactId>pi4j-core</artifactId>
-                <version>${pi4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.pi4j</groupId>
-                <artifactId>pi4j-device</artifactId>
-                <version>${pi4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.pi4j</groupId>
-                <artifactId>pi4j-gpio-extension</artifactId>
-                <version>${pi4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -637,7 +584,6 @@
                 <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
-
             <!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2 -->
             <dependency>
                 <groupId>org.powermock</groupId>
@@ -684,29 +630,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <!-- Global dependencies -->
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-    </dependencies>
 </project>

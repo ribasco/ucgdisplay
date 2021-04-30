@@ -1,10 +1,12 @@
 ### Universal Character/Graphics LCD Library for Java
 
-[![Github Workflow Build Status](https://github.com/ribasco/ucgdisplay/workflows/CI%20/%20Testing%20/%20Deployment/badge.svg)](https://github.com/ribasco/ucgdisplay/actions?query=branch%3Amaster) [![Maven Central](https://img.shields.io/maven-central/v/com.ibasco.ucgdisplay/ucg-display.svg?label=Maven%20Central)](https://search.maven.org/search?q=com.ibasco.ucgdisplay) [![Join the chat at https://gitter.im/ucgdisplay/Lobby](https://badges.gitter.im/ucgdisplay/Lobby.svg)](https://gitter.im/ucgdisplay/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4209cfcd33eb4f98a6e1d16414804d45)](https://app.codacy.com/app/ribasco/ucgdisplay?utm_source=github.com&utm_medium=referral&utm_content=ribasco/ucgdisplay&utm_campaign=Badge_Grade_Dashboard) [![Javadocs](https://www.javadoc.io/badge/com.ibasco.ucgdisplay/ucg-display.svg)](https://www.javadoc.io/doc/com.ibasco.ucgdisplay/ucg-display)
+[![Github Workflow Build Status](https://github.com/ribasco/ucgdisplay/workflows/CI%20/%20Testing%20/%20Deployment/badge.svg)](https://github.com/ribasco/ucgdisplay/actions?query=branch%3Amaster) [![Maven Central](https://img.shields.io/maven-central/v/com.ibasco.ucgdisplay/ucg-display.svg?label=Maven%20Central)](https://search.maven.org/search?q=com.ibasco.ucgdisplay) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4209cfcd33eb4f98a6e1d16414804d45)](https://app.codacy.com/app/ribasco/ucgdisplay?utm_source=github.com&utm_medium=referral&utm_content=ribasco/ucgdisplay&utm_campaign=Badge_Grade_Dashboard) [![Javadocs](https://www.javadoc.io/badge/com.ibasco.ucgdisplay/ucg-display.svg)](https://www.javadoc.io/doc/com.ibasco.ucgdisplay/ucg-display)
 
 ### Change Log
 **3.0.0 (04/27/2021)**
-- Removed input module
+
+- Modularized project (for jdk 11 above)
+- Dropped input and character display modules
 - Removed travis ci script.
 
 **2.0.0-alpha (07/04/2020)**
@@ -38,38 +40,25 @@
 
 ##### General features
 
-* Supports both Character and Graphics/Dot-Matrix display devices
+* Supports Graphics/Dot-Matrix display devices
 * Support for multiple I/O peripheral providers
-  * [Libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/)
-  * [Pigpio](https://github.com/joan2937/pigpio) (Daemon or Standalone)
-  * [C-Periphery](https://github.com/vsergeev/c-periphery) (Based on the linux kernel)
-* Provides native bindings via JNI to the popular U8g2 library for graphics displays.
-* Introspection capability. Allows you to examine the low-level communication data flow of the display device.
+   * [Libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/)
+   * [Pigpio](https://github.com/joan2937/pigpio) (Daemon or Standalone)
+   * [C-Periphery](https://github.com/vsergeev/c-periphery) (Based on the linux kernel)
+* Provides native bindings (via JNI) to the U8g2 library for graphics displays.
+* Provides a virtual driver interface allowing u8g2 native operations to be accessed in java. Useful for apps that needs to simulate u8g2 draw operations without the need for a real display device.
 
 ##### Display drivers
 
-######  Character LCD driver features (Work in Progress)
-* Pure java implementation for Hitachi HD44780 driver powered by Pi4j
-* Flexible configuration options for interfacing with your SoC device (e.g. GPIO expanders/I2C/SPI)
-* Flexible pin mapping configuration
-* Supported LCD adapters
-    * `MCP23017`
-    * Shift Register (e.g. `74HC595`)
-    * GPIO
-    * `MCP23008`(Coming soon)
-    * `PCF8574` (Coming soon)
-###### Graphic LCD driver features (Work in Progress)
+###### Graphic LCD driver features
+
 * SPI and I2C hardware capability and other software bit-banging implementations
-* Over 46+ controllers are supported. Refer to the table below for the list of supported display controllers. (note: not everything has been tested yet)
-* The graphics display module wraps around the popular c/c++ [U8g2](https://github.com/olikraus/u8g2) library by Oliver. All drawing operations present in the library should be similar to the ones found in U8g2 (Refer to the official [U8g2 reference manual](https://github.com/olikraus/u8g2/wiki/u8g2reference) for more information). 
+* Over 46+ controllers are supported. Refer to the table below for the list of supported display controllers.
+* The graphics display module wraps around the popular c/c++ [U8g2](https://github.com/olikraus/u8g2) library by Oliver. All drawing operations present in the library should be similar to the ones found in U8g2 (Refer to the official [U8g2 reference manual](https://github.com/olikraus/u8g2/wiki/u8g2reference) for more information).
 
 ### Supported display controllers
 
 ---
-###### Character LCD
-
-* Hitachi HD44780
-  
 ###### Graphic/Dot-Matrix LCD
 
 * A2PRINTER, HX1230, IL3820, IST3020, KS0108, LC7981, LD7032, LS013B7DH03, LS027B7DH01, MAX7219, NT7534, PCD8544, PCF8812, RA8835, SBN1661, SED1330, SED1520, SH1106, SH1107, SH1108, SH1122, SSD1305, SSD1306, SSD1309, SSD1317, SSD1322, SSD1325, SSD1326, SSD1327, SSD1329, SSD1606, SSD1607, ST75256, ST7565, ST7567, ST7586S, ST7588, ST7920, T6963, UC1601, UC1604, UC1608, UC1610, UC1611, UC1638, UC1701
@@ -140,7 +129,7 @@ To be able to download snapshots from Sonatype, add the following profile entry 
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucg-display</artifactId>
-             <version>1.5.2-alpha</version>
+             <version>3.0.0</version>
          </dependency>
     </dependencies>
     ```
@@ -151,18 +140,11 @@ To be able to download snapshots from Sonatype, add the following profile entry 
 
     ```xml
     <dependencies>
-        <!-- Character display driver (HD44780) -->
-         <dependency>
-             <groupId>com.ibasco.ucgdisplay</groupId>
-             <artifactId>ucgd-drivers-clcd</artifactId>
-             <version>1.5.2-alpha</version>
-         </dependency>
-      
          <!-- Graphics display driver -->
          <dependency>
              <groupId>com.ibasco.ucgdisplay</groupId>
              <artifactId>ucgd-drivers-glcd</artifactId>
-             <version>1.5.2-alpha</version>
+             <version>3.0.0</version>
          </dependency>
     </dependencies>
     ```
@@ -207,63 +189,6 @@ To be able to download snapshots from Sonatype, add the following profile entry 
 
 ---
 Simple hello world examples
-
-######  Character LCD Example (HD44780)
-
-Simple hello world example demonstrating the use of different LCD adapters.
-
-```java
-package com.ibasco.ucgdisplay.examples;
-
-import com.ibasco.ucgdisplay.drivers.clcd.HD44780DisplayDriver;
-import com.ibasco.ucgdisplay.drivers.clcd.LcdGpioAdapter;
-import com.ibasco.ucgdisplay.drivers.clcd.LcdPinMapConfig;
-import com.ibasco.ucgdisplay.drivers.clcd.LcdTemplates;
-import com.ibasco.ucgdisplay.drivers.clcd.adapters.GpioLcdAdapter;
-import com.ibasco.ucgdisplay.drivers.clcd.adapters.Mcp23017LcdAdapter;
-import com.ibasco.ucgdisplay.drivers.clcd.adapters.ShiftRegisterLcdAdapter;
-import com.ibasco.ucgdisplay.drivers.clcd.enums.LcdPin;
-import com.ibasco.ucgdisplay.drivers.clcd.providers.MCP23017GpioProviderExt;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.io.i2c.I2CBus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class HD44780Example {
-
-    private static final Logger log = LoggerFactory.getLogger(HD44780Example.class);
-
-    public static void main(String[] args) {
-        try {
-            LcdPinMapConfig config = new LcdPinMapConfig()
-                    .map(LcdPin.RS, RaspiPin.GPIO_02)
-                    .map(LcdPin.EN, RaspiPin.GPIO_03)
-                    .map(LcdPin.DATA_4, RaspiPin.GPIO_04)
-                    .map(LcdPin.DATA_5, RaspiPin.GPIO_05)
-                    .map(LcdPin.DATA_6, RaspiPin.GPIO_06)
-                    .map(LcdPin.DATA_7, RaspiPin.GPIO_07);
-            
-            //GPIO adapter
-            LcdGpioAdapter adapter = new GpioLcdAdapter(config);
-
-            //Shift register adapter
-            //LcdGpioAdapter adapter = new ShiftRegisterLcdAdapter(GpioFactory.getDefaultProvider(), RaspiPin.GPIO_02, RaspiPin.GPIO_03, RaspiPin.GPIO_04, config);
-
-            //MCP23017 I2C adapter (Using built-in templates)
-            //MCP23017GpioProviderExt mcp23017GpioProvider = new MCP23017GpioProviderExt(I2CBus.BUS_1, 0x15);
-            //LcdGpioAdapter adapter = new Mcp23017LcdAdapter(mcp23017GpioProvider, LcdTemplates.ADAFRUIT_I2C_RGBLCD_MCP23017);
-            
-            HD44780DisplayDriver charDriver = new HD44780DisplayDriver(adapter, 20, 4);
-            charDriver.home();
-            charDriver.write("Hello World");
-        } catch (Exception e) {
-            log.error("Error occured", e);
-        }
-    }
-}
-
-```
 
 ######  Graphic LCD Example (ST7920 SPI Hardware)
 
@@ -433,7 +358,7 @@ public class GlcdST7920SWExample {
 * The adapters for character lcd driver `Mcp23008LcdAdapter` and `Pcf8574TLcdAdapter` are not yet implemented. 
 * Due to lack of hardware availability, I am currently unable to test the `SPI`, `I2C` and bit-bang interfaces for most of the display controllers. The code implementation for these interfaces are complete, so In theory, they should work but it not confirmed. I am going to rely on your feedback for this and I will do my best to support any issues you may encounter.
 
-### Contribution
+### Cross-Compilation Guide (for the Virtual driver interface)
 
 ---
 Contributions are always welcome. For starters, checkout the guide to setting up your Dev/Build environment for more information.

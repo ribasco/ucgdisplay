@@ -442,10 +442,16 @@ public interface GlcdDisplayDriver extends DisplayDriver {
     /**
      * <p>Draws pixels on the screen based on the provided pixel buffer. This buffer is using the BGRA format. The size of the buffer is determined by the following formulat: width * height * 4</p>
      *
+     * @param x
+     *         The x-coordinate
+     * @param y
+     *         The y-coordinate
+     * @param width
+     *         The width of the pixels to be drawn
+     * @param height
+     *         The height of the pixels to be drawn
      * @param buffer
      *         The bgra pixel buffer
-     * @param size
-     *         The size of the bgra pixel buffer
      */
     void drawPixelsBgra(int x, int y, int width, int height, byte[] buffer);
 
