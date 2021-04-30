@@ -34,12 +34,14 @@ jobs:
       - uses: actions/checkout@v2
       - name: Setup Java JDK
         uses: actions/setup-java@v2
-        with:
+        with: # running setup-java again overwrites the settings.xml
           distribution: ${{ env.JAVA_DIST }}
-          java-version: ${{ env.JAVA_VERSION }} # ${{ matrix.java }}
-          check-latest: true
+          java-version: ${{ env.JAVA_VERSION }}
+          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: SONATYPE_USERNAME # env variable for username in deploy
+          server-password: SONATYPE_PASSWORD # env variable for token in deploy
           gpg-private-key: ${{ secrets.GPG_AUTHOR_PRIVATEKEY }} # Value of the GPG private key to import
-          gpg-passphrase: ${{ secrets.GPG_AUTHOR_PASSPHRASE }} # env variable for GPG private key passphrase
+          gpg-passphrase: GPG_AUTHOR_PASSPHRASE # env variable for GPG private key passphrase
 
       - name: Extract branch name
         shell: bash
@@ -79,7 +81,7 @@ jobs:
         run: scripts/install-deps-bin.sh
 
       - name: Build Project (Java + Native)
-        run: mvn --batch-mode --show-version package -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${{ env.BUILD_TYPE }} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true
+        run: mvn --batch-mode --show-version package -P'release' -Dcompile.native=true -Dgraphics.target=native-build-cc-all -Dinput.target=native-build-cc-all -Dbuild.type=${{ env.BUILD_TYPE }} -Dlicense.skipUpdateLicense=true -DskipTests=true -Dmaven.javadoc.skip=true
 
       - name: Unit Tests
         run: mvn test -Dmaven.javadoc.skip=true
@@ -87,17 +89,9 @@ jobs:
       - name: Integration Tests
         run: mvn verify -Dmaven.javadoc.skip=true
 
-      - name: Set up for Sonatype
-        uses: actions/setup-java@v2
-        with: # running setup-java again overwrites the settings.xml
-          distribution: ${{ env.JAVA_DIST }}
-          java-version: ${{ env.JAVA_VERSION }}
-          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: SONATYPE_USERNAME # env variable for username in deploy
-          server-password: SONATYPE_PASSWORD # env variable for token in deploy
-          gpg-private-key: ${{ secrets.GPG_AUTHOR_PRIVATEKEY }} # Value of the GPG private key to import
-          gpg-passphrase: GPG_AUTHOR_PASSPHRASE # env variable for GPG private key passphrase
-
+      #- name: Set up for Sonatype
+      #  uses: actions/setup-java@v2
+      -
       - name: Publish to Sonatype (Snapshots)
         if: github.event_name != 'pull_request' && github.event_name != 'release'
         run: mvn --batch-mode deploy -P'deploy-sonatype,release' -Dmaven.antrun.skip=true -DskipTests=true -Dlicense.skipUpdateLicense=true -Dmaven.javadoc.skip=true
