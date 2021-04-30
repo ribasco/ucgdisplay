@@ -1,3 +1,5 @@
+# Note: Upgrading to 20.04+ will not have libssl1.0-dev in the official repositories. Build will fail as a result.
+
 name: CI / Testing / Deployment
 
 on:
@@ -24,7 +26,7 @@ env:
 jobs:
   build-project:
     name: 'Cross-Compile Build (All)'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
         java: [ '11' ]
@@ -57,7 +59,7 @@ jobs:
         run: wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 
       - name: Add LLVM toolchain to sources.list.d
-        run: echo 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-9 main' | sudo tee -a /etc/apt/sources.list.d/llvm.list
+        run: echo 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main' | sudo tee -a /etc/apt/sources.list.d/llvm.list
 
       - name: Add ubuntu toolchain ppa
         run: sudo add-apt-repository -n ppa:ubuntu-toolchain-r/test
@@ -66,7 +68,7 @@ jobs:
         run: sudo apt-get update || true
 
       - name: Install required packages
-        run: sudo apt-get install gnupg2 mingw-w64 autoconf-archive llvm-9 llvm-9-dev clang-9 gcc-7 g++-7 gcc-multilib g++-multilib libssl-dev
+        run: sudo apt-get install gnupg2 mingw-w64 autoconf-archive llvm-9 llvm-9-dev clang-9 gcc-7 g++-7 gcc-multilib g++-multilib libssl1.0-dev
 
       - name: Add clang-9 path to /usr/local/bin
         run: sudo ln -s /usr/bin/clang-9 /usr/local/bin/clang && sudo ln -s /usr/bin/clang++-9 /usr/local/bin/clang++
