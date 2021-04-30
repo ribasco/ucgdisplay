@@ -18,7 +18,7 @@ env:
   BUILD_TYPE: Debug
   LD_LIBRARY_PATH: /usr/lib/llvm-9/lib
   JAVA_DIST: 'adopt'
-  JAVA_VERSION: '16'
+  JAVA_VERSION: '11'
 
 jobs:
   build-project:
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        java: [ '16' ]
+        java: [ '11' ]
     steps:
       - uses: actions/checkout@v2
       - name: Setup Java JDK

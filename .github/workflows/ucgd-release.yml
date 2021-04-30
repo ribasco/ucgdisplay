@@ -7,7 +7,7 @@ on:
 env:
   BUILD_TYPE: Release
   LD_LIBRARY_PATH: /usr/lib/llvm-9/lib
-  JAVA_VERSION: '16'
+  JAVA_VERSION: '11'
   JAVA_DIST: 'adopt'
 
 jobs:
